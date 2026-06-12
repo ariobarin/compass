@@ -1,0 +1,7 @@
+interface:
+  display_name: "WebMCP Tool Authoring"
+  short_description: "Design portable WebMCP tool surfaces"
+  default_prompt: "Use $webmcp-tool-authoring to design this WebMCP tool surface from workflow discovery through validation."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,66 @@
+# Human-owned Codex files that this repo is allowed to track.
+
+[codex]
+home = "%USERPROFILE%\\.codex"
+
+files = [
+  "AGENTS.md",
+  "keybindings.json",
+]
+
+dirs = [
+  "agents",
+]
+
+skills = [
+  "benchmark-run-operator",
+  "git-branch-resolver",
+  "webmcp-eval-triage",
+  "webmcp-tool-authoring",
+  "webmcp-verify-tool",
+]
+
+[config]
+review_file = "config.review.toml"
+install_automatically = false
+reason = "Live config.toml includes generated runtime paths, marketplaces, project trust, and MCP server wiring."
+
+[local_only]
+files = [
+  "auth.json",
+  "history.jsonl",
+  "session_index.jsonl",
+  "installation_id",
+  "cap_sid",
+  "models_cache.json",
+  ".codex-global-state.json",
+]
+
+dirs = [
+  ".sandbox",
+  ".sandbox-bin",
+  ".sandbox-secrets",
+  ".tmp",
+  "archived_sessions",
+  "automations",
+  "browser",
+  "cache",
+  "computer-use",
+  "log",
+  "memories",
+  "node_repl",
+  "plugins",
+  "process_manager",
+  "sessions",
+  "sqlite",
+  "tmp",
+  "vendor_imports",
+  "worktrees",
+]
+
+patterns = [
+  "*.sqlite",
+  "*.sqlite-shm",
+  "*.sqlite-wal",
+  "*.log",
+]

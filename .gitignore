@@ -1,0 +1,16 @@
+/.codex-live-draft/
+/backups/
+/local.toml
+*.local.toml
+*.bak
+*.tmp
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+auth.json
+history.jsonl
+session_index.jsonl
+logs_*.sqlite*
+state_*.sqlite*
+memories_*.sqlite*
+goals_*.sqlite*

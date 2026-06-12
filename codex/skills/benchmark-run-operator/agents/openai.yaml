@@ -1,0 +1,7 @@
+interface:
+  display_name: "Benchmark Run Operator"
+  short_description: "Operate and finalize web benchmark runs"
+  default_prompt: "Use $benchmark-run-operator to launch, monitor, or rebuild the final outputs of this A/B benchmark run from validated artifacts."
+
+policy:
+  allow_implicit_invocation: true

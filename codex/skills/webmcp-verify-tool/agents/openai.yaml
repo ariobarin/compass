@@ -1,0 +1,7 @@
+interface:
+  display_name: "WebMCP Verify Tool"
+  short_description: "Verify WebMCP tools in a browser"
+  default_prompt: "Use $webmcp-verify-tool to prove this WebMCP tool change works in the live browser runtime."
+
+policy:
+  allow_implicit_invocation: true

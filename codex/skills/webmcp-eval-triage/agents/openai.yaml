@@ -1,0 +1,7 @@
+interface:
+  display_name: "WebMCP Eval Triage"
+  short_description: "Classify WebMCP benchmark failures"
+  default_prompt: "Use $webmcp-eval-triage to classify these benchmark failures before changing tools, evals, or infra."
+
+policy:
+  allow_implicit_invocation: true
