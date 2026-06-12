@@ -50,7 +50,7 @@ foreach ($item in $items) {
 
     $repoMap = Get-RelativeFileMap -Root $item.RepoPath
     $liveMap = Get-RelativeFileMap -Root $item.LivePath
-    $allKeys = @($repoMap.Keys + $liveMap.Keys | Sort-Object -Unique)
+    $allKeys = @(@($repoMap.Keys) + @($liveMap.Keys) | Sort-Object -Unique)
     foreach ($key in $allKeys) {
         if (-not $repoMap.ContainsKey($key) -or -not $liveMap.ContainsKey($key) -or $repoMap[$key] -ne $liveMap[$key]) {
             $drift.Add((Join-Path $item.LivePath $key))
