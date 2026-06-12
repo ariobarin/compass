@@ -17,6 +17,8 @@ portable and should not be committed.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
 - `workflows/`: durable operating notes for recurring work.
+- `local-docs/`: repo-local maintenance learnings that are not installed into a
+  live Codex home.
 - `manifests/portable-files.toml`: the allowlist and local-only denylist.
 - `manifests/tool-surfaces.md`: review notes for tools that can touch local or
   external state.

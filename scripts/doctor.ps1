@@ -24,6 +24,8 @@ foreach ($path in @(
     "codex\config.review.toml",
     "manifests\portable-files.toml",
     "manifests\tool-surfaces.md",
+    "local-docs\README.md",
+    "local-docs\maintenance-learnings.md",
     "workflows\plan-template.md",
     "workflows\read-only-research.md",
     "workflows\agent-failures.md",
