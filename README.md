@@ -10,6 +10,7 @@ portable and should not be committed.
 ## Layout
 
 - `codex/AGENTS.md`: global instructions to copy into the live Codex home.
+- `AGENTS.md`: repo-local maintenance guidance for this portable config repo.
 - `codex/keybindings.json`: portable keyboard bindings.
 - `codex/agents/`: custom agents.
 - `codex/skills/`: custom skills, excluding system and plugin cache skills.
@@ -17,6 +18,8 @@ portable and should not be committed.
   machine. This is not installed automatically.
 - `workflows/`: durable operating notes for recurring work.
 - `manifests/portable-files.toml`: the allowlist and local-only denylist.
+- `manifests/tool-surfaces.md`: review notes for tools that can touch local or
+  external state.
 - `scripts/`: snapshot, diff, install, and health check helpers.
 
 ## Common commands
@@ -31,6 +34,13 @@ Check the repo for obvious portability mistakes:
 
 ```powershell
 .\scripts\doctor.ps1
+```
+
+Check whether live Codex files match the portable allowlist and ask Codex to
+report active instruction sources:
+
+```powershell
+.\scripts\verify-live.ps1
 ```
 
 Install reviewed portable files into the live Codex home:
@@ -57,3 +67,5 @@ what they would change.
 - Do not commit secrets, auth files, SQLite state, logs, session history, caches,
   browser profiles, generated plugin caches, or machine runtime paths.
 - Keep machine-specific values in ignored local files or in live config only.
+- Keep skill descriptions concise. Put detailed instructions in `SKILL.md` and
+  references.

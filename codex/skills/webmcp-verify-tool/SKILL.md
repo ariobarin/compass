@@ -1,6 +1,6 @@
 ---
 name: webmcp-verify-tool
-description: Verify a WebMCP tool change by rebuilding or refreshing the served code, driving the tool in a real browser, checking registration, execution, persistence, inspector state, dev logs, docs, mirrored schema fixtures, and final evidence.
+description: Verify WebMCP tool changes in the live browser. Use for registration, execution, state, logs, fixtures, and evidence.
 ---
 
 # webmcp-verify-tool

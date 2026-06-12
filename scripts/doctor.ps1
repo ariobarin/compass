@@ -5,7 +5,12 @@ param(
 . "$PSScriptRoot\common.ps1"
 
 $repoRoot = Get-RepoRoot
-$liveHome = Get-CodexHome -CodexHome $CodexHome
+try {
+    $liveHome = Get-CodexHome -CodexHome $CodexHome
+}
+catch {
+    $liveHome = Join-Path $env:USERPROFILE ".codex"
+}
 $problems = New-Object System.Collections.Generic.List[string]
 
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
@@ -13,10 +18,16 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
 }
 
 foreach ($path in @(
+    "AGENTS.md",
     "codex\AGENTS.md",
     "codex\keybindings.json",
     "codex\config.review.toml",
-    "manifests\portable-files.toml"
+    "manifests\portable-files.toml",
+    "manifests\tool-surfaces.md",
+    "workflows\plan-template.md",
+    "workflows\read-only-research.md",
+    "workflows\agent-failures.md",
+    "scripts\verify-live.ps1"
 )) {
     $fullPath = Join-Path $repoRoot $path
     if (-not (Test-Path $fullPath)) {
@@ -60,7 +71,6 @@ foreach ($dir in Get-ChildItem -Path $repoRoot -Recurse -Force -Directory -Error
     }
 }
 
-$dashChars = @([char]0x2014, [char]0x2013)
 $textFiles = Get-ChildItem -Path $repoRoot -Recurse -Force -File |
     Where-Object {
         $_.FullName -notmatch "\\.git\\" -and
@@ -69,11 +79,23 @@ $textFiles = Get-ChildItem -Path $repoRoot -Recurse -Force -File |
 
 foreach ($file in $textFiles) {
     $content = Get-Content -Raw -LiteralPath $file.FullName
-    foreach ($char in $dashChars) {
-        if ($content.Contains($char)) {
-            $problems.Add("disallowed dash character in: $($file.FullName)")
-            break
-        }
+    if ($content -match "[^\x00-\x7F]") {
+        $problems.Add("non-ASCII text in: $($file.FullName)")
+    }
+}
+
+$maxDescriptionLength = 160
+$skillFiles = Get-ChildItem -Path (Join-Path $repoRoot "codex\skills") -Recurse -File -Filter "SKILL.md" -ErrorAction SilentlyContinue
+foreach ($skillFile in $skillFiles) {
+    $description = Select-String -Path $skillFile.FullName -Pattern "^description:\s*(.+)$" | Select-Object -First 1
+    if (-not $description) {
+        $problems.Add("missing skill description: $($skillFile.FullName)")
+        continue
+    }
+
+    $descriptionText = $description.Matches[0].Groups[1].Value.Trim()
+    if ($descriptionText.Length -gt $maxDescriptionLength) {
+        $problems.Add("skill description over $maxDescriptionLength chars: $($skillFile.FullName)")
     }
 }
 
