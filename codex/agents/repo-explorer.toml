@@ -1,5 +1,5 @@
 name = "repo-explorer"
-description = "Read-only repository explorer for mapping code paths, workflows, and evidence before implementation."
+description = "Read-only repository explorer for unclear, cross-module, or noisy-context work. Use before implementation when mapping code paths, workflows, runtime evidence, or branch state would reduce risk or protect the parent context."
 sandbox_mode = "read-only"
 model_reasoning_effort = "medium"
 developer_instructions = """
