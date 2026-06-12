@@ -1,6 +1,6 @@
 ---
 name: webmcp-eval-triage
-description: Triage failing WebArena or WebMCP benchmark tasks into tool faults, stale eval expectations, agent executor mistakes, infrastructure failures, or long-run drift using logs, eval definitions, runtime evidence, and result artifacts.
+description: Triage failing WebArena or WebMCP tasks. Use to classify tool, eval, agent, infrastructure, and drift failures.
 ---
 
 # webmcp-eval-triage

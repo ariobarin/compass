@@ -1,6 +1,6 @@
 ---
 name: git-branch-resolver
-description: Audit and safely resolve Git local branches, worktrees, origin refs, and pull requests. Use when reviewing branch sprawl, refreshing a requested PR branch on the same branch, preserving recent local changes, or, when explicitly asked, cleaning up superseded branches, retargeting PRs, or deleting stale branch state.
+description: Audit Git branches, worktrees, remotes, and PRs. Use for branch sprawl, PR refreshes, safe cleanup, and local WIP preservation.
 ---
 
 # git-branch-resolver

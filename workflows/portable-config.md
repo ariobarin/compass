@@ -7,9 +7,11 @@ fresh profile, or copied repo checkout.
 
 1. Edit files in this repo first.
 2. Run `.\scripts\doctor.ps1`.
-3. Run `.\scripts\diff-live.ps1`.
-4. Review the diff.
-5. Run `.\scripts\install.ps1 -Apply` only after the diff is accepted.
+3. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when you need a quick
+   drift report.
+4. Run `.\scripts\diff-live.ps1` when you need a full diff against live files.
+5. Review the diff.
+6. Run `.\scripts\install.ps1 -Apply` only after the diff is accepted.
 
 ## Snapshot flow
 
@@ -42,3 +44,11 @@ review:
 5. Run `.\scripts\install.ps1 -Apply`.
 6. Review `codex/config.review.toml` and copy only the config fragments that
    still make sense on that machine.
+
+## Related Workflows
+
+- [plan-template.md](plan-template.md): planning large or risky work.
+- [read-only-research.md](read-only-research.md): mapping code paths before
+  edits.
+- [agent-failures.md](agent-failures.md): converting repeated failures into
+  durable improvements.

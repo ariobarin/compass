@@ -25,6 +25,12 @@ review_file = "config.review.toml"
 install_automatically = false
 reason = "Live config.toml includes generated runtime paths, marketplaces, project trust, and MCP server wiring."
 
+[repo_only]
+dirs = [
+  "local-docs",
+]
+reason = "These docs guide repository maintenance but are not installed into a live Codex home."
+
 [local_only]
 files = [
   "auth.json",

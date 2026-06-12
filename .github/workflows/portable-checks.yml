@@ -1,0 +1,56 @@
+name: portable checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  portable:
+    runs-on: windows-2025
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run doctor
+        shell: pwsh
+        run: ./scripts/doctor.ps1
+
+      - name: Check tracked text whitespace
+        shell: pwsh
+        run: |
+          $bad = @()
+          $files = git ls-files |
+            Where-Object { $_ -match "\.(md|ps1|toml|json|ya?ml|txt)$" }
+          foreach ($file in $files) {
+            $lineNumber = 0
+            foreach ($line in Get-Content -LiteralPath $file) {
+              $lineNumber += 1
+              if ($line -match "[ \t]$") {
+                $bad += "${file}:$lineNumber"
+              }
+            }
+          }
+          if ($bad.Count -gt 0) {
+            $bad | ForEach-Object { Write-Host "trailing whitespace: $_" }
+            exit 1
+          }
+
+      - name: Check local-only filenames
+        shell: pwsh
+        run: |
+          $blocked = @(
+            "auth.json",
+            "history.jsonl",
+            "session_index.jsonl",
+            "installation_id",
+            "cap_sid"
+          )
+          $matches = Get-ChildItem -Recurse -Force -File |
+            Where-Object { $_.FullName -notmatch "\\.git\\" -and $blocked -contains $_.Name }
+          if ($matches) {
+            $matches | ForEach-Object { Write-Host "blocked file: $($_.FullName)" }
+            exit 1
+          }

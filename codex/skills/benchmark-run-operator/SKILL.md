@@ -1,6 +1,6 @@
 ---
 name: benchmark-run-operator
-description: Operate local A/B benchmark runs for WebMCP, WebOperator, OpAgent, or similar web agents. Use for protocol-first setup, new-agent bring-up, isolated stack ownership, launch readiness, timeout tuning, long-run monitoring, pause or recovery, final artifact validation, and rebuilding final reports from canonical result artifacts.
+description: Run and monitor WebMCP or browser-agent benchmarks. Use for setup, launch gates, monitoring, recovery, and report rebuilds.
 ---
 
 # benchmark-run-operator

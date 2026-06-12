@@ -1,6 +1,6 @@
 ---
 name: webmcp-tool-authoring
-description: Design and create WebMCP tools for a site from workflow discovery through implementation and live validation. Use for new site tool surfaces, expanding benchmark site tools, choosing which difficult workflows deserve tools, and correcting tool-shape drift.
+description: Design and implement WebMCP tool surfaces. Use for workflow discovery, tool shaping, and live validation.
 ---
 
 # webmcp-tool-authoring
