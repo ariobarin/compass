@@ -4,6 +4,12 @@ Use this template for large, ambiguous, risky, or multi-step work. Keep the plan
 short enough to guide execution, not so detailed that it becomes a second
 implementation.
 
+Use it when the user explicitly asks for a goal, target state, success
+criteria, or plan, or when the work clearly needs structured planning.
+
+Draft the goal collaboratively in normal prose. Do not switch into a formal
+goal-management workflow unless the user explicitly asks for that workflow.
+
 ## Goal
 
 State the concrete end state in one or two paragraphs. Include what must be true

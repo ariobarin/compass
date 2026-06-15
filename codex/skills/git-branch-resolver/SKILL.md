@@ -1,14 +1,22 @@
 ---
 name: git-branch-resolver
-description: Audit Git branches, worktrees, remotes, and PRs. Use for branch sprawl, PR refreshes, safe cleanup, and local WIP preservation.
+description: Audit and safely resolve Git branches, worktrees, remotes, and PRs. Use for read-only audits, requested PR refreshes, preservation, and explicit cleanup.
 ---
 
 # git-branch-resolver
 
-Use this skill to turn a messy Git repository into a smaller, understandable
-set of useful branches and worktrees.
+Use this skill to audit or refresh Git branch state without losing active work.
 
-Default to audit and preservation first. Do not delete branches, remove
+Choose a mode before mutating anything:
+
+- `audit/report`: inventory branches, worktrees, remotes, and PRs; classify
+  their state; recommend next actions; do not mutate Git or PR state.
+- `refresh requested PR`: keep work on the exact branch or PR the user named,
+  refresh it against the current base, reverify, and preserve branch identity.
+- `cleanup on request`: after inventory and preservation, delete or retarget
+  clearly redundant state the user explicitly asked to clean up.
+
+Default to `audit/report` or `refresh requested PR`. Do not delete branches, remove
 worktrees, retarget PRs, or close PRs unless the user explicitly asked for
 cleanup or the evidence makes the branch intent unambiguously redundant.
 
@@ -16,7 +24,7 @@ When the user names a specific branch or PR, keep work on that exact branch.
 Do not redirect the work to a different PR or replacement branch unless the
 user asks for that outcome.
 
-The target end state:
+For explicit cleanup work, the target end state is:
 
 - remaining local branches are `main` or `master`, active PR branches, or
   clearly useful local work;
@@ -47,15 +55,21 @@ depends on repo context, GitHub access, or multi-remote fork handling.
 
 ## Inventory first
 
-Fetch and collect branch, worktree, and PR state before deciding anything:
+If the prompt or repo rules require read-only inspection, collect current local
+state first and skip fetch or prune:
 
 ```powershell
-git fetch --all --prune
 git status --short --branch
 git worktree list --porcelain
 git branch -vv --no-color
 git branch -r --no-color
 git remote -v
+```
+
+When ref refresh is allowed and the task is cleanup or PR refresh work, add:
+
+```powershell
+git fetch --all --prune
 ```
 
 If the current shell is not inside the target repo, stop and ask for the
@@ -164,7 +178,8 @@ Delete only after evidence:
 
 ## Verification gates
 
-Before reporting completion, verify current state:
+Before reporting completion, re-read current state. If remote refresh is
+allowed, include fetch or prune first:
 
 ```powershell
 git fetch --all --prune
@@ -172,6 +187,9 @@ git branch -vv --no-color
 git branch -r --no-color
 git worktree list --porcelain
 ```
+
+If the task stayed read-only, skip fetch or prune and run the remaining local
+state commands only.
 
 If a PR host is available, verify open PRs:
 
@@ -200,11 +218,14 @@ branch.
 
 Report:
 
-- deleted local branches and worktrees;
-- deleted remote branches;
-- PRs opened, rebased, retargeted, closed, or left active;
-- exact branch names and commit SHAs;
+- operating mode used;
+- requested branch or PR, if any, and whether branch identity was preserved;
+- preserved or refreshed branches, worktrees, and exact commit SHAs;
+- PRs opened, refreshed, rebased, retargeted, closed, or left active;
 - the base repo and base branch used for any PR refresh or review;
 - any branches intentionally left because they back open PRs or active external
   work;
+- deleted local branches, worktrees, or remote branches, only when cleanup was
+  requested or explicitly approved;
 - verification commands and their result.
+- next recommended action when the task stopped at audit or report mode.
