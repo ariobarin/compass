@@ -107,6 +107,70 @@ foreach ($skillFile in $skillFiles) {
 
 $manifestPath = Join-Path $repoRoot "manifests\portable-files.toml"
 $manifestText = Get-Content -Raw -LiteralPath $manifestPath
+
+function Get-ManifestList {
+    param(
+        [string]$Text,
+        [string]$Key
+    )
+
+    $match = [regex]::Match($Text, "(?ms)^$Key\s*=\s*\[(.*?)^\]")
+    if (-not $match.Success) {
+        return $null
+    }
+
+    return @(
+        [regex]::Matches($match.Groups[1].Value, '"([^"]+)"') |
+            ForEach-Object { $_.Groups[1].Value } |
+            Sort-Object -Unique
+    )
+}
+
+$codexRoot = [System.IO.Path]::GetFullPath((Join-Path $repoRoot "codex")).TrimEnd("\")
+$mappedItems = @(Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome)
+
+foreach ($entry in @(
+    [pscustomobject]@{ Key = "files"; Type = "file" },
+    [pscustomobject]@{ Key = "dirs"; Type = "dir" }
+)) {
+    $manifestValues = Get-ManifestList -Text $manifestText -Key $entry.Key
+    if ($null -eq $manifestValues) {
+        $problems.Add("missing $($entry.Key) allowlist in portable manifest")
+        continue
+    }
+
+    $mappedValues = @(
+        $mappedItems |
+            Where-Object {
+                $_.Type -eq $entry.Type -and
+                [System.IO.Path]::GetFullPath($_.RepoPath).TrimEnd("\").StartsWith(
+                    "$codexRoot\",
+                    [System.StringComparison]::OrdinalIgnoreCase
+                ) -and
+                -not [System.IO.Path]::GetFullPath($_.RepoPath).TrimEnd("\").StartsWith(
+                    "$codexRoot\skills\",
+                    [System.StringComparison]::OrdinalIgnoreCase
+                )
+            } |
+            ForEach-Object {
+                [System.IO.Path]::GetFullPath($_.RepoPath).Substring($codexRoot.Length).TrimStart("\")
+            } |
+            Sort-Object -Unique
+    )
+
+    foreach ($value in $manifestValues) {
+        if ($mappedValues -notcontains $value) {
+            $problems.Add("$($entry.Type) in manifest missing from install map: $value")
+        }
+    }
+
+    foreach ($value in $mappedValues) {
+        if ($manifestValues -notcontains $value) {
+            $problems.Add("$($entry.Type) in install map missing from manifest: $value")
+        }
+    }
+}
+
 $skillsMatch = [regex]::Match($manifestText, "(?ms)^skills\s*=\s*\[(.*?)^\]")
 if (-not $skillsMatch.Success) {
     $problems.Add("missing skills allowlist in portable manifest")
@@ -120,7 +184,7 @@ else {
 
     $skillsRoot = [System.IO.Path]::GetFullPath((Join-Path (Join-Path $repoRoot "codex") "skills")).TrimEnd("\")
     $mappedSkills = @(
-        Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome |
+        $mappedItems |
             Where-Object {
                 $_.Type -eq "dir" -and
                 [System.IO.Path]::GetFullPath($_.RepoPath).TrimEnd("\").StartsWith(

@@ -5,11 +5,13 @@ home = "%USERPROFILE%\\.codex"
 
 files = [
   "AGENTS.md",
+  "hooks.json",
   "keybindings.json",
 ]
 
 dirs = [
   "agents",
+  "hooks",
 ]
 
 skills = [
