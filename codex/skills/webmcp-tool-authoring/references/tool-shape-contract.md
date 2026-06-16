@@ -99,6 +99,9 @@ Declarative form tools require real visible forms.
 - Use spec-defined attributes only: `toolname`, `tooldescription`,
   `toolparamdescription`, and `toolautosubmit`.
 - Field parameter names come from each field's `name` attribute.
+- Large select enumerations alone are not a reason to abandon a real visible
+  form. Keep those workflows declarative unless the widget behavior cannot be
+  expressed safely with declarative annotations.
 - Hidden fake forms appended only for agents are not acceptable.
 - If the UI is a sort control, dropdown, path segment, or JS widget with no real
   form, use an imperative tool.
