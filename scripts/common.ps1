@@ -67,6 +67,7 @@ function Get-PortableFileMap {
     })
 
     foreach ($skill in @(
+        "benchmark-infra-reviewer",
         "benchmark-run-operator",
         "git-branch-resolver",
         "webmcp-eval-triage",

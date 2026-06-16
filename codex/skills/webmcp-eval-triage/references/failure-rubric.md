@@ -83,7 +83,7 @@ Use these codes in notes or review comments when helpful.
 | B12 | Hidden fake forms are not valid declarative tools. |
 | A1 | Colocate tools with page kinds when possible. |
 | A2 | The current page is the implicit first argument. |
-| A3 | Prefer declarative forms when a real form exists. |
+| A3 | Prefer declarative forms when a real visible form exists, even with large enums. |
 | A5 | Drive the page widget when UI state matters. |
 | T1 | Form to results page. |
 | T2 | List current page rows. |

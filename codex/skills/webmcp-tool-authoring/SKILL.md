@@ -36,6 +36,9 @@ change done.
    do from returned data.
 5. Pick a shape from the local decision table: declarative form, DOM read,
    list/action pair, modal, sort/filter, or navigation.
+   Prefer declarative forms when a real visible form exists, even if a select
+   field has a large enum. Large enums alone are not a reason to switch that
+   workflow to imperative.
 6. Implement with the page lifecycle in mind: page scope, abort signals, stable
    ids, one structured return value, and no hidden alias behavior.
 7. Validate by structural checks and live browser behavior.
