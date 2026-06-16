@@ -1,0 +1,7 @@
+interface:
+  display_name: "Action Items to PRs"
+  short_description: "Turn action items into scoped PRs"
+  default_prompt: "Use $action-items-to-prs to convert these action items into scoped PRs, verify the work, and use critic review when requested."
+
+policy:
+  allow_implicit_invocation: true
