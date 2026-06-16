@@ -1,0 +1,7 @@
+interface:
+  display_name: "Benchmark Infra Reviewer"
+  short_description: "Review benchmark infra diffs before PR"
+  default_prompt: "Use $benchmark-infra-reviewer to review this benchmark-management diff for cautious semantics, dated evidence, and PR readiness."
+
+policy:
+  allow_implicit_invocation: true

@@ -13,6 +13,7 @@ dirs = [
 ]
 
 skills = [
+  "benchmark-infra-reviewer",
   "benchmark-run-operator",
   "git-branch-resolver",
   "webmcp-eval-triage",
