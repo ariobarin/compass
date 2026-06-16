@@ -71,9 +71,13 @@ function Get-PortableFileMap {
         "benchmark-infra-reviewer",
         "benchmark-run-operator",
         "git-branch-resolver",
+        "grill-me",
+        "to-prd",
+        "ui-ux-pro-max",
         "webmcp-eval-triage",
         "webmcp-tool-authoring",
-        "webmcp-verify-tool"
+        "webmcp-verify-tool",
+        "write-a-skill"
     )) {
         $items.Add([pscustomobject]@{
             Type = "dir"
