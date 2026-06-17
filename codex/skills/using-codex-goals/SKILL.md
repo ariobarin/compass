@@ -25,22 +25,13 @@ stopping rules change:
 
 ## Goal Brief
 
-When drafting or clarifying a goal, shape it into this contract:
-
-```text
-/goal <objective>
-
-Done means:
-Scope:
-Do not touch:
-Evidence required:
-If waiting:
-If blocked:
-Subagents:
-```
-
-Keep each field concrete. Prefer named files, repos, PRs, commands, checks,
+When drafting or clarifying a goal, shape it as a concrete contract with a
+finish line, scope boundary, verification evidence, waiting rule, blocker rule,
+and any subagent slices. Prefer named files, repos, PRs, commands, checks,
 artifacts, and review signals over broad intent.
+
+For ready-to-copy goal and subagent templates, read
+[goal-contracts.md](references/goal-contracts.md).
 
 ## Running A Goal
 
@@ -58,36 +49,10 @@ artifacts, and review signals over broad intent.
 
 ## Subagent Handoffs
 
-For subagents, pass a narrowed slice instead of the whole parent goal:
-
-```text
-Parent goal:
-Slice:
-Allowed files or systems:
-Forbidden scope:
-Inputs to inspect:
-Expected output:
-Evidence required:
-Done condition for this slice:
-Return one status: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, or BLOCKED.
-```
-
-Use fresh subagents for independent slices. The controller keeps ownership of
-the parent goal, integrates outputs, verifies final evidence, and decides when
-the parent can be completed.
-
-## Good Completion Predicates
-
-Good predicates name the finish line and the proof:
-
-- All named PRs are open, green, reviewed, and linked in the final report.
-- Each listed repo has a current diff audit, a matching `MODIFICATIONS.md`, and
-  verification that unrelated changes were not touched.
-- The report exists at the requested path, covers each named comparison axis,
-  and has been checked for formatting or repo-specific style constraints.
-
-Avoid predicates like "make progress", "clean it up", or "look into it" unless
-the user explicitly wants exploration only.
+Pass a narrowed slice instead of the whole parent goal. Use fresh subagents for
+independent slices. The controller keeps ownership of the parent goal,
+integrates outputs, verifies final evidence, and decides when the parent can be
+completed.
 
 ## Related Skills
 
