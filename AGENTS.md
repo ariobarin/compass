@@ -3,6 +3,11 @@
 This repo is the reviewed source for portable Codex setup. It is not a raw
 backup of `~/.codex`.
 
+- `codex/AGENTS.md` is the portable source for the live global
+  `~/.codex/AGENTS.md`. Only put session-wide defaults there.
+- This repo-root `AGENTS.md` is for codex-portable maintenance guidance.
+- If a rule only makes sense while editing codex-portable, put it here or in
+  `workflows/` or `local-docs/`, not in `codex/AGENTS.md`.
 - Keep `codex/AGENTS.md` short and global.
 - Put detailed operating behavior in `workflows/`, skills, scripts, or
   manifests.

@@ -22,6 +22,8 @@ Use this checklist while verifying a changed WebMCP tool.
 ## Execution
 
 - Declarative tools use real visible forms and spec-defined attributes.
+- Real declarative forms include `toolautosubmit` unless a documented contract
+  exception exists.
 - Imperative tools drive the page's own controls when UI state matters.
 - API-backed tools are shaped around a user workflow, not raw backend exposure.
 - Navigation tools validate synchronously and handle teardown safely.
@@ -49,6 +51,8 @@ Use this checklist while verifying a changed WebMCP tool.
 
 - Tool appears on valid page and not invalid page.
 - Tool call succeeds through WebMCP runtime.
+- Declarative attributes are confirmed on the live served form element, not
+  inferred from helper comments or grep counts.
 - Returned structure is inspected.
 - DOM or route reflects the effect.
 - Mutations persist after relist, reload, or direct API check.
