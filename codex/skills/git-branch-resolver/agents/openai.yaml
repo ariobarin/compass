@@ -1,4 +1,7 @@
 interface:
   display_name: "Git Branch Resolver"
   short_description: "Audit and refresh Git branches safely"
-  default_prompt: "Use $git-branch-resolver to audit branch state, refresh a requested PR branch, and clean up only after evidence."
+  default_prompt: "Use $git-branch-resolver to audit branch state, preserve useful work, refresh a requested PR branch on the same branch, and clean up only after evidence."
+
+policy:
+  allow_implicit_invocation: true

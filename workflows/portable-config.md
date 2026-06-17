@@ -25,6 +25,17 @@ fresh profile, or copied repo checkout.
 Treat `codex/config.review.toml` as a reviewed fragment. It captures stable
 choices, but it is not a full replacement for the live generated config.
 
+## Durable Guidance Edits
+
+When the change affects future Codex behavior across sessions or machines:
+
+1. Read the current portable files first.
+2. Draft the exact patch set before editing unless direct edits were explicitly
+   requested.
+3. Prefer default locations and copy-based sync over symlink or installer
+   indirection.
+4. Run `.\scripts\doctor.ps1` after the draft becomes a real change.
+
 Do not copy these live `config.toml` sections into the portable file without
 review:
 

@@ -99,6 +99,10 @@ Declarative form tools require real visible forms.
 - Use spec-defined attributes only: `toolname`, `tooldescription`,
   `toolparamdescription`, and `toolautosubmit`.
 - Field parameter names come from each field's `name` attribute.
+- Missing `toolautosubmit` on a real declarative form is a bug unless a
+  documented contract exception exists.
+- Verify declarative attributes on the served form element, not helper comments
+  or count-based grep alone.
 - Large select enumerations alone are not a reason to abandon a real visible
   form. Keep those workflows declarative unless the widget behavior cannot be
   expressed safely with declarative annotations.
