@@ -68,6 +68,10 @@ $blockedDirs = @(
 )
 
 foreach ($dir in Get-ChildItem -Path $repoRoot -Recurse -Force -Directory -ErrorAction SilentlyContinue) {
+    if ($dir.FullName -match "\\.git(\\|$)") {
+        continue
+    }
+
     if ($blockedDirs -contains $dir.Name) {
         $problems.Add("blocked local-only directory in repo tree: $($dir.FullName)")
     }

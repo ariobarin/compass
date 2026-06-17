@@ -1,0 +1,7 @@
+interface:
+  display_name: "Using Codex Goals"
+  short_description: "Write durable Codex goal contracts"
+  default_prompt: "Use $using-codex-goals to draft or run a Codex goal with completion criteria, verification evidence, continuation rules, and bounded subagent slices."
+
+policy:
+  allow_implicit_invocation: true
