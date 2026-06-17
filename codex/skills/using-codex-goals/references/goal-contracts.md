@@ -43,6 +43,20 @@ Return one status: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, or BLOCKED.
 The controller should keep ownership of the parent goal. A subagent completes
 only its slice and returns evidence for integration.
 
+## Goal Handoff Ablation
+
+Keep these behaviors separate when testing or designing a handoff:
+
+| Question | Test | Observed behavior | Use when |
+| --- | --- | --- | --- |
+| Can `/goal` be transported? | Send `/goal ...` through thread or subagent delegation. | No. It arrives as text or delegated input. | Avoid relying on slash-command transport. |
+| Can the child own a goal? | Tell the child to call `create_goal`, then `get_goal`. | Yes, when goal tools are available in that context. | Use when the child needs persistence in its own context. |
+| Can the child work from a contract? | Send a slice with scope, evidence, done condition, and return status. | Yes. The child can report evidence without active goal state. | Use for bounded subagent slices and controller-owned parent goals. |
+
+Do not stop after proving slash-command transport fails if the actual question
+is whether the child can create and own its own goal. Test self-activation
+separately.
+
 ## Delegation Flow
 
 Use this flow when the parent goal has independent slices:

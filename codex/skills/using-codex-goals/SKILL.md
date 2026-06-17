@@ -49,6 +49,15 @@ For ready-to-copy goal and subagent templates, read
 
 ## Subagent Handoffs
 
+First identify which goal handoff question is being asked:
+
+- Transfer: can a controller send `/goal` to make another context inherit active
+  goal state? Tested behavior says no.
+- Self-activation: can the child create its own active goal with goal tools?
+  Tested behavior says yes when `create_goal` is available.
+- Contract delegation: can the child work from a goal-shaped slice without
+  active goal state? Tested behavior says yes.
+
 Do not assume active Codex goal state can be assigned to another thread or
 subagent. Goal tools operate on the current thread, and delegated messages may
 deliver `/goal` as text rather than as a slash command. Pass a narrowed
