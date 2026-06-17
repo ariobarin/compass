@@ -25,10 +25,11 @@ stopping rules change:
 
 ## Activation Rule
 
-When the user invokes this skill for real work, default to creating or
-continuing a goal in the current context. Skip goal creation only when the user
-is reviewing this skill, drafting a reusable template, explicitly says not to
-create a goal, or is asking a narrow question that should not persist.
+When the user invokes this skill for real work and goal tools are available,
+default to creating or continuing a goal in the current context. Skip goal
+creation when goal tools are unavailable, the user is reviewing this skill,
+drafting a reusable template, explicitly says not to create a goal, or is asking
+a narrow question that should not persist.
 
 ## Goal Brief
 
