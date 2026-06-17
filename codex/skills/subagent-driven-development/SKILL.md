@@ -121,6 +121,8 @@ Never:
 
 ## Useful Pairings
 
+- Pair with `using-codex-goals` when the user frames the work as a durable
+  `/goal` or when subagent slices need explicit completion evidence.
 - Pair with `git-branch-resolver` when branch or worktree setup is part of the
   job.
 - Pair with `action-items-to-prs` when the plan comes from a report, audit, or

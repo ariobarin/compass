@@ -9,6 +9,10 @@ Use this skill to turn a set of actionable items into reviewed PR work. Keep the
 source artifact as the anchor for scope, grouping, verification, and final
 status.
 
+When the user frames the work as a Codex `/goal`, pair this with
+`using-codex-goals` so each PR group has a completion predicate and evidence
+ledger before publishing.
+
 ## Start with the source
 
 Read local guidance before editing:

@@ -75,6 +75,7 @@ function Get-PortableFileMap {
         "subagent-driven-development",
         "to-prd",
         "ui-ux-pro-max",
+        "using-codex-goals",
         "webmcp-eval-triage",
         "webmcp-tool-authoring",
         "webmcp-verify-tool",
