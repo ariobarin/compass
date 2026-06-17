@@ -23,6 +23,13 @@ stopping rules change:
 5. Mark blocked only when the same blocker repeats across the required goal
    turns and no meaningful progress remains possible.
 
+## Activation Rule
+
+When the user invokes this skill for real work, default to creating or
+continuing a goal in the current context. Skip goal creation only when the user
+is reviewing this skill, drafting a reusable template, explicitly says not to
+create a goal, or is asking a narrow question that should not persist.
+
 ## Goal Brief
 
 When drafting or clarifying a goal, shape it as a concrete contract with a
