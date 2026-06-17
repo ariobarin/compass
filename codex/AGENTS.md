@@ -17,11 +17,6 @@
 ## Workflow
 - Read frontend code to find the API call a click produces and reproduce it directly.
 - For debugging, prefer headful Chrome using the plugin.
-- For edits to durable Codex guidance, skills, workflows, or reviewed config,
-  read the current files first and draft the exact patch before changing files
-  unless direct edits were explicitly requested.
-- Prefer default Codex locations and copy-based sync over symlink or installer
-  indirection.
 
 ## Windows host
 - Any `.sh` script that serves as a container entrypoint must be written with LF-only line endings. CRLF causes the container to exit immediately with a misleading "No such file or directory" on the entrypoint because the kernel tries to exec `/bin/sh\r`. If a container exits on start with that error, check line endings before assuming a missing file or wrong path.

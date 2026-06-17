@@ -19,6 +19,11 @@ config a deliberate copy step with a diff.
 
 - Keep `codex/AGENTS.md` short. It should hold personal defaults that genuinely
   apply everywhere.
+- Treat `codex/AGENTS.md` as the portable copy of the live global
+  `~/.codex/AGENTS.md`, not as repo-local maintenance notes.
+- If a rule only makes sense while editing `codex-portable`, it belongs in the
+  repo-root `AGENTS.md`, `workflows/`, or `local-docs/`, not in
+  `codex/AGENTS.md`.
 - Put detailed guidance in `workflows/`, skill references, scripts, manifests,
   or local docs.
 - Add durable guidance only after repeated mistakes or clear workflow friction.

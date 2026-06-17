@@ -9,8 +9,10 @@ portable and should not be committed.
 
 ## Layout
 
-- `codex/AGENTS.md`: global instructions to copy into the live Codex home.
+- `codex/AGENTS.md`: portable source for the live global `~/.codex/AGENTS.md`.
+  Keep only session-wide defaults there.
 - `AGENTS.md`: repo-local maintenance guidance for this portable config repo.
+  Use this for codex-portable process and review rules.
 - `codex/keybindings.json`: portable keyboard bindings.
 - `codex/agents/`: custom agents.
 - `codex/skills/`: custom skills, excluding system and plugin cache skills.
