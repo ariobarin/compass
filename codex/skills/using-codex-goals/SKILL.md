@@ -1,6 +1,6 @@
 ---
 name: using-codex-goals
-description: Draft and run durable Codex goals with explicit completion, evidence, continuation, and subagent handoff rules.
+description: Draft and run durable Codex goal contracts. Use when starting, resuming, delegating, or reviewing `/goal` work.
 ---
 
 # Using Codex Goals
