@@ -71,13 +71,16 @@ Practical notes:
 - Use connectors when the alternative is a spaghetti edge.
 - Keep visual styling quiet: restrained colors, consistent line weights, no decorative gradients, no oversized legend.
 
-## Proposal Flowcharts
+## Source, Certainty, And Change
 
-For proposals, choose one of these patterns:
+Use the same flowcharting method for existing workflows, proposals, decisions, and hybrid artifacts. The difference is evidence posture, not diagram type.
+
+Choose one of these patterns:
 
 - Baseline and proposed diagrams side by side when the change is structural.
-- One proposed diagram with explicit delta markers when the baseline is already known.
-- Overview plus focused change diagrams when the proposal has multiple independent mechanisms.
+- One diagram with explicit delta markers when the starting state is already known.
+- Overview plus focused mechanism diagrams when the flow has multiple independent moving parts.
+- A single confirmed flow when the goal is simply to document how something works.
 
 Make sure the chart shows:
 
@@ -88,14 +91,12 @@ Make sure the chart shows:
 - what new risks, validations, waits, or fallbacks exist;
 - what final outcomes are possible.
 
-## Existing-System Flowcharts
+Quality rules:
 
-For existing systems:
-
-- Inspect source code, docs, logs, traces, screenshots, API calls, or runtime behavior before drawing.
-- Distinguish confirmed behavior from inferred behavior.
+- Inspect source code, docs, logs, traces, screenshots, API calls, runtime behavior, requirements, or proposal text before drawing.
+- Distinguish confirmed behavior from inferred or proposed behavior when the reader could otherwise mistake one for the other.
 - Do not force unrelated components into a shared template just because the diagrams need to compare them.
-- Use separate diagrams when systems have genuinely different control flow.
+- Use separate diagrams when systems or alternatives have genuinely different control flow.
 - When comparing variants, verify that variant-specific labels, notes, and branches only appear in the matching variant.
 
 ## Rendered QA Checklist

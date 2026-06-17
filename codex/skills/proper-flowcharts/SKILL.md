@@ -17,8 +17,8 @@ Create flowcharts that teach the reader how a process works, what a proposal cha
 
 2. Inventory the process before drawing.
    - Identify starts, ends, actors, responsibilities, inputs, outputs, decisions, subprocesses, data stores, documents, waits, failures, loops, parallel work, and handoffs.
-   - For existing systems, read the source, docs, traces, or UI/API behavior first. Do not draw from guesses when evidence is available.
-   - For proposals, show the current state, proposed state, or delta explicitly instead of mixing them in one ambiguous path.
+   - Ground the chart in the best available source: code, docs, traces, UI/API behavior, requirements, or the user's proposed design.
+   - Mark what is confirmed, inferred, proposed, or changed when that distinction matters to the reader.
 
 3. Choose a shape language.
    - Use standard flowchart symbols where they fit: terminal, process, decision, input/output, predefined process, connector, data store, document, manual action, preparation, and fork/join.
@@ -39,8 +39,8 @@ Create flowcharts that teach the reader how a process works, what a proposal cha
    - Prefer a diagram selector, tabs, or separate sections over showing many tiny diagrams at once.
 
 6. Make the artifact functional.
-   - If the user asks for a proposal, make the change understandable: baseline, proposed behavior, decision points, risks, and where responsibilities shift.
-   - If the user asks to visualize an existing workflow, show what actually happens and cite or reference the evidence used.
+   - Make the flow understandable: trigger, baseline or starting state, changed behavior if any, decision points, risks, responsibilities, and final outcomes.
+   - Cite or reference evidence when the chart represents a real system. State assumptions when the chart represents a proposed or inferred system.
    - If a mode, variant, or toggle changes the chart, ensure every visible note, title, legend entry, and diagram respects that selected state.
 
 7. Verify the rendered result.
