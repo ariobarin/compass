@@ -72,14 +72,16 @@ winget install Python.Python.3.12
 
 ## How to Use This Skill
 
-After this skill is selected, start from the matching workflow row:
+After this skill is selected, apply the same quality model to new, existing,
+and changed UI. The rows below only choose the best entry point based on the
+available evidence and the user's request.
 
 | Scenario | Example Requests | Start From |
 |----------|-----------------|------------|
-| **New project / page** | "Build a landing page", "Build a dashboard" | Step 1 -> Step 2 (design system) |
-| **New component** | "Create a pricing card", "Add a modal" | Step 3 (domain search: style, ux) |
+| **Page or product surface** | "Build a landing page", "Build a dashboard" | Step 1 -> Step 2 (design system) |
+| **Component or local surface** | "Create a pricing card", "Add a modal" | Step 3 (domain search: style, ux) |
 | **Choose style / color / font** | "What style fits a fintech app?", "Recommend a color palette" | Step 2 (design system) |
-| **Review existing UI** | "Review this page for UX issues", "Check accessibility" | `references/quick-reference.md` checklist |
+| **Evaluate an existing surface** | "Review this page for UX issues", "Check accessibility" | `references/quick-reference.md` checklist |
 | **Fix a UI bug** | "Button hover is broken", "Layout shifts on load" | `references/quick-reference.md` -> relevant section |
 | **Improve / optimize** | "Make this faster", "Improve mobile experience" | Step 3 (domain search: ux, react) |
 | **Implement dark mode** | "Add dark mode support" | Step 3 (domain: style "dark mode") |
