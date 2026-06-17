@@ -40,12 +40,23 @@ Do not use this skill when:
 7. Commit, push, or open PRs only when the user asked for publishing or the
    repo workflow clearly requires it.
 
+## Prompt Templates
+
+Use the bundled prompt templates instead of hand-rolling dispatch text:
+
+- [implementer-prompt.md](implementer-prompt.md): implementer task handoff.
+- [spec-reviewer-prompt.md](spec-reviewer-prompt.md): spec compliance review.
+- [code-quality-reviewer-prompt.md](code-quality-reviewer-prompt.md): code
+  quality review after spec compliance passes.
+
 ## Task Dispatch Pattern
 
 For each task:
 
-1. Give the implementer the full task text, repo path, scope boundaries, nearby
-   files, validation target, and known pitfalls.
+1. Dispatch the implementer with
+   [implementer-prompt.md](implementer-prompt.md), plus the full task text,
+   repo path, scope boundaries, nearby files, validation target, and known
+   pitfalls.
 2. Require questions before coding when requirements or context are unclear.
 3. Require one concrete status on return:
    - `DONE`
@@ -72,9 +83,16 @@ Do not ignore a blocked signal and simply ask for the same work again.
 Spec compliance review answers one question: did the implementation match the
 requested task, with nothing missing and nothing extra?
 
+Use [spec-reviewer-prompt.md](spec-reviewer-prompt.md) for that review so the
+same standard is applied each time.
+
 Code quality review happens only after spec compliance passes. It should focus
 on correctness risks, tests, maintainability, file growth, and fit with local
 patterns.
+
+Use [code-quality-reviewer-prompt.md](code-quality-reviewer-prompt.md) for the
+quality pass so the reviewer sees the requested task, diff context, and review
+focus explicitly.
 
 If either review finds issues:
 
