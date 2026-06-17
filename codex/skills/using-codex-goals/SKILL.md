@@ -58,6 +58,11 @@ Use fresh subagents for independent slices. The controller keeps ownership of
 the parent goal, integrates outputs, verifies final evidence, and decides when
 the parent can be completed.
 
+If a child thread or subagent needs its own active goal, explicitly instruct it
+to call `create_goal` for its slice, then use `get_goal` to confirm the local
+goal state. Do not rely on sending `/goal` through delegation to activate that
+state.
+
 Before dispatching a subagent, write the slice as a mini goal with its own done
 condition and evidence requirement. Tell the subagent not to mark or claim the
 parent goal complete. The subagent should return status and evidence; the

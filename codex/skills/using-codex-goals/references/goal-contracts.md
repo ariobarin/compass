@@ -24,7 +24,8 @@ concrete enough that another agent could verify it later without guessing.
 
 Use this as a contract, not as an attempt to transfer active Codex goal state.
 In observed Codex behavior, delegated messages to other threads and spawned
-subagents did not interpret `/goal` as a slash command.
+subagents did not interpret `/goal` as a slash command. If the child needs
+active goal state, tell it to call `create_goal` for its own slice.
 
 ```text
 Parent goal:
@@ -60,10 +61,26 @@ The controller should not outsource final parent completion. A subagent can say
 its slice is done, but only the controller can verify that every slice and
 cross-slice requirement satisfies the parent goal.
 
-If a separate thread truly needs its own active goal, the receiving thread
-should create or receive that goal through its own native user interaction. A
-controller-sent delegation should still include the slice contract so the work
+If a separate thread or subagent truly needs its own active goal, include an
+explicit instruction like this:
+
+```text
+If goal tools are available, call create_goal with objective: <slice objective>.
+Then call get_goal and confirm the active objective before working. When the
+slice is complete, call update_goal with status complete.
+```
+
+A controller-sent delegation should still include the slice contract so the work
 is useful even when no active goal state exists in the child context.
+
+## Observed Patterns
+
+- Sending `/goal ...` through delegation: child receives text, not active goal
+  state.
+- Sending a slice contract without active goal state: child can execute the
+  bounded work and return status with evidence.
+- Explicitly telling the child to call `create_goal`: child can create and later
+  complete its own local active goal when goal tools are available.
 
 ## Completion Predicate Examples
 
