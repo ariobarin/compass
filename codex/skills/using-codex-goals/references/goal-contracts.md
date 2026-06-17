@@ -22,6 +22,10 @@ concrete enough that another agent could verify it later without guessing.
 
 ## Subagent Slice Template
 
+Use this as a contract, not as an attempt to transfer active Codex goal state.
+In observed Codex behavior, delegated messages to other threads and spawned
+subagents did not interpret `/goal` as a slash command.
+
 ```text
 Parent goal:
 Slice:
@@ -55,6 +59,11 @@ Use this flow when the parent goal has independent slices:
 The controller should not outsource final parent completion. A subagent can say
 its slice is done, but only the controller can verify that every slice and
 cross-slice requirement satisfies the parent goal.
+
+If a separate thread truly needs its own active goal, the receiving thread
+should create or receive that goal through its own native user interaction. A
+controller-sent delegation should still include the slice contract so the work
+is useful even when no active goal state exists in the child context.
 
 ## Completion Predicate Examples
 

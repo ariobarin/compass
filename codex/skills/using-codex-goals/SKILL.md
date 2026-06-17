@@ -49,10 +49,14 @@ For ready-to-copy goal and subagent templates, read
 
 ## Subagent Handoffs
 
-Pass a narrowed slice instead of the whole parent goal. Use fresh subagents for
-independent slices. The controller keeps ownership of the parent goal,
-integrates outputs, verifies final evidence, and decides when the parent can be
-completed.
+Do not assume active Codex goal state can be assigned to another thread or
+subagent. Goal tools operate on the current thread, and delegated messages may
+deliver `/goal` as text rather than as a slash command. Pass a narrowed
+goal-shaped contract instead of the whole parent goal.
+
+Use fresh subagents for independent slices. The controller keeps ownership of
+the parent goal, integrates outputs, verifies final evidence, and decides when
+the parent can be completed.
 
 Before dispatching a subagent, write the slice as a mini goal with its own done
 condition and evidence requirement. Tell the subagent not to mark or claim the
