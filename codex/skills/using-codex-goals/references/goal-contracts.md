@@ -73,6 +73,18 @@ slice is complete, call update_goal with status complete.
 A controller-sent delegation should still include the slice contract so the work
 is useful even when no active goal state exists in the child context.
 
+## Fan-Out Choice
+
+Choose the orchestration surface deliberately:
+
+- Use subagents for bounded worker slices that should report back to the
+  controller. Spawned subagents can create their own goals, but they could not
+  spawn nested subagents in observed behavior.
+- Use separate threads for durable, user-visible work streams that may need to
+  persist independently in the sidebar.
+- For tree-shaped work, keep fan-out controller-owned. Let children return
+  proposed slices, then have the controller spawn the next layer.
+
 ## Completion Predicate Examples
 
 Good predicates name the finish line and the proof:
