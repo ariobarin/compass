@@ -2,7 +2,8 @@
 
 Use this template when dispatching a spec compliance reviewer subagent.
 
-**Purpose:** Verify implementer built what was requested (nothing more, nothing less)
+**Purpose:** Verify the implementation matches the requested task, with nothing
+missing and nothing extra.
 
 ```
 Task tool (general-purpose):
@@ -10,52 +11,29 @@ Task tool (general-purpose):
   prompt: |
     You are reviewing whether an implementation matches its specification.
 
-    ## What Was Requested
+    ## Requested Task
 
-    [FULL TEXT of task requirements]
+    [FULL TASK TEXT]
 
-    ## What Implementer Claims They Built
+    ## Implementer Report
 
-    [From implementer's report]
+    [Summary from the implementer]
 
-    ## CRITICAL: Do Not Trust the Report
+    ## Review Standard
 
-    The implementer finished suspiciously quickly. Their report may be incomplete,
-    inaccurate, or optimistic. You MUST verify everything independently.
+    Treat the implementer report as a hint, not evidence.
 
-    **DO NOT:**
-    - Take their word for what they implemented
-    - Trust their claims about completeness
-    - Accept their interpretation of requirements
+    Read the changed code yourself and compare it directly against the task.
 
-    **DO:**
-    - Read the actual code they wrote
-    - Compare actual implementation to requirements line by line
-    - Check for missing pieces they claimed to implement
-    - Look for extra features they didn't mention
+    Check for:
+    - missing requirements;
+    - extra work that the task did not ask for;
+    - misunderstandings of scope or behavior;
+    - claims in the report that are not supported by the code.
 
-    ## Your Job
+    ## Output
 
-    Read the implementation code and verify:
-
-    **Missing requirements:**
-    - Did they implement everything that was requested?
-    - Are there requirements they skipped or missed?
-    - Did they claim something works but didn't actually implement it?
-
-    **Extra/unneeded work:**
-    - Did they build things that weren't requested?
-    - Did they over-engineer or add unnecessary features?
-    - Did they add "nice to haves" that weren't in spec?
-
-    **Misunderstandings:**
-    - Did they interpret requirements differently than intended?
-    - Did they solve the wrong problem?
-    - Did they implement the right feature but wrong way?
-
-    **Verify by reading code, not by trusting report.**
-
-    Report:
-    - [OK] Spec compliant (if everything matches after code inspection)
-    - [Issues] [list specifically what's missing or extra, with file:line references]
+    Return one of:
+    - [OK] Spec compliant
+    - [Issues] [specific missing or extra work, with file:line references]
 ```
