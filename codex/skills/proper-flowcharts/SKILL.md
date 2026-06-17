@@ -1,24 +1,24 @@
 ---
 name: proper-flowcharts
-description: Create readable standard flowcharts for workflows, proposals, decisions, systems, and Mermaid diagrams. Use for flowcharts, process maps, or diagram cleanup.
+description: Create readable standard flowcharts for workflows, decisions, systems, process changes, and Mermaid diagrams. Use for flowcharts, process maps, or cleanup.
 ---
 
 # Proper Flowcharts
 
 ## Overview
 
-Create flowcharts that teach the reader how a process works, what a proposal changes, or where decisions and handoffs occur. Optimize for semantic clarity, readability, and useful decomposition before visual decoration.
+Create flowcharts that teach the reader how a process works, changes, or transfers decisions and handoffs. Optimize for semantic clarity, readability, and useful decomposition before visual decoration.
 
 ## Workflow
 
 1. Define the reader and job.
-   - Decide whether the chart is for orientation, review, implementation, debugging, proposal comparison, or documentation.
+   - Decide whether the chart is for orientation, review, implementation, debugging, change comparison, or documentation.
    - Pick the level of detail that reader needs. Do not put every edge case in the overview.
 
 2. Inventory the process before drawing.
    - Identify starts, ends, actors, responsibilities, inputs, outputs, decisions, subprocesses, data stores, documents, waits, failures, loops, parallel work, and handoffs.
-   - Ground the chart in the best available source: code, docs, traces, UI/API behavior, requirements, or the user's proposed design.
-   - Mark what is confirmed, inferred, proposed, or changed when that distinction matters to the reader.
+   - Ground the chart in the best available source: code, docs, traces, UI/API behavior, requirements, design notes, or the user's intended behavior.
+   - Mark what is confirmed, inferred, intended, or changed when that distinction matters to the reader.
 
 3. Choose a shape language.
    - Use standard flowchart symbols where they fit: terminal, process, decision, input/output, predefined process, connector, data store, document, manual action, preparation, and fork/join.
@@ -40,7 +40,7 @@ Create flowcharts that teach the reader how a process works, what a proposal cha
 
 6. Make the artifact functional.
    - Make the flow understandable: trigger, baseline or starting state, changed behavior if any, decision points, risks, responsibilities, and final outcomes.
-   - Cite or reference evidence when the chart represents a real system. State assumptions when the chart represents a proposed or inferred system.
+   - Cite or reference evidence when the chart represents a real system. State assumptions when the chart includes intended or inferred behavior.
    - If a mode, variant, or toggle changes the chart, ensure every visible note, title, legend entry, and diagram respects that selected state.
 
 7. Verify the rendered result.

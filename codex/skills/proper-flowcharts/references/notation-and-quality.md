@@ -73,11 +73,11 @@ Practical notes:
 
 ## Source, Certainty, And Change
 
-Use the same flowcharting method for existing workflows, proposals, decisions, and hybrid artifacts. The difference is evidence posture, not diagram type.
+Use the same flowcharting method for confirmed, inferred, intended, changed, and hybrid flows. The difference is evidence posture, not diagram type.
 
 Choose one of these patterns:
 
-- Baseline and proposed diagrams side by side when the change is structural.
+- Before and after diagrams side by side when the change is structural.
 - One diagram with explicit delta markers when the starting state is already known.
 - Overview plus focused mechanism diagrams when the flow has multiple independent moving parts.
 - A single confirmed flow when the goal is simply to document how something works.
@@ -88,13 +88,13 @@ Make sure the chart shows:
 - what changes state;
 - which actor or system owns each step;
 - where decisions are made;
-- what new risks, validations, waits, or fallbacks exist;
+- what added risks, validations, waits, or fallbacks exist;
 - what final outcomes are possible.
 
 Quality rules:
 
-- Inspect source code, docs, logs, traces, screenshots, API calls, runtime behavior, requirements, or proposal text before drawing.
-- Distinguish confirmed behavior from inferred or proposed behavior when the reader could otherwise mistake one for the other.
+- Inspect source code, docs, logs, traces, screenshots, API calls, runtime behavior, requirements, design notes, or intended behavior before drawing.
+- Distinguish confirmed behavior from inferred or intended behavior when the reader could otherwise mistake one for the other.
 - Do not force unrelated components into a shared template just because the diagrams need to compare them.
 - Use separate diagrams when systems or alternatives have genuinely different control flow.
 - When comparing variants, verify that variant-specific labels, notes, and branches only appear in the matching variant.
