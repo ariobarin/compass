@@ -31,11 +31,30 @@ Inputs to inspect:
 Expected output:
 Evidence required:
 Done condition for this slice:
+Do not:
 Return one status: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, or BLOCKED.
 ```
 
 The controller should keep ownership of the parent goal. A subagent completes
 only its slice and returns evidence for integration.
+
+## Delegation Flow
+
+Use this flow when the parent goal has independent slices:
+
+1. Controller derives slices from the parent completion predicate.
+2. Controller gives each subagent one slice, allowed scope, forbidden scope, and
+   evidence requirements.
+3. Subagent inspects only the inputs needed for its slice.
+4. Subagent returns status, changed files or findings, checks run, evidence, and
+   unresolved risks.
+5. Controller reviews the evidence against the slice done condition.
+6. Controller integrates results across slices and decides whether the parent
+   goal is complete, needs more work, or is still waiting.
+
+The controller should not outsource final parent completion. A subagent can say
+its slice is done, but only the controller can verify that every slice and
+cross-slice requirement satisfies the parent goal.
 
 ## Completion Predicate Examples
 

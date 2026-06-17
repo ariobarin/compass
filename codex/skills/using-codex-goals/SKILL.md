@@ -54,6 +54,12 @@ independent slices. The controller keeps ownership of the parent goal,
 integrates outputs, verifies final evidence, and decides when the parent can be
 completed.
 
+Before dispatching a subagent, write the slice as a mini goal with its own done
+condition and evidence requirement. Tell the subagent not to mark or claim the
+parent goal complete. The subagent should return status and evidence; the
+controller should decide whether to continue, re-dispatch, review, or complete
+the parent goal.
+
 ## Related Skills
 
 - Use `subagent-driven-development` when a goal already has independent
