@@ -58,6 +58,8 @@ review:
 
 ## Related Workflows
 
+- [addition-intake.md](addition-intake.md): promoting new portable artifacts and
+  checking related stale guidance.
 - [plan-template.md](plan-template.md): planning large or risky work.
 - [read-only-research.md](read-only-research.md): mapping code paths before
   edits.

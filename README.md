@@ -19,6 +19,7 @@ portable and should not be committed.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
 - `workflows/`: durable operating notes for recurring work.
+  Use `workflows/addition-intake.md` before promoting new portable artifacts.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
   live Codex home.
 - `manifests/portable-files.toml`: the allowlist and local-only denylist.
@@ -73,3 +74,5 @@ what they would change.
 - Keep machine-specific values in ignored local files or in live config only.
 - Keep skill descriptions concise. Put detailed instructions in `SKILL.md` and
   references.
+- Promote additions through a PR after checking nearby docs, manifests, and
+  install maps for stale guidance.

@@ -34,6 +34,9 @@ config a deliberate copy step with a diff.
 
 ## Change Routing
 
+Use `workflows/addition-intake.md` when promoting a new durable artifact into the
+portable repo.
+
 - A repeated human process belongs in `workflows/`.
 - A task-specific agent capability belongs in `codex/skills/`.
 - A mechanical or reproducible check belongs in `scripts/`.

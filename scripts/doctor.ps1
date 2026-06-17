@@ -26,6 +26,7 @@ foreach ($path in @(
     "manifests\tool-surfaces.md",
     "local-docs\README.md",
     "local-docs\maintenance-learnings.md",
+    "workflows\addition-intake.md",
     "workflows\plan-template.md",
     "workflows\read-only-research.md",
     "workflows\agent-failures.md",
@@ -102,6 +103,14 @@ foreach ($skillFile in $skillFiles) {
     $descriptionText = $description.Matches[0].Groups[1].Value.Trim()
     if ($descriptionText.Length -gt $maxDescriptionLength) {
         $problems.Add("skill description over $maxDescriptionLength chars: $($skillFile.FullName)")
+    }
+}
+
+$agentFiles = Get-ChildItem -Path (Join-Path $repoRoot "codex\agents") -File -Filter "*.toml" -ErrorAction SilentlyContinue
+foreach ($agentFile in $agentFiles) {
+    $agentText = Get-Content -Raw -LiteralPath $agentFile.FullName
+    if ($agentText -match "(?i)read-only" -and $agentText -notmatch '(?m)^sandbox_mode\s*=\s*"read-only"') {
+        $problems.Add("read-only agent missing sandbox_mode: $($agentFile.FullName)")
     }
 }
 
