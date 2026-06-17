@@ -72,6 +72,7 @@ function Get-PortableFileMap {
         "benchmark-run-operator",
         "git-branch-resolver",
         "grill-me",
+        "subagent-driven-development",
         "to-prd",
         "ui-ux-pro-max",
         "webmcp-eval-triage",
