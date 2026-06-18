@@ -30,6 +30,34 @@ Use this reference when creating, revising, or reviewing flowcharts. The shape m
 - If the renderer cannot draw a desired standard shape, use the closest supported shape and name the semantic role in the label or legend.
 - Avoid inventing decorative shapes. If the distinction does not help the reader, use a normal process rectangle.
 
+## Flowchart Grammar
+
+- Use one node for one thing: one operation, one call boundary, one decision, one stored artifact, or one visible state.
+- Put conditional logic in diamonds. If a label says the process chooses one path or another, split it into a decision node with labeled edges.
+- Split operational `and` labels into separate nodes when they describe multiple actions. Keep compound nouns only when they name one artifact or concept.
+- Use call-boundary nodes for external or model calls. The call node should name the call. Parse or interpret the result in the following decision node.
+- Keep append and feedback steps precise. Browser observations, tool results, inspected schemas, metadata records, and summary artifacts are different state updates.
+- Show causal visibility. If a result is appended before the next model, service, or human decision, make that feedback edge explicit.
+- Do not let a low-detail index or catalog jump directly to concrete execution when the real process requires inspection, lookup, schema retrieval, authorization, or another detail step first.
+
+Generic call-boundary pattern:
+
+```mermaid
+flowchart TD
+  context[Prepare context]
+  call[/Call decision-maker/]
+  choice{Parsed output}
+  tool[Use selected tool]
+  browser[Run browser action]
+  answer[Return answer]
+  append[Append result to state]
+
+  context --> call --> choice
+  choice -- tool request --> tool --> append
+  choice -- browser action --> browser --> append
+  choice -- final answer --> answer
+```
+
 ## Mermaid Guidance
 
 Prefer Mermaid for Markdown or source-controlled diagrams when the target renderer supports it.
@@ -70,6 +98,21 @@ Practical notes:
 - Use swimlanes when responsibility matters more than sequence alone.
 - Use connectors when the alternative is a spaghetti edge.
 - Keep visual styling quiet: restrained colors, consistent line weights, no decorative gradients, no oversized legend.
+- Do not shrink a large flow until it becomes a thin strip. Split it into focused diagrams or change orientation.
+- Prefer one selected diagram at a time for dense technical briefings. Use tabs, a selector, or sections instead of stacked miniatures.
+- Make the default selected view match the reader's main job. For runtime comparison, open on runtime behavior, not training, setup, or background architecture.
+- Keep explanatory page text sparse. Use diagrams, concise labels, compact legends, and optional source notes.
+
+## Modes, Variants, And Controls
+
+When an artifact has toggles, filters, modes, or variants:
+
+- The control should select the rendered visualization. Do not draw all modes inside one graph unless the graph is explicitly a comparison view.
+- Every visible title, chip, legend item, note, and diagram body must match the selected state.
+- If a mode does not apply to an item, disable the control, normalize to the effective mode, or explain the non-applicability. Do not invent a fake path.
+- Preserve comparison context. Toggling should keep the selected diagram, scroll position, and comparable view whenever the selected diagram still exists.
+- If a selected diagram is unavailable in a temporary mode, fall back cleanly and restore it when the mode becomes available again.
+- A superficial label swap is not a meaningful mode difference. Verify that the flow changes in the correct way or remove the implied distinction.
 
 ## Source, Certainty, And Change
 
@@ -98,6 +141,20 @@ Quality rules:
 - Do not force unrelated components into a shared template just because the diagrams need to compare them.
 - Use separate diagrams when systems or alternatives have genuinely different control flow.
 - When comparing variants, verify that variant-specific labels, notes, and branches only appear in the matching variant.
+- Treat examples and screenshots as evidence of a pattern to inspect. Fix the pattern across the artifact when it recurs.
+
+## Annotations
+
+Use annotations only when they reduce hidden inference:
+
+- prompt or context visibility;
+- appended-state visibility;
+- fallback behavior;
+- controller or responsibility routing;
+- artifact evidence semantics;
+- mode-specific capability constraints.
+
+Keep annotations short and visually secondary. Do not use annotations to repeat obvious node labels or compensate for a missing flow step.
 
 ## Rendered QA Checklist
 
@@ -113,3 +170,20 @@ Before delivery, verify the actual rendered artifact:
 - Mermaid or diagram tooling reports no parse or render errors.
 - Supporting diagrams add clarity instead of repeating the same overview.
 - The chart teaches the workflow faster than prose alone.
+
+For interactive artifacts, also verify:
+
+- every reachable mode, variant, and diagram tab renders;
+- toggles update the diagram body, not only a chip or label;
+- controls preserve the reader's selected diagram and scroll position where possible;
+- non-applicable controls are disabled, normalized, or clearly explained;
+- no stale mode-specific content appears in another mode.
+
+For semantic validation, check:
+
+- expected required steps are present;
+- impossible paths are absent;
+- low-detail discovery paths include required inspection or detail retrieval before concrete execution;
+- call outputs flow to decisions, then to separate branch actions;
+- append steps record the right kind of state;
+- critic or reviewer findings are consolidated by source evidence and independently repeated failures.
