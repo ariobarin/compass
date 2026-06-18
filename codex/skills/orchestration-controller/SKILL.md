@@ -41,7 +41,7 @@ Use this table before accepting a worker report.
 | `DONE_WITH_CONCERNS` | Convert each concern into fix, PR, review, bounded rerun, explicit defer, or accepted risk. Do not close from concerns alone. |
 | `BLOCKED` | Assume solvable. Ask what exact repro, patch, branch, PR, review path, config change, precedent search, or owner handoff would move it. |
 | `NEEDS_CONTEXT` | Search docs, repo history, prior handoffs, issues, PRs, and thread logs before asking the user. |
-| `WAITING_ON_REVIEW` | Use available review paths. Try `@codex` when it is a remote repo convention, a fresh local `neutral-critic` subagent when available, CI, local tests, or a focused review thread. |
+| `WAITING_ON_REVIEW` | Use available review paths. Request `@codex` when it is a remote repo convention, and spawn a fresh local `neutral-critic` subagent when available before treating review wait as exhausted. |
 | `NO RESULTS` | Keep the run objective live. Route to the next executable launch, smoke, patch, or accepted-deferral decision. |
 
 ## Blocker Discipline
@@ -97,10 +97,12 @@ acceptance of an incomplete endpoint.
 
 When a PR or patch needs review, do not stop after one silent path.
 
-Use the best available combination:
+Use the best available combination, with the fresh local critic as a required
+step when that agent is available:
 
 - request `@codex` review when that is the repo convention;
-- spawn a fresh local `neutral-critic` subagent when available, instead of
+- spawn a fresh local `neutral-critic` subagent before treating review wait as
+  exhausted, instead of
   reusing one that has already seen prior findings or parent framing;
 - run local checks and CI;
 - spawn or message a focused reviewer with exact files, diff, and acceptance
