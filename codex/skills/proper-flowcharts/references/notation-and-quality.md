@@ -45,17 +45,18 @@ Generic call-boundary pattern:
 ```mermaid
 flowchart TD
   context[Prepare context]
-  call[/Call decision-maker/]
+  decisionCall[/Call decision-maker/]
   choice{Parsed output}
   tool[Use selected tool]
   browser[Run browser action]
   answer[Return answer]
   append[Append result to state]
 
-  context --> call --> choice
+  context --> decisionCall --> choice
   choice -- tool request --> tool --> append
   choice -- browser action --> browser --> append
   choice -- final answer --> answer
+  append --> context
 ```
 
 ## Mermaid Guidance
@@ -155,6 +156,7 @@ Use annotations only when they reduce hidden inference:
 - mode-specific capability constraints.
 
 Keep annotations short and visually secondary. Do not use annotations to repeat obvious node labels or compensate for a missing flow step.
+Use visual proximity or dotted, non-directional connectors for annotations. Do not connect notes with normal directed flow arrows, because that makes them look like executable steps.
 
 ## Rendered QA Checklist
 
