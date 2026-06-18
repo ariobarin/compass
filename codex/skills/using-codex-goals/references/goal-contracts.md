@@ -1,7 +1,22 @@
 # Goal Contracts
 
-Load this reference when a task needs copyable `/goal` prompts, subagent
-handoffs, or examples of good completion predicates.
+Load this reference when a task needs copyable `/goal` prompts, controller
+handoffs, monitor goals, child-goal activation language, or examples of good
+completion predicates.
+
+## Contents
+
+- Goal Brief Template
+- Observed Delegation Behavior
+- Controller Goal Template
+- Worker Goal Template
+- Monitor Goal Template
+- Subagent Slice Template
+- Child Goal Activation Snippet
+- Delegation Flow
+- Fan-Out Rules
+- Completion Predicate Examples
+- Waiting Rule Examples
 
 ## Goal Brief Template
 
@@ -19,6 +34,80 @@ Subagents:
 
 Use this form to turn broad intent into a durable contract. Keep every field
 concrete enough that another agent could verify it later without guessing.
+
+## Observed Delegation Behavior
+
+As observed in Codex on June 17-18, 2026:
+
+- delegated `/goal` text to another thread or spawned subagent was treated as
+  plain text;
+- a child that needed active goal state had to call `create_goal` for itself;
+- the parent controller kept completion authority for the parent goal;
+- spawned subagents could create goals, but nested subagent spawning was not
+  available in the observed sessions.
+
+Treat these as observed behavior, not permanent platform guarantees.
+
+## Controller Goal Template
+
+Use this when the parent thread owns orchestration, verification, or routing.
+
+```text
+/goal <parent objective>
+
+Done means:
+Scope:
+Do not touch:
+Evidence required:
+If waiting:
+If blocked:
+Subagents:
+```
+
+Good controller scopes often include:
+
+- keep parent completion authority;
+- verify child evidence before accepting status claims;
+- route blockers into concrete next actions;
+- keep live docs or handoffs current only when they reflect real state.
+
+## Worker Goal Template
+
+Use this when a child thread or subagent owns one executable slice.
+
+```text
+/goal <slice objective>
+
+Done means:
+Scope:
+Do not touch:
+Evidence required:
+If waiting:
+If blocked:
+Subagents:
+```
+
+Good worker scopes keep one owner, one slice, one done condition, and one
+evidence set.
+
+## Monitor Goal Template
+
+Use this when the job is oversight, not implementation.
+
+```text
+/goal Monitor <target thread, run, or PR> until <time or completion condition>.
+
+Done means:
+Scope:
+Do not touch:
+Evidence required:
+If waiting:
+If blocked:
+Subagents:
+```
+
+Good monitor scopes say when to intervene, what drift counts as off-task, and
+what cadence to use between checks.
 
 ## Subagent Slice Template
 
@@ -43,37 +132,42 @@ Return one status: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, or BLOCKED.
 The controller should keep ownership of the parent goal. A subagent completes
 only its slice and returns evidence for integration.
 
-## Delegation Flow
-
-Use this flow when the parent goal has independent slices:
-
-1. Controller derives slices from the parent completion predicate.
-2. Controller gives each subagent one slice, allowed scope, forbidden scope, and
-   evidence requirements.
-3. Subagent inspects only the inputs needed for its slice.
-4. Subagent returns status, changed files or findings, checks run, evidence, and
-   unresolved risks.
-5. Controller reviews the evidence against the slice done condition.
-6. Controller integrates results across slices and decides whether the parent
-   goal is complete, needs more work, or is still waiting.
-
-The controller should not outsource final parent completion. A subagent can say
-its slice is done, but only the controller can verify that every slice and
-cross-slice requirement satisfies the parent goal.
+## Child Goal Activation Snippet
 
 If a separate thread or subagent truly needs its own active goal, include an
-explicit instruction like this:
+explicit instruction like this instead of sending raw `/goal` text:
 
 ```text
-If goal tools are available, call create_goal with objective: <slice objective>.
-Then call get_goal and confirm the active objective before working. When the
-slice is complete, call update_goal with status complete.
+First action: if goal tools are available, call create_goal with this objective:
+<slice objective>.
+Then call get_goal and confirm the active objective before working.
+Do not treat this prompt as a slash command.
+When the slice is complete, call update_goal with status complete.
 ```
 
 A controller-sent delegation should still include the slice contract so the work
 is useful even when no active goal state exists in the child context.
 
-## Fan-Out Choice
+## Delegation Flow
+
+Use this flow when the parent goal has independent slices:
+
+1. Controller derives slices from the parent completion predicate.
+2. Controller gives each child one slice, allowed scope, forbidden scope, and
+   evidence requirements.
+3. Child applies its own goal if goal tools are available.
+4. Child inspects only the inputs needed for its slice.
+5. Child returns status, changed files or findings, checks run, evidence, and
+   unresolved risks.
+6. Controller reviews the evidence against the slice done condition.
+7. Controller integrates results across slices and decides whether the parent
+   goal is complete, needs more work, or is still waiting.
+
+The controller should not outsource final parent completion. A child can say its
+slice is done, but only the controller can verify that every slice and
+cross-slice requirement satisfies the parent goal.
+
+## Fan-Out Rules
 
 Choose the orchestration surface deliberately:
 
@@ -84,6 +178,8 @@ Choose the orchestration surface deliberately:
   persist independently in the sidebar.
 - For tree-shaped work, keep fan-out controller-owned. Let children return
   proposed slices, then have the controller spawn the next layer.
+- Use monitor goals for oversight threads that should check for drift, false
+  blockers, or false completion without absorbing implementation ownership.
 
 ## Completion Predicate Examples
 

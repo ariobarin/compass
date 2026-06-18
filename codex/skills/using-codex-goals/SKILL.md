@@ -8,6 +8,19 @@ description: Draft and run durable Codex goal contracts. Use when starting, resu
 Use this skill when the user starts, refines, delegates, resumes, or reviews a
 Codex `/goal`. Treat a goal as a durable work contract, not a prompt prefix.
 
+## Observed Codex Behavior
+
+As observed in Codex on June 17-18, 2026:
+
+- delegated `/goal` text sent to another thread or subagent is plain text;
+- a child that needs active goal state must call `create_goal` for itself;
+- parent completion stays with the controller, even when a child completes its
+  slice;
+- spawned subagents could create their own goals, but nested subagent spawning
+  was unavailable in the observed sessions.
+
+Treat these as observed product behavior, not as permanent platform guarantees.
+
 ## Mental Model
 
 Codex goals persist a thread-bound objective and inject continuation behavior on
@@ -30,7 +43,7 @@ finish line, scope boundary, verification evidence, waiting rule, blocker rule,
 and any subagent slices. Prefer named files, repos, PRs, commands, checks,
 artifacts, and review signals over broad intent.
 
-For ready-to-copy goal and subagent templates, read
+For ready-to-copy controller, worker, monitor, and subagent templates, read
 [goal-contracts.md](references/goal-contracts.md).
 
 ## Running A Goal
@@ -46,6 +59,9 @@ For ready-to-copy goal and subagent templates, read
    latest authoritative state, not only from prior chat memory.
 6. Before marking complete, audit every explicit requirement against current
    evidence. Weak, indirect, stale, or missing evidence means keep working.
+7. If goal tools are unavailable in the current context, keep using the same
+   goal-shaped contract in plain text. Do not imply that active goal state
+   exists when it does not.
 
 ## Subagent Handoffs
 
@@ -66,6 +82,8 @@ the parent goal.
 
 ## Related Skills
 
+- Use `orchestration-controller` when the parent goal spans multiple workers,
+  long-running monitoring, or review fallback routing.
 - Use `subagent-driven-development` when a goal already has independent
   implementation slices and needs controller-led subagent execution.
 - Use `action-items-to-prs` when a goal should become one or more PR-scoped
