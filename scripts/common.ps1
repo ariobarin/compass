@@ -80,6 +80,7 @@ function Get-PortableFileMap {
         "git-branch-resolver",
         "grill-me",
         "orchestration-controller",
+        "proper-flowcharts",
         "subagent-driven-development",
         "to-prd",
         "ui-ux-pro-max",
