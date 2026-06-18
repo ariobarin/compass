@@ -1,7 +1,7 @@
 interface:
   display_name: "Write A Skill"
-  short_description: "Create focused reusable skills"
-  default_prompt: "Use $write-a-skill to create or revise a focused reusable skill with proper structure and validation."
+  short_description: "Maintain portable Codex skills"
+  default_prompt: "Use $write-a-skill to create or revise a codex-portable skill with current structure, manifest wiring, and validation."
 
 policy:
   allow_implicit_invocation: true

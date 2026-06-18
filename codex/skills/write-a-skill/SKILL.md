@@ -1,117 +1,104 @@
 ---
 name: write-a-skill
-description: Create new agent skills with proper structure, progressive disclosure, and bundled resources. Use when user wants to create, write, or build a new skill.
+description: Create or revise portable Codex skills with metadata, install wiring, and validation. Use when adding or refreshing a skill in codex-portable.
 ---
 
-# Writing Skills
+# Write A Skill
 
-## Process
+Use this skill for the codex-portable maintenance path, not as a replacement
+for generic skill-design guidance. The job here is to turn a repeated Codex
+workflow into a portable, reviewable skill that fits the current repo
+conventions and install surface.
 
-1. **Gather requirements** - ask user about:
-   - What task/domain does the skill cover?
-   - What specific use cases should it handle?
-   - Does it need executable scripts or just instructions?
-   - Any reference materials to include?
+## Decide Whether It Should Be A Skill
 
-2. **Draft the skill** - create:
-   - SKILL.md with concise instructions
-   - Additional reference files if content exceeds 500 lines
-   - Utility scripts if deterministic operations needed
+Before creating or expanding a skill, check whether the problem is actually:
 
-3. **Review with user** - present draft and ask:
-   - Does this cover your use cases?
-   - Anything missing or unclear?
-   - Should any section be more/less detailed?
+- a repeated agent capability: skill;
+- a repo-local human process: `workflows/`;
+- a mechanical check: `scripts/`;
+- a portability boundary: `manifests/`;
+- a repo-only lesson: `local-docs/`.
 
-## Skill Structure
+Do not create a skill when a repo-local workflow or script would carry the
+behavior more cleanly.
 
-```
+## Start From Real Trigger Examples
+
+Collect concrete examples from recent prompts, PR comments, or repeated repair
+work. Use those examples to answer:
+
+- what requests should trigger the skill;
+- what artifacts the skill should read or produce;
+- which steps are core enough for `SKILL.md`;
+- which details belong in `references/` or `scripts/`.
+
+If the examples show the same capability under different request posture, keep
+one skill. Do not split identical behavior by proposal vs existing system, new
+vs old project, review vs create, or similar false routing axes.
+
+## Preferred Skill Shape
+
+For codex-portable skills, the normal installable shape is:
+
+```text
 skill-name/
-+-- SKILL.md           # Main instructions (required)
-+-- REFERENCE.md       # Detailed docs (if needed)
-+-- EXAMPLES.md        # Usage examples (if needed)
-+-- scripts/           # Utility scripts (if needed)
-    +-- helper.js
+  SKILL.md
+  agents/openai.yaml
+  references/
+  scripts/
 ```
 
-## SKILL.md Template
+Use only the folders that the skill actually needs. Keep frontmatter to
+`name` and `description` only.
 
-```md
----
-name: skill-name
-description: Brief description of capability. Use when [specific triggers].
----
+## Author The Skill
 
-# Skill Name
+1. Keep the description specific about both capability and trigger.
+2. Keep `SKILL.md` lean. Put detailed workflows, variants, or domain reference
+   material in one-level-deep files under `references/`.
+3. Keep "when to use" guidance in the description, not in a long trigger
+   section in the body.
+4. Add `agents/openai.yaml` and keep it aligned with the skill body.
+5. Add scripts only for deterministic repeated work, validation, or fragile
+   mechanics.
+6. Avoid local-only paths or machine-specific assumptions unless the repo
+   intentionally owns that boundary.
 
-## Quick start
+## Portable Repo Wiring
 
-[Minimal working example]
+When the skill should install into a live Codex home, update all of these in
+the same branch:
 
-## Workflows
+1. `codex/skills/<name>/`
+2. `manifests/portable-files.toml`
+3. `scripts/common.ps1`
 
-[Step-by-step processes with checklists for complex tasks]
+If the skill is intentionally repo-only, keep it out of the install manifest
+and explain the boundary in the relevant repo docs instead.
 
-## Advanced features
+When promoting a live-only or branch-only skill, make sure the repo copy
+includes the real `SKILL.md`, `agents/openai.yaml`, and any references or
+scripts needed for a normal install. Do not rely on partial live state.
 
-[Link to separate files: See [REFERENCE.md](REFERENCE.md)]
-```
+## Verify Before Opening Or Updating A PR
 
-## Description Requirements
+Run the narrowest checks that prove the skill is well-formed and portable:
 
-The description is **the only thing your agent sees** when deciding which skill to load. It's surfaced in the system prompt alongside all other installed skills. Your agent reads these descriptions and picks the relevant skill based on the user's request.
+- `scripts/quick_validate.py <skill-folder>`
+- `scripts/doctor.ps1`
+- `git diff --check`
 
-**Goal**: Give your agent just enough info to know:
+Run `scripts/verify-live.ps1 -SkipCodexCommand` only when live drift matters.
+Expected drift is fine for branch-only skills that are not meant to be
+installed yet.
 
-1. What capability this skill provides
-2. When/why to trigger it (specific keywords, contexts, file types)
+## Review Pass
 
-**Format**:
+Before calling the PR ready, check for nearby stale patterns:
 
-- Max 1024 chars
-- Write in third person
-- First sentence: what it does
-- Second sentence: "Use when [specific triggers]"
-
-**Good example**:
-
-```
-Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when user mentions PDFs, forms, or document extraction.
-```
-
-**Bad example**:
-
-```
-Helps with documents.
-```
-
-The bad example gives your agent no way to distinguish this from other document skills.
-
-## When to Add Scripts
-
-Add utility scripts when:
-
-- Operation is deterministic (validation, formatting)
-- Same code would be generated repeatedly
-- Errors need explicit handling
-
-Scripts save tokens and improve reliability vs generated code.
-
-## When to Split Files
-
-Split into separate files when:
-
-- SKILL.md exceeds 100 lines
-- Content has distinct domains (finance vs sales schemas)
-- Advanced features are rarely needed
-
-## Review Checklist
-
-After drafting, verify:
-
-- [ ] Description includes triggers ("Use when...")
-- [ ] SKILL.md under 100 lines
-- [ ] No time-sensitive info
-- [ ] Consistent terminology
-- [ ] Concrete examples included
-- [ ] References one level deep
+- duplicated or overlapping skills that should route through one capability;
+- false workflow splits in neighboring skills or docs;
+- stale `openai.yaml` text after a skill rewrite;
+- manifest or installer lists that forgot the new skill;
+- references that exist on disk but are not linked from `SKILL.md`.
