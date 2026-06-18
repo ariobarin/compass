@@ -53,7 +53,7 @@ first failure: the controller accepted worker blocker and done claims as termina
 downstream effects: benchmark work stopped at blocker classification, no countable full A/B/C results were produced, review wait was treated too passively, and the controller later overcorrected by directly implementing worker-owned changes
 evidence: live objective docs contained no full-result evidence but had completion-shaped blocker checkboxes; worker and monitor threads reported no intervention needed while no full benchmark runner was active
 root cause category: workflow mismatch, weak verification
-fix made: added the orchestration-controller skill to force status classification, blocker conversion, alternate review paths, precedent search before user-decision stops, and explicit ownership boundaries
-verification: validate the new skill with quick_validate.py and doctor.ps1 before PR
+fix made: added the orchestration-controller skill to force status classification, blocker conversion, alternate review paths, precedent search before user-decision stops, and explicit ownership boundaries; added it to the portable skill allowlist
+verification: `python C:\Users\Administrator\.codex\skills\.system\skill-creator\scripts\quick_validate.py codex\skills\orchestration-controller`, `.\scripts\doctor.ps1`, and `git diff --check` passed before PR
 should become durable guidance: yes, as a focused skill rather than a broad global rule
 ```
