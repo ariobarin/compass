@@ -25,7 +25,7 @@ completion predicates.
 
 Done means:
 Scope:
-Do not touch:
+Out of scope:
 Evidence required:
 If waiting:
 If blocked:
@@ -33,7 +33,7 @@ Subagents:
 ```
 
 Use this form to turn broad intent into a durable contract. Keep every field
-concrete enough that another agent could verify it later without guessing.
+concrete enough that another agent can verify it from named evidence.
 
 ## Observed Delegation Behavior
 
@@ -41,12 +41,14 @@ As observed in Codex on June 17-18, 2026:
 
 - delegated `/goal` text to another thread or spawned subagent was treated as
   plain text;
-- a child that needed active goal state had to call `create_goal` for itself;
+- a child that needed active goal state applied it by calling `create_goal` for
+  itself;
 - the parent controller kept completion authority for the parent goal;
-- spawned subagents could create goals, but nested subagent spawning was not
-  available in the observed sessions.
+- spawned subagents could create goals, while nested subagent spawning was
+  unavailable in the observed sessions.
 
-Treat these as observed behavior, not permanent platform guarantees.
+Treat these as an observed behavior snapshot rather than permanent platform
+guarantees.
 
 ## Controller Goal Template
 
@@ -57,7 +59,7 @@ Use this when the parent thread owns orchestration, verification, or routing.
 
 Done means:
 Scope:
-Do not touch:
+Out of scope:
 Evidence required:
 If waiting:
 If blocked:
@@ -80,7 +82,7 @@ Use this when a child thread or subagent owns one executable slice.
 
 Done means:
 Scope:
-Do not touch:
+Out of scope:
 Evidence required:
 If waiting:
 If blocked:
@@ -99,7 +101,7 @@ Use this when the job is oversight, not implementation.
 
 Done means:
 Scope:
-Do not touch:
+Out of scope:
 Evidence required:
 If waiting:
 If blocked:
@@ -111,21 +113,23 @@ what cadence to use between checks.
 
 ## Subagent Slice Template
 
-Use this as a contract, not as an attempt to transfer active Codex goal state.
+Use this as a contract. Active goal state exists only after the child applies
+goal tools in its own context.
 In observed Codex behavior, delegated messages to other threads and spawned
-subagents did not interpret `/goal` as a slash command. If the child needs
-active goal state, tell it to call `create_goal` for its own slice.
+subagents treated `/goal` text as plain text. If the child needs active goal
+state, ask that child to apply the goal to itself by calling `create_goal` for
+its own slice.
 
 ```text
 Parent goal:
 Slice:
 Allowed files or systems:
-Forbidden scope:
+Out of scope:
 Inputs to inspect:
 Expected output:
 Evidence required:
 Done condition for this slice:
-Do not:
+Constraints:
 Return one status: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, or BLOCKED.
 ```
 
@@ -135,13 +139,13 @@ only its slice and returns evidence for integration.
 ## Child Goal Activation Snippet
 
 If a separate thread or subagent truly needs its own active goal, include an
-explicit instruction like this instead of sending raw `/goal` text:
+explicit self-application instruction like this:
 
 ```text
 First action: if goal tools are available, call create_goal with this objective:
 <slice objective>.
 Then call get_goal and confirm the active objective before working.
-Do not treat this prompt as a slash command.
+Treat this prompt as activation instructions. Apply goal tools in this context.
 When the slice is complete, call update_goal with status complete.
 ```
 
@@ -153,7 +157,7 @@ is useful even when no active goal state exists in the child context.
 Use this flow when the parent goal has independent slices:
 
 1. Controller derives slices from the parent completion predicate.
-2. Controller gives each child one slice, allowed scope, forbidden scope, and
+2. Controller gives each child one slice, allowed scope, out-of-scope boundary, and
    evidence requirements.
 3. Child applies its own goal if goal tools are available.
 4. Child inspects only the inputs needed for its slice.
@@ -163,9 +167,9 @@ Use this flow when the parent goal has independent slices:
 7. Controller integrates results across slices and decides whether the parent
    goal is complete, needs more work, or is still waiting.
 
-The controller should not outsource final parent completion. A child can say its
-slice is done, but only the controller can verify that every slice and
-cross-slice requirement satisfies the parent goal.
+The controller keeps final parent completion authority. A child can say its slice
+is done, and the controller verifies that every slice and cross-slice requirement
+satisfies the parent goal.
 
 ## Fan-Out Rules
 
@@ -179,7 +183,8 @@ Choose the orchestration surface deliberately:
 - For tree-shaped work, keep fan-out controller-owned. Let children return
   proposed slices, then have the controller spawn the next layer.
 - Use monitor goals for oversight threads that should check for drift, false
-  blockers, or false completion without absorbing implementation ownership.
+  blockers, or false completion while implementation ownership stays with the
+  assigned worker.
 
 ## Completion Predicate Examples
 
@@ -187,12 +192,12 @@ Good predicates name the finish line and the proof:
 
 - All named PRs are open, green, reviewed, and linked in the final report.
 - Each listed repo has a current diff audit, a matching `MODIFICATIONS.md`, and
-  verification that unrelated changes were not touched.
+  verification that only requested changes were touched.
 - The report exists at the requested path, covers each named comparison axis,
   and has been checked for formatting or repo-specific style constraints.
 
-Avoid predicates like "make progress", "clean it up", or "look into it" unless
-the user explicitly wants exploration only.
+Use concrete predicates in place of "make progress", "clean it up", or "look
+into it", unless the user explicitly wants exploration only.
 
 ## Waiting Rule Examples
 
