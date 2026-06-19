@@ -7,6 +7,10 @@ live Codex directory contains auth, logs, sessions, caches, databases, generated
 plugin state, browser state, and machine-specific runtime paths. Those are not
 portable and should not be committed.
 
+Hosted Codex web settings, cloud task history, repository connections, and
+workspace connector installs such as Slack or Linear are also out of scope for
+this repo. They are service-side state, not portable files.
+
 ## Layout
 
 - `codex/AGENTS.md`: portable source for the live global `~/.codex/AGENTS.md`.
