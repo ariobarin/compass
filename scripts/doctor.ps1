@@ -111,12 +111,22 @@ foreach ($agentFile in $agentFiles) {
     $agentText = Get-Content -Raw -LiteralPath $agentFile.FullName
     $topLevelValues = @{}
     $inMultilineString = $false
+    $inTable = $false
 
     foreach ($line in ($agentText -split "`r?`n")) {
         if ($inMultilineString) {
             if ($line -match '"""') {
                 $inMultilineString = $false
             }
+            continue
+        }
+
+        if ($line -match '^\s*\[') {
+            $inTable = $true
+            continue
+        }
+
+        if ($inTable) {
             continue
         }
 
