@@ -60,9 +60,11 @@ Use only the folders that the skill actually needs. Keep frontmatter to
 3. Keep "when to use" guidance in the description, not in a long trigger
    section in the body.
 4. Add `agents/openai.yaml` and keep it aligned with the skill body.
-5. Add scripts only for deterministic repeated work, validation, or fragile
+5. Re-open `agents/openai.yaml` after generating it and confirm
+   `default_prompt` still names the skill with `$skill-name`.
+6. Add scripts only for deterministic repeated work, validation, or fragile
    mechanics.
-6. Avoid local-only paths or machine-specific assumptions unless the repo
+7. Avoid local-only paths or machine-specific assumptions unless the repo
    intentionally owns that boundary.
 
 ## Portable Repo Wiring
@@ -85,11 +87,11 @@ scripts needed for a normal install. Do not rely on partial live state.
 
 Run the narrowest checks that prove the skill is well-formed and portable:
 
-- `scripts/quick_validate.py <skill-folder>`
-- `scripts/doctor.ps1`
+- `python $CODEX_HOME/skills/.system/skill-creator/scripts/quick_validate.py <skill-folder>`
+- `.\scripts\doctor.ps1`
 - `git diff --check`
 
-Run `scripts/verify-live.ps1 -SkipCodexCommand` only when live drift matters.
+Run `.\scripts\verify-live.ps1 -SkipCodexCommand` only when live drift matters.
 Expected drift is fine for branch-only skills that are not meant to be
 installed yet.
 
