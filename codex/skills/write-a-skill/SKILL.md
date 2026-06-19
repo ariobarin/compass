@@ -92,7 +92,7 @@ Run the narrowest checks that prove the skill is well-formed and portable:
 - PowerShell: `$codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE ".codex" }; python (Join-Path $codexHome "skills\.system\skill-creator\scripts\quick_validate.py") <skill-folder>`
 - Bash: `python "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py" <skill-folder>`
 - `.\scripts\doctor.ps1`
-- `git diff --check`
+- `git diff --check origin/main...HEAD`
 
 Run `.\scripts\verify-live.ps1 -SkipCodexCommand` only when live drift matters.
 Expected drift is fine for branch-only skills that are not meant to be
