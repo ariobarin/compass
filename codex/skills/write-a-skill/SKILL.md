@@ -10,6 +10,10 @@ for generic skill-design guidance. The job here is to turn a repeated Codex
 workflow into a portable, reviewable skill that fits the current repo
 conventions and install surface.
 
+This skill is for reusable global skills that belong in `codex-portable`.
+If the capability only makes sense for one project or repository, keep that
+skill in the target repo instead of promoting it here.
+
 ## Decide Whether It Should Be A Skill
 
 Before creating or expanding a skill, check whether the problem is actually:
@@ -59,19 +63,24 @@ skill-name/
 Use only the folders that the skill actually needs. Keep frontmatter to
 `name` and `description` only.
 
+Treat `codex/skills/` here as the repo's portable source tree for reviewed
+global skills. Do not assume that every project should use the same path just
+because this repo does.
+
 ## Author The Skill
 
-1. Keep the description specific about both capability and trigger.
-2. Keep `SKILL.md` lean. Put detailed workflows, variants, or domain reference
+1. Keep the `name` and `description` metadata present and accurate.
+2. Keep the description specific about both capability and trigger.
+3. Keep `SKILL.md` lean. Put detailed workflows, variants, or domain reference
    material in one-level-deep files under `references/`.
-3. Keep "when to use" guidance in the description, not in a long trigger
+4. Keep "when to use" guidance in the description, not in a long trigger
    section in the body.
-4. Add `agents/openai.yaml` and keep it aligned with the skill body.
-5. Re-open `agents/openai.yaml` after generating it and confirm
+5. Add `agents/openai.yaml` and keep it aligned with the skill body.
+6. Re-open `agents/openai.yaml` after generating it and confirm
    `default_prompt` still names the skill with `$skill-name`.
-6. Add scripts only for deterministic repeated work, validation, or fragile
+7. Add scripts only for deterministic repeated work, validation, or fragile
    mechanics.
-7. Use portable paths and assumptions by default. Include local-only paths or
+8. Use portable paths and assumptions by default. Include local-only paths or
    machine-specific assumptions only when the repo intentionally owns that
    boundary.
 
@@ -86,6 +95,10 @@ the same branch:
 
 If the skill is intentionally repo-only, keep it out of the install manifest
 and explain the boundary in the relevant repo docs instead.
+
+When a skill belongs in the target repo rather than in the portable global
+setup, do not wire it into `manifests/portable-files.toml` or
+`scripts/common.ps1`.
 
 Do not pull a project-specific skill into `codex-portable` just because you are
 editing it from this repo. If the skill mainly exists to serve one repository,
