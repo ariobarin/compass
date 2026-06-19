@@ -23,6 +23,12 @@ Before creating or expanding a skill, check whether the problem is actually:
 Choose a repo-local workflow or script when that surface carries the behavior
 more cleanly.
 
+For skill placement, distinguish global from project-local scope:
+
+- reusable cross-repo developer capability: `codex-portable` skill;
+- codebase-specific workflow, schema, or policy: put the skill in that target
+  repo instead of `codex-portable`.
+
 ## Start From Real Trigger Examples
 
 Collect concrete examples from recent prompts, PR comments, or repeated repair
@@ -80,6 +86,10 @@ the same branch:
 
 If the skill is intentionally repo-only, keep it out of the install manifest
 and explain the boundary in the relevant repo docs instead.
+
+Do not pull a project-specific skill into `codex-portable` just because you are
+editing it from this repo. If the skill mainly exists to serve one repository,
+its home should usually be that repository.
 
 When promoting a live-only or branch-only skill, make the repo copy complete:
 include the real `SKILL.md`, `agents/openai.yaml`, and any references or scripts
