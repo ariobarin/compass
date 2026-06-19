@@ -6,8 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ~/.codex/hooks/portable_guard.py",
-            "commandWindows": "python -c \"import os, runpy; runpy.run_path(os.path.join(os.environ['USERPROFILE'], '.codex', 'hooks', 'portable_guard.py'), run_name='__main__')\"",
+            "command": "python3 \"${CODEX_HOME:-$HOME/.codex}/hooks/portable_guard.py\"",
+            "commandWindows": "python -c \"import os, runpy; home = os.environ.get('CODEX_HOME') or os.path.join(os.environ['USERPROFILE'], '.codex'); runpy.run_path(os.path.join(home, 'hooks', 'portable_guard.py'), run_name='__main__')\"",
             "timeout": 30,
             "statusMessage": "Checking portable workflow guard"
           }
@@ -19,8 +19,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ~/.codex/hooks/portable_guard.py",
-            "commandWindows": "python -c \"import os, runpy; runpy.run_path(os.path.join(os.environ['USERPROFILE'], '.codex', 'hooks', 'portable_guard.py'), run_name='__main__')\"",
+            "command": "python3 \"${CODEX_HOME:-$HOME/.codex}/hooks/portable_guard.py\"",
+            "commandWindows": "python -c \"import os, runpy; home = os.environ.get('CODEX_HOME') or os.path.join(os.environ['USERPROFILE'], '.codex'); runpy.run_path(os.path.join(home, 'hooks', 'portable_guard.py'), run_name='__main__')\"",
             "timeout": 30,
             "statusMessage": "Checking git closeout"
           }

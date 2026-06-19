@@ -12,6 +12,10 @@ function Get-CodexHome {
         return (Resolve-Path $CodexHome).Path
     }
 
+    if ($env:CODEX_HOME) {
+        return (Resolve-Path $env:CODEX_HOME).Path
+    }
+
     $default = Join-Path $env:USERPROFILE ".codex"
     return (Resolve-Path $default).Path
 }
