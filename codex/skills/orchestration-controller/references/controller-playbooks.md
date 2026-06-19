@@ -30,7 +30,7 @@ Child-goal activation snippet:
 First action: if goal tools are available, call create_goal with this
 objective: <slice objective>.
 Then call get_goal and confirm the active objective before working.
-Do not treat this prompt as a slash command.
+Treat this text as activation instructions. The child applies goal tools itself.
 ```
 
 ## Status Repair Playbook
@@ -40,8 +40,8 @@ Convert worker claims into the next real action:
 - `DONE`: verify against the parent objective, not the worker's interpretation.
 - `DONE_WITH_CONCERNS`: split concerns into fixes, reviews, reruns, defers, or
   accepted risks.
-- `BLOCKED`: demand a repro, patch path, review path, precedent, or owner
-  reroute.
+- `BLOCKED`: identify the repro, patch path, review path, precedent, or owner
+  reroute that can move the work.
 - `NEEDS_CONTEXT`: search docs, prior chat, live docs, issues, PRs, and handoff
   notes before asking the user.
 - `WAITING_ON_REVIEW`: move to the review fallback ladder.
@@ -59,18 +59,18 @@ When one review path is silent or unavailable:
 5. Route findings back to the implementation owner and re-request review after
    fixes.
 
-Do not stop after one silent review path.
+Continue to the next review path after a silent or unavailable reviewer.
 
 ## Ownership Boundary
 
-The controller keeps work moving, but does not absorb implementation by
-default.
+The controller keeps work moving while implementation stays with the assigned
+owner by default.
 
 - Route code or doc edits back to the worker that owns the repo or PR.
 - Use helper threads for review, precedent search, or log inspection.
-- Edit directly only when the user assigned controller-owned docs, routing
-  notes, emergency cleanup, or explicitly reassigned implementation ownership.
-- If ownership changes, record why it changed and what the controller edited.
+- Edit directly when the user assigned controller-owned docs, routing notes,
+  emergency cleanup, or reassigned implementation ownership.
+- When ownership changes, record why it changed and what the controller edited.
 
 ## Monitor Cadence Playbook
 
@@ -78,12 +78,13 @@ For long-running work:
 
 - choose a cadence that matches the system half-life, often 5 to 15 minutes for
   active CI, review, or benchmark work;
-- sleep between checks only when the current state has a plausible next event;
+- sleep between checks when the current state has a plausible next event;
 - on wake-up, ask whether the system can still move right now;
 - intervene when a worker drifts, accepts a false blocker, accepts false
   completion, or ignores a viable review or repair path.
 
-Waiting until a named time is not the same as making progress toward the goal.
+A named time creates the next inspection point. Progress still comes from
+evidence, repair, review, or owner routing.
 
 ## Morning Handoff Template
 

@@ -1,13 +1,14 @@
 ---
 name: orchestration-controller
-description: Coordinate worker threads, benchmark babysitting, PR review routing, and parent goals without accepting false blockers or premature done states.
+description: Coordinate worker threads, benchmark monitoring, PR review routing, and parent goals through evidence checks and owner actions.
 ---
 
 # Orchestration Controller
 
-Use this skill when the job is to keep delegated work moving. The controller is
-not the implementer by default. The controller is responsible for state,
-ownership, evidence, routing, and escalation.
+Use this skill when the job is to keep delegated work moving. The controller
+owns state, evidence, routing, escalation, and parent completion. Implementation
+stays with the assigned worker unless the user or current state assigns the
+controller a direct edit.
 
 ## Required Reference
 
@@ -17,12 +18,12 @@ templates.
 
 ## Core Rule
 
-Treat worker statuses as claims, not facts.
+Classify worker statuses as evidence claims.
 
-Before accepting `DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, `NEEDS_CONTEXT`, or
-`WAITING_ON_REVIEW`, inspect the evidence and classify the true next state.
-Most apparent blockers in software and research work are unfinished problem
-solving.
+For each `DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, `NEEDS_CONTEXT`, or
+`WAITING_ON_REVIEW` report, inspect the artifacts behind the claim and map it to
+the next true state: complete, needs repair, needs context, needs review,
+explicitly deferred, or truly blocked.
 
 ## Goal Ownership
 
@@ -42,21 +43,21 @@ goal-shaped parent, worker, or monitor contract.
 4. Convert every non-terminal claim into a next action with a named owner.
 5. Prefer reversible PRs, bounded smokes, local repros, neutral critique, CI,
    and precedent lookup over stopping.
-6. Update live docs only to reflect real state changes. Do not let docs replace
-   operational progress.
+6. Update live docs when they reflect real operational state changes.
 7. Repeat until each slice is complete, explicitly deferred, or truly blocked.
 
 ## Monitor Cadence
 
 For long-running controller work, sleeping between checks is fine. Each wake-up
-should still ask:
+should still answer:
 
-- can the system still move;
-- did a worker drift off task or accept a false terminal state;
-- did a claimed blocker become a repair path;
-- should review fallback or owner rerouting happen now.
+- the next event that can move the system;
+- the worker or artifact that needs inspection;
+- the repair path for any claimed blocker;
+- the review fallback or owner reroute to apply now.
 
-A time gate by itself is not success.
+A time gate creates an inspection point. Completion comes from matching
+evidence.
 
 ## Status Conversion
 
@@ -65,7 +66,7 @@ Use this table before accepting a worker report.
 | Worker claim | Controller response |
 | --- | --- |
 | `DONE` | Verify against the original objective, not the worker's narrowed task. Require artifacts, checks, PR state, or runtime evidence. |
-| `DONE_WITH_CONCERNS` | Convert each concern into fix, PR, review, bounded rerun, explicit defer, or accepted risk. Do not close from concerns alone. |
+| `DONE_WITH_CONCERNS` | Resolve each concern as a fix, PR, review, bounded rerun, explicit defer, or accepted risk. |
 | `BLOCKED` | Assume solvable. Ask what exact repro, patch, branch, PR, review path, config change, precedent search, or owner handoff would move it. |
 | `NEEDS_CONTEXT` | Search docs, repo history, prior handoffs, issues, PRs, and thread logs before asking the user. |
 | `WAITING_ON_REVIEW` | Use available review paths. Request `@codex` when it is a remote repo convention, and spawn a fresh local `neutral-critic` subagent when available before treating review wait as exhausted. |
@@ -73,7 +74,7 @@ Use this table before accepting a worker report.
 
 ## Blocker Discipline
 
-Call something blocked only after the controller has tried the reasonable ladder:
+Use `BLOCKED` only after the controller has tried the reasonable ladder:
 
 1. Reproduce or inspect the failure.
 2. Search repo docs, live objective docs, handoffs, runbooks, prior PRs, issues,
@@ -87,26 +88,24 @@ Call something blocked only after the controller has tried the reasonable ladder
    mutation, large compute spend, benchmark comparability risk, paper-claim
    changes, credentials, or unsafe operations.
 
-If a worker says a user decision is needed, first prove the decision was not
-already made in docs, history, or prior chat.
+When a worker says a user decision is needed, first search docs, history, and
+prior chat for an existing decision.
 
 ## Ownership Boundaries
 
-Drive work forward without stealing it.
+Keep ownership explicit while moving work forward.
 
 - Send implementation back to the responsible worker when that worker owns the
   repo or PR.
 - Use helper agents or threads to search precedent, inspect logs, or critique a
   PR when that helps the owner move.
-- Directly edit only when the user assigned controller-owned docs, routing notes,
-  or emergency cleanup, or when the controller has been reassigned as
-  implementer.
-- If direct intervention is necessary, record why ownership changed and what was
-  changed.
+- Edit directly when the user assigned controller-owned docs, routing notes, or
+  emergency cleanup, or when the controller has been reassigned as implementer.
+- When ownership changes, record why it changed and what the controller edited.
 
 ## Evidence Gates
 
-Do not let these count as completion by themselves:
+Treat these as status signals that need matching objective evidence:
 
 - a status word from a worker;
 - a blocker report;
@@ -117,20 +116,19 @@ Do not let these count as completion by themselves:
 - a smoke passing when the objective requires full results;
 - a handoff that explains failure but does not route the next action.
 
-Completion requires evidence matching the parent objective or explicit user
+Completion requires evidence that matches the parent objective, or explicit user
 acceptance of an incomplete endpoint.
 
 ## Review Paths
 
-When a PR or patch needs review, do not stop after one silent path.
+When a PR or patch needs review, move through the available review paths until
+one produces actionable findings or an approval signal.
 
 Use the best available combination, with the fresh local critic as a required
 step when that agent is available:
 
 - request `@codex` review when that is the repo convention;
-- spawn a fresh local `neutral-critic` subagent before treating review wait as
-  exhausted, instead of
-  reusing one that has already seen prior findings or parent framing;
+- spawn a fresh local `neutral-critic` subagent for an independent review;
 - run local checks and CI;
 - spawn or message a focused reviewer with exact files, diff, and acceptance
   criteria;
@@ -149,8 +147,8 @@ For overnight or time-gated controller work, a good handoff is a control surface
 - exact next commands, PRs, owners, and review paths;
 - explicit deferrals and why they are safe.
 
-Do not treat waiting until a time gate as success. Sleeping between checks is
-fine only if each wake-up asks whether the system can still move.
+A time gate creates the next inspection point. Sleeping between checks is useful
+when each wake-up asks whether the system can move.
 
 ## Related Skills
 

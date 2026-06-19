@@ -1,7 +1,7 @@
 interface:
   display_name: "Orchestration Controller"
   short_description: "Keep delegated work moving with evidence"
-  default_prompt: "Use $orchestration-controller to coordinate worker threads without accepting false blockers."
+  default_prompt: "Use $orchestration-controller to coordinate worker threads through evidence checks, owner routing, and review fallback."
 
 policy:
   allow_implicit_invocation: true
