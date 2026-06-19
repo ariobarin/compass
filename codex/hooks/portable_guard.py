@@ -13,7 +13,7 @@ from pathlib import Path
 
 DASH_CHARS = chr(0x2013) + chr(0x2014)
 PUBLIC_COMMAND_RE = re.compile(
-    r"\b(git\s+commit|git\s+tag|gh\s+pr\s+\S+|gh\s+release)\b",
+    r"\b(git\s+commit|git\s+tag|gh(?:\s+(?:--repo|-R)\s+\S+)*\s+pr\s+\S+|gh\s+release)\b",
     re.IGNORECASE,
 )
 def read_input() -> dict:
@@ -45,6 +45,8 @@ def continue_turn(reason: str) -> None:
 
 def tool_command(data: dict) -> str:
     tool_input = data.get("tool_input")
+    if isinstance(tool_input, str):
+        return tool_input
     if isinstance(tool_input, dict):
         command = tool_input.get("command")
         if isinstance(command, str):
