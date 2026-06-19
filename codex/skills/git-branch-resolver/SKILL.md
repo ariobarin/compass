@@ -66,7 +66,8 @@ git branch -r --no-color
 git remote -v
 ```
 
-When ref refresh is allowed and the task is cleanup or PR refresh work, add:
+When ref refresh is allowed and the task is `audit/report`, cleanup, or PR
+refresh work, add:
 
 ```powershell
 git fetch --all --prune
