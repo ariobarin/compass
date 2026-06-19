@@ -1,6 +1,6 @@
 ---
 name: ui-ux-pro-max
-description: Guide UI/UX design for web and mobile tasks involving layout, components, visual systems, UX review, accessibility, charts, and stack rules.
+description: Guide UI/UX design for web and mobile layout, components, visual systems, palettes, typography, UX review, accessibility, charts, and stack rules.
 ---
 
 # UI/UX Pro Max - Design Intelligence
