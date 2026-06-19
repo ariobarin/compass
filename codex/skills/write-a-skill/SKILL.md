@@ -20,8 +20,8 @@ Before creating or expanding a skill, check whether the problem is actually:
 - a portability boundary: `manifests/`;
 - a repo-only lesson: `local-docs/`.
 
-Do not create a skill when a repo-local workflow or script would carry the
-behavior more cleanly.
+Choose a repo-local workflow or script when that surface carries the behavior
+more cleanly.
 
 ## Start From Real Trigger Examples
 
@@ -34,8 +34,9 @@ work. Use those examples to answer:
 - which details belong in `references/` or `scripts/`.
 
 If the examples show the same capability under different request posture, keep
-one skill. Do not split identical behavior by proposal vs existing system, new
-vs old project, review vs create, or similar false routing axes.
+one skill and route variants inside it. Group proposal vs existing system, new
+vs old project, review vs create, and similar postures when the underlying
+capability is the same.
 
 ## Preferred Skill Shape
 
@@ -64,8 +65,9 @@ Use only the folders that the skill actually needs. Keep frontmatter to
    `default_prompt` still names the skill with `$skill-name`.
 6. Add scripts only for deterministic repeated work, validation, or fragile
    mechanics.
-7. Avoid local-only paths or machine-specific assumptions unless the repo
-   intentionally owns that boundary.
+7. Use portable paths and assumptions by default. Include local-only paths or
+   machine-specific assumptions only when the repo intentionally owns that
+   boundary.
 
 ## Portable Repo Wiring
 
@@ -79,9 +81,9 @@ the same branch:
 If the skill is intentionally repo-only, keep it out of the install manifest
 and explain the boundary in the relevant repo docs instead.
 
-When promoting a live-only or branch-only skill, make sure the repo copy
-includes the real `SKILL.md`, `agents/openai.yaml`, and any references or
-scripts needed for a normal install. Do not rely on partial live state.
+When promoting a live-only or branch-only skill, make the repo copy complete:
+include the real `SKILL.md`, `agents/openai.yaml`, and any references or scripts
+needed for a normal install.
 
 ## Verify Before Opening Or Updating A PR
 
