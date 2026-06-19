@@ -12,8 +12,9 @@ from pathlib import Path
 
 
 DASH_CHARS = chr(0x2013) + chr(0x2014)
+SHELL_ARG = r'"[^"]+"|\'[^\']+\'|\S+'
 PUBLIC_COMMAND_RE = re.compile(
-    r"\b(git(?:\s+(?:(?:-C|-c|--git-dir|--work-tree|--namespace)\s+\S+|--[A-Za-z0-9-]+(?:=\S+)?|-[A-Za-z]+))*\s+(?:commit|tag)|gh(?:\s+(?:--repo|-R)\s+\S+)*\s+pr\s+\S+|gh\s+release)\b",
+    rf"\b(git(?:\s+(?:(?:-C|-c|--git-dir|--work-tree|--namespace)\s+(?:{SHELL_ARG})|--[A-Za-z0-9-]+=(?:{SHELL_ARG})|--[A-Za-z0-9-]+|-[A-Za-z]+))*\s+(?:commit|tag)|gh(?:\s+(?:(?:--repo|-R)\s+(?:{SHELL_ARG})|--repo=(?:{SHELL_ARG})))*\s+pr\s+\S+|gh\s+release)\b",
     re.IGNORECASE,
 )
 def read_input() -> dict:
