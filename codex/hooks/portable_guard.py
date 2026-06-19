@@ -175,15 +175,18 @@ def repo_status_summary(repo: Path) -> str | None:
     header = lines[0]
     has_ahead = "[ahead " in header or "ahead " in header
     has_no_upstream = "..." not in header
-    has_unpushed_no_upstream = has_no_upstream and head_missing_from_remotes(repo)
+    upstream_gone = "[gone]" in header
+    has_unpushed_without_remote = (
+        has_no_upstream or upstream_gone
+    ) and head_missing_from_remotes(repo)
 
-    if not body and not has_ahead and not has_unpushed_no_upstream:
+    if not body and not has_ahead and not has_unpushed_without_remote:
         return None
 
     details = []
     if body:
         details.append(f"{len(body)} dirty entries")
-    if has_ahead or has_unpushed_no_upstream:
+    if has_ahead or has_unpushed_without_remote:
         details.append("unpushed commits")
     if not details:
         return None
