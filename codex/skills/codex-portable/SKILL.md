@@ -20,12 +20,12 @@ this repo, not just explain it.
 Treat the current portable configuration as editable source, not a frozen
 snapshot.
 
-If the user wants durable Codex behavior changed, modify or append the right
-files in this repo without waiting for a separate instruction that existing
-portable files may be edited.
+When the user wants durable Codex behavior changed, modify or append the right
+files in this repo. Treat existing portable files as editable source.
 
-Do not jump straight to live `~/.codex` edits when the reviewed repo copy is
-the right surface.
+Use the reviewed repo copy as the change surface when it owns the behavior.
+Reserve live `~/.codex` edits for validation, drift checks, or explicitly live
+state.
 
 ## Route The Change
 
