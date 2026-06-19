@@ -36,6 +36,8 @@ config a deliberate copy step with a diff.
 
 - A repeated human process belongs in `workflows/`.
 - A task-specific agent capability belongs in `codex/skills/`.
+- A shareable bundle of skills, hooks, apps, or MCP config belongs in a plugin
+  repo or repo-scoped plugin folder, not in the live plugin cache.
 - A mechanical or reproducible check belongs in `scripts/`.
 - A capability boundary or portability decision belongs in `manifests/`.
 - A maintenance lesson for this repo belongs in `local-docs/`.

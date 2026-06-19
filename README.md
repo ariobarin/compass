@@ -74,6 +74,9 @@ what they would change.
   replacement for the live generated `config.toml`.
 - Do not commit secrets, auth files, SQLite state, logs, session history, caches,
   browser profiles, generated plugin caches, or machine runtime paths.
+- If you intentionally author a plugin, keep the plugin source and marketplace
+  metadata in a normal repo path or dedicated plugin repo, not in live cache
+  directories.
 - Keep machine-specific values in ignored local files or in live config only.
 - Keep skill descriptions concise. Put detailed instructions in `SKILL.md` and
   references.
