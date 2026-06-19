@@ -38,15 +38,15 @@ state.
 - Update `workflows/` for repeated human processes.
 - Update `scripts/` for mechanical checks or sync logic.
 - Update `local-docs/` for repo-only maintenance lessons.
-- Update `manifests/portable-files.toml` and `scripts/common.ps1` whenever an
-  installed skill or agent surface changes.
+- Update `manifests/portable-files.toml` and `scripts/common.ps1` when adding an
+  installed skill or changing an install surface that those files map.
 
 ## Validate The Repo Change
 
 1. Update the durable artifact and any required install wiring in the same
    branch.
 2. Run `.\scripts\doctor.ps1`.
-3. Run `python C:\Users\Administrator\.codex\skills\.system\skill-creator\scripts\quick_validate.py <skill-folder>`
+3. Run `python $env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py <skill-folder>`
    for skill edits.
 4. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when live drift matters.
 5. Use a PR as the review unit.
