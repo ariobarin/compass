@@ -14,7 +14,7 @@ from pathlib import Path
 DASH_CHARS = chr(0x2013) + chr(0x2014)
 SHELL_ARG = r'"[^"]+"|\'[^\']+\'|\S+'
 PUBLIC_COMMAND_RE = re.compile(
-    rf"\b(git(?:\s+(?:(?:-C|-c|--git-dir|--work-tree|--namespace)\s+(?:{SHELL_ARG})|--[A-Za-z0-9-]+=(?:{SHELL_ARG})|--[A-Za-z0-9-]+|-[A-Za-z]+))*\s+(?:commit|tag)|gh(?:\s+(?:(?:--repo|-R)\s+(?:{SHELL_ARG})|--repo=(?:{SHELL_ARG})))*\s+pr\s+\S+|gh\s+release)\b",
+    rf"\b(git(?:\s+(?:(?:-C|--git-dir|--work-tree|--namespace)\s+(?:{SHELL_ARG})|-c\s+(?:[^\s=]+=(?:{SHELL_ARG})|(?:{SHELL_ARG}))|--[A-Za-z0-9-]+=(?:{SHELL_ARG})|--[A-Za-z0-9-]+|-[A-Za-z]+))*\s+(?:commit|tag)|gh(?:\s+(?:(?:--repo|-R)\s+(?:{SHELL_ARG})|--repo=(?:{SHELL_ARG})))*\s+pr\s+\S+|gh\s+release)\b",
     re.IGNORECASE,
 )
 def read_input() -> dict:
@@ -155,9 +155,8 @@ def repo_status_summary(repo: Path) -> str | None:
     body = [line for line in lines[1:] if line.strip()]
     header = lines[0]
     has_ahead = "[ahead " in header or "ahead " in header
-    no_upstream = "..." not in header and not header.endswith("main") and not header.endswith("master")
 
-    if not body and not has_ahead and not no_upstream:
+    if not body and not has_ahead:
         return None
 
     details = []
@@ -165,8 +164,6 @@ def repo_status_summary(repo: Path) -> str | None:
         details.append(f"{len(body)} dirty entries")
     if has_ahead:
         details.append("unpushed commits")
-    if no_upstream:
-        details.append("no upstream shown")
     if not details:
         return None
     return f"{repo}: {', '.join(details)}"
