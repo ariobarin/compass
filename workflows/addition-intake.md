@@ -21,6 +21,12 @@ The default path is staged:
    checks that apply to that artifact type.
 6. Open a PR before treating the portable copy as accepted.
 
+Imported setup from other agents follows the same path. Treat imported files,
+skills, hooks, MCP config, and settings as candidate input only. Review them,
+route them to the narrowest durable artifact, and keep imported chats, project
+lists, auth, plugin follow-up state, and other migration-only runtime data out
+of this repo unless the repo intentionally adopts a reviewed portable form.
+
 ## Routing
 
 - Repeated human process: add a focused file in `workflows/`.
