@@ -1,0 +1,7 @@
+interface:
+  display_name: "Codex Portable"
+  short_description: "Edit portable Codex repo config"
+  default_prompt: "Use $codex-portable to update the codex-portable repo with the right portable config, skill, workflow, agent, or manifest changes."
+
+policy:
+  allow_implicit_invocation: true
