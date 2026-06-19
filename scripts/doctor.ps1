@@ -109,15 +109,29 @@ foreach ($skillFile in $skillFiles) {
 $agentFiles = Get-ChildItem -Path (Join-Path $repoRoot "codex\agents") -File -Filter "*.toml" -ErrorAction SilentlyContinue
 foreach ($agentFile in $agentFiles) {
     $agentText = Get-Content -Raw -LiteralPath $agentFile.FullName
-    $developerInstructions = [regex]::Match($agentText, "(?m)^developer_instructions\s*=")
-    if ($developerInstructions.Success) {
-        $agentMetadata = $agentText.Substring(0, $developerInstructions.Index)
-    }
-    else {
-        $agentMetadata = $agentText
+    $topLevelValues = @{}
+    $inMultilineString = $false
+
+    foreach ($line in ($agentText -split "`r?`n")) {
+        if ($inMultilineString) {
+            if ($line -match '"""') {
+                $inMultilineString = $false
+            }
+            continue
+        }
+
+        if ($line -match '^\s*([A-Za-z0-9_-]+)\s*=\s*"""') {
+            $inMultilineString = $true
+            continue
+        }
+
+        $assignment = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"([^"]*)"\s*$')
+        if ($assignment.Success) {
+            $topLevelValues[$assignment.Groups[1].Value] = $assignment.Groups[2].Value
+        }
     }
 
-    if ($agentText -match "(?i)read-only" -and $agentMetadata -notmatch '(?m)^sandbox_mode\s*=\s*"read-only"\s*$') {
+    if ($agentText -match "(?i)read-only" -and ($topLevelValues["sandbox_mode"] -ne "read-only")) {
         $problems.Add("read-only agent missing sandbox_mode: $($agentFile.FullName)")
     }
 }

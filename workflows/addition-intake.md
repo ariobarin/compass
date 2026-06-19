@@ -17,7 +17,8 @@ The default path is staged:
 2. Capture the problem it solves and the evidence that it worked.
 3. Decide the smallest durable artifact type.
 4. Copy only reviewed portable files into this repo.
-5. Wire the addition into the allowlist, install map, docs, and checks.
+5. Wire the addition into the route-specific allowlist, install map, docs, and
+   checks that apply to that artifact type.
 6. Open a PR before treating the portable copy as accepted.
 
 ## Routing
