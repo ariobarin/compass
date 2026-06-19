@@ -10,7 +10,7 @@ You are implementing Task N: [task name]
 
 ## Task Description
 
-[FULL TASK TEXT - paste it here, do not make the subagent find the plan file]
+[FULL TASK TEXT - paste it here so the subagent has the plan slice inline]
 
 ## Context
 
@@ -22,8 +22,10 @@ architectural context, known pitfalls]
 Ask questions now if the requirements, boundaries, or validation target are
 unclear. Raise concerns before you start coding.
 
-If a required path is missing or only given relatively, ask for the exact
-absolute path instead of guessing.
+If a required path is missing or only given relatively, first resolve it from
+the repo path, task text, and nearby files. Ask for the exact path only when
+multiple plausible targets remain and choosing one would risk changing the
+wrong artifact.
 
 ## Your Job
 
@@ -58,7 +60,7 @@ Return `NEEDS_CONTEXT` when:
 - requirements are missing;
 - the task needs design choices the plan did not settle;
 - the repo state or local guidance conflicts with the requested change;
-- you are reading widely without making progress.
+- you are reading widely while progress needs a narrower slice or more context.
 
 Return `BLOCKED` only after you have tried the reasonable local recovery and can
 name the exact dependency outside your assigned scope. Include what you tried,

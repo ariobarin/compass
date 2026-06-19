@@ -72,7 +72,7 @@ For each task:
    - `BLOCKED`
 4. If the task touches shared code paths, confirm the implementer ran the
    narrowest useful checks before review.
-5. Dispatch spec review before code quality review. Do not reverse the order.
+5. Dispatch spec review before code quality review.
 
 ## Worker Signals
 

@@ -22,8 +22,8 @@ You are reviewing implementation quality after spec compliance passed.
 - Head commit: [HEAD_SHA]
 - Implementer summary: [short summary]
 
-If the repo path, changed files, or diff context are missing, say so instead of
-guessing through the repository.
+If the repo path, changed files, or diff context are missing, ask for that
+context before reviewing.
 
 ## Review Focus
 

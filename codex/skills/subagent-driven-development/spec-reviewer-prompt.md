@@ -28,8 +28,8 @@ You are reviewing whether an implementation matches its specification.
 Treat the implementer report as a hint, not evidence.
 
 Read the changed code yourself and compare it directly against the task.
-If the repo path, changed files, or diff location are missing, say so instead
-of guessing through the repository.
+If the repo path, changed files, or diff location are missing, ask for that
+context before reviewing.
 
 Check for:
 - missing requirements;
