@@ -23,8 +23,9 @@ this repo. They are service-side state, not portable files.
 - `codex/agents/`: reusable global custom agents installed into the live Codex
   home. Project-specific custom agents belong in the target repo.
 - `codex/skills/`: reusable global custom skills installed into the live Codex
-  home, excluding system and plugin cache skills. Project-specific skills
-  belong in the target repo.
+  home for the current personal skill store, excluding system and plugin cache
+  skills. Project-specific `.agents/skills` belong in the target repo. Broader
+  sharing should usually happen through a plugin.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
 - `workflows/`: repo-side operating notes for recurring maintenance work. These
