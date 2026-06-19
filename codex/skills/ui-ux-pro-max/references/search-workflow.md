@@ -33,9 +33,9 @@ python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persi
 python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name" --page "dashboard"
 ```
 
-The master file is `design-system/MASTER.md`. Page overrides live under
-`design-system/pages/`. When building a page, read the master first and then
-apply the page override when it exists.
+The master file is `design-system/<project_slug>/MASTER.md`. Page overrides
+live under `design-system/<project_slug>/pages/`. When building a page, read the
+project master first and then apply the page override when it exists.
 
 ## Focused Searches
 
@@ -89,13 +89,16 @@ python3 skills/ui-ux-pro-max/scripts/search.py "search loading animation" --doma
 python3 skills/ui-ux-pro-max/scripts/search.py "list performance navigation" --stack <detected-stack>
 ```
 
-## Output Formats
+## Output Options
 
 The default design-system output is terminal-friendly ASCII. Use Markdown for
-docs:
+docs, JSON for script consumers, and `--output-dir` to choose where persisted
+design-system files are written:
 
 ```bash
 python3 skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system -f markdown
+python3 skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --json
+python3 skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system --persist --output-dir docs/ui
 ```
 
 ## Troubleshooting
