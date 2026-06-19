@@ -16,9 +16,9 @@ Choose a mode before mutating anything:
 - `cleanup on request`: after inventory and preservation, delete or retarget
   clearly redundant state the user explicitly asked to clean up.
 
-Default to `audit/report` or `refresh requested PR`. Do not delete branches, remove
-worktrees, retarget PRs, or close PRs unless the user explicitly asked for
-cleanup or the evidence makes the branch intent unambiguously redundant.
+Default to `audit/report` or `refresh requested PR`. In those modes, do not
+delete branches, remove worktrees, retarget PRs, or close PRs. Move to cleanup
+only when the user explicitly asks for those cleanup actions.
 
 When the user names a specific branch or PR, keep work on that exact branch.
 Do not redirect the work to a different PR or replacement branch unless the
@@ -151,8 +151,8 @@ Update active PR branches carefully:
 - if the delta is already represented by the base or default branch, mark it as
   redundant in the audit and close or delete it only when the user asked for
   cleanup;
-- retarget PR bases to the default branch when old base branches have merged or
-  been removed.
+- when retargeting was explicitly requested, retarget PR bases to the default
+  branch only after confirming old base branches have merged or been removed.
 
 Handle conflicts conservatively:
 
