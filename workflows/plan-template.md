@@ -41,7 +41,7 @@ for the work to count as done.
 
 - Required commands:
 - Runtime or browser checks:
-- GitHub checks:
+- GitHub checks or review path (CI, requested reviewers, `@codex review`):
 - Artifacts to inspect:
 - Evidence that proves completion:
 
