@@ -31,3 +31,7 @@ backup of `~/.codex`.
   stronger default authority without a current-doc justification.
 - Flag guidance that routes project-specific behavior into `codex-portable`
   when it should live in the target project repo instead.
+- Flag tracked `AGENTS.override.md` or `rules/` files unless they were
+  intentionally adopted as reviewed portable policy.
+- Flag project-specific agents or skills routed into `codex-portable` when they
+  should live in the target repo.

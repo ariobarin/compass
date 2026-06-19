@@ -16,7 +16,9 @@
 
 ## Workflow
 - Read frontend code to find the API call a click produces and reproduce it directly.
-- For debugging, prefer headful Chrome using the plugin.
+- For debugging, prefer the in-app Browser for localhost, file previews, and
+  public pages without sign-in. Use headful Chrome when existing profile state,
+  cookies, extensions, or signed-in sessions actually matter.
 - When the user explicitly asks for a goal, target state, or success criteria after exploration, draft a short collaborative goal in prose. Do not switch to formal goal-management workflow unless they ask for it.
 - For time-sensitive claims such as evidence status, benchmark numbers, freshness, or architecture state, include the verification date or snapshot and avoid words like "current", "latest", or "fresh" unless verified in the same run.
 

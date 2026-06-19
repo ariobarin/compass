@@ -8,7 +8,8 @@ and cache paths out of this repo.
 | --- | --- | --- | --- | --- |
 | Shell | Read, write, run commands, start processes | No | High | Controlled by live sandbox and approval policy. Keep command habits in workflows, not hardcoded runtime paths. |
 | GitHub CLI | Create repos, push branches, open PRs, inspect checks | Partial | High | Portable docs are fine. Auth state and tokens stay local. |
-| Chrome plugin | Uses logged-in Chrome state and browser tabs | Partial | High | Prefer for debugging when session state matters. Do not commit profile paths or cookies. |
+| Browser plugin | Uses the in-app browser for localhost, file previews, screenshots, DOM inspection, and public web pages | Partial | Medium | Prefer first for localhost and unauthenticated pages. Website allowlists, blocked sites, and any deeper developer-mode or CDP state stay local. |
+| Chrome plugin | Uses logged-in Chrome state and browser tabs | Partial | High | Prefer when session state, cookies, extensions, or the regular browser profile matter. Do not commit profile paths or cookies. |
 | Computer Use plugin | Controls Windows desktop apps | Partial | High | Useful fallback for visual desktop tasks. Keep runtime paths local. |
 | Documents plugin | Creates and edits document artifacts | Partial | Medium | Portable skill knowledge is fine. Generated files belong in task outputs, not config. |
 | which-llm plugin | Looks up current model costs, slugs, and benchmarks | Partial | Medium | Plugin source can be documented. Plugin cache and snapshots stay local. |

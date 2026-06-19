@@ -41,6 +41,7 @@ reason = "These docs guide repository maintenance but are not installed into a l
 
 [local_only]
 files = [
+  "AGENTS.override.md",
   "auth.json",
   "history.jsonl",
   "session_index.jsonl",
@@ -62,9 +63,11 @@ dirs = [
   "computer-use",
   "log",
   "memories",
+  "memories_extensions",
   "node_repl",
   "plugins",
   "process_manager",
+  "rules",
   "sessions",
   "sqlite",
   "tmp",

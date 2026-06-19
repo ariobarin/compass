@@ -38,6 +38,7 @@ foreach ($path in @(
 }
 
 $blockedNames = @(
+    "AGENTS.override.md",
     "auth.json",
     "history.jsonl",
     "session_index.jsonl",
@@ -57,13 +58,22 @@ $blockedDirs = @(
     ".sandbox-bin",
     ".sandbox-secrets",
     ".tmp",
+    "archived_sessions",
+    "automations",
+    "browser",
     "cache",
+    "computer-use",
     "log",
     "memories",
+    "memories_extensions",
+    "node_repl",
     "plugins",
+    "process_manager",
+    "rules",
     "sessions",
     "sqlite",
     "tmp",
+    "vendor_imports",
     "worktrees"
 )
 
