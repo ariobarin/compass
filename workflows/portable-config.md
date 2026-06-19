@@ -3,6 +3,9 @@
 Use this workflow when changing Codex setup that should survive a new machine,
 fresh profile, or copied repo checkout.
 
+These scripts target `-CodexHome` when passed, otherwise `$env:CODEX_HOME`,
+otherwise the default `%USERPROFILE%\.codex` home.
+
 ## Change flow
 
 1. Edit files in this repo first.
@@ -59,6 +62,10 @@ review:
 - plugin cache paths;
 - migration prompts and generated state;
 - auth, browser, or connector state.
+
+Do not treat live `automations/` state as the portable form of a reusable
+workflow. If an automation pattern should survive across machines, capture it
+as a skill, workflow doc, or reviewed config change instead.
 
 ## New machines
 

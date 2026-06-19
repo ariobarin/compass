@@ -13,9 +13,10 @@ this repo. They are service-side state, not portable files.
 
 ## Layout
 
-- `codex/AGENTS.md`: portable source for the live global `~/.codex/AGENTS.md`.
-  Keep only session-wide defaults there. Keep `AGENTS.override.md` local, and
-  keep project `AGENTS.md` files in the target repo.
+- `codex/AGENTS.md`: portable source for the live global `AGENTS.md` in the
+  active Codex home, usually `~/.codex/AGENTS.md`. Keep only session-wide
+  defaults there. Keep `AGENTS.override.md` local, and keep project
+  `AGENTS.md` files in the target repo.
 - `AGENTS.md`: repo-local maintenance guidance for this portable config repo.
   Use this for codex-portable process and review rules.
 - `codex/keybindings.json`: portable keyboard bindings.
@@ -70,6 +71,9 @@ Refresh the repo from the current live allowlist:
 Without `-Apply`, `snapshot.ps1` and `install.ps1` run in review mode and explain
 what they would change.
 
+All scripts target `-CodexHome` when passed, otherwise `$env:CODEX_HOME`,
+otherwise the default `%USERPROFILE%\.codex` home.
+
 ## Rules
 
 - Keep this repo small and boring.
@@ -80,6 +84,8 @@ what they would change.
   they are reviewed portable policy.
 - Do not commit secrets, auth files, SQLite state, logs, session history, caches,
   browser profiles, generated plugin caches, or machine runtime paths.
+- If an automation should become portable, capture it as a skill, workflow, or
+  reviewed config change, not by tracking live `automations/` state.
 - If you intentionally author a plugin, keep the plugin source and marketplace
   metadata in a normal repo path or dedicated plugin repo, not in live cache
   directories.

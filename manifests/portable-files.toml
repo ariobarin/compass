@@ -1,7 +1,9 @@
 # Human-owned Codex files that this repo is allowed to track.
 
 [codex]
-home = "%USERPROFILE%\\.codex"
+# The live target is the active Codex home: $CODEX_HOME when set, otherwise
+# the default %USERPROFILE%\.codex path.
+home = "$CODEX_HOME or %USERPROFILE%\\.codex"
 
 files = [
   "AGENTS.md",
@@ -70,6 +72,7 @@ dirs = [
   "rules",
   "sessions",
   "sqlite",
+  "threads",
   "tmp",
   "vendor_imports",
   "worktrees",

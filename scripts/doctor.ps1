@@ -72,6 +72,7 @@ $blockedDirs = @(
     "rules",
     "sessions",
     "sqlite",
+    "threads",
     "tmp",
     "vendor_imports",
     "worktrees"
