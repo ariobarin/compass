@@ -10,7 +10,8 @@ Use this skill to audit or refresh Git branch state without losing active work.
 Choose a mode before mutating anything:
 
 - `audit/report`: inventory branches, worktrees, remotes, and PRs; classify
-  their state; recommend next actions; do not mutate Git or PR state.
+  their state; recommend next actions; do not change branches, worktrees,
+  commits, or PR state.
 - `refresh requested PR`: keep work on the exact branch or PR the user named,
   refresh it against the current base, reverify, and preserve branch identity.
 - `cleanup on request`: after inventory and preservation, delete or retarget
@@ -55,8 +56,9 @@ depends on repo context, GitHub access, or multi-remote fork handling.
 
 ## Inventory first
 
-If the prompt or repo rules require read-only inspection, collect current local
-state first and skip fetch or prune:
+If the prompt or repo rules require read-only inspection, or the user has not
+opted into refreshing remote refs, collect current local state first and skip
+fetch or prune:
 
 ```powershell
 git status --short --branch
@@ -66,8 +68,8 @@ git branch -r --no-color
 git remote -v
 ```
 
-When ref refresh is allowed and the task is `audit/report`, cleanup, or PR
-refresh work, add:
+When the user has opted into refreshing remote refs and the task is
+`audit/report`, cleanup, or PR refresh work, add:
 
 ```powershell
 git fetch --all --prune
@@ -75,6 +77,10 @@ git fetch --all --prune
 
 If the current shell is not inside the target repo, stop and ask for the
 target `owner/repo` or local repo path before doing PR inspection or cleanup.
+
+When `audit/report` skips fetch or prune, label branch classifications as based
+on current local refs and call out that stale remote-tracking refs may affect
+recommendations.
 
 If GitHub is the host and `gh` is authenticated, infer `owner/repo` from
 `git remote get-url origin`, then gather PRs:
