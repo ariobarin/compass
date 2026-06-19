@@ -19,11 +19,17 @@ You are reviewing whether an implementation matches its specification.
 
 [Summary from the implementer]
 
+## Files And Paths
+
+[Absolute repo path, exact changed files, or diff location]
+
 ## Review Standard
 
 Treat the implementer report as a hint, not evidence.
 
 Read the changed code yourself and compare it directly against the task.
+If the repo path, changed files, or diff location are missing, say so instead
+of guessing through the repository.
 
 Check for:
 - missing requirements;

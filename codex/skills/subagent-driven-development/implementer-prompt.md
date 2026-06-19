@@ -14,12 +14,16 @@ You are implementing Task N: [task name]
 
 ## Context
 
-[Repo path, nearby files, architectural context, known pitfalls]
+[Absolute repo path, exact file/log/artifact paths, nearby files,
+architectural context, known pitfalls]
 
 ## Before You Begin
 
 Ask questions now if the requirements, boundaries, or validation target are
 unclear. Raise concerns before you start coding.
+
+If a required path is missing or only given relatively, ask for the exact
+absolute path instead of guessing.
 
 ## Your Job
 

@@ -23,7 +23,7 @@ Use this skill when all of these are true:
 - each task can be described with local context and concrete checks;
 - the controller can stay focused on sequencing, review, and integration.
 
-Do not use this skill when:
+Use another workflow when:
 
 - the work is still exploratory or the plan is not real yet;
 - tasks are tightly coupled and need continuous shared context;
@@ -35,16 +35,21 @@ Do not use this skill when:
 Hold the plan one level above execution:
 
 - restate task boundaries before dispatch;
-- give each implementer only the context needed for its slice;
+- give each implementer only the context needed for its slice, including exact
+  repo, file, log, and artifact paths when they matter;
 - track task state explicitly instead of relying on memory;
 - use fresh implementers for unrelated tasks;
 - run spec compliance review before code quality review;
 - send fixes back through the implementer path until review is clear;
+- keep execution with the worker path when a worker needs repair, narrowing,
+  rerouting, or a fresh owner;
+- keep the parent moving on independent read-only prep or controller work while
+  a child is slow, timed out, or waiting on external state;
 - publish only when the user asked for it or the repo workflow requires it.
 
 ## Prompt Templates
 
-Use the bundled prompt templates instead of hand-rolling dispatch text:
+Use the prompt templates in this skill instead of hand-rolling dispatch text:
 
 - [implementer-prompt.md](implementer-prompt.md): implementer task handoff.
 - [spec-reviewer-prompt.md](spec-reviewer-prompt.md): spec compliance review.
@@ -57,8 +62,8 @@ For each task:
 
 1. Dispatch the implementer with
    [implementer-prompt.md](implementer-prompt.md), plus the full task text,
-   repo path, scope boundaries, nearby files, validation target, and known
-   pitfalls.
+   absolute repo path, exact files or artifacts to inspect, scope boundaries,
+   nearby files, validation target, and known pitfalls.
 2. Require questions before coding when requirements or context are unclear.
 3. Require one concrete status on return:
    - `DONE`
@@ -83,6 +88,23 @@ For each task:
 
 Do not solve the task for the worker. Restore agency, then route execution back
 to the owner.
+
+## Wait Discipline
+
+- If a child times out or stalls, collect partial findings and ask what failed,
+  what was tried, and what the smallest next action is. Decide whether to add
+  context, narrow the slice, interrupt, close, or dispatch a fresh worker.
+- While a still-active child may touch the shared checkout, keep parent work to
+  independent prep, prompt shaping, review planning, or read-only verification.
+  Edit shared files only after closing, interrupting, or otherwise accounting
+  for that child.
+- Do not block the parent on a long-running reviewer when independent prep,
+  read-only verification, or unrelated follow-up remains. Hold the reviewed
+  diff at its current gate until that reviewer returns.
+- When the job stops being same-session implementation sequencing and becomes
+  mostly routing, monitoring, review fallback, or completion-gate enforcement,
+  create a controller-owned status plan with named owners and evidence gates.
+  Use `orchestration-controller` when oversight needs to stay stepped back.
 
 ## Review Loop
 
@@ -133,6 +155,9 @@ Never:
   job.
 - Pair with `action-items-to-prs` when the plan comes from a report, audit, or
   issue list that should become PR-scoped work.
+- Pair with `orchestration-controller` when the parent task is mostly routing,
+  monitoring, review fallback, or completion-gate enforcement instead of
+  implementation sequencing.
 
 ## Output
 
