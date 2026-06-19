@@ -5,10 +5,10 @@ agent, script, manifest entry, or config fragment belongs in `codex-portable`.
 
 ## Intake Standard
 
-Additions should be promoted only when they are human-owned, portable, and useful
-outside one transient task. Do not commit generated state, plugin cache output,
-auth state, sessions, logs, browser profiles, local runtime paths, or one-machine
-trust settings.
+Promote additions when they are human-owned, portable, and useful outside one
+transient task. Keep generated state, plugin cache output, auth state, sessions,
+logs, browser profiles, local runtime paths, and one-machine trust settings in
+live or ignored local storage.
 
 The default path is staged:
 
@@ -29,8 +29,8 @@ The default path is staged:
 - Portability boundary or tool capability: update `manifests/`.
 - Repo-only maintenance lesson: update `local-docs/`.
 - Session-wide personal default: update `codex/AGENTS.md` only after review.
-- Stable config fragment: update `codex/config.review.toml`, never live
-  `config.toml`.
+- Stable config fragment: update `codex/config.review.toml`; keep live
+  `config.toml` out of repo changes.
 
 If an addition fits more than one route, choose the narrowest route that solves
 the repeated problem.
@@ -57,10 +57,10 @@ Every addition should include a nearby stale-guidance pass:
 - Check whether `workflows/portable-config.md` links new workflows.
 - Check whether `scripts/doctor.ps1` should require the new durable file.
 - Check whether agent or tool docs still match current sandbox and review rules.
-- Remove or update guidance that describes an old flow.
+- Replace guidance that describes an old flow with the current route.
 
-Do not broaden the sweep into unrelated cleanup. Fix stale items that directly
-affect the new addition flow or current portability checks.
+Scope the sweep to directly related cleanup. Fix stale items that affect the new
+addition flow or current portability checks.
 
 ## PR Shape
 
