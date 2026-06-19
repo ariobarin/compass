@@ -4,6 +4,10 @@ Use this template for large, ambiguous, risky, or multi-step work. Keep the plan
 short enough to guide execution, not so detailed that it becomes a second
 implementation.
 
+Prefer native `/plan` or Plan mode when it is available and the work is still
+interactive. Use this template when you need a written plan artifact, a shared
+execution structure, or a durable repo-local workflow note.
+
 Use it when the user explicitly asks for a goal, target state, success
 criteria, or plan, or when the work clearly needs structured planning.
 
