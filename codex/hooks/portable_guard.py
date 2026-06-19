@@ -118,6 +118,25 @@ def git_root(path: Path) -> Path | None:
     return Path(root)
 
 
+def head_missing_from_remotes(repo: Path) -> bool:
+    remotes = run_git(
+        repo,
+        ["for-each-ref", "--format=%(refname:short)", "refs/remotes"],
+    )
+    if remotes.returncode != 0:
+        return False
+    if not any(line.strip() for line in remotes.stdout.splitlines()):
+        return False
+
+    contains = run_git(
+        repo,
+        ["branch", "-r", "--contains", "HEAD", "--format=%(refname:short)"],
+    )
+    if contains.returncode != 0:
+        return False
+    return not any(line.strip() for line in contains.stdout.splitlines())
+
+
 def candidate_repos(cwd: Path) -> list[Path]:
     repos: list[Path] = []
     root = git_root(cwd)
@@ -155,14 +174,16 @@ def repo_status_summary(repo: Path) -> str | None:
     body = [line for line in lines[1:] if line.strip()]
     header = lines[0]
     has_ahead = "[ahead " in header or "ahead " in header
+    has_no_upstream = "..." not in header
+    has_unpushed_no_upstream = has_no_upstream and head_missing_from_remotes(repo)
 
-    if not body and not has_ahead:
+    if not body and not has_ahead and not has_unpushed_no_upstream:
         return None
 
     details = []
     if body:
         details.append(f"{len(body)} dirty entries")
-    if has_ahead:
+    if has_ahead or has_unpushed_no_upstream:
         details.append("unpushed commits")
     if not details:
         return None
