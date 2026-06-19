@@ -1,6 +1,6 @@
 ---
 name: proper-flowcharts
-description: Create readable standard flowcharts for workflows, decisions, systems, process changes, and Mermaid diagrams. Use for flowcharts, process maps, or cleanup.
+description: Create readable standard flowcharts for workflows, systems, and Mermaid diagrams. Use when creating, reviewing, or cleaning up flowcharts or process maps.
 ---
 
 # Proper Flowcharts
