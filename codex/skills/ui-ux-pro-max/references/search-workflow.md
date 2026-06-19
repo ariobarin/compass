@@ -60,7 +60,7 @@ Available domains:
 | `google-fonts` | Individual Google Fonts lookup |
 | `react` | React and Next.js performance |
 | `web` | App interface rules such as touch targets and safe areas |
-| `prompt` | AI prompt and CSS keywords |
+| `icons` | Icon style and usage guidance |
 
 ## Stack Searches
 
