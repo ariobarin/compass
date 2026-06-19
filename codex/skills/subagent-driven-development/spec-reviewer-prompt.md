@@ -21,15 +21,16 @@ You are reviewing whether an implementation matches its specification.
 
 ## Files And Paths
 
-[Absolute repo path, exact changed files, or diff location]
+- Repo path: [ABSOLUTE_REPO_PATH]
+- Diff locator: [BASE_SHA..HEAD_SHA, PR number, patch file, or exact changed files]
 
 ## Review Standard
 
 Treat the implementer report as a hint, not evidence.
 
 Read the changed code yourself and compare it directly against the task.
-If the repo path, changed files, or diff location are missing, ask for that
-context before reviewing.
+If the repo path or diff locator is missing, ask for that exact missing field
+before reviewing.
 
 Check for:
 - missing requirements;
