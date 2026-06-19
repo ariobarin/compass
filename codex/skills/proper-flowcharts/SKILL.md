@@ -13,7 +13,7 @@ Create flowcharts that teach the reader how a process works, changes, or transfe
 
 1. Define the reader and job.
    - Decide whether the chart is for orientation, review, implementation, debugging, change comparison, or documentation.
-   - Pick the level of detail that reader needs. Do not put every edge case in the overview.
+   - Pick the level of detail that reader needs. Put rare edge cases in focused supporting diagrams.
    - Treat screenshots, sketches, and examples as intent signals, not templates to copy.
 
 2. Inventory the process before drawing.
@@ -24,7 +24,7 @@ Create flowcharts that teach the reader how a process works, changes, or transfe
 
 3. Choose a shape language.
    - Use standard flowchart symbols where they fit: terminal, process, decision, input/output, predefined process, connector, data store, document, manual action, preparation, and fork/join.
-   - Map shapes to the domain intentionally. A shape can represent any domain concept that matches its flowchart meaning, but do not bake in project-specific meanings.
+   - Map shapes to the domain intentionally. A shape can represent any domain concept that matches its flowchart meaning. Keep project-specific meanings in labels or legends.
    - Keep one meaning per shape within a diagram or diagram set. Add a compact legend only when the mapping is not obvious.
    - Make nodes atomic: one operation, one call boundary, one artifact, or one decision. Read [notation-and-quality.md](references/notation-and-quality.md) when you need symbol details, mode rules, Mermaid notes, or final QA.
 
@@ -33,8 +33,8 @@ Create flowcharts that teach the reader how a process works, changes, or transfe
    - Label decision exits with the condition, such as `yes`, `no`, `valid`, `retry`, or the business-specific branch name.
    - Use active verb labels for actions and noun labels for artifacts or states.
    - Keep labels short enough to read inside shapes. Move explanation into adjacent notes or prose.
-   - Avoid crossing lines. Use connectors, lanes, or separate diagrams instead of tangled edges.
-   - Do not hide branch logic in process labels. A real choice needs a decision node with separate outgoing edges.
+   - Use connectors, lanes, or separate diagrams to keep edges readable.
+   - Put branch logic in decision nodes with separate labeled outgoing edges.
 
 5. Decompose complex systems.
    - Start with one readable overview.
@@ -44,12 +44,12 @@ Create flowcharts that teach the reader how a process works, changes, or transfe
 6. Make the artifact functional.
    - Make the flow understandable: trigger, baseline or starting state, changed behavior if any, decision points, risks, responsibilities, and final outcomes.
    - Cite or reference evidence when the chart represents a real system. State assumptions when the chart includes intended or inferred behavior.
-   - If a mode, variant, or toggle changes the chart, render the selected state rather than baking every mode into one graph. Disable or normalize controls that do not apply.
+   - If a mode, variant, or toggle changes the chart, render the selected state. Disable or normalize controls outside the selected state.
    - Preserve reader context in interactive artifacts. Mode changes should keep the selected diagram and scroll position when possible.
 
 7. Verify the rendered result.
    - Render the diagram in the target medium, such as Markdown, HTML, slides, or an image.
    - Check that text is readable at the expected viewport or page size.
    - Fix tiny full-width mega-flows by splitting them or changing orientation.
-   - Avoid internal scroll panes unless the user explicitly needs a large navigable canvas.
+   - Use page-level flow by default. Add an internal scroll pane only when the user explicitly needs a large navigable canvas.
    - Confirm there are no clipped nodes, unreadable labels, broken Mermaid parse errors, page-level overflow, stale state, unrelated variant content, missing steps, or impossible paths.

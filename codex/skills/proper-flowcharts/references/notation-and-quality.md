@@ -27,8 +27,8 @@ Use this reference when creating, revising, or reviewing flowcharts. The shape m
 - Keep a shape's meaning stable across the artifact.
 - Use color as a secondary cue only. The diagram must still work in grayscale.
 - Use a legend only for non-obvious mappings. Keep it compact and put it after or beside the diagram.
-- If the renderer cannot draw a desired standard shape, use the closest supported shape and name the semantic role in the label or legend.
-- Avoid inventing decorative shapes. If the distinction does not help the reader, use a normal process rectangle.
+- When the renderer lacks a desired standard shape, use the closest supported shape and name the semantic role in the label or legend.
+- Use a normal process rectangle for distinctions with little reader value.
 
 ## Flowchart Grammar
 
@@ -38,7 +38,7 @@ Use this reference when creating, revising, or reviewing flowcharts. The shape m
 - Use call-boundary nodes for external or model calls. The call node should name the call. Parse or interpret the result in the following decision node.
 - Keep append and feedback steps precise. Browser observations, tool results, inspected schemas, metadata records, and summary artifacts are different state updates.
 - Show causal visibility. If a result is appended before the next model, service, or human decision, make that feedback edge explicit.
-- Do not let a low-detail index or catalog jump directly to concrete execution when the real process requires inspection, lookup, schema retrieval, authorization, or another detail step first.
+- Show required inspection, lookup, schema retrieval, authorization, or other detail steps between a low-detail index and concrete execution.
 
 Generic call-boundary pattern:
 
@@ -83,7 +83,7 @@ flowchart TD
 Practical notes:
 
 - Quote or simplify labels that contain punctuation if the renderer is strict.
-- Avoid reserved-looking node ids such as `call`, `class`, `default`, or `end`.
+- Use node ids outside Mermaid reserved words such as `call`, `class`, `default`, or `end`.
 - Use stable node ids that describe role, not label text.
 - Prefer `TD` for step-by-step workflows and `LR` for compact pipelines. Switch orientation when readability suffers.
 - Newer Mermaid shape syntax is not always supported everywhere. Test in the actual target renderer before relying on extended shapes.
@@ -91,7 +91,7 @@ Practical notes:
 ## Readability Rules
 
 - One diagram should answer one main question.
-- Show the happy path clearly, then add exception paths without overpowering it.
+- Show the happy path clearly, then add visually secondary exception paths.
 - Put rare failures, retries, cleanup, and internals in supporting diagrams when they make the main flow hard to read.
 - Keep labels short. Use surrounding prose for detailed explanation.
 - Label all non-obvious edges and all decision exits.
@@ -99,7 +99,7 @@ Practical notes:
 - Use swimlanes when responsibility matters more than sequence alone.
 - Use connectors when the alternative is a spaghetti edge.
 - Keep visual styling quiet: restrained colors, consistent line weights, no decorative gradients, no oversized legend.
-- Do not shrink a large flow until it becomes a thin strip. Split it into focused diagrams or change orientation.
+- Split large flows into focused diagrams or change orientation before labels become unreadable.
 - Prefer one selected diagram at a time for dense technical briefings. Use tabs, a selector, or sections instead of stacked miniatures.
 - Make the default selected view match the reader's main job. For runtime comparison, open on runtime behavior, not training, setup, or background architecture.
 - Keep explanatory page text sparse. Use diagrams, concise labels, compact legends, and optional source notes.
@@ -108,9 +108,9 @@ Practical notes:
 
 When an artifact has toggles, filters, modes, or variants:
 
-- The control should select the rendered visualization. Do not draw all modes inside one graph unless the graph is explicitly a comparison view.
+- The control should select the rendered visualization. Draw all modes inside one graph only when the graph is explicitly a comparison view.
 - Every visible title, chip, legend item, note, and diagram body must match the selected state.
-- If a mode does not apply to an item, disable the control, normalize to the effective mode, or explain the non-applicability. Do not invent a fake path.
+- If a mode does not apply to an item, disable the control, normalize to the effective mode, or explain the non-applicability.
 - Preserve comparison context. Toggling should keep the selected diagram, scroll position, and comparable view whenever the selected diagram still exists.
 - If a selected diagram is unavailable in a temporary mode, fall back cleanly and restore it when the mode becomes available again.
 - A superficial label swap is not a meaningful mode difference. Verify that the flow changes in the correct way or remove the implied distinction.
@@ -139,7 +139,7 @@ Quality rules:
 
 - Inspect source code, docs, logs, traces, screenshots, API calls, runtime behavior, requirements, design notes, or intended behavior before drawing.
 - Distinguish confirmed behavior from inferred or intended behavior when the reader could otherwise mistake one for the other.
-- Do not force unrelated components into a shared template just because the diagrams need to compare them.
+- Use separate templates for unrelated components that need comparison.
 - Use separate diagrams when systems or alternatives have genuinely different control flow.
 - When comparing variants, verify that variant-specific labels, notes, and branches only appear in the matching variant.
 - Treat examples and screenshots as evidence of a pattern to inspect. Fix the pattern across the artifact when it recurs.
@@ -155,8 +155,8 @@ Use annotations only when they reduce hidden inference:
 - artifact evidence semantics;
 - mode-specific capability constraints.
 
-Keep annotations short and visually secondary. Do not use annotations to repeat obvious node labels or compensate for a missing flow step.
-Use visual proximity or dotted, non-directional connectors for annotations. Do not connect notes with normal directed flow arrows, because that makes them look like executable steps.
+Keep annotations short and visually secondary. Use them for hidden inference that the nodes and edges already support.
+Use visual proximity or dotted, non-directional connectors for annotations. Keep normal directed flow arrows for executable steps.
 
 ## Rendered QA Checklist
 
@@ -165,10 +165,10 @@ Before delivery, verify the actual rendered artifact:
 - The diagram has a clear start, end, and main path.
 - Decision branches are labeled and recombine only when that is truly the behavior.
 - Text is readable at the expected viewport, page size, or slide size.
-- No node text overlaps, truncates badly, or escapes its shape.
-- No shape is so small that its semantic difference is invisible.
-- No page-level horizontal overflow appears on mobile or narrow viewports.
-- No internal scroll area hides the main point unless an intentional large-canvas interaction is provided.
+- Node text fits its shape and stays readable.
+- Shapes are large enough for their semantic differences to be visible.
+- The page fits mobile and narrow viewports in the available width.
+- The main point stays visible in the main page flow. Internal scroll areas appear only in intentional large-canvas interactions.
 - Mermaid or diagram tooling reports no parse or render errors.
 - Supporting diagrams add clarity instead of repeating the same overview.
 - The chart teaches the workflow faster than prose alone.
@@ -179,12 +179,12 @@ For interactive artifacts, also verify:
 - toggles update the diagram body, not only a chip or label;
 - controls preserve the reader's selected diagram and scroll position where possible;
 - non-applicable controls are disabled, normalized, or clearly explained;
-- no stale mode-specific content appears in another mode.
+- visible mode-specific content matches the selected mode.
 
 For semantic validation, check:
 
 - expected required steps are present;
-- impossible paths are absent;
+- paths are possible under the documented rules;
 - low-detail discovery paths include required inspection or detail retrieval before concrete execution;
 - call outputs flow to decisions, then to separate branch actions;
 - append steps record the right kind of state;
