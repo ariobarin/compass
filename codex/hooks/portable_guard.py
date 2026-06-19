@@ -13,7 +13,7 @@ from pathlib import Path
 
 DASH_CHARS = chr(0x2013) + chr(0x2014)
 PUBLIC_COMMAND_RE = re.compile(
-    r"\b(git\s+commit|git\s+tag|gh\s+pr\s+(create|edit|comment|review)|gh\s+release)\b",
+    r"\b(git\s+commit|git\s+tag|gh\s+pr\s+\S+|gh\s+release)\b",
     re.IGNORECASE,
 )
 def read_input() -> dict:
