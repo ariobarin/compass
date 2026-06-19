@@ -13,7 +13,7 @@ from pathlib import Path
 
 DASH_CHARS = chr(0x2013) + chr(0x2014)
 PUBLIC_COMMAND_RE = re.compile(
-    r"\b(git\s+commit|git\s+tag|gh(?:\s+(?:--repo|-R)\s+\S+)*\s+pr\s+\S+|gh\s+release)\b",
+    r"\b(git(?:\s+(?:(?:-C|-c|--git-dir|--work-tree|--namespace)\s+\S+|--[A-Za-z0-9-]+(?:=\S+)?|-[A-Za-z]+))*\s+(?:commit|tag)|gh(?:\s+(?:--repo|-R)\s+\S+)*\s+pr\s+\S+|gh\s+release)\b",
     re.IGNORECASE,
 )
 def read_input() -> dict:
@@ -122,15 +122,15 @@ def candidate_repos(cwd: Path) -> list[Path]:
     root = git_root(cwd)
     if root is not None:
         repos.append(root)
-    else:
-        try:
-            for child in cwd.iterdir():
-                if not child.is_dir():
-                    continue
-                if (child / ".git").exists():
-                    repos.append(child)
-        except OSError:
-            pass
+
+    try:
+        for child in cwd.iterdir():
+            if not child.is_dir():
+                continue
+            if (child / ".git").exists():
+                repos.append(child)
+    except OSError:
+        pass
 
     unique: list[Path] = []
     seen: set[str] = set()
