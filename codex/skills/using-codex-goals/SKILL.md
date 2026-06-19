@@ -92,8 +92,6 @@ goal.
 
 ## Related Skills
 
-- Use `orchestration-controller` when the parent goal spans multiple workers,
-  long-running monitoring, or review fallback routing.
 - Use `subagent-driven-development` when a goal already has independent
   implementation slices and needs controller-led subagent execution.
 - Use `action-items-to-prs` when a goal should become one or more PR-scoped
