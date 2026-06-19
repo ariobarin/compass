@@ -89,7 +89,8 @@ needed for a normal install.
 
 Run the narrowest checks that prove the skill is well-formed and portable:
 
-- `python $CODEX_HOME/skills/.system/skill-creator/scripts/quick_validate.py <skill-folder>`
+- PowerShell: `$home = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE ".codex" }; python (Join-Path $home "skills\.system\skill-creator\scripts\quick_validate.py") <skill-folder>`
+- Bash: `python "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py" <skill-folder>`
 - `.\scripts\doctor.ps1`
 - `git diff --check`
 
