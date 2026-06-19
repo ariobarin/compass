@@ -109,7 +109,15 @@ foreach ($skillFile in $skillFiles) {
 $agentFiles = Get-ChildItem -Path (Join-Path $repoRoot "codex\agents") -File -Filter "*.toml" -ErrorAction SilentlyContinue
 foreach ($agentFile in $agentFiles) {
     $agentText = Get-Content -Raw -LiteralPath $agentFile.FullName
-    if ($agentText -match "(?i)read-only" -and $agentText -notmatch '(?m)^sandbox_mode\s*=\s*"read-only"') {
+    $developerInstructions = [regex]::Match($agentText, "(?m)^developer_instructions\s*=")
+    if ($developerInstructions.Success) {
+        $agentMetadata = $agentText.Substring(0, $developerInstructions.Index)
+    }
+    else {
+        $agentMetadata = $agentText
+    }
+
+    if ($agentText -match "(?i)read-only" -and $agentMetadata -notmatch '(?m)^sandbox_mode\s*=\s*"read-only"\s*$') {
         $problems.Add("read-only agent missing sandbox_mode: $($agentFile.FullName)")
     }
 }
