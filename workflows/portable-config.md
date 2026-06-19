@@ -41,6 +41,7 @@ review:
 
 - generated marketplace timestamps and local cache paths;
 - app runtime and MCP binary paths;
+- MCP server transport wiring, URLs, OAuth callback overrides, and token or header config;
 - project trust entries for one machine;
 - plugin cache paths;
 - migration prompts and generated state;
