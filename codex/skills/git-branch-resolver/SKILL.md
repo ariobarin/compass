@@ -164,15 +164,18 @@ Handle conflicts conservatively:
   that intent;
 - run `git diff --check` after conflict resolution.
 
-Delete only after evidence:
+Delete only after explicit cleanup approval and evidence:
 
+- confirm the user asked for cleanup or approved the specific cleanup action;
 - prove the branch intent exists in `origin/<default>` or an open PR before
   deleting local branches, worktrees, or backup refs;
-- if the upstream state is uncertain, preserve first and delete later;
-- delete local branches after confirming work is merged, superseded, closed as
-  redundant, or preserved elsewhere;
-- delete remote branches only after confirming no open PR depends on them;
-- remove clean stale worktrees with `git worktree remove <path>`;
+- if the upstream state is uncertain, preserve first and ask before deleting;
+- delete local branches only after approval and after confirming work is merged,
+  superseded, closed as redundant, or preserved elsewhere;
+- delete remote branches only after approval and after confirming no open PR
+  depends on them;
+- remove clean stale worktrees with `git worktree remove <path>` only after
+  approval;
 - never remove dirty worktrees until dirty state is committed, pushed, or
   explicitly documented as disposable.
 
