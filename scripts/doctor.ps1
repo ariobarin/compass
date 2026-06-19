@@ -133,7 +133,11 @@ foreach ($agentFile in $agentFiles) {
         if ($line -match '^\s*([A-Za-z0-9_-]+)\s*=\s*"""') {
             $openingIndex = $line.IndexOf('"""')
             $afterOpening = $line.Substring($openingIndex + 3)
-            if ($afterOpening -notmatch '"""') {
+            $sameLineValue = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"""(.*?)"""\s*(#.*)?$')
+            if ($sameLineValue.Success) {
+                $topLevelValues[$sameLineValue.Groups[1].Value] = $sameLineValue.Groups[2].Value
+            }
+            elseif ($afterOpening -notmatch '"""') {
                 $inMultilineString = $true
             }
             continue
