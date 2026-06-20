@@ -19,3 +19,17 @@ backup of `~/.codex`.
 - Use `.\scripts\verify-live.ps1 -SkipCodexCommand` to inspect live drift.
 - Review `codex/config.review.toml` manually before copying any config into a
   live Codex home.
+
+## Skill authoring
+
+Skills should shape judgment before they prescribe steps. Start by making the
+agent understand the role it is taking on, why that role exists, what failure
+mode it prevents, and what boundaries preserve good judgment.
+
+- Lead with the mental model, not a checklist.
+- Use procedures only for fragile or exact operations.
+- Prefer principles, boundaries, and short examples over exhaustive branches.
+- Trust the agent to reason from the right stance instead of turning the skill
+  into a flowchart.
+- Keep concrete prompts and templates where they teach the role or preserve a
+  handoff contract.

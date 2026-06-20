@@ -41,8 +41,8 @@ Return one status: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, or BLOCKED.
 ```
 
 The controller should keep ownership of the parent goal. A subagent completes
-only its slice and returns evidence for integration. `BLOCKED` is a repair
-state, not a successful slice outcome. The controller preserves parent-goal
+only its slice and returns evidence for integration. `BLOCKED` is an unfinished
+signal, not a successful slice outcome. The controller preserves parent-goal
 judgment, asks unblock questions, routes execution to a worker or fresh worker,
 and records any concrete dependency that remains.
 

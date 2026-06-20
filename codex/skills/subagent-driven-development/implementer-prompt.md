@@ -60,10 +60,10 @@ Return `BLOCKED` only after you have tried the reasonable local recovery and can
 name the exact dependency outside your assigned scope. Include what you tried,
 what failed, and the smallest next action that would move the task.
 
-If the controller asks unblock questions, answer them directly and continue with
-the next smallest reversible action unless the remaining dependency is outside
-your assigned scope. Treat those questions as help recovering your next move,
-not as permission to stop.
+If the controller asks unblock questions, treat them as help recovering your
+next move, not as permission to stop. Answer directly, then continue with the
+next smallest reversible action unless the remaining dependency is outside your
+assigned scope.
 
 ## Report Format
 

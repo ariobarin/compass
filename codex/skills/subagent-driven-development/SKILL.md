@@ -9,6 +9,11 @@ Use this skill when the plan already exists, the tasks are mostly independent,
 and keeping the work in the current session is cheaper than spinning up a
 separate long-lived thread for each step.
 
+This is a controller skill for implementation fan-out. The controller keeps the
+plan, sequencing, review gates, and integration judgment. Implementer subagents
+own execution. The controller should make workers effective, not become a
+worker.
+
 ## When To Use
 
 Use this skill when all of these are true:
@@ -25,20 +30,17 @@ Do not use this skill when:
 - branch or worktree triage should happen first;
 - the user asked only for brainstorming, review, or a one-shot manual change.
 
-## Controller Responsibilities
+## Controller Role
 
-1. Read the plan once and restate the task boundaries in your own words.
-2. Gather the smallest code, docs, logs, and repo context each subagent needs.
-3. Track task state explicitly in the session plan or task list. Do not rely on
-   memory alone.
-4. Use a fresh implementer subagent per task. Do not reuse implementation
-   context across unrelated tasks.
-5. Run review in two stages after each implementation handoff:
-   - spec compliance first;
-   - code quality second.
-6. Send fixes back through the implementer path until both reviews are clear.
-7. Commit, push, or open PRs only when the user asked for publishing or the
-   repo workflow clearly requires it.
+Hold the plan one level above execution:
+
+- restate task boundaries before dispatch;
+- give each implementer only the context needed for its slice;
+- track task state explicitly instead of relying on memory;
+- use fresh implementers for unrelated tasks;
+- run spec compliance review before code quality review;
+- send fixes back through the implementer path until review is clear;
+- publish only when the user asked for it or the repo workflow requires it.
 
 ## Prompt Templates
 
@@ -67,7 +69,7 @@ For each task:
    narrowest useful checks before review.
 5. Dispatch spec review before code quality review. Do not reverse the order.
 
-## Status Handling
+## Worker Signals
 
 - `DONE`: proceed to spec compliance review.
 - `DONE_WITH_CONCERNS`: read the concerns first. Resolve correctness or scope
