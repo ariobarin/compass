@@ -12,8 +12,8 @@ Done means:
 Scope:
 Do not touch:
 Evidence required:
-If waiting:
-If blocked:
+If waiting on external state:
+If stuck or failing:
 Subagents:
 ```
 
@@ -41,7 +41,10 @@ Return one status: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, or BLOCKED.
 ```
 
 The controller should keep ownership of the parent goal. A subagent completes
-only its slice and returns evidence for integration.
+only its slice and returns evidence for integration. `BLOCKED` is an unfinished
+signal, not a successful slice outcome. The controller preserves parent-goal
+judgment, asks unblock questions, routes execution to a worker or fresh worker,
+and records any concrete dependency that remains.
 
 ## Delegation Flow
 
@@ -55,7 +58,7 @@ Use this flow when the parent goal has independent slices:
    unresolved risks.
 5. Controller reviews the evidence against the slice done condition.
 6. Controller integrates results across slices and decides whether the parent
-   goal is complete, needs more work, or is still waiting.
+   goal is complete, needs more work, or has a named external wait.
 
 The controller should not outsource final parent completion. A subagent can say
 its slice is done, but only the controller can verify that every slice and
@@ -103,8 +106,13 @@ the user explicitly wants exploration only.
 Use waiting rules for external systems:
 
 - If waiting on PR review, keep the goal active and poll for new review comments
-  or approval signals.
+  or approval signals. Use the wait time for independent checks or critique when
+  they can move the goal.
 - If waiting on CI, keep the goal active until checks pass, fail with actionable
   logs, or time out under the user's stated policy.
-- If waiting on a benchmark, preserve artifacts and report the next expected
+- If waiting on an external run, preserve artifacts and report the next expected
   checkpoint instead of marking complete early.
+
+Do not treat failed setup, stale review, or a partial run as completed waiting.
+Convert it into worker questions, owner reroute, a real monitor, or the concrete
+dependency that remains.
