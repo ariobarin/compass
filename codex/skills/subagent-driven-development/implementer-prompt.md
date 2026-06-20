@@ -35,8 +35,10 @@ workflow requires one.
 
 ## While You Work
 
-If you hit something unexpected, stop and ask. Do not guess through unclear
-requirements, repo policy, or architecture.
+If you hit something unexpected, diagnose and fix it inside the assigned scope.
+Do not hand routine setup, test, dependency, merge, or validation problems back
+as blockers. Ask the controller only when requirements, repo policy, ownership,
+or architecture are unclear enough that continuing would risk the task.
 
 ## Code Organization
 
@@ -48,11 +50,15 @@ requirements, repo policy, or architecture.
 
 ## Escalate Early
 
-Return `NEEDS_CONTEXT` or `BLOCKED` when:
+Return `NEEDS_CONTEXT` when:
 - requirements are missing;
 - the task needs design choices the plan did not settle;
 - the repo state or local guidance conflicts with the requested change;
 - you are reading widely without making progress.
+
+Return `BLOCKED` only after you have tried the reasonable repair path and can
+name the exact controller or user decision needed. Include what you tried, what
+failed, and the smallest next action that would move the task.
 
 ## Report Format
 

@@ -13,7 +13,7 @@ Scope:
 Do not touch:
 Evidence required:
 If waiting:
-If blocked:
+If stuck or failing:
 Subagents:
 ```
 
@@ -41,7 +41,9 @@ Return one status: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, or BLOCKED.
 ```
 
 The controller should keep ownership of the parent goal. A subagent completes
-only its slice and returns evidence for integration.
+only its slice and returns evidence for integration. `BLOCKED` is a repair
+state, not a successful slice outcome; the controller should diagnose, repair,
+reroute, or ask for the smallest serious decision that remains.
 
 ## Delegation Flow
 
@@ -106,5 +108,5 @@ Use waiting rules for external systems:
   or approval signals.
 - If waiting on CI, keep the goal active until checks pass, fail with actionable
   logs, or time out under the user's stated policy.
-- If waiting on a benchmark, preserve artifacts and report the next expected
+- If waiting on an external run, preserve artifacts and report the next expected
   checkpoint instead of marking complete early.

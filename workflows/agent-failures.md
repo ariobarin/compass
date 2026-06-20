@@ -50,10 +50,10 @@ date: 2026-06-18
 repo or workflow: WebMCP overnight benchmark orchestration
 task: coordinate worker threads for benchmark runs, dictionary PR review, agent modification audit, and ablation planning
 first failure: the controller accepted worker blocker and done claims as terminal state instead of auditing them as evidence claims and converting actionable blockers into PRs, review paths, smokes, or owner handoffs
-downstream effects: benchmark work stopped at blocker classification, no countable full A/B/C results were produced, review wait was treated too passively, and the controller later overcorrected by directly implementing worker-owned changes
+downstream effects: work stopped at blocker classification, no countable full A/B/C results were produced, review wait was treated too passively, and the controller later overcorrected by directly implementing worker-owned changes
 evidence: live objective docs contained no full-result evidence but had completion-shaped blocker checkboxes; worker and monitor threads reported no intervention needed while no full benchmark runner was active
 root cause category: workflow mismatch, weak verification
-fix made: added the orchestration-controller skill to force status classification, blocker conversion, alternate review paths, precedent search before user-decision stops, and explicit ownership boundaries; added it to the portable skill allowlist
+fix made: added the orchestration-controller skill to force high-agency status classification, blocker repair, alternate review paths, precedent search before user-decision stops, and explicit ownership boundaries; added it to the portable skill allowlist
 verification: `python C:\Users\Administrator\.codex\skills\.system\skill-creator\scripts\quick_validate.py codex\skills\orchestration-controller`, `.\scripts\doctor.ps1`, and `git diff --check` passed before PR
 should become durable guidance: yes, as a focused skill rather than a broad global rule
 ```

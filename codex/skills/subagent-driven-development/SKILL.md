@@ -73,8 +73,11 @@ For each task:
 - `DONE_WITH_CONCERNS`: read the concerns first. Resolve correctness or scope
   concerns before review.
 - `NEEDS_CONTEXT`: provide the missing context and re-dispatch.
-- `BLOCKED`: change something before retrying. Add context, pick a stronger
-  model, split the task, or escalate to the user if the plan is wrong.
+- `BLOCKED`: treat this as a repairable state, not a terminal result. Inspect
+  the reason, add context, pick a stronger model, split the task, repair local
+  setup, reroute ownership, or use `orchestration-controller` for broader
+  coordination. Ask the user only when the plan is wrong or a serious
+  user-owned decision remains.
 
 Do not ignore a blocked signal and simply ask for the same work again.
 
@@ -132,4 +135,4 @@ Never:
 
 Report the plan used, task order, subagent status per task, review findings,
 checks run, and whether the branch is ready for the next task, ready for PR
-work, or blocked.
+work, or needs a named repair action.

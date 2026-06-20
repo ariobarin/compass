@@ -1,7 +1,9 @@
 # Controller Playbooks
 
 Load this reference when the controller needs concrete prompts, status repair
-patterns, review fallback, or long-running monitor behavior.
+patterns, review fallback, or long-running monitor behavior. The playbooks keep
+the controller moving toward the requested result instead of reporting failure
+back to the user as if it were completion.
 
 ## Contents
 
@@ -40,12 +42,17 @@ Convert worker claims into the next real action:
 - `DONE`: verify against the parent objective, not the worker's interpretation.
 - `DONE_WITH_CONCERNS`: split concerns into fixes, reviews, reruns, defers, or
   accepted risks.
-- `BLOCKED`: identify the repro, patch path, review path, precedent, or owner
-  reroute that can move the work.
+- `BLOCKED`: treat as a repair request. Identify the repro, root cause, patch
+  path, review path, precedent, or owner reroute that can move the work.
 - `NEEDS_CONTEXT`: search docs, prior chat, live docs, issues, PRs, and handoff
   notes before asking the user.
 - `WAITING_ON_REVIEW`: move to the review fallback ladder.
-- `NO RESULTS`: choose the next executable launch, smoke, patch, or deferral.
+- `NO RESULTS`: choose the next executable launch, smoke, patch, rerun, or
+  explicit user deferral.
+
+Do not accept "I am blocked" as the final answer. The controller's normal move
+is to diagnose, fix or route the fix, validate it, and continue the parent
+objective.
 
 ## Review Fallback Ladder
 
@@ -77,7 +84,7 @@ owner by default.
 For long-running work:
 
 - choose a cadence that matches the system half-life, often 5 to 15 minutes for
-  active CI, review, or benchmark work;
+  active CI, review, deployment, data collection, or other external progress;
 - sleep between checks when the current state has a plausible next event;
 - on wake-up, ask whether the system can still move right now;
 - intervene when a worker drifts, accepts a false blocker, accepts false
@@ -95,7 +102,7 @@ Objective:
 Current state:
 Running now:
 Completed with evidence:
-Invalid or partial:
+Invalid or partial, with repair path:
 Review state:
 Exact next owners and actions:
 Explicit deferrals and why they are safe:

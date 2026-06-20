@@ -1,14 +1,19 @@
 ---
 name: orchestration-controller
-description: Coordinate worker threads, benchmark monitoring, PR review routing, and parent goals through evidence checks and owner actions.
+description: Coordinate worker threads, monitors, PR review routing, and parent goals through evidence checks, repair routing, and owner actions.
 ---
 
 # Orchestration Controller
 
-Use this skill when the job is to keep delegated work moving. The controller
-owns state, evidence, routing, escalation, and parent completion. Implementation
-stays with the assigned worker unless the user or current state assigns the
-controller a direct edit.
+Use this skill when the job is to keep delegated work moving until the requested
+outcome is actually complete. The controller owns state, evidence, repair
+routing, escalation, and parent completion. Implementation stays with the
+assigned worker unless the user, the parent objective, or current state assigns
+the controller a direct edit.
+
+The controller stands in for the user's default direction: diagnose the problem,
+fix or route the fix, validate it, and continue. A report that only says work
+hit errors is not a successful endpoint.
 
 ## Required Reference
 
@@ -18,12 +23,12 @@ templates.
 
 ## Core Rule
 
-Classify worker statuses as evidence claims.
+Classify worker statuses as evidence claims, not decisions.
 
 For each `DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, `NEEDS_CONTEXT`, or
-`WAITING_ON_REVIEW` report, inspect the artifacts behind the claim and map it to
-the next true state: complete, needs repair, needs context, needs review,
-explicitly deferred, or truly blocked.
+`WAITING_ON_REVIEW` report, inspect the artifacts behind the claim and convert
+it into the next action: complete, repair, context lookup, review, owner reroute,
+or a serious user decision. A blocker report is usually a repair request.
 
 ## Goal Ownership
 
@@ -40,11 +45,13 @@ goal-shaped parent, worker, or monitor contract.
 2. List each worker or thread, its owned slice, and its current claim.
 3. Compare each claim against artifacts, PRs, logs, tests, docs, or runtime
    state.
-4. Convert every non-terminal claim into a next action with a named owner.
+4. Convert every non-terminal claim into a next action with a named owner and
+   validation target.
 5. Prefer reversible PRs, bounded smokes, local repros, neutral critique, CI,
-   and precedent lookup over stopping.
+   and precedent lookup over stopping or asking the user to decide for you.
 6. Update live docs when they reflect real operational state changes.
-7. Repeat until each slice is complete, explicitly deferred, or truly blocked.
+7. Repeat until the parent outcome is complete, explicitly deferred by the user,
+   or waiting on a serious decision the controller cannot responsibly make.
 
 ## Monitor Cadence
 
@@ -57,7 +64,7 @@ should still answer:
 - the review fallback or owner reroute to apply now.
 
 A time gate creates an inspection point. Completion comes from matching
-evidence.
+evidence, not from reporting that something failed overnight.
 
 ## Status Conversion
 
@@ -67,14 +74,16 @@ Use this table before accepting a worker report.
 | --- | --- |
 | `DONE` | Verify against the original objective, not the worker's narrowed task. Require artifacts, checks, PR state, or runtime evidence. |
 | `DONE_WITH_CONCERNS` | Resolve each concern as a fix, PR, review, bounded rerun, explicit defer, or accepted risk. |
-| `BLOCKED` | Assume solvable. Ask what exact repro, patch, branch, PR, review path, config change, precedent search, or owner handoff would move it. |
-| `NEEDS_CONTEXT` | Search docs, repo history, prior handoffs, issues, PRs, and thread logs before asking the user. |
-| `WAITING_ON_REVIEW` | Use available review paths. Request `@codex` when it is a remote repo convention, and spawn a fresh local `neutral-critic` subagent when available before treating review wait as exhausted. |
-| `NO RESULTS` | Keep the run objective live. Route to the next executable launch, smoke, patch, or accepted-deferral decision. |
+| `BLOCKED` | Treat as untriaged repair work. Identify the repro, root cause, patch path, branch, PR, config change, precedent search, or owner handoff that can move it. |
+| `NEEDS_CONTEXT` | Search docs, repo history, prior handoffs, issues, PRs, thread logs, and local artifacts before asking the user. |
+| `WAITING_ON_REVIEW` | Use available review paths. Request `@codex` when it is a remote repo convention, spawn a fresh local `neutral-critic` subagent when available, run checks, or assign a focused reviewer before treating review wait as exhausted. |
+| `NO RESULTS` | Keep the objective live. Route to the next executable launch, smoke, patch, rerun, or explicit user deferral. |
 
 ## Blocker Discipline
 
-Use `BLOCKED` only after the controller has tried the reasonable ladder:
+Default stance: the problem is solvable. Use `BLOCKED` only after the controller
+has tried the repair ladder and can name the exact user-owned decision that
+remains:
 
 1. Reproduce or inspect the failure.
 2. Search repo docs, live objective docs, handoffs, runbooks, prior PRs, issues,
@@ -85,11 +94,12 @@ Use `BLOCKED` only after the controller has tried the reasonable ladder:
 5. Use an alternate review path when the preferred reviewer is absent.
 6. Choose a conservative reversible default when precedent supports it.
 7. Ask the user only for serious decisions: irreversible changes, external-owned
-   mutation, large compute spend, benchmark comparability risk, paper-claim
-   changes, credentials, or unsafe operations.
+   mutation, large cost, measurement comparability risk, published-claim
+   changes, credentials, product intent, or unsafe operations.
 
 When a worker says a user decision is needed, first search docs, history, and
-prior chat for an existing decision.
+prior chat for an existing decision. If a reasonable reversible fix exists,
+route that fix instead of stopping.
 
 ## Ownership Boundaries
 
@@ -112,7 +122,7 @@ Treat these as status signals that need matching objective evidence:
 - a live doc checkbox;
 - a green unrelated check;
 - a PR that only requested review;
-- a partial benchmark run;
+- a partial long-running run;
 - a smoke passing when the objective requires full results;
 - a handoff that explains failure but does not route the next action.
 
@@ -142,9 +152,9 @@ For overnight or time-gated controller work, a good handoff is a control surface
 - current objective state;
 - what is running now;
 - what completed with evidence;
-- what is partial or invalid;
-- exact blockers that survived the blocker ladder;
-- exact next commands, PRs, owners, and review paths;
+- what was partial or invalid and the repair path applied;
+- serious user-owned decisions that survived the repair ladder;
+- exact next commands, PRs, owners, and review paths if work remains;
 - explicit deferrals and why they are safe.
 
 A time gate creates the next inspection point. Sleeping between checks is useful
@@ -156,5 +166,5 @@ when each wake-up asks whether the system can move.
   goal contract or when workers need self-applied slice goals.
 - Use `subagent-driven-development` when the controller is sequencing
   implementation tasks with staged review in the same session.
-- Use `benchmark-run-operator` when the controlled work is a live benchmark run
-  with stack, artifact, and run-validity concerns.
+- Use domain-specific operator or reviewer skills for the system being
+  controlled when local expertise would improve the repair path.
