@@ -8,12 +8,15 @@ description: Coordinate worker threads, monitors, PR review routing, and parent 
 Use this skill when the job is to keep delegated work moving until the requested
 outcome is actually complete. The controller owns state, evidence, repair
 routing, escalation, and parent completion. Implementation stays with the
-assigned worker unless the user, the parent objective, or current state assigns
-the controller a direct edit.
+assigned worker by default. The controller edits directly only for
+controller-owned artifacts, edits explicitly assigned to the controller by the
+parent objective, emergency cleanup needed to protect scope, or recorded
+ownership reassignment.
 
 The controller stands in for the user's default direction: diagnose the problem,
 fix or route the fix, validate it, and continue. A report that only says work
-hit errors is not a successful endpoint.
+hit errors is not a successful endpoint. The posture is proactive, ready, and
+moving: every status becomes a verified next action.
 
 ## Required Reference
 
@@ -50,8 +53,9 @@ goal-shaped parent, worker, or monitor contract.
 5. Prefer reversible PRs, bounded smokes, local repros, neutral critique, CI,
    and precedent lookup over stopping or asking the user to decide for you.
 6. Update live docs when they reflect real operational state changes.
-7. Repeat until the parent outcome is complete, explicitly deferred by the user,
-   or waiting on a serious decision the controller cannot responsibly make.
+7. Repeat until the parent outcome has matching evidence, the user explicitly
+   accepts an incomplete endpoint, or a named serious decision remains after the
+   repair ladder.
 
 ## Monitor Cadence
 
@@ -65,6 +69,7 @@ should still answer:
 
 A time gate creates an inspection point. Completion comes from matching
 evidence, not from reporting that something failed overnight.
+Each wake-up produces action or a verified external wait, not a status recital.
 
 ## Status Conversion
 
@@ -73,11 +78,11 @@ Use this table before accepting a worker report.
 | Worker claim | Controller response |
 | --- | --- |
 | `DONE` | Verify against the original objective, not the worker's narrowed task. Require artifacts, checks, PR state, or runtime evidence. |
-| `DONE_WITH_CONCERNS` | Resolve each concern as a fix, PR, review, bounded rerun, explicit defer, or accepted risk. |
+| `DONE_WITH_CONCERNS` | Resolve each concern as a fix, PR, review, bounded rerun, accepted risk with evidence, or user-accepted defer. |
 | `BLOCKED` | Treat as untriaged repair work. Identify the repro, root cause, patch path, branch, PR, config change, precedent search, or owner handoff that can move it. |
 | `NEEDS_CONTEXT` | Search docs, repo history, prior handoffs, issues, PRs, thread logs, and local artifacts before asking the user. |
-| `WAITING_ON_REVIEW` | Use available review paths. Request `@codex` when it is a remote repo convention, spawn a fresh local `neutral-critic` subagent when available, run checks, or assign a focused reviewer before treating review wait as exhausted. |
-| `NO RESULTS` | Keep the objective live. Route to the next executable launch, smoke, patch, rerun, or explicit user deferral. |
+| `WAITING_ON_REVIEW` | Use review paths in parallel when possible. Request `@codex` when it is a remote repo convention, spawn a fresh local `neutral-critic` subagent when available, run checks, or assign a focused reviewer before treating review wait as exhausted. |
+| `NO RESULTS` | Keep the objective live. Pick the next executable launch, smoke, patch, rerun, or named serious decision. |
 
 ## Blocker Discipline
 
@@ -88,8 +93,9 @@ remains:
 1. Reproduce or inspect the failure.
 2. Search repo docs, live objective docs, handoffs, runbooks, prior PRs, issues,
    and thread logs for precedent.
-3. Make or route a small PR-sized fix when the failure is code, config, docs, or
-   launch contract.
+3. Route a small PR-sized fix to the implementation owner, or make it directly
+   only under the ownership rules below, when the failure is code, config, docs,
+   or launch contract.
 4. Use a bounded smoke or narrow check to prove the fix.
 5. Use an alternate review path when the preferred reviewer is absent.
 6. Choose a conservative reversible default when precedent supports it.
@@ -109,8 +115,10 @@ Keep ownership explicit while moving work forward.
   repo or PR.
 - Use helper agents or threads to search precedent, inspect logs, or critique a
   PR when that helps the owner move.
-- Edit directly when the user assigned controller-owned docs, routing notes, or
-  emergency cleanup, or when the controller has been reassigned as implementer.
+- Edit directly only when the user assigned controller-owned docs, routing
+  notes, emergency cleanup needed to protect scope, edits explicitly assigned
+  to the controller by the parent objective, or when the controller has been
+  reassigned as implementer.
 - When ownership changes, record why it changed and what the controller edited.
 
 ## Evidence Gates
@@ -126,8 +134,8 @@ Treat these as status signals that need matching objective evidence:
 - a smoke passing when the objective requires full results;
 - a handoff that explains failure but does not route the next action.
 
-Completion requires evidence that matches the parent objective, or explicit user
-acceptance of an incomplete endpoint.
+Completion requires evidence that matches the parent objective, or a recorded
+user-accepted incomplete endpoint.
 
 ## Review Paths
 
@@ -148,14 +156,15 @@ step when that agent is available:
 ## Morning Or Long-Running Handoffs
 
 For overnight or time-gated controller work, a good handoff is a control surface:
+it lets the next agent or human move immediately. It is not an error log.
 
 - current objective state;
 - what is running now;
 - what completed with evidence;
 - what was partial or invalid and the repair path applied;
-- serious user-owned decisions that survived the repair ladder;
+- serious user-owned decisions still remaining after the repair ladder;
 - exact next commands, PRs, owners, and review paths if work remains;
-- explicit deferrals and why they are safe.
+- user-accepted deferrals and why they are safe.
 
 A time gate creates the next inspection point. Sleeping between checks is useful
 when each wake-up asks whether the system can move.

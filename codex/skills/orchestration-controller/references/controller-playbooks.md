@@ -23,7 +23,8 @@ At startup:
 3. Tell each child to apply its own goal when active goal state matters.
 4. Set the expected evidence format: findings, checks, PR state, logs, or
    artifacts.
-5. Set the next check time and the condition that would justify early
+5. Name the first repair move for any reported blocker or partial state.
+6. Set the next check time and the condition that would justify early
    intervention.
 
 Child-goal activation snippet:
@@ -56,7 +57,9 @@ objective.
 
 ## Review Fallback Ladder
 
-When one review path is silent or unavailable:
+Launch independent review paths as soon as they are useful. Do not wait for one
+reviewer to go silent before starting a fresh local critique when that agent is
+available.
 
 1. Use `@codex` when that is the normal repo path.
 2. Use a fresh local `neutral-critic` subagent when available.
@@ -66,7 +69,8 @@ When one review path is silent or unavailable:
 5. Route findings back to the implementation owner and re-request review after
    fixes.
 
-Continue to the next review path after a silent or unavailable reviewer.
+Continue to the next review path after a silent or unavailable reviewer. Treat
+review exhaustion as a claim that needs evidence, not a reason to stall.
 
 ## Ownership Boundary
 
@@ -75,8 +79,10 @@ owner by default.
 
 - Route code or doc edits back to the worker that owns the repo or PR.
 - Use helper threads for review, precedent search, or log inspection.
-- Edit directly when the user assigned controller-owned docs, routing notes,
-  emergency cleanup, or reassigned implementation ownership.
+- Edit directly only when the user assigned controller-owned docs, routing
+  notes, emergency cleanup needed to protect scope, edits explicitly assigned
+  to the controller by the parent objective, or reassigned implementation
+  ownership.
 - When ownership changes, record why it changed and what the controller edited.
 
 ## Monitor Cadence Playbook
@@ -92,10 +98,13 @@ For long-running work:
 
 A named time creates the next inspection point. Progress still comes from
 evidence, repair, review, or owner routing.
+Each wake-up should produce an action, a verified external wait, or a concrete
+owner reroute.
 
 ## Morning Handoff Template
 
-Use this shape when the controller hands work back to a human or a new thread:
+Use this shape only after the controller has moved every viable repair, review,
+and owner route it can move:
 
 ```text
 Objective:
@@ -105,5 +114,5 @@ Completed with evidence:
 Invalid or partial, with repair path:
 Review state:
 Exact next owners and actions:
-Explicit deferrals and why they are safe:
+User-accepted deferrals and why they are safe:
 ```

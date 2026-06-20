@@ -54,6 +54,6 @@ downstream effects: work stopped at blocker classification, no countable full A/
 evidence: live objective docs contained no full-result evidence but had completion-shaped blocker checkboxes; worker and monitor threads reported no intervention needed while no full benchmark runner was active
 root cause category: workflow mismatch, weak verification
 fix made: added the orchestration-controller skill to force high-agency status classification, blocker repair, alternate review paths, precedent search before user-decision stops, and explicit ownership boundaries; added it to the portable skill allowlist
-verification: `python C:\Users\Administrator\.codex\skills\.system\skill-creator\scripts\quick_validate.py codex\skills\orchestration-controller`, `.\scripts\doctor.ps1`, and `git diff --check` passed before PR
+verification: `py -3 "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" codex\skills\orchestration-controller`, `.\scripts\doctor.ps1`, and `git diff --check` passed before PR
 should become durable guidance: yes, as a focused skill rather than a broad global rule
 ```

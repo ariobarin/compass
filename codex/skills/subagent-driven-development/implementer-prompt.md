@@ -67,5 +67,5 @@ failed, and the smallest next action that would move the task.
 - Files changed
 - Checks run and results
 - Self-review findings
-- Open concerns or blockers
+- Open concerns, repair path tried, and exact next action
 ```
