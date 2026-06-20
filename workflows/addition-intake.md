@@ -48,6 +48,23 @@ of this repo unless the repo intentionally adopts a reviewed portable form.
 If an addition fits more than one route, choose the narrowest route that solves
 the repeated problem.
 
+## Runtime Vs Maintainer Guidance
+
+Decide whether the artifact is meant to be installed into the live Codex home or
+only used to maintain this repo.
+
+Installed agentic guidance changes how future Codex sessions behave. Put that
+in `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`, and keep it focused
+on durable role, stance, judgment, and capability boundaries. Do not include
+codex-portable maintenance process, PR hygiene, install-map details, or one-repo
+review habits in installed agentic docs.
+
+Repo-maintainer guidance helps humans and agents edit this repository. Put that
+in this root `AGENTS.md`, `workflows/`, `local-docs/`, `manifests/`, or
+`scripts/`. It can explain promotion rules, local checks, stale-guidance sweeps,
+and why a portable file belongs here. It should not pretend to be a runtime rule
+for every Codex session.
+
 ## Skill And Agent Additions
 
 Skills and agents need extra review because they shape future agent behavior.
@@ -59,10 +76,12 @@ Skills and agents need extra review because they shape future agent behavior.
   owns a local copy.
 - Add each portable skill name to `manifests/portable-files.toml`.
 - Add each portable skill to `Get-PortableFileMap` in `scripts/common.ps1`.
-- Give read-only reviewer or researcher agents a top-level
-  `sandbox_mode = "read-only"` setting.
-- Run `.\scripts\doctor.ps1` to catch manifest, install-map, and read-only
-  agent drift.
+- Give agents a sandbox that matches their evidence path. Pure explorers that
+  should never mutate state need `sandbox_mode = "read-only"`. Reviewers that
+  must run tests, commands, browser checks, or plugin-backed validation should
+  be non-editing by instruction instead of blocked by sandbox.
+- Run `.\scripts\doctor.ps1` to catch manifest, install-map, and agent sandbox
+  drift.
 
 ## Stale Guidance Sweep
 

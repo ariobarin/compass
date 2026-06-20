@@ -13,7 +13,8 @@ catch drift before config is copied into a live machine.
   making useful changes to this repo without bloating the portable Codex setup.
 - [../workflows/addition-intake.md](../workflows/addition-intake.md): promotion
   flow for new portable workflows, skills, agents, scripts, manifests, and
-  config fragments.
+  config fragments. Workflows guide repo maintenance and are not installed into
+  the live Codex home.
 
 ## Boundary
 

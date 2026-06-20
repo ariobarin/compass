@@ -37,6 +37,7 @@ reason = "Live config.toml includes generated runtime paths, marketplaces, proje
 [repo_only]
 dirs = [
   "local-docs",
+  "workflows",
 ]
 reason = "These docs guide repository maintenance but are not installed into a live Codex home."
 

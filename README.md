@@ -18,7 +18,7 @@ portable and should not be committed.
 - `codex/skills/`: custom skills, excluding system and plugin cache skills.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
-- `workflows/`: durable operating notes for recurring work.
+- `workflows/`: repo-side operating notes for recurring maintenance work.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
   live Codex home.
