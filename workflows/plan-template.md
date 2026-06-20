@@ -4,6 +4,9 @@ Use this template for large, ambiguous, risky, or multi-step work. Keep the plan
 short enough to guide execution, not so detailed that it becomes a second
 implementation.
 
+This is repo-maintainer guidance and is not installed into the live Codex home.
+Put reusable agent behavior in `codex/agents/` or `codex/skills/` instead.
+
 ## Goal
 
 State the concrete end state in one or two paragraphs. Include what must be true

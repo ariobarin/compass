@@ -3,6 +3,10 @@
 Use this workflow when changing Codex setup that should survive a new machine,
 fresh profile, or copied repo checkout.
 
+This is repo-maintainer guidance. It is not installed into the live Codex home.
+Installed agentic guidance lives under `codex/AGENTS.md`, `codex/agents/`, and
+`codex/skills/`.
+
 ## Change flow
 
 1. Edit files in this repo first.

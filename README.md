@@ -14,18 +14,21 @@ portable and should not be committed.
 - `AGENTS.md`: repo-local maintenance guidance for this portable config repo.
   Use this for codex-portable process and review rules.
 - `codex/keybindings.json`: portable keyboard bindings.
-- `codex/agents/`: custom agents.
-- `codex/skills/`: custom skills, excluding system and plugin cache skills.
+- `codex/agents/`: custom agents installed into the live Codex home.
+- `codex/skills/`: custom skills installed into the live Codex home, excluding
+  system and plugin cache skills.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
-- `workflows/`: repo-side operating notes for recurring maintenance work.
+- `workflows/`: repo-side operating notes for recurring maintenance work. These
+  are not installed into the live Codex home.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
   live Codex home.
-- `manifests/portable-files.toml`: the allowlist and local-only denylist.
-- `manifests/tool-surfaces.md`: review notes for tools that can touch local or
-  external state.
-- `scripts/`: snapshot, diff, install, and health check helpers.
+- `manifests/portable-files.toml`: the install allowlist, repo-only list, and
+  local-only denylist.
+- `manifests/tool-surfaces.md`: repo-side review notes for tools that can touch
+  local or external state.
+- `scripts/`: repo-side snapshot, diff, install, and health check helpers.
 
 ## Common commands
 

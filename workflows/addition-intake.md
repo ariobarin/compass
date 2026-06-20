@@ -18,8 +18,8 @@ local storage.
 
 The default path is staged:
 
-1. Use or test the addition in the live Codex home first when that is the lowest
-   risk way to validate behavior.
+1. For installed agentic guidance, use or test the addition in the live Codex
+   home first when that is the lowest risk way to validate behavior.
 2. Capture the problem it solves and the evidence that it worked.
 3. Decide the smallest durable artifact type.
 4. Copy only reviewed portable files into this repo.

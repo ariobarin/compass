@@ -5,12 +5,18 @@ backup of `~/.codex`.
 
 - `codex/AGENTS.md` is the portable source for the live global
   `~/.codex/AGENTS.md`. Only put session-wide defaults there.
+- Installed agentic guidance belongs under `codex/AGENTS.md`,
+  `codex/agents/`, or `codex/skills/`.
 - This repo-root `AGENTS.md` is for codex-portable maintenance guidance.
 - If a rule only makes sense while editing codex-portable, put it here or in
-  `workflows/` or `local-docs/`, not in `codex/AGENTS.md`.
+  `workflows/` or `local-docs/`, not in installed agentic docs.
+- Repo-maintainer guidance belongs in this file, `workflows/`, `local-docs/`,
+  `manifests/`, or `scripts/`. These surfaces are not copied into live Codex as
+  agent behavior.
 - Keep `codex/AGENTS.md` short and global.
-- Put detailed operating behavior in `workflows/`, skills, scripts, or
-  manifests.
+- Put detailed operating behavior in the narrowest surface: installed agents or
+  skills for reusable agent capability, repo workflows for codex-portable
+  maintenance, scripts for mechanical checks, and manifests for boundaries.
 - For nontrivial changes to this repo, read
   `local-docs/maintenance-learnings.md` before editing.
 - Do not commit auth, sessions, logs, caches, browser state, SQLite files, or
