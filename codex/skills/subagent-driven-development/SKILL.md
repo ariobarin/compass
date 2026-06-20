@@ -73,16 +73,14 @@ For each task:
 - `DONE_WITH_CONCERNS`: read the concerns first. Resolve correctness or scope
   concerns before review.
 - `NEEDS_CONTEXT`: provide the missing context and re-dispatch.
-- `BLOCKED`: treat this as a repairable state, not a terminal result. Ask the
-  worker what failed, what was tried, what the next smallest action is, and
-  whether a fresh worker should take over. Add context, pick a stronger model,
-  split the task, repair local setup through the worker, reroute ownership, or
-  use `orchestration-controller` for broader coordination. Escalate beyond the
-  worker only after the repair path has been tried and the remaining dependency
-  is concrete.
+- `BLOCKED`: treat this as a signal that the worker lost the next move, not as
+  a terminal result. Ask what failed, what was tried, what the smallest next
+  action is, and whether a fresh worker should take over. Add context or reroute
+  ownership, but keep execution with the worker path. Use
+  `orchestration-controller` when oversight itself needs to stay stepped back.
 
-Do not ignore a blocked signal or solve the task for the worker. Restore agency,
-then route execution back to the owner.
+Do not solve the task for the worker. Restore agency, then route execution back
+to the owner.
 
 ## Review Loop
 

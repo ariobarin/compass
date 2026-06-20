@@ -56,13 +56,14 @@ Return `NEEDS_CONTEXT` when:
 - the repo state or local guidance conflicts with the requested change;
 - you are reading widely without making progress.
 
-Return `BLOCKED` only after you have tried the reasonable repair path and can
+Return `BLOCKED` only after you have tried the reasonable local recovery and can
 name the exact dependency outside your assigned scope. Include what you tried,
 what failed, and the smallest next action that would move the task.
 
 If the controller asks unblock questions, answer them directly and continue with
 the next smallest reversible action unless the remaining dependency is outside
-your assigned scope.
+your assigned scope. Treat those questions as help recovering your next move,
+not as permission to stop.
 
 ## Report Format
 
@@ -71,5 +72,5 @@ your assigned scope.
 - Files changed
 - Checks run and results
 - Self-review findings
-- Open concerns, repair path tried, and exact next action
+- Open concerns, local recovery tried, and exact next action
 ```
