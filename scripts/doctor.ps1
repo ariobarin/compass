@@ -106,17 +106,27 @@ foreach ($skillFile in $skillFiles) {
     }
 }
 
-$agentFiles = Get-ChildItem -Path (Join-Path $repoRoot "codex\agents") -File -Filter "*.toml" -ErrorAction SilentlyContinue
-foreach ($agentFile in $agentFiles) {
-    $agentText = Get-Content -Raw -LiteralPath $agentFile.FullName
+function Get-TopLevelTomlStringValues {
+    param([string]$Text)
+
     $topLevelValues = @{}
+    $currentKey = $null
+    $currentValue = New-Object System.Text.StringBuilder
     $inMultilineString = $false
     $inTable = $false
 
-    foreach ($line in ($agentText -split "`r?`n")) {
+    foreach ($line in ($Text -split "`r?`n")) {
         if ($inMultilineString) {
-            if ($line -match '"""') {
+            $closingIndex = $line.IndexOf('"""')
+            if ($closingIndex -ge 0) {
+                [void]$currentValue.AppendLine($line.Substring(0, $closingIndex))
+                $topLevelValues[$currentKey] = $currentValue.ToString()
+                $currentKey = $null
+                [void]$currentValue.Clear()
                 $inMultilineString = $false
+            }
+            else {
+                [void]$currentValue.AppendLine($line)
             }
             continue
         }
@@ -130,14 +140,18 @@ foreach ($agentFile in $agentFiles) {
             continue
         }
 
-        if ($line -match '^\s*([A-Za-z0-9_-]+)\s*=\s*"""') {
-            $openingIndex = $line.IndexOf('"""')
-            $afterOpening = $line.Substring($openingIndex + 3)
-            $sameLineValue = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"""(.*?)"""\s*(#.*)?$')
-            if ($sameLineValue.Success) {
-                $topLevelValues[$sameLineValue.Groups[1].Value] = $sameLineValue.Groups[2].Value
+        $multiline = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"""(.*)$')
+        if ($multiline.Success) {
+            $key = $multiline.Groups[1].Value
+            $remainingText = $multiline.Groups[2].Value
+            $closingIndex = $remainingText.IndexOf('"""')
+            if ($closingIndex -ge 0) {
+                $topLevelValues[$key] = $remainingText.Substring(0, $closingIndex)
             }
-            elseif ($afterOpening -notmatch '"""') {
+            else {
+                $currentKey = $key
+                [void]$currentValue.Clear()
+                [void]$currentValue.AppendLine($remainingText)
                 $inMultilineString = $true
             }
             continue
@@ -149,7 +163,16 @@ foreach ($agentFile in $agentFiles) {
         }
     }
 
-    if ($agentText -match "(?i)read-only" -and ($topLevelValues["sandbox_mode"] -ne "read-only")) {
+    return $topLevelValues
+}
+
+$agentFiles = Get-ChildItem -Path (Join-Path $repoRoot "codex\agents") -File -Filter "*.toml" -ErrorAction SilentlyContinue
+foreach ($agentFile in $agentFiles) {
+    $agentText = Get-Content -Raw -LiteralPath $agentFile.FullName
+    $topLevelValues = Get-TopLevelTomlStringValues -Text $agentText
+    $topLevelText = $topLevelValues.Values -join "`n"
+
+    if ($topLevelText -match "(?i)\bread-only\b" -and ($topLevelValues["sandbox_mode"] -ne "read-only")) {
         $problems.Add("read-only agent missing sandbox_mode: $($agentFile.FullName)")
     }
 }

@@ -2,13 +2,19 @@
 
 Use this workflow when deciding whether a new Codex rule, workflow, skill,
 agent, script, manifest entry, or config fragment belongs in `codex-portable`.
+This is maintainer guidance for promoting durable artifacts, not a runtime rule
+for every Codex turn.
 
 ## Intake Standard
 
+Treat additions as candidates until evidence shows they solve a repeated problem
+and can be reviewed, reinstalled, and verified without carrying generated state.
 Promote additions when they are human-owned, portable, and useful outside one
-transient task. Keep generated state, plugin cache output, auth state, sessions,
-logs, browser profiles, local runtime paths, and one-machine trust settings in
-live or ignored local storage.
+transient task.
+
+Keep generated state, plugin cache output, auth state, sessions, logs, browser
+profiles, local runtime paths, and one-machine trust settings in live or ignored
+local storage.
 
 The default path is staged:
 
@@ -42,18 +48,21 @@ of this repo unless the repo intentionally adopts a reviewed portable form.
 If an addition fits more than one route, choose the narrowest route that solves
 the repeated problem.
 
-## Skill Additions
+## Skill And Agent Additions
 
-Skills need extra review because their descriptions are loaded into future
-sessions.
+Skills and agents need extra review because they shape future agent behavior.
 
-1. Keep the description concise and specific.
-2. Put detailed instructions in `SKILL.md`, references, scripts, or assets.
-3. Exclude system skills and plugin cache skills unless the repo intentionally
-   owns a local copy.
-4. Add the skill name to `manifests/portable-files.toml`.
-5. Add the skill to `Get-PortableFileMap` in `scripts/common.ps1`.
-6. Run `.\scripts\doctor.ps1` to catch manifest and install-map drift.
+- Keep skill descriptions concise and specific.
+- Put detailed skill instructions in `SKILL.md`, references, scripts, or
+  assets.
+- Exclude system skills and plugin cache skills unless the repo intentionally
+  owns a local copy.
+- Add each portable skill name to `manifests/portable-files.toml`.
+- Add each portable skill to `Get-PortableFileMap` in `scripts/common.ps1`.
+- Give read-only reviewer or researcher agents a top-level
+  `sandbox_mode = "read-only"` setting.
+- Run `.\scripts\doctor.ps1` to catch manifest, install-map, and read-only
+  agent drift.
 
 ## Stale Guidance Sweep
 
