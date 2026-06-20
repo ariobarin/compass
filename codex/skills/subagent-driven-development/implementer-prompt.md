@@ -60,6 +60,9 @@ Return `BLOCKED` only after you have tried the reasonable repair path and can
 name the exact controller or user decision needed. Include what you tried, what
 failed, and the smallest next action that would move the task.
 
+If the controller asks unblock questions, answer them directly and continue with
+the next smallest reversible action unless a serious owner decision remains.
+
 ## Report Format
 
 - **Status:** DONE | DONE_WITH_CONCERNS | NEEDS_CONTEXT | BLOCKED

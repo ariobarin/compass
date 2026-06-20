@@ -9,9 +9,11 @@ back to the user as if it were completion.
 
 - Kickoff Playbook
 - Status Repair Playbook
+- Worker Unblock Questions
 - Review Fallback Ladder
 - Ownership Boundary
 - Monitor Cadence Playbook
+- Thrash Reset Playbook
 - Morning Handoff Template
 
 ## Kickoff Playbook
@@ -23,8 +25,8 @@ At startup:
 3. Tell each child to apply its own goal when active goal state matters.
 4. Set the expected evidence format: findings, checks, PR state, logs, or
    artifacts.
-5. Name the first repair move for any reported blocker or partial state.
-6. Set the next check time and the condition that would justify early
+5. Name the first unblock question for any reported blocker or partial state.
+6. Set the next heartbeat and the condition that would justify early
    intervention.
 
 Child-goal activation snippet:
@@ -43,8 +45,9 @@ Convert worker claims into the next real action:
 - `DONE`: verify against the parent objective, not the worker's interpretation.
 - `DONE_WITH_CONCERNS`: split concerns into fixes, reviews, reruns, defers, or
   accepted risks.
-- `BLOCKED`: treat as a repair request. Identify the repro, root cause, patch
-  path, review path, precedent, or owner reroute that can move the work.
+- `BLOCKED`: treat as an agency reset. Ask the worker what failed, what proves
+  it is impossible, what was tried, what the next smallest action is, and what
+  they would do if the user replied only with "continue".
 - `NEEDS_CONTEXT`: search docs, prior chat, live docs, issues, PRs, and handoff
   notes before asking the user.
 - `WAITING_ON_REVIEW`: move to the review fallback ladder.
@@ -52,8 +55,25 @@ Convert worker claims into the next real action:
   explicit user deferral.
 
 Do not accept "I am blocked" as the final answer. The controller's normal move
-is to diagnose, fix or route the fix, validate it, and continue the parent
-objective.
+is to restore agency with questions, route execution to the owner, validate
+evidence, and continue the parent objective.
+
+## Worker Unblock Questions
+
+Use these before solving anything for the worker:
+
+```text
+What exactly failed?
+What did you try, and what did each attempt prove?
+What evidence says this is impossible inside your assigned scope?
+What is the next smallest reversible test, patch, rerun, or lookup?
+What would you do next if the user replied only with "continue"?
+Are you repeating attempts or running out of context, and should a fresh worker
+take over?
+```
+
+Route the worker's answer back to the worker or to a fresh owner. The controller
+does not become the implementer.
 
 ## Review Fallback Ladder
 
@@ -79,18 +99,19 @@ owner by default.
 
 - Route code or doc edits back to the worker that owns the repo or PR.
 - Use helper threads for review, precedent search, or log inspection.
-- Edit directly only when the user assigned controller-owned docs, routing
-  notes, emergency cleanup needed to protect scope, edits explicitly assigned
-  to the controller by the parent objective, or reassigned implementation
-  ownership.
-- When ownership changes, record why it changed and what the controller edited.
+- Edit only controller-owned control surfaces: assignments, status notes,
+  monitor schedules, review requests, handoff state, and routing comments.
+- Never edit worker-owned implementation, config, docs, or task output. If
+  those artifacts need changes, route them to a worker or a fresh worker.
+- When ownership changes, record why it changed and who now owns the work.
 
 ## Monitor Cadence Playbook
 
 For long-running work:
 
-- choose a cadence that matches the system half-life, often 5 to 15 minutes for
-  active CI, review, deployment, data collection, or other external progress;
+- choose the slowest cadence that still protects the objective, often 30 to 60
+  minutes for long runs and 5 to 15 minutes only for active CI, review,
+  deployment, data collection, or other short feedback loops;
 - sleep between checks when the current state has a plausible next event;
 - on wake-up, ask whether the system can still move right now;
 - intervene when a worker drifts, accepts a false blocker, accepts false
@@ -98,13 +119,30 @@ For long-running work:
 
 A named time creates the next inspection point. Progress still comes from
 evidence, repair, review, or owner routing.
-Each wake-up should produce an action, a verified external wait, or a concrete
-owner reroute.
+Each wake-up should produce a worker question, an owner reroute, a verified
+external wait, or a next heartbeat.
+
+## Thrash Reset Playbook
+
+Use this when a worker repeats attempts, loses the objective, expands scope, or
+reports logs instead of a next repair action:
+
+```text
+Pause implementation. Step back and answer:
+1. What is the original objective?
+2. What is the current evidence?
+3. What attempts changed the state?
+4. What is the next smallest reversible action?
+5. What should a fresh worker take over if your context is saturated?
+
+Then continue with that next action, or return the exact owner decision that
+remains.
+```
 
 ## Morning Handoff Template
 
-Use this shape only after the controller has moved every viable repair, review,
-and owner route it can move:
+Use this shape only after the controller has asked the unblock questions, routed
+every viable owner action, and set the next heartbeat:
 
 ```text
 Objective:

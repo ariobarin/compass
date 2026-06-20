@@ -73,13 +73,15 @@ For each task:
 - `DONE_WITH_CONCERNS`: read the concerns first. Resolve correctness or scope
   concerns before review.
 - `NEEDS_CONTEXT`: provide the missing context and re-dispatch.
-- `BLOCKED`: treat this as a repairable state, not a terminal result. Inspect
-  the reason, add context, pick a stronger model, split the task, repair local
-  setup, reroute ownership, or use `orchestration-controller` for broader
-  coordination. Ask the user only when the plan is wrong or a serious
-  user-owned decision remains.
+- `BLOCKED`: treat this as a repairable state, not a terminal result. Ask the
+  worker what failed, what was tried, what the next smallest action is, and
+  whether a fresh worker should take over. Add context, pick a stronger model,
+  split the task, repair local setup through the worker, reroute ownership, or
+  use `orchestration-controller` for broader coordination. Ask the user only
+  when the plan is wrong or a serious user-owned decision remains.
 
-Do not ignore a blocked signal and simply ask for the same work again.
+Do not ignore a blocked signal or solve the task for the worker. Restore agency,
+then route execution back to the owner.
 
 ## Review Loop
 
