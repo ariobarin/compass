@@ -91,9 +91,9 @@ goal.
 
 ## Related Skills
 
-- Use bundled `subagent-driven-development` when a goal already has independent
+- Use `subagent-driven-development` when a goal already has independent
   implementation slices and needs controller-led subagent execution.
-- Use bundled `action-items-to-prs` when a goal should become one or more PR-scoped
+- Use `action-items-to-prs` when a goal should become one or more PR-scoped
   changes.
-- Use bundled `git-branch-resolver` when a goal depends on branch, worktree, or PR
+- Use `git-branch-resolver` when a goal depends on branch, worktree, or PR
   inventory before implementation.

@@ -10,7 +10,7 @@ page-scope change. Static review and guessed selectors are not verification.
 
 ## Required References
 
-Read both local references:
+Read both references:
 
 - [live-verification.md](references/live-verification.md): rebuild or refresh
   paths, headful Chrome, inspector bridge, frontend/API tracing, and evidence
