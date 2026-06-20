@@ -40,19 +40,21 @@ Treat this text as activation instructions. The child applies goal tools itself.
 
 ## Status Repair Playbook
 
-Convert worker claims into the next real action:
+Convert worker statuses and controller-observed states into the next real
+action:
 
-- `DONE`: verify against the parent objective, not the worker's interpretation.
-- `DONE_WITH_CONCERNS`: split concerns into fixes, reviews, reruns, defers, or
-  accepted risks.
-- `BLOCKED`: treat as an agency reset. Ask the worker what failed, what proves
-  it is impossible, what was tried, what the next smallest action is, and what
-  they would do if the user replied only with "continue".
-- `NEEDS_CONTEXT`: search docs, prior chat, live docs, issues, PRs, and handoff
-  notes before asking the user.
-- `WAITING_ON_REVIEW`: move to the review fallback ladder.
-- `NO RESULTS`: choose the next executable launch, smoke, patch, rerun, or
-  explicit user deferral.
+- Worker `DONE`: verify against the parent objective, not the worker's
+  interpretation.
+- Worker `DONE_WITH_CONCERNS`: split concerns into fixes, reviews, reruns,
+  defers, or accepted risks.
+- Worker `BLOCKED`: treat as an agency reset. Ask the worker what failed, what
+  proves it is impossible, what was tried, what the next smallest action is,
+  and what they would do if the user replied only with "continue".
+- Worker `NEEDS_CONTEXT`: search docs, prior chat, live docs, issues, PRs, and
+  handoff notes before asking the user.
+- Controller `WAITING_ON_REVIEW`: move to the review fallback ladder.
+- Controller `NO_RESULTS`: choose the next executable launch, smoke, patch,
+  rerun, review, or owner route.
 
 Do not accept "I am blocked" as the final answer. The controller's normal move
 is to restore agency with questions, route execution to the owner, validate
@@ -77,12 +79,13 @@ does not become the implementer.
 
 ## Review Fallback Ladder
 
-Launch independent review paths as soon as they are useful. Do not wait for one
-reviewer to go silent before starting a fresh local critique when that agent is
-available.
+Launch independent review paths as soon as they are useful. Always start with a
+fresh local `neutral-critic` review. Add GitHub Codex review only when the
+repository is public, owned, or otherwise has an accessible reviewer.
 
-1. Use `@codex` when that is the normal repo path.
-2. Use a fresh local `neutral-critic` subagent when available.
+1. Use a fresh local `neutral-critic` subagent.
+2. Use `@codex` when that is the normal repo path and the reviewer is
+   accessible.
 3. Run local checks and CI.
 4. Spawn or message a focused reviewer with exact files, diff, and acceptance
    criteria.
@@ -135,8 +138,7 @@ Pause implementation. Step back and answer:
 4. What is the next smallest reversible action?
 5. What should a fresh worker take over if your context is saturated?
 
-Then continue with that next action, or return the exact owner decision that
-remains.
+Then continue with that next action, or return the exact remaining dependency.
 ```
 
 ## Morning Handoff Template

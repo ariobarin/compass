@@ -77,8 +77,9 @@ For each task:
   worker what failed, what was tried, what the next smallest action is, and
   whether a fresh worker should take over. Add context, pick a stronger model,
   split the task, repair local setup through the worker, reroute ownership, or
-  use `orchestration-controller` for broader coordination. Ask the user only
-  when the plan is wrong or a serious user-owned decision remains.
+  use `orchestration-controller` for broader coordination. Escalate beyond the
+  worker only after the repair path has been tried and the remaining dependency
+  is concrete.
 
 Do not ignore a blocked signal or solve the task for the worker. Restore agency,
 then route execution back to the owner.

@@ -44,7 +44,7 @@ The controller should keep ownership of the parent goal. A subagent completes
 only its slice and returns evidence for integration. `BLOCKED` is a repair
 state, not a successful slice outcome; the controller should ask unblock
 questions, route repair to the worker or a fresh worker, reroute ownership, or
-ask for the smallest serious decision that remains.
+record the concrete dependency that remains.
 
 ## Delegation Flow
 
@@ -114,5 +114,5 @@ Use waiting rules for external systems:
   checkpoint instead of marking complete early.
 
 Do not treat failed setup, stale review, or a partial run as completed waiting.
-Convert it into worker questions, repair routing, owner reroute, or the smallest
-serious decision that remains.
+Convert it into worker questions, repair routing, owner reroute, or the
+concrete dependency that remains.

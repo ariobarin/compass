@@ -1,6 +1,6 @@
 ---
 name: orchestration-controller
-description: Coordinate worker threads and monitors with question-led unblocking, thrash detection, review routing, slow checks, and parent-goal evidence.
+description: Coordinate worker threads and monitors with question-led unblocking, thrash detection, review routing, monitor cadence, and parent-goal evidence.
 ---
 
 # Orchestration Controller
@@ -27,12 +27,13 @@ templates.
 
 Classify worker statuses as evidence claims, not decisions.
 
-For each `DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, `NEEDS_CONTEXT`, or
-`WAITING_ON_REVIEW` report, inspect the artifacts behind the claim and convert
-it into the next action: complete, question-led unblock, worker repair, context
-lookup, review, owner reroute, monitor sleep, or a serious user decision. A
-blocker report is usually a worker who needs better questions, not a terminal
-state.
+For each worker report of `DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, or
+`NEEDS_CONTEXT`, inspect the artifacts behind the claim and convert it into the
+next action: complete, question-led unblock, worker repair, context lookup,
+review, owner reroute, or monitor sleep. Treat controller-observed states such
+as `WAITING_ON_REVIEW` or `NO_RESULTS` the same way: evidence claims to inspect,
+not decisions to accept. A blocker report is usually a worker who needs better
+questions, not a terminal state.
 
 ## Goal Ownership
 
@@ -52,13 +53,12 @@ goal-shaped parent, worker, or monitor contract.
 4. Convert every non-terminal claim into a next action with a named owner and
    validation target.
 5. Prefer questions, owner reroutes, reversible PRs, bounded smokes, neutral
-   critique, CI, and precedent lookup over stopping or asking the user to decide
-   for you.
+   critique, CI, and precedent lookup over stopping early.
 6. Update only controller-owned control surfaces when they reflect real
    operational state changes.
 7. Repeat until the parent outcome has matching evidence, the user explicitly
-   accepts an incomplete endpoint, or a named serious decision remains after the
-   unblock questions and owner routing.
+   accepts an incomplete endpoint, or every available repair, review, lookup,
+   and owner route has been tried and the remaining dependency is recorded.
 
 ## Monitor Cadence
 
@@ -81,20 +81,20 @@ external wait. If everything is moving, record the next check and sleep again.
 
 Use this table before accepting a worker report.
 
-| Worker claim | Controller response |
+| Claim or state | Controller response |
 | --- | --- |
-| `DONE` | Verify against the original objective, not the worker's narrowed task. Require artifacts, checks, PR state, or runtime evidence. |
-| `DONE_WITH_CONCERNS` | Resolve each concern as a fix, PR, review, bounded rerun, accepted risk with evidence, or user-accepted defer. |
-| `BLOCKED` | Treat as a worker agency problem first. Ask what failed, what evidence proves it is impossible, what was tried, what the next smallest test is, and what the worker would do if the user simply said continue. Route the worker or a fresh worker to execute the answer. |
-| `NEEDS_CONTEXT` | Search docs, repo history, prior handoffs, issues, PRs, thread logs, and local artifacts before asking the user. |
-| `WAITING_ON_REVIEW` | Use review paths in parallel when possible. Request `@codex` when it is a remote repo convention, spawn a fresh local `neutral-critic` subagent when available, run checks, or assign a focused reviewer before treating review wait as exhausted. |
-| `NO RESULTS` | Keep the objective live. Pick the next executable launch, smoke, patch, rerun, or named serious decision. |
+| Worker `DONE` | Verify against the original objective, not the worker's narrowed task. Require artifacts, checks, PR state, or runtime evidence. |
+| Worker `DONE_WITH_CONCERNS` | Resolve each concern as a fix, PR, review, bounded rerun, accepted risk with evidence, or user-accepted defer. |
+| Worker `BLOCKED` | Treat as a worker agency problem first. Ask what failed, what evidence proves it is impossible, what was tried, what the next smallest test is, and what the worker would do if the user simply said continue. Route the worker or a fresh worker to execute the answer. |
+| Worker `NEEDS_CONTEXT` | Search docs, repo history, prior handoffs, issues, PRs, thread logs, and local artifacts before asking the user. |
+| Controller `WAITING_ON_REVIEW` | Run a fresh local `neutral-critic` review, run checks or CI, and request `@codex` only when the repository is public, owned, or otherwise has an accessible GitHub Codex reviewer. |
+| Controller `NO_RESULTS` | Keep the objective live. Pick the next executable launch, smoke, patch, rerun, review, or owner route. |
 
 ## Question-Led Unblocking
 
 Default stance: the problem is solvable. Use `BLOCKED` only after the controller
-has questioned the worker back into an executable repair path, or can name the
-exact user-owned decision that remains.
+has questioned the worker back into an executable repair path and verified no
+route remains inside the assigned scope.
 
 Ask the worker:
 
@@ -107,14 +107,11 @@ Ask the worker:
    repeating attempts?
 
 Then route the answer to the worker, a fresh worker, a reviewer, or the owner of
-the affected system. Ask the user only for serious decisions: irreversible
-changes, external-owned
-   mutation, large cost, measurement comparability risk, published-claim
-   changes, credentials, product intent, or unsafe operations.
+the affected system.
 
-When a worker says a user decision is needed, first search docs, history, and
-prior chat for an existing decision. If a reasonable reversible fix exists,
-route that fix instead of stopping.
+When a worker says the next step is outside its scope, first search docs,
+history, and prior chat for an existing answer. If a reasonable reversible fix
+exists, route that fix instead of stopping.
 
 ## Thrash Control
 
@@ -139,8 +136,7 @@ Pause implementation. Step back and answer:
 4. What is the next smallest reversible action?
 5. What should a fresh worker take over if your context is saturated?
 
-Then continue with that next action, or return the exact owner decision that
-remains.
+Then continue with that next action, or return the exact remaining dependency.
 ```
 
 ## Ownership Boundaries
@@ -168,7 +164,7 @@ Treat these as status signals that need matching objective evidence:
 - a PR that only requested review;
 - a partial long-running run;
 - a smoke passing when the objective requires full results;
-- a handoff that explains failure but does not route the next action.
+- a handoff that explains failure but does not route the next action;
 - a worker repeating attempts without answering the reset questions.
 
 Completion requires evidence that matches the parent objective, or a recorded
@@ -179,11 +175,13 @@ user-accepted incomplete endpoint.
 When a PR or patch needs review, move through the available review paths until
 one produces actionable findings or an approval signal.
 
-Use the best available combination, with the fresh local critic as a required
-step when that agent is available:
+Always start with a fresh local `neutral-critic` review. Add GitHub Codex review
+when repository ownership, visibility, and installation access make it
+available:
 
-- request `@codex` review when that is the repo convention;
 - spawn a fresh local `neutral-critic` subagent for an independent review;
+- request `@codex` review when that is the repo convention and the reviewer is
+  accessible;
 - run local checks and CI;
 - spawn or message a focused reviewer with exact files, diff, and acceptance
   criteria;
@@ -199,8 +197,7 @@ it lets the next agent or human move immediately. It is not an error log.
 - what is running now;
 - what completed with evidence;
 - what was partial or invalid and the repair path applied;
-- serious user-owned decisions still remaining after unblock questions and
-  owner routing;
+- remaining dependencies after unblock questions and owner routing;
 - exact next commands, PRs, owners, and review paths if work remains;
 - user-accepted deferrals and why they are safe.
 
