@@ -11,7 +11,7 @@ failure.
 
 ## Required References
 
-Read the local references that match the failure:
+Read the references that match the failure:
 
 - [failure-rubric.md](references/failure-rubric.md): fault buckets, compact
   critique codes, stale-eval decisions, and WebMCP tool-shape failure modes.

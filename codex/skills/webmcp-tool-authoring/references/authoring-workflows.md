@@ -1,7 +1,7 @@
 # WebMCP Authoring Workflows
 
-This reference is portable. It distills the established local authoring docs and
-prior site sweeps without depending on their original paths.
+This reference distills established WebMCP authoring practices and prior site
+sweeps without depending on original project paths.
 
 ## Contents
 

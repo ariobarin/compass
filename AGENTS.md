@@ -17,6 +17,11 @@ backup of `~/.codex`.
 - Put detailed operating behavior in the narrowest surface: installed agents or
   skills for reusable agent capability, repo workflows for codex-portable
   maintenance, scripts for mechanical checks, and manifests for boundaries.
+- Treat `codex/agents` and manifest-listed `codex/skills` as one portable
+  bundle. When editing bundled skills or agents, reference bundled capabilities
+  directly instead of making them sound optional. Keep conditional wording for
+  external services, permissions, credentials, CI, browser state, MCP tools,
+  goal tools, or repository access.
 - For nontrivial changes to this repo, read
   `local-docs/maintenance-learnings.md` before editing.
 - Do not commit auth, sessions, logs, caches, browser state, SQLite files, or

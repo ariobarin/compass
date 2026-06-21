@@ -11,7 +11,7 @@ fragile, hidden, scroll-heavy, or stateful in the normal browser path.
 
 ## Required References
 
-Read the local references before authoring:
+Read these references before authoring:
 
 - [authoring-workflows.md](references/authoring-workflows.md): cold-start
   discovery, generation routes, choosing tool candidates, and validation loops.
