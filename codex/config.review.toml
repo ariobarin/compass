@@ -11,6 +11,10 @@
 # Keep this fragment on one permissions model at a time. It currently stays on
 # the older sandbox keys and should not mix in `default_permissions` or
 # `[permissions]` entries without a deliberate migration.
+#
+# Keep app-local desktop state and undocumented UI helper blocks out of this
+# reviewed fragment. Durable cross-session instruction preferences belong in
+# `codex/AGENTS.md`.
 
 approvals_reviewer = "auto_review"
 model = "gpt-5.5"
@@ -27,44 +31,6 @@ sandbox = "elevated"
 hide_full_access_warning = true
 
 [features]
-terminal_resize_reflow = true
 memories = true
-external_migration = true
 goals = true
 prevent_idle_sleep = true
-js_repl = false
-
-[desktop]
-conversationDetailMode = "STEPS_COMMANDS"
-ambient-suggestions-enabled = false
-appearanceTheme = "dark"
-followUpQueueMode = "steer"
-composerEnterBehavior = "cmdIfMultiline"
-show-context-window-usage = true
-hotkey-window-projectless-default-enabled = true
-dictationDictionary = ["ariobarin", "webmcp"]
-keepRemoteControlAwakeWhilePluggedIn = true
-git-branch-prefix = "ario-"
-git-pull-request-merge-method = "squash"
-git-show-sidebar-pr-icons = true
-git-pr-instructions = """
-## Writing style
-- Never use em dashes or en dashes anywhere: commits, code comments, prose, chat replies. Use a regular hyphen, comma, colon, parentheses, or two sentences instead.
-- Do not name personal preferences in commit messages or other public artifacts. Describe changes neutrally, such as "clean up tool docs".
-
-## Commit messages
-- Single short lowercase subject line, around 8 words or fewer. No body, no `Co-Authored-By` trailer.
-- Past-tense imperatives like "add", "fix", "move", and "return" are fine. No trailing punctuation, no leading capital.
-
-## Pull requests
-- Descriptive title, often verb-led. No `feat:`, `fix:`, or `chore:` prefixes. Title need not match the commit subject.
-- Body is optional and minimal: 0-2 sentences, lead with motivation or why, not what changed. Empty body is fine.
-- No markdown headers, checkboxes, emojis, or "Generated with Codex" footer."""
-git-commit-instructions = """
-## Writing style
-- Never use em dashes or en dashes anywhere: commits, code comments, prose, chat replies. Use a regular hyphen, comma, colon, parentheses, or two sentences instead.
-- Do not name personal preferences in commit messages or other public artifacts. Describe changes neutrally, such as "clean up tool docs".
-
-## Commit messages
-- Single short lowercase subject line, around 8 words or fewer. No body, no `Co-Authored-By` trailer.
-- Past-tense imperatives like "add", "fix", "move", and "return" are fine. No trailing punctuation, no leading capital."""
