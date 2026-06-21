@@ -1,7 +1,7 @@
 interface:
   display_name: "To PRD"
   short_description: "Turn context into a PRD"
-  default_prompt: "Use $to-prd to turn the current conversation context into a PRD for the project issue tracker."
+  default_prompt: "Use $to-prd to draft a PRD from the current context without publishing unless explicitly requested."
 
 policy:
   allow_implicit_invocation: true
