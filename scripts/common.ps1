@@ -16,10 +16,6 @@ function Get-CodexHome {
         return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($env:CODEX_HOME)
     }
 
-    if ($env:CODEX_HOME) {
-        return (Resolve-Path $env:CODEX_HOME).Path
-    }
-
     $default = Join-Path $env:USERPROFILE ".codex"
     return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($default)
 }

@@ -17,6 +17,12 @@ PUBLIC_COMMAND_RE = re.compile(
     rf"\b(git(?:\s+(?:(?:-C|--git-dir|--work-tree|--namespace)\s+(?:{SHELL_ARG})|-c\s+(?:[^\s=]+=(?:{SHELL_ARG})|(?:{SHELL_ARG}))|--[A-Za-z0-9-]+=(?:{SHELL_ARG})|--[A-Za-z0-9-]+|-[A-Za-z]+))*\s+(?:commit|tag)|gh(?:\s+(?:(?:--repo|-R)\s+(?:{SHELL_ARG})|--repo=(?:{SHELL_ARG})))*\s+pr\s+\S+|gh\s+release)\b",
     re.IGNORECASE,
 )
+
+
+def env_enabled(name: str) -> bool:
+    return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
 def read_input() -> dict:
     try:
         return json.loads(sys.stdin.read() or "{}")
@@ -79,6 +85,9 @@ def added_patch_lines(command: str) -> list[tuple[str, str]]:
 
 
 def dash_guard(data: dict) -> bool:
+    if env_enabled("CODEX_PORTABLE_DISABLE_DASH_GUARD"):
+        return False
+
     tool_name = str(data.get("tool_name") or "")
     command = tool_command(data)
 
@@ -143,14 +152,15 @@ def candidate_repos(cwd: Path) -> list[Path]:
     if root is not None:
         repos.append(root)
 
-    try:
-        for child in cwd.iterdir():
-            if not child.is_dir():
-                continue
-            if (child / ".git").exists():
-                repos.append(child)
-    except OSError:
-        pass
+    if not env_enabled("CODEX_PORTABLE_DISABLE_CHILD_REPO_SCAN"):
+        try:
+            for child in cwd.iterdir():
+                if not child.is_dir():
+                    continue
+                if (child / ".git").exists():
+                    repos.append(child)
+        except OSError:
+            pass
 
     unique: list[Path] = []
     seen: set[str] = set()
@@ -194,7 +204,7 @@ def repo_status_summary(repo: Path) -> str | None:
 
 
 def dirty_worktree_closeout(data: dict) -> bool:
-    if data.get("stop_hook_active"):
+    if data.get("stop_hook_active") or env_enabled("CODEX_PORTABLE_DISABLE_GIT_CLOSEOUT"):
         return False
 
     cwd = Path(str(data.get("cwd") or os.getcwd()))
