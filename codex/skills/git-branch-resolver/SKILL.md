@@ -56,9 +56,7 @@ depends on repo context, GitHub access, or multi-remote fork handling.
 
 ## Inventory first
 
-If the prompt or repo rules require read-only inspection, or the user has not
-opted into refreshing remote refs, collect current local state first and skip
-fetch or prune:
+Start by collecting current local state:
 
 ```powershell
 git status --short --branch
@@ -68,22 +66,23 @@ git branch -r --no-color
 git remote -v
 ```
 
-When the user explicitly opts into refreshing remote refs for `audit/report`,
-cleanup, or PR refresh work, run:
+For read-only audits, skip fetch or prune unless the user explicitly asks to
+refresh remote refs. Label classifications as based on current local refs and
+call out that stale remote-tracking refs may affect recommendations.
+
+For cleanup and requested PR refresh work, refresh remote refs before using
+`origin/<default>` as proof or making branch changes:
 
 ```powershell
 git fetch --all --prune
 ```
 
-Treat that as a ref refresh, not read-only inspection, because it updates local
-remote-tracking refs.
+If fetch fails during cleanup or PR refresh, stop before deleting, retargeting,
+rebasing, or pushing branch state. Treat fetch and prune as a ref refresh, not
+read-only inspection, because they update local remote-tracking refs.
 
 If the current shell is not inside the target repo, stop and ask for the
 target `owner/repo` or local repo path before doing PR inspection or cleanup.
-
-When `audit/report` skips fetch or prune, label branch classifications as based
-on current local refs and call out that stale remote-tracking refs may affect
-recommendations.
 
 If GitHub is the host and `gh` is authenticated, infer `owner/repo` from
 `git remote get-url origin`, then gather PRs:
@@ -191,8 +190,8 @@ Delete only after explicit cleanup approval and evidence:
 
 ## Verification gates
 
-Before reporting completion, re-read current state. If the user explicitly
-opted into refreshing remote refs, run:
+Before reporting completion, re-read current state. For cleanup or PR refresh
+work, run:
 
 ```powershell
 git fetch --all --prune
@@ -201,8 +200,8 @@ git branch -r --no-color
 git worktree list --porcelain
 ```
 
-If the task stayed read-only, skip fetch or prune and run the remaining local
-state commands only.
+If the task stayed read-only, skip fetch or prune unless the user explicitly
+asked to refresh remote refs, and run the remaining local state commands only.
 
 If a PR host is available, verify open PRs:
 
