@@ -8,6 +8,8 @@ description: Maintain codex-portable durable setup. Use when editing installed s
 Use this skill when changing `codex-portable` itself. Its job is to route durable
 setup changes to the right source file while preserving the install boundary.
 
+Repository: [ariobarin/codex-portable](https://github.com/ariobarin/codex-portable).
+
 ## Stance
 
 Treat this repo as reviewed source, not a backup of live `~/.codex`. Keep

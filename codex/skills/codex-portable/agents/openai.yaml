@@ -1,7 +1,7 @@
 interface:
   display_name: "Codex Portable"
   short_description: "Maintain portable Codex setup"
-  default_prompt: "Use $codex-portable to update durable Codex setup while preserving the install boundary."
+  default_prompt: "Use $codex-portable to update durable Codex setup in https://github.com/ariobarin/codex-portable while preserving the install boundary."
 
 policy:
   allow_implicit_invocation: true
