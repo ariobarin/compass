@@ -50,6 +50,26 @@ should become durable guidance:
 ## Entries
 
 ```text
+date: 2026-06-12
+repo or workflow: multi-thread audit coordination
+task: launch several audit threads with their own worktrees and PR workflow
+first failure: workers were given both local tracking work and public PR
+  authority, so public branches started to carry tracker notes, partial
+  findings, and mixed coordination content.
+downstream effects: the repository accumulated draft PRs with unclear review
+  order, overlapping fixes, and scratch content that was not useful upstream.
+evidence: audit tracker PRs had to be folded, closed, or rebuilt into focused
+  reviewable changes.
+root cause category: workflow mismatch
+fix made: added workflows/multi-thread-pr-coordination.md and ignored root
+  .local scratch tracking while keeping tracked .local files blocked by doctor.
+verification: run .\scripts\doctor.ps1 and verify .local scratch files stay
+  ignored while forced-tracked .local files fail.
+should become durable guidance: yes, as repo-maintainer workflow guidance and
+  a local scratch check, not as a global rule for every PR.
+```
+
+```text
 date: 2026-06-18
 repo or workflow: WebMCP overnight benchmark orchestration
 task: coordinate worker threads for benchmark runs, dictionary PR review, agent modification audit, and ablation planning
