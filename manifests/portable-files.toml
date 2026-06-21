@@ -14,6 +14,9 @@ dirs = [
   "agents",
 ]
 
+# This allowlist models the current live personal skill store under the active
+# Codex home. It does not model project `.agents/skills` folders inside target
+# repos.
 skills = [
   "action-items-to-prs",
   "benchmark-infra-reviewer",

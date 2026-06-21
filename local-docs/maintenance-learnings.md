@@ -62,8 +62,10 @@ Use `workflows/addition-intake.md` when promoting a new durable artifact into th
 portable repo.
 
 - A repeated codex-portable maintenance process belongs in `workflows/`.
-- A reusable agent capability that should be installed belongs in
-  `codex/skills/`.
+- A reusable personal skill that should be installed into the user-home skill
+  store belongs in `codex/skills/`.
+- `codex/skills/` mirrors the active Codex home skill store. It is separate
+  from project `.agents/skills` discovery inside target repos.
 - A project-specific skill belongs in the target repo, not in `codex-portable`.
 - A reusable custom agent that should be installed belongs in `codex/agents/`.
 - A project-specific custom agent belongs in the target repo.
