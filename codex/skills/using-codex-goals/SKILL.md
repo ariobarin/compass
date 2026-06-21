@@ -35,17 +35,20 @@ for specific tasks. This skill treats cross-thread goal activation as an
 explicit action in the child context rather than a text transfer from the
 parent.
 
-As observed in Codex on June 17-18, 2026:
+Codex product mechanics can change. Use this contract unless current tooling
+shows a different boundary:
 
-- delegated `/goal` text sent to another thread or subagent is plain text;
+- delegated `/goal` text sent to another thread or subagent is plain text until
+  the child applies it;
 - a child that needs active goal state applies it by calling `create_goal` for
   itself;
 - parent completion stays with the controller, even when a child completes its
   slice;
-- spawned subagents could create their own goals, but nested subagent spawning
-  was unavailable in the observed sessions.
+- spawned subagents may create their own goals when goal tools are available,
+  but nested subagent spawning is not an assumed capability.
 
-Treat these as observed product behavior, not as permanent platform guarantees.
+Treat these as operating assumptions to verify, not as permanent platform
+guarantees.
 
 ## Activation Rule
 

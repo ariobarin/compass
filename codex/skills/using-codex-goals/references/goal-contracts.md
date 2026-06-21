@@ -7,7 +7,7 @@ completion predicates.
 ## Contents
 
 - Goal Brief Template
-- Observed Delegation Behavior
+- Delegation State Boundary
 - Controller Goal Template
 - Worker Goal Template
 - Monitor Goal Template
@@ -35,19 +35,20 @@ Subagents:
 Use this form to turn broad intent into a durable contract. Keep every field
 concrete enough that another agent can verify it from named evidence.
 
-## Observed Delegation Behavior
+## Delegation State Boundary
 
-As observed in Codex on June 17-18, 2026:
+Codex product mechanics can change. Use this contract unless current tooling
+shows a different boundary:
 
-- delegated `/goal` text to another thread or spawned subagent was treated as
-  plain text;
+- delegated `/goal` text to another thread or spawned subagent is plain text
+  until the child applies it;
 - a child that needed active goal state applied it by calling `create_goal` for
   itself;
-- the parent controller kept completion authority for the parent goal;
-- spawned subagents could create goals, while nested subagent spawning was
-  unavailable in the observed sessions.
+- the parent controller keeps completion authority for the parent goal;
+- spawned subagents may create goals when goal tools are available, while nested
+  subagent spawning is not an assumed capability.
 
-Treat these as an observed behavior snapshot rather than permanent platform
+Treat these as operating assumptions to verify rather than permanent platform
 guarantees.
 
 ## Controller Goal Template
@@ -179,8 +180,9 @@ satisfies the parent goal.
 Choose the orchestration surface deliberately:
 
 - Use subagents for bounded worker slices that should report back to the
-  controller. Spawned subagents can create their own goals, but they could not
-  spawn nested subagents in observed behavior.
+  controller. Spawned subagents can create their own goals when goal tools are
+  available. Do not assume they can spawn nested subagents unless the current
+  tool surface proves it.
 - Use separate threads for durable, user-visible work streams that may need to
   persist independently in the sidebar.
 - For tree-shaped work, keep fan-out controller-owned. Let children return
