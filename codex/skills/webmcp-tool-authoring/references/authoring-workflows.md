@@ -1,7 +1,16 @@
 # WebMCP Authoring Workflows
 
-This reference is portable. It distills the established local authoring docs and
-prior site sweeps without depending on their original paths.
+This reference distills established WebMCP authoring practices and prior site
+sweeps without depending on original project paths.
+
+## Contents
+
+- [Cold-Start Discovery](#cold-start-discovery)
+- [Candidate Selection](#candidate-selection)
+- [Generation Routes](#generation-routes)
+- [Implementation Shapes](#implementation-shapes)
+- [Validation Loop](#validation-loop)
+- [Common Authoring Failures](#common-authoring-failures)
 
 ## Cold-Start Discovery
 

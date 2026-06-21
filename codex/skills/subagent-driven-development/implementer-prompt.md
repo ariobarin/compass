@@ -10,16 +10,22 @@ You are implementing Task N: [task name]
 
 ## Task Description
 
-[FULL TASK TEXT - paste it here, do not make the subagent find the plan file]
+[FULL TASK TEXT - paste it here so the subagent has the plan slice inline]
 
 ## Context
 
-[Repo path, nearby files, architectural context, known pitfalls]
+[Absolute repo path, exact file/log/artifact paths, nearby files,
+architectural context, known pitfalls]
 
 ## Before You Begin
 
 Ask questions now if the requirements, boundaries, or validation target are
 unclear. Raise concerns before you start coding.
+
+If a required path is missing or only given relatively, first resolve it from
+the repo path, task text, and nearby files. Ask for the exact path only when
+multiple plausible targets remain and choosing one would risk changing the
+wrong artifact.
 
 ## Your Job
 
@@ -35,8 +41,10 @@ workflow requires one.
 
 ## While You Work
 
-If you hit something unexpected, stop and ask. Do not guess through unclear
-requirements, repo policy, or architecture.
+If you hit something unexpected, diagnose and fix it inside the assigned scope.
+Do not hand routine setup, test, dependency, merge, or validation problems back
+as blockers. Ask the controller only when requirements, repo policy, ownership,
+or architecture are unclear enough that continuing would risk the task.
 
 ## Code Organization
 
@@ -48,11 +56,20 @@ requirements, repo policy, or architecture.
 
 ## Escalate Early
 
-Return `NEEDS_CONTEXT` or `BLOCKED` when:
+Return `NEEDS_CONTEXT` when:
 - requirements are missing;
 - the task needs design choices the plan did not settle;
 - the repo state or local guidance conflicts with the requested change;
-- you are reading widely without making progress.
+- you are reading widely while progress needs a narrower slice or more context.
+
+Return `BLOCKED` only after you have tried the reasonable local recovery and can
+name the exact dependency outside your assigned scope. Include what you tried,
+what failed, and the smallest next action that would move the task.
+
+If the controller asks unblock questions, treat them as help recovering your
+next move, not as permission to stop. Answer directly, then continue with the
+next smallest reversible action unless the remaining dependency is outside your
+assigned scope.
 
 ## Report Format
 
@@ -61,5 +78,5 @@ Return `NEEDS_CONTEXT` or `BLOCKED` when:
 - Files changed
 - Checks run and results
 - Self-review findings
-- Open concerns or blockers
+- Open concerns, local recovery tried, and exact next action
 ```

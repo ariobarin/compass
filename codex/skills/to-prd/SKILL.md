@@ -1,74 +1,92 @@
 ---
 name: to-prd
-description: Turn the current conversation context into a PRD and publish it to the project issue tracker. Use when user wants to create a PRD from the current context.
+description: Draft PRDs from current context without publishing by default. Use when user asks to create or refine a PRD from existing context.
 ---
 
-This skill takes the current conversation context and codebase understanding and produces a PRD. Do NOT interview the user  -  just synthesize what you already know.
+# To PRD
 
-The issue tracker and triage label vocabulary should have been provided to you  -  run `/setup-matt-pocock-skills` if not.
+Use this skill to turn already-available conversation, codebase, and product
+context into a product requirements document. The role is synthesis: preserve
+the user's intent, separate decisions from assumptions, and make the next
+implementation conversation easier to review.
+
+The failure mode this prevents is premature project tracking. A useful PRD can
+exist as a local draft, chat artifact, or issue body. Do not create, update,
+label, or publish anything in an external tracker unless the user explicitly
+asks for publication and provides the target tracker, repository or project,
+and label policy.
+
+## Drafting Stance
+
+- Start from current context and nearby repo evidence.
+- Ask only for missing decisions that block a coherent PRD.
+- Mark inferred decisions as assumptions when the user did not confirm them.
+- Prefer domain vocabulary from the project over generic feature language.
+- Keep implementation details stable enough to survive code movement.
 
 ## Process
 
-1. Explore the repo to understand the current state of the codebase, if you haven't already. Use the project's domain glossary vocabulary throughout the PRD, and respect any ADRs in the area you're touching.
-
-2. Sketch out the seams at which you're going to test the feature. Existing seams should be preferred to new ones. Use the highest seam possible. If new seams are needed, propose them at the highest point you can.
-
-Check with the user that these seams match their expectations.
-
-3. Write the PRD using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+1. Read relevant project guidance, ADRs, glossary docs, and nearby code when
+   they are available.
+2. Identify the problem, intended users, proposed solution, explicit
+   decisions, assumptions, out-of-scope work, and verification seams.
+3. Draft the PRD using the template below.
+4. If publication was explicitly requested, restate the target tracker,
+   target project, labels, and final remote action before publishing.
 
 <prd-template>
 
 ## Problem Statement
 
-The problem that the user is facing, from the user's perspective.
+Describe the user's problem from the user's perspective.
 
 ## Solution
 
-The solution to the problem, from the user's perspective.
+Describe the proposed solution from the user's perspective.
 
 ## User Stories
 
-A LONG, numbered list of user stories. Each user story should be in the format of:
+List user stories in this format:
 
-1. As an <actor>, I want a <feature>, so that <benefit>
+1. As an <actor>, I want <feature>, so that <benefit>.
 
-<user-story-example>
-1. As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending
-</user-story-example>
-
-This list of user stories should be extremely extensive and cover all aspects of the feature.
+Cover the main actor paths, edge cases, and administrative or operational
+needs that matter for implementation.
 
 ## Implementation Decisions
 
-A list of implementation decisions that were made. This can include:
+List decisions that are already made or strongly implied, including:
 
-- The modules that will be built/modified
-- The interfaces of those modules that will be modified
-- Technical clarifications from the developer
-- Architectural decisions
-- Schema changes
-- API contracts
-- Specific interactions
+- modules or systems involved;
+- API, schema, or interface contracts;
+- architectural decisions;
+- user interactions;
+- technical clarifications from the user.
 
-Do NOT include specific file paths or code snippets. They may end up being outdated very quickly.
-
-Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it within the relevant decision and note briefly that it came from a prototype. Trim to the decision-rich parts  -  not a working demo, just the important bits.
+Avoid specific file paths unless the path itself is part of the requirement.
+If a prototype produced a compact snippet that captures a decision more clearly
+than prose, include only the decision-bearing part and label it as prototype
+derived.
 
 ## Testing Decisions
 
-A list of testing decisions that were made. Include:
+List the expected testing seams and prior art, including:
 
-- A description of what makes a good test (only test external behavior, not implementation details)
-- Which modules will be tested
-- Prior art for the tests (i.e. similar types of tests in the codebase)
+- what user-visible behavior must be tested;
+- which existing test style or layer should be reused;
+- which edge cases need coverage;
+- which manual or runtime checks remain useful.
+
+## Assumptions
+
+List assumptions that should be confirmed before implementation.
 
 ## Out of Scope
 
-A description of the things that are out of scope for this PRD.
+List work that should not be included in the first implementation.
 
 ## Further Notes
 
-Any further notes about the feature.
+Add any remaining context that would help an implementer or reviewer.
 
 </prd-template>

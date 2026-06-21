@@ -1,22 +1,31 @@
 ---
 name: git-branch-resolver
-description: Audit Git branches, worktrees, remotes, and PRs. Use for branch sprawl, PR refreshes, safe cleanup, and local WIP preservation.
+description: Audit and safely resolve Git branches, worktrees, remotes, and PRs. Use for read-only audits, requested PR refreshes, preservation, and explicit cleanup.
 ---
 
 # git-branch-resolver
 
-Use this skill to turn a messy Git repository into a smaller, understandable
-set of useful branches and worktrees.
+Use this skill to audit or refresh Git branch state without losing active work.
 
-Default to audit and preservation first. Do not delete branches, remove
-worktrees, retarget PRs, or close PRs unless the user explicitly asked for
-cleanup or the evidence makes the branch intent unambiguously redundant.
+Choose a mode before mutating anything:
+
+- `audit/report`: inventory branches, worktrees, remotes, and PRs; classify
+  their state; recommend next actions; do not change branches, worktrees,
+  commits, or PR state.
+- `refresh requested PR`: keep work on the exact branch or PR the user named,
+  refresh it against the current base, reverify, and preserve branch identity.
+- `cleanup on request`: after inventory and preservation, delete or retarget
+  clearly redundant state the user explicitly asked to clean up.
+
+Default to `audit/report` or `refresh requested PR`. In those modes, do not
+delete branches, remove worktrees, retarget PRs, or close PRs. Move to cleanup
+only when the user explicitly asks for those cleanup actions.
 
 When the user names a specific branch or PR, keep work on that exact branch.
 Do not redirect the work to a different PR or replacement branch unless the
 user asks for that outcome.
 
-The target end state:
+For explicit cleanup work, the target end state is:
 
 - remaining local branches are `main` or `master`, active PR branches, or
   clearly useful local work;
@@ -47,16 +56,30 @@ depends on repo context, GitHub access, or multi-remote fork handling.
 
 ## Inventory first
 
-Fetch and collect branch, worktree, and PR state before deciding anything:
+Start by collecting current local state:
 
 ```powershell
-git fetch --all --prune
 git status --short --branch
 git worktree list --porcelain
 git branch -vv --no-color
 git branch -r --no-color
 git remote -v
 ```
+
+For read-only audits, skip fetch or prune unless the user explicitly asks to
+refresh remote refs. Label classifications as based on current local refs and
+call out that stale remote-tracking refs may affect recommendations.
+
+For cleanup and requested PR refresh work, refresh remote refs before using
+`origin/<default>` as proof or making branch changes:
+
+```powershell
+git fetch --all --prune
+```
+
+If fetch fails during cleanup or PR refresh, stop before deleting, retargeting,
+rebasing, or pushing branch state. Treat fetch and prune as a ref refresh, not
+read-only inspection, because they update local remote-tracking refs.
 
 If the current shell is not inside the target repo, stop and ask for the
 target `owner/repo` or local repo path before doing PR inspection or cleanup.
@@ -137,8 +160,8 @@ Update active PR branches carefully:
 - if the delta is already represented by the base or default branch, mark it as
   redundant in the audit and close or delete it only when the user asked for
   cleanup;
-- retarget PR bases to the default branch when old base branches have merged or
-  been removed.
+- when retargeting was explicitly requested, retarget PR bases to the default
+  branch only after confirming old base branches have merged or been removed.
 
 Handle conflicts conservatively:
 
@@ -150,21 +173,25 @@ Handle conflicts conservatively:
   that intent;
 - run `git diff --check` after conflict resolution.
 
-Delete only after evidence:
+Delete only after explicit cleanup approval and evidence:
 
+- confirm the user asked for cleanup or approved the specific cleanup action;
 - prove the branch intent exists in `origin/<default>` or an open PR before
   deleting local branches, worktrees, or backup refs;
-- if the upstream state is uncertain, preserve first and delete later;
-- delete local branches after confirming work is merged, superseded, closed as
-  redundant, or preserved elsewhere;
-- delete remote branches only after confirming no open PR depends on them;
-- remove clean stale worktrees with `git worktree remove <path>`;
+- if the upstream state is uncertain, preserve first and ask before deleting;
+- delete local branches only after approval and after confirming work is merged,
+  superseded, closed as redundant, or preserved elsewhere;
+- delete remote branches only after approval and after confirming no open PR
+  depends on them;
+- remove clean stale worktrees with `git worktree remove <path>` only after
+  approval;
 - never remove dirty worktrees until dirty state is committed, pushed, or
   explicitly documented as disposable.
 
 ## Verification gates
 
-Before reporting completion, verify current state:
+Before reporting completion, re-read current state. For cleanup or PR refresh
+work, run:
 
 ```powershell
 git fetch --all --prune
@@ -172,6 +199,9 @@ git branch -vv --no-color
 git branch -r --no-color
 git worktree list --porcelain
 ```
+
+If the task stayed read-only, skip fetch or prune unless the user explicitly
+asked to refresh remote refs, and run the remaining local state commands only.
 
 If a PR host is available, verify open PRs:
 
@@ -200,11 +230,14 @@ branch.
 
 Report:
 
-- deleted local branches and worktrees;
-- deleted remote branches;
-- PRs opened, rebased, retargeted, closed, or left active;
-- exact branch names and commit SHAs;
+- operating mode used;
+- requested branch or PR, if any, and whether branch identity was preserved;
+- preserved or refreshed branches, worktrees, and exact commit SHAs;
+- PRs opened, refreshed, rebased, retargeted, closed, or left active;
 - the base repo and base branch used for any PR refresh or review;
 - any branches intentionally left because they back open PRs or active external
   work;
+- deleted local branches, worktrees, or remote branches, only when cleanup was
+  requested or explicitly approved;
 - verification commands and their result.
+- next recommended action when the task stopped at audit or report mode.

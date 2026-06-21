@@ -9,11 +9,15 @@ function Get-CodexHome {
     param([string]$CodexHome)
 
     if ($CodexHome) {
-        return (Resolve-Path $CodexHome).Path
+        return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($CodexHome)
+    }
+
+    if ($env:CODEX_HOME) {
+        return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($env:CODEX_HOME)
     }
 
     $default = Join-Path $env:USERPROFILE ".codex"
-    return (Resolve-Path $default).Path
+    return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($default)
 }
 
 function New-DirectoryForFile {
@@ -66,12 +70,16 @@ function Get-PortableFileMap {
         LivePath = Join-Path $CodexHome "agents"
     })
 
+    # This repo mirrors the current personal skill store under the active
+    # Codex home. Project `.agents/skills` stay with the target repo.
     foreach ($skill in @(
         "action-items-to-prs",
         "benchmark-infra-reviewer",
         "benchmark-run-operator",
+        "codex-portable",
         "git-branch-resolver",
         "grill-me",
+        "orchestration-controller",
         "subagent-driven-development",
         "to-prd",
         "ui-ux-pro-max",

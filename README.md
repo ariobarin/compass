@@ -7,24 +7,37 @@ live Codex directory contains auth, logs, sessions, caches, databases, generated
 plugin state, browser state, and machine-specific runtime paths. Those are not
 portable and should not be committed.
 
+Hosted Codex web settings, cloud task history, repository connections, and
+workspace connector installs such as Slack or Linear are also out of scope for
+this repo. They are service-side state, not portable files.
+
 ## Layout
 
-- `codex/AGENTS.md`: portable source for the live global `~/.codex/AGENTS.md`.
-  Keep only session-wide defaults there.
+- `codex/AGENTS.md`: portable source for the live global `AGENTS.md` in the
+  active Codex home, usually `~/.codex/AGENTS.md`. Keep only session-wide
+  defaults there. Keep `AGENTS.override.md` local, and keep project
+  `AGENTS.md` files in the target repo.
 - `AGENTS.md`: repo-local maintenance guidance for this portable config repo.
   Use this for codex-portable process and review rules.
 - `codex/keybindings.json`: portable keyboard bindings.
-- `codex/agents/`: custom agents.
-- `codex/skills/`: custom skills, excluding system and plugin cache skills.
+- `codex/agents/`: reusable global custom agents installed into the live Codex
+  home. Project-specific custom agents belong in the target repo.
+- `codex/skills/`: reusable global custom skills installed into the live Codex
+  home for the current personal skill store, excluding system and plugin cache
+  skills. Project-specific `.agents/skills` belong in the target repo. Broader
+  sharing should usually happen through a plugin.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
-- `workflows/`: durable operating notes for recurring work.
+- `workflows/`: repo-side operating notes for recurring maintenance work. These
+  are not installed into the live Codex home.
+  Use `workflows/addition-intake.md` before promoting new portable artifacts.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
   live Codex home.
-- `manifests/portable-files.toml`: the allowlist and local-only denylist.
-- `manifests/tool-surfaces.md`: review notes for tools that can touch local or
-  external state.
-- `scripts/`: snapshot, diff, install, and health check helpers.
+- `manifests/portable-files.toml`: the install allowlist, repo-only list, and
+  local-only denylist.
+- `manifests/tool-surfaces.md`: repo-side review notes for tools that can touch
+  local or external state.
+- `scripts/`: repo-side snapshot, diff, install, and health check helpers.
 
 ## Common commands
 
@@ -62,14 +75,26 @@ Refresh the repo from the current live allowlist:
 Without `-Apply`, `snapshot.ps1` and `install.ps1` run in review mode and explain
 what they would change.
 
+All scripts target `-CodexHome` when passed, otherwise `$env:CODEX_HOME`,
+otherwise the default `%USERPROFILE%\.codex` home.
+
 ## Rules
 
 - Keep this repo small and boring.
 - Copy ordinary files into normal Codex locations. Avoid symlink-based setup.
 - Treat `codex/config.review.toml` as a draft for manual review, not a direct
   replacement for the live generated `config.toml`.
+- Keep `AGENTS.override.md` and `rules/` local unless you deliberately decide
+  they are reviewed portable policy.
 - Do not commit secrets, auth files, SQLite state, logs, session history, caches,
   browser profiles, generated plugin caches, or machine runtime paths.
+- If an automation should become portable, capture it as a skill, workflow, or
+  reviewed config change, not by tracking live `automations/` state.
+- If you intentionally author a plugin, keep the plugin source and marketplace
+  metadata in a normal repo path or dedicated plugin repo, not in live cache
+  directories.
 - Keep machine-specific values in ignored local files or in live config only.
 - Keep skill descriptions concise. Put detailed instructions in `SKILL.md` and
   references.
+- Promote additions through a PR after checking nearby docs, manifests, and
+  install maps for stale guidance.

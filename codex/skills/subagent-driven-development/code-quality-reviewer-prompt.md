@@ -17,9 +17,12 @@ You are reviewing implementation quality after spec compliance passed.
 
 ## Diff Context
 
-- Base commit: [BASE_SHA]
-- Head commit: [HEAD_SHA]
+- Repo path: [ABSOLUTE_REPO_PATH]
+- Diff locator: [BASE_SHA..HEAD_SHA, PR number, patch file, or exact changed files]
 - Implementer summary: [short summary]
+
+If the repo path or diff locator is missing, ask for that exact missing field
+before reviewing.
 
 ## Review Focus
 

@@ -12,12 +12,90 @@ catch {
     $liveHome = Join-Path $env:USERPROFILE ".codex"
 }
 $problems = New-Object System.Collections.Generic.List[string]
+$trackedFiles = @()
+$pathSeparators = @([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) | Select-Object -Unique
+
+function Get-DoctorFullPath {
+    param([string]$Path)
+
+    return [System.IO.Path]::GetFullPath($Path).TrimEnd($pathSeparators)
+}
+
+$localScratchRoot = Get-DoctorFullPath -Path (Join-Path $repoRoot ".local")
+
+function Test-LocalScratchPath {
+    param([string]$Path)
+
+    $fullPath = Get-DoctorFullPath -Path $Path
+    if ($fullPath -eq $localScratchRoot) {
+        return $true
+    }
+
+    foreach ($separator in $pathSeparators) {
+        if ($fullPath.StartsWith("$localScratchRoot$separator", [System.StringComparison]::OrdinalIgnoreCase)) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Get-DoctorChildItem {
+    param(
+        [ValidateSet("File", "Directory")]
+        [string]$Kind,
+        [string]$Filter = "*"
+    )
+
+    $items = New-Object System.Collections.Generic.List[object]
+
+    function Add-DoctorChildren {
+        param([string]$Path)
+
+        foreach ($child in Get-ChildItem -LiteralPath $Path -Force -ErrorAction SilentlyContinue) {
+            if ($child.PSIsContainer) {
+                if ($child.FullName -match "\\.git(\\|$)") {
+                    continue
+                }
+
+                if (Test-LocalScratchPath -Path $child.FullName) {
+                    continue
+                }
+
+                if ($Kind -eq "Directory" -and $child.Name -like $Filter) {
+                    $items.Add($child)
+                }
+
+                Add-DoctorChildren -Path $child.FullName
+                continue
+            }
+
+            if ($Kind -eq "File" -and $child.Name -like $Filter) {
+                $items.Add($child)
+            }
+        }
+    }
+
+    Add-DoctorChildren -Path $repoRoot
+    return $items
+}
 
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     $problems.Add("git is not on PATH")
 }
+else {
+    $trackedFiles = @(& git -C $repoRoot ls-files 2>$null)
+    foreach ($trackedFile in $trackedFiles) {
+        $trackedPath = Get-DoctorFullPath -Path (Join-Path $repoRoot $trackedFile)
+        if (Test-LocalScratchPath -Path $trackedPath) {
+            $problems.Add("tracked local scratch path: $trackedFile")
+        }
+    }
+}
 
 foreach ($path in @(
+    ".gitattributes",
+    ".github\workflows\portable-checks.yml",
     "AGENTS.md",
     "codex\AGENTS.md",
     "codex\keybindings.json",
@@ -26,6 +104,9 @@ foreach ($path in @(
     "manifests\tool-surfaces.md",
     "local-docs\README.md",
     "local-docs\maintenance-learnings.md",
+    "workflows\addition-intake.md",
+    "workflows\portable-config.md",
+    "workflows\multi-thread-pr-coordination.md",
     "workflows\plan-template.md",
     "workflows\read-only-research.md",
     "workflows\agent-failures.md",
@@ -37,37 +118,64 @@ foreach ($path in @(
     }
 }
 
-$blockedNames = @(
-    "auth.json",
-    "history.jsonl",
-    "session_index.jsonl",
-    "installation_id",
-    "cap_sid"
-)
+$manifestPath = Join-Path $repoRoot "manifests\portable-files.toml"
+$manifestText = Get-Content -Raw -LiteralPath $manifestPath
+
+function Get-ManifestArrayValues {
+    param(
+        [string]$Text,
+        [string]$Section,
+        [string]$Key
+    )
+
+    $sectionPattern = "(?ms)^\[$([regex]::Escape($Section))\]\s*(.*?)(?=^\[|\z)"
+    $sectionMatch = [regex]::Match($Text, $sectionPattern)
+    if (-not $sectionMatch.Success) {
+        return @()
+    }
+
+    $keyPattern = "(?ms)^\s*$([regex]::Escape($Key))\s*=\s*\[(.*?)^\s*\]"
+    $keyMatch = [regex]::Match($sectionMatch.Groups[1].Value, $keyPattern)
+    if (-not $keyMatch.Success) {
+        return @()
+    }
+
+    return @(
+        [regex]::Matches($keyMatch.Groups[1].Value, '"([^"]+)"') |
+            ForEach-Object { $_.Groups[1].Value }
+    )
+}
+
+$blockedNames = @(Get-ManifestArrayValues -Text $manifestText -Section "local_only" -Key "files")
+if ($blockedNames.Count -eq 0) {
+    $problems.Add("missing local-only files in portable manifest")
+}
 
 foreach ($blocked in $blockedNames) {
-    $matches = Get-ChildItem -Path $repoRoot -Recurse -Force -File -Filter $blocked -ErrorAction SilentlyContinue
+    $matches = Get-DoctorChildItem -Kind File -Filter $blocked
     foreach ($match in $matches) {
-        $problems.Add("blocked local-only file tracked in repo tree: $($match.FullName)")
+        $problems.Add("blocked local-only file in repo tree: $($match.FullName)")
     }
 }
 
-$blockedDirs = @(
-    ".sandbox",
-    ".sandbox-bin",
-    ".sandbox-secrets",
-    ".tmp",
-    "cache",
-    "log",
-    "memories",
-    "plugins",
-    "sessions",
-    "sqlite",
-    "tmp",
-    "worktrees"
-)
+$blockedPatterns = @(Get-ManifestArrayValues -Text $manifestText -Section "local_only" -Key "patterns")
+if ($blockedPatterns.Count -eq 0) {
+    $problems.Add("missing local-only patterns in portable manifest")
+}
 
-foreach ($dir in Get-ChildItem -Path $repoRoot -Recurse -Force -Directory -ErrorAction SilentlyContinue) {
+foreach ($blockedPattern in $blockedPatterns) {
+    $matches = Get-DoctorChildItem -Kind File -Filter $blockedPattern
+    foreach ($match in $matches) {
+        $problems.Add("blocked local-only file pattern in repo tree: $($match.FullName)")
+    }
+}
+
+$blockedDirs = @(Get-ManifestArrayValues -Text $manifestText -Section "local_only" -Key "dirs")
+if ($blockedDirs.Count -eq 0) {
+    $problems.Add("missing local-only dirs in portable manifest")
+}
+
+foreach ($dir in Get-DoctorChildItem -Kind Directory) {
     if ($dir.FullName -match "\\.git(\\|$)") {
         continue
     }
@@ -77,7 +185,7 @@ foreach ($dir in Get-ChildItem -Path $repoRoot -Recurse -Force -Directory -Error
     }
 }
 
-$textFiles = Get-ChildItem -Path $repoRoot -Recurse -Force -File |
+$textFiles = Get-DoctorChildItem -Kind File |
     Where-Object {
         $_.FullName -notmatch "\\.git\\" -and
         $_.Extension -in @(".md", ".toml", ".json", ".ps1", ".yaml", ".yml", ".txt")
@@ -87,6 +195,24 @@ foreach ($file in $textFiles) {
     $content = Get-Content -Raw -LiteralPath $file.FullName
     if ($content -match "[^\x00-\x7F]") {
         $problems.Add("non-ASCII text in: $($file.FullName)")
+    }
+}
+
+$dashCheckedExtensions = @(".md", ".toml", ".json", ".ps1", ".yaml", ".yml", ".txt", ".py", ".csv")
+$dashCheckedFiles = Get-DoctorChildItem -Kind File |
+    Where-Object {
+        $_.FullName -notmatch "\\.git\\" -and
+        $_.Extension -in $dashCheckedExtensions
+    }
+$blockedDashChars = @([char]0x2013, [char]0x2014)
+
+foreach ($file in $dashCheckedFiles) {
+    $content = Get-Content -Raw -LiteralPath $file.FullName
+    foreach ($dashChar in $blockedDashChars) {
+        if ($content.Contains($dashChar)) {
+            $problems.Add("non-ASCII dash text in: $($file.FullName)")
+            break
+        }
     }
 }
 
@@ -111,8 +237,77 @@ foreach ($skillFile in $skillFiles) {
     }
 }
 
-$manifestPath = Join-Path $repoRoot "manifests\portable-files.toml"
-$manifestText = Get-Content -Raw -LiteralPath $manifestPath
+function Get-TopLevelTomlStringValues {
+    param([string]$Text)
+
+    $topLevelValues = @{}
+    $currentKey = $null
+    $currentValue = New-Object System.Text.StringBuilder
+    $inMultilineString = $false
+    $inTable = $false
+
+    foreach ($line in ($Text -split "`r?`n")) {
+        if ($inMultilineString) {
+            $closingIndex = $line.IndexOf('"""')
+            if ($closingIndex -ge 0) {
+                [void]$currentValue.AppendLine($line.Substring(0, $closingIndex))
+                $topLevelValues[$currentKey] = $currentValue.ToString()
+                $currentKey = $null
+                [void]$currentValue.Clear()
+                $inMultilineString = $false
+            }
+            else {
+                [void]$currentValue.AppendLine($line)
+            }
+            continue
+        }
+
+        if ($line -match '^\s*\[') {
+            $inTable = $true
+            continue
+        }
+
+        if ($inTable) {
+            continue
+        }
+
+        $multiline = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"""(.*)$')
+        if ($multiline.Success) {
+            $key = $multiline.Groups[1].Value
+            $remainingText = $multiline.Groups[2].Value
+            $closingIndex = $remainingText.IndexOf('"""')
+            if ($closingIndex -ge 0) {
+                $topLevelValues[$key] = $remainingText.Substring(0, $closingIndex)
+            }
+            else {
+                $currentKey = $key
+                [void]$currentValue.Clear()
+                [void]$currentValue.AppendLine($remainingText)
+                $inMultilineString = $true
+            }
+            continue
+        }
+
+        $assignment = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"([^"]*)"\s*(#.*)?$')
+        if ($assignment.Success) {
+            $topLevelValues[$assignment.Groups[1].Value] = $assignment.Groups[2].Value
+        }
+    }
+
+    return $topLevelValues
+}
+
+$agentFiles = Get-ChildItem -Path (Join-Path $repoRoot "codex\agents") -File -Filter "*.toml" -ErrorAction SilentlyContinue
+foreach ($agentFile in $agentFiles) {
+    $agentText = Get-Content -Raw -LiteralPath $agentFile.FullName
+    $topLevelValues = Get-TopLevelTomlStringValues -Text $agentText
+    $topLevelText = $topLevelValues.Values -join "`n"
+
+    if ($topLevelText -match "(?i)\bread-only\b" -and ($topLevelValues["sandbox_mode"] -ne "read-only")) {
+        $problems.Add("read-only agent missing sandbox_mode: $($agentFile.FullName)")
+    }
+}
+
 $skillsMatch = [regex]::Match($manifestText, "(?ms)^skills\s*=\s*\[(.*?)^\]")
 if (-not $skillsMatch.Success) {
     $problems.Add("missing skills allowlist in portable manifest")

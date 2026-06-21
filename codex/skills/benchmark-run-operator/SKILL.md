@@ -15,7 +15,7 @@ before inventing local glue.
 
 ## Required References
 
-Read the local references that match the task:
+Read the references that match the task:
 
 - [benchmark-protocol.md](references/benchmark-protocol.md): comparison design,
   A/B validity, smoke gates, success metrics, and accepted confounds.

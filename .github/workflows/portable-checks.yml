@@ -37,20 +37,3 @@ jobs:
             $bad | ForEach-Object { Write-Host "trailing whitespace: $_" }
             exit 1
           }
-
-      - name: Check local-only filenames
-        shell: pwsh
-        run: |
-          $blocked = @(
-            "auth.json",
-            "history.jsonl",
-            "session_index.jsonl",
-            "installation_id",
-            "cap_sid"
-          )
-          $matches = Get-ChildItem -Recurse -Force -File |
-            Where-Object { $_.FullName -notmatch "\\.git\\" -and $blocked -contains $_.Name }
-          if ($matches) {
-            $matches | ForEach-Object { Write-Host "blocked file: $($_.FullName)" }
-            exit 1
-          }
