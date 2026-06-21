@@ -74,6 +74,10 @@ small upstream-doc PR only when the docs are useful to future readers.
 During active parallel work, the coordinator should periodically inspect PRs
 created by the current workstream:
 
+Mutate current-workstream PRs only when the user granted that authority for the
+workstream. Otherwise, report the recommended cleanup and ask before closing,
+rebasing, retargeting, or refreshing.
+
 1. List current-workstream PRs and classify them.
 2. Close duplicate, scratch, or mixed workstream PRs with a short comment.
 3. Rebase or refresh viable workstream PRs on current main.
