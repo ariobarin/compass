@@ -43,6 +43,11 @@ Keep the reviewed fragment internally consistent. If it stays on the older
 `sandbox_mode` path, do not mix in the newer `default_permissions` and
 `[permissions]` profile system without a deliberate migration.
 
+Keep portable intent separate from app-shaped local state. Session-wide writing,
+Git, and review preferences belong in `codex/AGENTS.md`. Desktop-only UI state,
+undocumented helper fields, and one-machine app toggles do not belong in the
+reviewed config fragment.
+
 ## Durable Guidance Edits
 
 When the change affects future Codex behavior across sessions or machines:
@@ -61,6 +66,8 @@ review:
 - app runtime and MCP binary paths;
 - MCP server transport wiring, URLs, OAuth callback overrides, and token or
   header config;
+- desktop UI state, app-only helper text blocks, and undocumented app-local
+  toggles;
 - `AGENTS.override.md` behavior or local `rules/` approvals that were accepted
   interactively on one machine;
 - project trust entries for one machine;
