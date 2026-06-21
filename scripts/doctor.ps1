@@ -98,6 +98,11 @@ foreach ($path in @(
     ".github\workflows\portable-checks.yml",
     "AGENTS.md",
     "codex\AGENTS.md",
+    "codex\hooks.json",
+    "codex\hooks\README.md",
+    "codex\hooks\portable_guard.py",
+    "codex\hooks\portable_guard.ps1",
+    "codex\hooks\portable_guard.sh",
     "codex\keybindings.json",
     "codex\config.review.toml",
     "manifests\portable-files.toml",
@@ -115,6 +120,63 @@ foreach ($path in @(
     $fullPath = Join-Path $repoRoot $path
     if (-not (Test-Path $fullPath)) {
         $problems.Add("missing required file: $path")
+    }
+}
+
+function Get-DoctorPythonRunner {
+    $candidates = New-Object System.Collections.Generic.List[object]
+
+    if ($env:OS -eq "Windows_NT") {
+        $candidates.Add(@("py", "-3"))
+    }
+
+    $candidates.Add(@("python3"))
+    $candidates.Add(@("python"))
+
+    foreach ($candidate in $candidates) {
+        $exe = $candidate[0]
+        if (-not (Get-Command $exe -ErrorAction SilentlyContinue)) {
+            continue
+        }
+
+        $runnerArgs = @()
+        if ($candidate.Count -gt 1) {
+            $runnerArgs = @($candidate[1..($candidate.Count - 1)])
+        }
+
+        & $exe @runnerArgs "--version" *> $null
+        if ($LASTEXITCODE -eq 0) {
+            return @($candidate)
+        }
+    }
+
+    return @()
+}
+
+function Invoke-DoctorPythonScript {
+    param(
+        [string[]]$Runner,
+        [string]$ScriptPath,
+        [string]$InputText
+    )
+
+    $exe = $Runner[0]
+    $runnerArgs = @()
+    if ($Runner.Count -gt 1) {
+        $runnerArgs = @($Runner[1..($Runner.Count - 1)])
+    }
+
+    $oldPythonIoEncoding = [Environment]::GetEnvironmentVariable("PYTHONIOENCODING", "Process")
+    [Environment]::SetEnvironmentVariable("PYTHONIOENCODING", "utf-8", "Process")
+    try {
+        $output = $InputText | & $exe @runnerArgs $ScriptPath 2>&1
+        return [pscustomobject]@{
+            ExitCode = $LASTEXITCODE
+            Output = ($output -join "`n")
+        }
+    }
+    finally {
+        [Environment]::SetEnvironmentVariable("PYTHONIOENCODING", $oldPythonIoEncoding, "Process")
     }
 }
 
@@ -343,6 +405,266 @@ else {
         if ($manifestSkills -notcontains $skill) {
             $problems.Add("skill in install map missing from manifest: $skill")
         }
+    }
+}
+
+$portableMap = @(Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome)
+foreach ($item in $portableMap) {
+    if (-not (Test-Path -LiteralPath $item.RepoPath)) {
+        $problems.Add("install map source missing: $($item.RepoPath)")
+    }
+}
+
+$codexRoot = Get-DoctorFullPath -Path (Join-Path $repoRoot "codex")
+$manifestCodexFiles = @(
+    Get-ManifestArrayValues -Text $manifestText -Section "codex" -Key "files" |
+        Sort-Object -Unique
+)
+$mappedCodexFiles = @(
+    $portableMap |
+        Where-Object {
+            $_.Type -eq "file" -and
+            (Get-DoctorFullPath -Path (Split-Path -Parent $_.RepoPath)) -eq $codexRoot
+        } |
+        ForEach-Object { Split-Path -Leaf $_.RepoPath } |
+        Sort-Object -Unique
+)
+
+foreach ($file in $manifestCodexFiles) {
+    if ($mappedCodexFiles -notcontains $file) {
+        $problems.Add("codex file in manifest missing from install map: $file")
+    }
+}
+
+foreach ($file in $mappedCodexFiles) {
+    if ($manifestCodexFiles -notcontains $file) {
+        $problems.Add("codex file in install map missing from manifest: $file")
+    }
+}
+
+$manifestCodexDirs = @(
+    Get-ManifestArrayValues -Text $manifestText -Section "codex" -Key "dirs" |
+        Sort-Object -Unique
+)
+$mappedCodexDirs = @(
+    $portableMap |
+        Where-Object {
+            $_.Type -eq "dir" -and
+            (Get-DoctorFullPath -Path (Split-Path -Parent $_.RepoPath)) -eq $codexRoot
+        } |
+        ForEach-Object { Split-Path -Leaf $_.RepoPath } |
+        Sort-Object -Unique
+)
+
+foreach ($dir in $manifestCodexDirs) {
+    if ($mappedCodexDirs -notcontains $dir) {
+        $problems.Add("codex dir in manifest missing from install map: $dir")
+    }
+}
+
+foreach ($dir in $mappedCodexDirs) {
+    if ($manifestCodexDirs -notcontains $dir) {
+        $problems.Add("codex dir in install map missing from manifest: $dir")
+    }
+}
+
+$hooksJsonPath = Join-Path $repoRoot "codex\hooks.json"
+try {
+    [void](Get-Content -Raw -LiteralPath $hooksJsonPath | ConvertFrom-Json)
+}
+catch {
+    $problems.Add("invalid hooks.json: $($_.Exception.Message)")
+}
+
+$hookGuardPath = Join-Path $repoRoot "codex\hooks\portable_guard.py"
+$pythonRunner = @(Get-DoctorPythonRunner)
+if ($pythonRunner.Count -eq 0) {
+    $problems.Add("no runnable Python found for portable hook guard")
+}
+elseif (Test-Path -LiteralPath $hookGuardPath) {
+    function Invoke-PortableGuardCase {
+        param(
+            [string]$Name,
+            [hashtable]$Payload
+        )
+
+        $inputText = $Payload | ConvertTo-Json -Compress -Depth 8
+        $result = Invoke-DoctorPythonScript -Runner $pythonRunner -ScriptPath $hookGuardPath -InputText $inputText
+        if ($result.ExitCode -ne 0) {
+            $problems.Add("portable hook case failed: $Name")
+            return $null
+        }
+
+        return $result.Output.Trim()
+    }
+
+    function Test-PortableGuardDeny {
+        param(
+            [string]$Name,
+            [hashtable]$Payload
+        )
+
+        $output = Invoke-PortableGuardCase -Name $Name -Payload $Payload
+        if (-not $output) {
+            $problems.Add("portable hook did not deny: $Name")
+            return
+        }
+
+        try {
+            $parsed = $output | ConvertFrom-Json
+            $decision = $parsed.hookSpecificOutput.permissionDecision
+            if ($decision -ne "deny") {
+                $problems.Add("portable hook unexpected decision for ${Name}: $decision")
+            }
+        }
+        catch {
+            $problems.Add("portable hook emitted invalid deny JSON for ${Name}: $output")
+        }
+    }
+
+    function Test-PortableGuardBlock {
+        param(
+            [string]$Name,
+            [hashtable]$Payload
+        )
+
+        $output = Invoke-PortableGuardCase -Name $Name -Payload $Payload
+        if (-not $output) {
+            $problems.Add("portable hook did not block: $Name")
+            return
+        }
+
+        try {
+            $parsed = $output | ConvertFrom-Json
+            if ($parsed.decision -ne "block") {
+                $problems.Add("portable hook unexpected block decision for ${Name}: $($parsed.decision)")
+            }
+        }
+        catch {
+            $problems.Add("portable hook emitted invalid block JSON for ${Name}: $output")
+        }
+    }
+
+    function Test-PortableGuardSilent {
+        param(
+            [string]$Name,
+            [hashtable]$Payload
+        )
+
+        $output = Invoke-PortableGuardCase -Name $Name -Payload $Payload
+        if ($output) {
+            $problems.Add("portable hook unexpectedly emitted output for ${Name}: $output")
+        }
+    }
+
+    $dash = [char]0x2014
+    Test-PortableGuardDeny -Name "git commit dash" -Payload @{
+        hook_event_name = "PreToolUse"
+        tool_name = "Bash"
+        tool_input = @{
+            command = "git commit -m `"bad $dash msg`""
+        }
+    }
+    Test-PortableGuardDeny -Name "git global option dash" -Payload @{
+        hook_event_name = "PreToolUse"
+        tool_name = "Bash"
+        tool_input = @{
+            command = "git -C repo commit -m `"bad $dash msg`""
+        }
+    }
+    Test-PortableGuardDeny -Name "patch dash" -Payload @{
+        hook_event_name = "PreToolUse"
+        tool_name = "apply_patch"
+        tool_input = "*** Begin Patch`n*** Add File: sample.md`n+bad $dash msg`n*** End Patch`n"
+    }
+    Test-PortableGuardSilent -Name "clean git command" -Payload @{
+        hook_event_name = "PreToolUse"
+        tool_name = "Bash"
+        tool_input = @{
+            command = "git status"
+        }
+    }
+
+    $oldDashOptOut = [Environment]::GetEnvironmentVariable("CODEX_PORTABLE_DISABLE_DASH_GUARD", "Process")
+    [Environment]::SetEnvironmentVariable("CODEX_PORTABLE_DISABLE_DASH_GUARD", "1", "Process")
+    try {
+        Test-PortableGuardSilent -Name "dash guard opt-out" -Payload @{
+            hook_event_name = "PreToolUse"
+            tool_name = "Bash"
+            tool_input = @{
+                command = "git commit -m `"bad $dash msg`""
+            }
+        }
+    }
+    finally {
+        [Environment]::SetEnvironmentVariable("CODEX_PORTABLE_DISABLE_DASH_GUARD", $oldDashOptOut, "Process")
+    }
+
+    if (Get-Command git -ErrorAction SilentlyContinue) {
+        $tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) "codex-portable-hook-$([guid]::NewGuid())"
+        try {
+            $repo = Join-Path $tempRoot "repo"
+            New-Item -ItemType Directory -Force $repo | Out-Null
+            & git -C $repo init -q *> $null
+            if ($LASTEXITCODE -ne 0) {
+                $problems.Add("portable hook git fixture failed to initialize")
+            }
+            else {
+                Test-PortableGuardSilent -Name "clean stop" -Payload @{
+                    hook_event_name = "Stop"
+                    cwd = $repo
+                }
+
+                Set-Content -LiteralPath (Join-Path $repo "dirty.txt") -Value "dirty"
+                Test-PortableGuardBlock -Name "dirty stop" -Payload @{
+                    hook_event_name = "Stop"
+                    cwd = $repo
+                }
+
+                $oldGitOptOut = [Environment]::GetEnvironmentVariable("CODEX_PORTABLE_DISABLE_GIT_CLOSEOUT", "Process")
+                [Environment]::SetEnvironmentVariable("CODEX_PORTABLE_DISABLE_GIT_CLOSEOUT", "1", "Process")
+                try {
+                    Test-PortableGuardSilent -Name "git closeout opt-out" -Payload @{
+                        hook_event_name = "Stop"
+                        cwd = $repo
+                    }
+                }
+                finally {
+                    [Environment]::SetEnvironmentVariable("CODEX_PORTABLE_DISABLE_GIT_CLOSEOUT", $oldGitOptOut, "Process")
+                }
+            }
+        }
+        finally {
+            if (Test-Path -LiteralPath $tempRoot) {
+                Remove-Item -LiteralPath $tempRoot -Recurse -Force
+            }
+        }
+    }
+}
+
+$hookLauncherPath = Join-Path $repoRoot "codex\hooks\portable_guard.ps1"
+if (Test-Path -LiteralPath $hookLauncherPath) {
+    $oldCodexHome = [Environment]::GetEnvironmentVariable("CODEX_HOME", "Process")
+    [Environment]::SetEnvironmentVariable("CODEX_HOME", (Join-Path $repoRoot "codex"), "Process")
+    try {
+        $dash = [char]0x2014
+        $payload = @{
+            hook_event_name = "PreToolUse"
+            tool_name = "Bash"
+            tool_input = @{
+                command = "git commit -m `"bad $dash msg`""
+            }
+        } | ConvertTo-Json -Compress -Depth 8
+        $launcherOutput = $payload | & $hookLauncherPath 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            $problems.Add("portable hook PowerShell launcher failed")
+        }
+        elseif (-not (($launcherOutput -join "`n") -match '"permissionDecision":"deny"')) {
+            $problems.Add("portable hook PowerShell launcher did not run guard")
+        }
+    }
+    finally {
+        [Environment]::SetEnvironmentVariable("CODEX_HOME", $oldCodexHome, "Process")
     }
 }
 

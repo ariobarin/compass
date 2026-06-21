@@ -20,6 +20,8 @@ this repo. They are service-side state, not portable files.
 - `AGENTS.md`: repo-local maintenance guidance for this portable config repo.
   Use this for codex-portable process and review rules.
 - `codex/keybindings.json`: portable keyboard bindings.
+- `codex/hooks.json` and `codex/hooks/`: reviewed Codex hooks installed into
+  the live Codex home. Hooks require `/hooks` trust review after install.
 - `codex/agents/`: reusable global custom agents installed into the live Codex
   home. Project-specific custom agents belong in the target repo.
 - `codex/skills/`: reusable global custom skills installed into the live Codex

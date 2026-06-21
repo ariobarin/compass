@@ -1,0 +1,31 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^(Bash|apply_patch)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CODEX_HOME:-$HOME/.codex}/hooks/portable_guard.sh\"",
+            "commandWindows": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$home = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE '.codex' }; $script = Join-Path $home 'hooks\\portable_guard.ps1'; if (Test-Path -LiteralPath $script) { & $script }\"",
+            "timeout": 30,
+            "statusMessage": "Checking portable workflow guard"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CODEX_HOME:-$HOME/.codex}/hooks/portable_guard.sh\"",
+            "commandWindows": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$home = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE '.codex' }; $script = Join-Path $home 'hooks\\portable_guard.ps1'; if (Test-Path -LiteralPath $script) { & $script }\"",
+            "timeout": 30,
+            "statusMessage": "Checking git closeout"
+          }
+        ]
+      }
+    ]
+  }
+}

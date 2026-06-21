@@ -7,11 +7,13 @@ home = "$CODEX_HOME or %USERPROFILE%\\.codex"
 
 files = [
   "AGENTS.md",
+  "hooks.json",
   "keybindings.json",
 ]
 
 dirs = [
   "agents",
+  "hooks",
 ]
 
 # This allowlist models the current live personal skill store under the active
