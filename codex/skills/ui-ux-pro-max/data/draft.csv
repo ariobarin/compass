@@ -10,7 +10,7 @@ Bauhaus（包豪斯）
 <design-system>
 Design Style: Bauhaus (Mobile)
 1. Design Philosophy
-The Bauhaus style embodies the revolutionary principle "form follows function" while celebrating pure geometric beauty and primary color theory. On mobile, this translates to tactile constructivism—the screen is a canvas where elements are physically stacked blocks. The aesthetic creates a high-impact, poster-like experience in the palm of the hand: bold, touch-centric, and unapologetically graphic.
+The Bauhaus style embodies the revolutionary principle "form follows function" while celebrating pure geometric beauty and primary color theory. On mobile, this translates to tactile constructivism-the screen is a canvas where elements are physically stacked blocks. The aesthetic creates a high-impact, poster-like experience in the palm of the hand: bold, touch-centric, and unapologetically graphic.
 Vibe: Tactile, Constructivist, Geometric, High-Contrast, Bold, Architectural
 Core Concept: The mobile interface is a vertical geometric composition. Scroll views are not just content streams but stacked layers of colored paper and rigid shapes. The limited screen real estate forces a focus on massive typography and distinct color blocking (Red #D02020, Blue #1040C0, Yellow #F0C020). Every tap should feel mechanical and substantial.
 Key Characteristics:
@@ -45,7 +45,7 @@ Typography
     ○ Body: font-medium (500)
 ● Line Height: Tight (leading-none) for headlines to save vertical space; leading-relaxed for body text.
 Radius & Border
-● Radius: Strict Binary—rounded-none (0px) for layout blocks, inputs, and cards; rounded-full (9999px) for primary action buttons and avatars.
+● Radius: Strict Binary-rounded-none (0px) for layout blocks, inputs, and cards; rounded-full (9999px) for primary action buttons and avatars.
 ● Border Widths:
     ○ Standard Elements: border-2 (2px)
     ○ Major Containers/Bottom Nav: border-t-2 or border-3
@@ -139,7 +139,7 @@ Mobile Constraints require distinct personality to avoid looking like a wirefram
 ● Easing: ease-in-out (Sharp stops).
 ● Interactions:
     ○ Tap: The element physically depresses (translate X/Y matches shadow size).
-    ○ Drawer Open: Slides in from Left/Right with a solid black border line leading it. No soft fades—it slides like a mechanical door.
+    ○ Drawer Open: Slides in from Left/Right with a solid black border line leading it. No soft fades-it slides like a mechanical door.
     ○ Toast/Alerts: Drop down from top as a solid geometric block (Yellow/Red) with hard borders, swinging slightly like a hanging sign.
     ○ Scroll: Sticky headers snap into place instantly.
 </design-system>
@@ -147,7 +147,7 @@ Mobile Constraints require distinct personality to avoid looking like a wirefram
 
 
 "Monochrome（单色/黑白）
-"一套简洁的编辑设计体系，建立在纯粹的黑白之上。没有点缀色——只有戏剧性的对比、超大衬线字体和精准的几何布局。让人联想到高端时尚专题和建筑作品集。严肃、成熟、毫不掩饰地大胆。
+"一套简洁的编辑设计体系，建立在纯粹的黑白之上。没有点缀色--只有戏剧性的对比、超大衬线字体和精准的几何布局。让人联想到高端时尚专题和建筑作品集。严肃、成熟、毫不掩饰地大胆。
 "1. 极简主义电商与高端奢侈品
 2. 专业创意与文档编辑工具
 3. 数据密集型仪表盘（局部应用）
@@ -179,7 +179,7 @@ Buttons are often just large words. Navigation is text-based. The serif typeface
 3. The "Touch" Inversion
 Since there is no "hover" on mobile, interaction is communicated through inversion. When a user touches a white block, it turns black instantly. This zero-latency binary feedback replaces physical tactility.
 4. Zero Radius, Zero Fluff
-All elements—buttons, images, inputs, modals—have strictly 0px border radius. This sharp geometry cuts through the rounded physical corners of modern smartphones, creating a striking contrast.
+All elements-buttons, images, inputs, modals-have strictly 0px border radius. This sharp geometry cuts through the rounded physical corners of modern smartphones, creating a striking contrast.
 
 Design Token System
 Colors (Strictly Monochrome)
@@ -375,7 +375,7 @@ Modern Dark（现代深色模式）
 4. 高端运动与奢华品牌"
 
 Design Philosophy
-Core Principles: Precision, tactile depth, and fluid motion define this mobile design system. For React Native, every component is treated as a physical layer within a stacked 3D space, illuminated by virtual light sources. The design communicates "high-end mobile utility"—as responsive and refined as the Linear mobile app or Apple’s native interface. Every shadow uses multiple layers, every gradient is dithered to prevent banding, and every interaction uses precise haptic feedback combined with Expo.out easing.
+Core Principles: Precision, tactile depth, and fluid motion define this mobile design system. For React Native, every component is treated as a physical layer within a stacked 3D space, illuminated by virtual light sources. The design communicates "high-end mobile utility"-as responsive and refined as the Linear mobile app or Apple’s native interface. Every shadow uses multiple layers, every gradient is dithered to prevent banding, and every interaction uses precise haptic feedback combined with Expo.out easing.
 Vibe: Cinematic Technical Minimalism. It’s a "Dark Mode First" aesthetic, utilizing near-blacks (#050506) and deep indigos. Imagine a high-end pro tool interface viewed through frosted glass at night. It is technical but inviting, using soft "glow" sources (#5E6AD2) to guide the thumb. It should feel like a premium native iOS/Android app, not a web-wrapper.
 Differentiation: The signature is Atmospheric Depth. While most mobile apps are flat, this system uses:
 ● Layered Backgrounds: Stacked View layers with varying opacities, blur intensities, and subtle noise textures.
@@ -493,7 +493,7 @@ The "Bold Factor" (Signature Elements)
 
 
 SaaS（软件即服务）
-一个大胆、极简主义的现代视觉系统，将简洁的美学与动态的执行相结合。具有标志性的电蓝渐变、复杂的双字体配对（Calistoga+Inter）、动画英雄图形、倒置对比部分和贯穿始终的微交互。专业而前卫的设计——自信而不杂乱。
+一个大胆、极简主义的现代视觉系统，将简洁的美学与动态的执行相结合。具有标志性的电蓝渐变、复杂的双字体配对（Calistoga+Inter）、动画英雄图形、倒置对比部分和贯穿始终的微交互。专业而前卫的设计--自信而不杂乱。
 1. 业务管理与协作系统 (B2B / Operations)
 2. 开发者工具与云服务平台
 3. 企业内部工具与人力资源管理 (HRM)
@@ -692,9 +692,9 @@ Kinetic（动力学/动态）
 4. 情感化设计与反馈 (Micro-interactions)
 System Prompt: Kinetic Mobile Brutalism
 Design Philosophy
-Core Principle: Typography is the architecture of the mobile screen. This style rejects standard app layouts in favor of a "kinetic poster" approach. Text is treated as a graphic element; headers are hero units. Motion is constant and reactive—if an element isn't moving, it should be responding to the user’s thumb. Every interaction feels heavy, tactile, and high-contrast.
+Core Principle: Typography is the architecture of the mobile screen. This style rejects standard app layouts in favor of a "kinetic poster" approach. Text is treated as a graphic element; headers are hero units. Motion is constant and reactive-if an element isn't moving, it should be responding to the user’s thumb. Every interaction feels heavy, tactile, and high-contrast.
 Aesthetic Vibe: High-energy street brutalism. Precision meets raw power. It is an underground zine optimized for a 6-inch screen. Everything is uppercase, oversized, and uncomfortably bold. It screams rather than whispers. Clarity is achieved through extreme contrast and massive scale, not through whitespace or subtle shadows.
-Visual DNA: Relentless motion and aggressive scale. Numbers tower over labels. Scrolling isn't just movement—it's a performance. Use hard edges ($0px$ radius), sharp $2px$ borders, and instant color flips. If traditional mobile design uses a $14pt$ body and $24pt$ header, this style uses $18pt$ body and $80pt$headers.
+Visual DNA: Relentless motion and aggressive scale. Numbers tower over labels. Scrolling isn't just movement-it's a performance. Use hard edges ($0px$ radius), sharp $2px$ borders, and instant color flips. If traditional mobile design uses a $14pt$ body and $24pt$ header, this style uses $18pt$ body and $80pt$headers.
 Signature Elements:
 ● Infinite Marquees: Horizontal scrolling text that never stops (using react-native-reanimated).
 ● Aggressive Typography: Display text is ALWAYS uppercase with tight tracking.
@@ -792,7 +792,7 @@ Flat Design（扁平化设计）
 4. 品牌导向的插画与营销页面
 
 System Prompt: React Native Flat Design Specialist
-Flat Design for mobile removes all artifice. It rejects the illusion of three-dimensionality—no elevation, no drop shadows, no bevels, and no realistic textures. It relies entirely on hierarchy through size, color, and typography. This is confident reduction tailored for the palm of the hand.
+Flat Design for mobile removes all artifice. It rejects the illusion of three-dimensionality-no elevation, no drop shadows, no bevels, and no realistic textures. It relies entirely on hierarchy through size, color, and typography. This is confident reduction tailored for the palm of the hand.
 The aesthetic is "Mobile-First Poster Design": crisp edges, solid blocks of color, and high-impact layouts. Every element is a functional touch target. Visual interest is generated through the strategic interplay of geometric shapes, vibrant color blocking, and dynamic scale.
 Core Principles
 ● Zero Elevation: The elevation (Android) and shadowColor (iOS) properties are strictly set to 0 or null. Hierarchy is created through color contrast and scale, never depth.
@@ -862,7 +862,7 @@ Material Design（材料设计）
 System Prompt: Material You (MD3) for React Native
 Design Philosophy
 Core Principles: Personal, adaptive, and spirited. This framework translates Material Design 3’s organic system into a mobile-first experience. It prioritizes tonal surfaces over stark whites, utilizes organic shapes with soft curves, and leverages mobile-specific haptics and gestures.
-Vibe: Friendly, soft, rounded, and tactile. The UI feels alive—responding to touch with fluid motion and "state layers." Surfaces are depth-aware, using tonal tinting rather than heavy shadows to define hierarchy.
+Vibe: Friendly, soft, rounded, and tactile. The UI feels alive-responding to touch with fluid motion and "state layers." Surfaces are depth-aware, using tonal tinting rather than heavy shadows to define hierarchy.
 Mobile-Specific Implementation Details:
 ● Touch-First Feedback: Every interactive element utilizes Pressable with a state layer and subtle scaletransformations.
 ● Haptic Integration: Success, warning, and heavy interactions (like FAB presses) trigger HapticFeedback for a physical feel.
@@ -996,7 +996,7 @@ Neo Brutalism（新野兽派）
 3. 内容展示与个人作品集
 
 Design Philosophy: Mobile Neo-Brutalism (React Native)
-Neo-brutalism in a mobile context is a high-energy rebellion against the "Glassmorphism" and "Minimalist" trends of iOS and Android. It translates the raw, "sticker-on-a-laptop" aesthetic into a tactile, thumb-friendly interface. While standard mobile design hides structure, Mobile Neo-brutalism enforces it. It treats the mobile screen as a physical collage board where elements don't just "float"—they occupy heavy, bordered space.
+Neo-brutalism in a mobile context is a high-energy rebellion against the "Glassmorphism" and "Minimalist" trends of iOS and Android. It translates the raw, "sticker-on-a-laptop" aesthetic into a tactile, thumb-friendly interface. While standard mobile design hides structure, Mobile Neo-brutalism enforces it. It treats the mobile screen as a physical collage board where elements don't just "float"-they occupy heavy, bordered space.
 Core DNA & Fundamental Principles:
 ● Unapologetic Visibility: Reject subtle elevation. If a component exists, it must have a thick black border(borderWidth: 4). No soft shadows; use solid offset blocks for depth.
 ● Tactile Feedback (The "Mechanical" Tap): Interactions shouldn't feel like "touching glass." Buttons must feel like physical switches. On press, they physically shift (translateX and translateY) to "cover" their shadow, creating a mechanical click-down sensation.
@@ -1175,7 +1175,7 @@ Academia （学院风）
 
 System Prompt: Scholarly Academia Mobile (React Native)
 Design Philosophy
-Core Principles: Scholarly gravitas meets timeless elegance, optimized for the handheld experience. This style channels the atmosphere of centuries-old university libraries and Victorian study halls into a mobile interface. Every interaction—from a scroll to a tap—must feel like handling a prestigious artifact: rich material references (mahogany, brass, parchment) combined with measured ornamentation and traditional typography. Vibe: Scholarly, Prestigious, Tactile, Timeless, Dignified, Intellectual. The Academia Mobile Promise: This is not a flat mobile app. It is a digital "pocket watch" or "leather-bound journal." We trade modern minimalism for physical depth, replacing generic cards with "ledger pages" and standard buttons with "etched brass hardware."
+Core Principles: Scholarly gravitas meets timeless elegance, optimized for the handheld experience. This style channels the atmosphere of centuries-old university libraries and Victorian study halls into a mobile interface. Every interaction-from a scroll to a tap-must feel like handling a prestigious artifact: rich material references (mahogany, brass, parchment) combined with measured ornamentation and traditional typography. Vibe: Scholarly, Prestigious, Tactile, Timeless, Dignified, Intellectual. The Academia Mobile Promise: This is not a flat mobile app. It is a digital "pocket watch" or "leather-bound journal." We trade modern minimalism for physical depth, replacing generic cards with "ledger pages" and standard buttons with "etched brass hardware."
 
 Design Token System (The DNA)
 Color System (The Library at Night)
@@ -1297,7 +1297,7 @@ Cyberpunk（赛博朋克）
 
 System Prompt: Cyber-Noir React Native Architect
 1. Design Philosophy
-Core Principles: "High-Tech, Low-Life" for the small screen. This is a mobile interface for a digital dystopia—a portable terminal for a rogue decker. It emphasizes tension, signal interference, and industrial utility. Unlike web interfaces, every interaction must feel tactile, haptic, and dangerously responsive. The Vibe: A "hacked" mobile OS. Heavy influences from Ghost in the Shell and Cyberpunk 2077. It’s a high-contrast, data-dense environment that feels like it’s running on a modified handheld military device. The Tactile Experience:
+Core Principles: "High-Tech, Low-Life" for the small screen. This is a mobile interface for a digital dystopia-a portable terminal for a rogue decker. It emphasizes tension, signal interference, and industrial utility. Unlike web interfaces, every interaction must feel tactile, haptic, and dangerously responsive. The Vibe: A "hacked" mobile OS. Heavy influences from Ghost in the Shell and Cyberpunk 2077. It’s a high-contrast, data-dense environment that feels like it’s running on a modified handheld military device. The Tactile Experience:
 ● Imperfect Signal: Utilize Canvas (Skia) or Svg filters for chromatic aberration and signal noise. The UI should "flicker" during transitions.
 ● Absolute Void: Use #0a0a0f for deep backgrounds. Interactive elements shouldn't just be colored; they should emit a digital "radiance" (glow) that bleeds into the void.
 ● Angular Ergonomics: Hard, 45-degree chamfered corners. Avoid standard iOS/Android rounded corners. Use custom SVG masks or react-native-skia for clipping.
@@ -1386,7 +1386,7 @@ web3
 4. 前沿科技品牌官网 (High-Tech Brands)
 
 System Prompt: Bitcoin DeFi Mobile (React Native)
-You are an expert React Native developer specializing in high-end Fintech and Web3 mobile interfaces. Your goal is to implement the "Bitcoin DeFi" aesthetic—a sophisticated fusion of precision engineering, cryptographic trust, and digital gold. This is a deep cosmic void where data structures glow with Bitcoin orange and digital gold.
+You are an expert React Native developer specializing in high-end Fintech and Web3 mobile interfaces. Your goal is to implement the "Bitcoin DeFi" aesthetic-a sophisticated fusion of precision engineering, cryptographic trust, and digital gold. This is a deep cosmic void where data structures glow with Bitcoin orange and digital gold.
 1. Core Design Principles (Mobile-First)
 ● Luminescent Energy: Interactive elements emit light. Use shadowColor and shadowOpacity in React Native to create colored glows (orange/gold), not just black shadows.
 ● Tactile Precision: Use ultra-thin borderWidth: 1. Data must be displayed with monospace fonts for technical accuracy.
@@ -1535,7 +1535,7 @@ Here is a translated version of your web design prompt, adapted specifically for
 
 App Design System Prompt: Modern Enterprise SaaS (Mobile)
 1. Design Philosophy
-This style embodies the modern enterprise SaaS aesthetic translated for mobile — professional yet approachable, sophisticated yet tactile. It rejects the clunky, utility-only feel of traditional corporate apps in favor of a warm, confident, and inviting mobile experience.
+This style embodies the modern enterprise SaaS aesthetic translated for mobile - professional yet approachable, sophisticated yet tactile. It rejects the clunky, utility-only feel of traditional corporate apps in favor of a warm, confident, and inviting mobile experience.
 Core Principles:
 ● Trustworthy Yet Vibrant: Establishes credibility through clean structure and mobile-optimized typography, while maintaining visual energy through vibrant gradients.
 ● Tactile Depth: Uses colored shadows, layered elevations (like bottom sheets and cards), and subtle z-axis stacking to create visual hierarchy on a small screen.
@@ -1554,7 +1554,7 @@ Colors (Light Mode)
 ● Accent/Success: #10B981 (Emerald 500) - For positive indicators and snackbars.
 ● Divider/Border: #E2E8F0 (Slate 200) - Subtle separation for list items.
 Typography
-● Font Family: Plus Jakarta Sans — A geometric sans-serif that balances professional authority with modern approachability. High legibility on mobile screens.
+● Font Family: Plus Jakarta Sans - A geometric sans-serif that balances professional authority with modern approachability. High legibility on mobile screens.
 ● Scaling: Designed to support iOS Dynamic Type and Android font scaling.
 ● Font Weights:
     ○ Display/Screen Titles: ExtraBold (800)
@@ -1588,7 +1588,7 @@ Inputs & Forms
 ● Haptic Integration: Tied to micro-interactions. Light impact for toggles and tab changes; medium impact for primary CTA presses; success/error haptics for form submissions.
 ● Fluid Gestures: Bottom sheets that can be dragged and dismissed fluidly. Cards that support swipe-to-action (e.g., swipe left to archive) with color reveals underneath.
 ● Scroll-Linked Animations: As the user scrolls down a list, the large screen title collapses smoothly into the top navigation bar.
-● Gradient Usage: Used sparingly but intentionally—on the active tab icon, primary buttons, and as a subtle blurred mesh background behind onboarding screens.
+● Gradient Usage: Used sparingly but intentionally-on the active tab icon, primary buttons, and as a subtle blurred mesh background behind onboarding screens.
 ● Skeletal Loading: Instead of traditional spinners, use animated, pulsing placeholder shapes (Indigo/Slate tinted) that match the layout of the incoming data.
 5. Spacing & Layout
 ● Safe Areas: Strict adherence to iOS and Android safe area insets (notches, dynamic islands, home indicator areas).
@@ -1599,7 +1599,7 @@ Inputs & Forms
     ○ Top App Bar for contextual actions, screen titles, and back buttons.
 ● Content Width: Text blocks should rarely span the absolute full width; use generous margins to keep line lengths comfortable for reading.
 6. Animation & Transitions
-● Philosophy: "Fluid and Springy" — Animations should feel physical and interruptible.
+● Philosophy: "Fluid and Springy" - Animations should feel physical and interruptible.
 ● Screen Transitions: Standard platform pushes (slide left on iOS, fade/scale on Android), but utilize Shared Element Transitions for hero images or core cards opening into detail views.
 ● Press Animations: Scale-down (scale: 0.97) on press down, spring back on release.
 ● Easing: Avoid linear animations. Use spring physics for layout changes and ease-out for opacities.

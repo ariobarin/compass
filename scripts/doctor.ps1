@@ -181,6 +181,24 @@ foreach ($file in $textFiles) {
     }
 }
 
+$dashCheckedExtensions = @(".md", ".toml", ".json", ".ps1", ".yaml", ".yml", ".txt", ".py", ".csv")
+$dashCheckedFiles = Get-DoctorChildItem -Kind File |
+    Where-Object {
+        $_.FullName -notmatch "\\.git\\" -and
+        $_.Extension -in $dashCheckedExtensions
+    }
+$blockedDashChars = @([char]0x2013, [char]0x2014)
+
+foreach ($file in $dashCheckedFiles) {
+    $content = Get-Content -Raw -LiteralPath $file.FullName
+    foreach ($dashChar in $blockedDashChars) {
+        if ($content.Contains($dashChar)) {
+            $problems.Add("non-ASCII dash text in: $($file.FullName)")
+            break
+        }
+    }
+}
+
 $maxDescriptionLength = 160
 $skillFiles = Get-ChildItem -Path (Join-Path $repoRoot "codex\skills") -Recurse -File -Filter "SKILL.md" -ErrorAction SilentlyContinue
 foreach ($skillFile in $skillFiles) {
