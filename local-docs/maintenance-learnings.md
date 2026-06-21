@@ -21,6 +21,17 @@ Installed agentic documentation changes future Codex behavior. It belongs in
 `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`, and should describe
 durable role, stance, judgment, and capability boundaries.
 
+Installed docs should speak to the agent that will use them at runtime. State
+the contract directly. Do not put provenance, dated observations, platform
+caveats, or repo review history into installed skills or agents when the agent
+just needs to act. Put that context in repo-maintainer docs instead.
+
+For goal delegation, the installed skill should say how goal state works: goal
+state is local to the context that activates it, delegated `/goal` text is plain
+text until the child applies it, and parent completion authority stays with the
+controller. The reason this wording exists belongs here, not in the runtime
+skill.
+
 Repo-maintainer documentation helps humans and agents maintain this repository.
 It belongs in the root `AGENTS.md`, `workflows/`, `local-docs/`, `manifests/`,
 or `scripts/`, and should explain promotion rules, checks, local review habits,
