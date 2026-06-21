@@ -3,8 +3,16 @@
 # Do not install this file over the live config.toml automatically. The live file
 # also contains generated marketplace state, runtime paths, MCP wiring, project
 # trust entries, and app migration markers that belong to the current machine.
+#
+# This reviewed fragment intentionally reflects the user's trusted-machine
+# default for local work. Use bounded workflows or runtime flags for lower-trust
+# tasks instead of mixing several config models into one portable fragment.
+#
+# Keep this fragment on one permissions model at a time. It currently stays on
+# the older sandbox keys and should not mix in `default_permissions` or
+# `[permissions]` entries without a deliberate migration.
 
-approvals_reviewer = "guardian_subagent"
+approvals_reviewer = "auto_review"
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
 personality = "pragmatic"

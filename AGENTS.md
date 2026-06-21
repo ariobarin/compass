@@ -26,6 +26,22 @@ backup of `~/.codex`.
 - Review `codex/config.review.toml` manually before copying any config into a
   live Codex home.
 
+## Review guidelines
+
+- Flag changes that accidentally expand the portable scope by committing auth,
+  sessions, logs, caches, browser state, SQLite files, generated plugin state,
+  or other local-only Codex data.
+- Flag changes that hardcode `~/.codex` or `%USERPROFILE%\\.codex` when the
+  path should respect `CODEX_HOME`.
+- Flag config changes that introduce undocumented keys, stale settings, or
+  stronger default authority without a current-doc justification.
+- Flag guidance that routes project-specific behavior into `codex-portable`
+  when it should live in the target project repo instead.
+- Flag tracked `AGENTS.override.md` or `rules/` files unless they were
+  intentionally adopted as reviewed portable policy.
+- Flag project-specific agents or skills routed into `codex-portable` when they
+  should live in the target repo.
+
 ## Skill authoring
 
 Skills should shape judgment before they prescribe steps. Start by making the

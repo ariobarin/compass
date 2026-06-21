@@ -7,6 +7,16 @@ implementation.
 This is repo-maintainer guidance and is not installed into the live Codex home.
 Put reusable agent behavior in `codex/agents/` or `codex/skills/` instead.
 
+Prefer native `/plan` or Plan mode when it is available and the work is still
+interactive. Use this template when you need a written plan artifact, a shared
+execution structure, or a durable repo-local workflow note.
+
+Use it when the user explicitly asks for a goal, target state, success
+criteria, or plan, or when the work clearly needs structured planning.
+
+Draft the goal collaboratively in normal prose. Do not switch into a formal
+goal-management workflow unless the user explicitly asks for that workflow.
+
 ## Goal
 
 State the concrete end state in one or two paragraphs. Include what must be true
@@ -38,7 +48,7 @@ for the work to count as done.
 
 - Required commands:
 - Runtime or browser checks:
-- GitHub checks:
+- GitHub checks or review path (CI, requested reviewers, `@codex review`):
 - Artifacts to inspect:
 - Evidence that proves completion:
 

@@ -62,8 +62,13 @@ Use `workflows/addition-intake.md` when promoting a new durable artifact into th
 portable repo.
 
 - A repeated codex-portable maintenance process belongs in `workflows/`.
-- A task-specific agent capability that should be installed belongs in
+- A reusable agent capability that should be installed belongs in
   `codex/skills/`.
+- A project-specific skill belongs in the target repo, not in `codex-portable`.
+- A reusable custom agent that should be installed belongs in `codex/agents/`.
+- A project-specific custom agent belongs in the target repo.
+- A shareable bundle of skills, hooks, apps, or MCP config belongs in a plugin
+  repo or repo-scoped plugin folder, not in the live plugin cache.
 - A mechanical or reproducible repo check belongs in `scripts/`.
 - A repo-side capability boundary or portability decision belongs in
   `manifests/`.
@@ -113,3 +118,13 @@ Any tool that can touch browser state, GitHub, the filesystem, local processes,
 MCP servers, or network resources should have a review path in
 `manifests/tool-surfaces.md`. Keep auth, cookies, generated paths, runtime pipes,
 and cache state local.
+
+## Local Override Surfaces
+
+Keep local override and approval-accumulation surfaces out of this repo unless
+they are deliberately adopted as reviewed portable policy.
+
+- `AGENTS.override.md` stays local.
+- `rules/` stays local by default.
+- Project `AGENTS.md`, project `.codex/agents/`, and project skill folders stay
+  with the target repo.

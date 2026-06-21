@@ -1,7 +1,9 @@
 # Human-owned Codex files that this repo is allowed to track.
 
 [codex]
-home = "%USERPROFILE%\\.codex"
+# The live target is the active Codex home: $CODEX_HOME when set, otherwise
+# the default %USERPROFILE%\.codex path.
+home = "$CODEX_HOME or %USERPROFILE%\\.codex"
 
 files = [
   "AGENTS.md",
@@ -53,6 +55,7 @@ reason = "These files guide repository maintenance but are not installed into a 
 
 [local_only]
 files = [
+  "AGENTS.override.md",
   "auth.json",
   "history.jsonl",
   "session_index.jsonl",
@@ -74,11 +77,14 @@ dirs = [
   "computer-use",
   "log",
   "memories",
+  "memories_extensions",
   "node_repl",
   "plugins",
   "process_manager",
+  "rules",
   "sessions",
   "sqlite",
+  "threads",
   "tmp",
   "vendor_imports",
   "worktrees",
