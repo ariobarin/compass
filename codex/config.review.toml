@@ -16,13 +16,12 @@
 # reviewed fragment. Durable cross-session instruction preferences belong in
 # `codex/AGENTS.md`.
 
-approvals_reviewer = "auto_review"
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
 personality = "pragmatic"
 service_tier = "default"
 sandbox_mode = "danger-full-access"
-approval_policy = "on-request"
+approval_policy = "never"
 
 [windows]
 sandbox = "elevated"
