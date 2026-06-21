@@ -13,6 +13,11 @@ this repo. They are service-side state, not portable files.
 
 For the philosophy behind this repo's shape, see [philosophy.md](philosophy.md).
 
+For public use, treat this repository as a worked example of a reviewed portable
+Codex setup. Read [CONTRIBUTING.md](CONTRIBUTING.md),
+[SECURITY.md](SECURITY.md), and [SUPPORT.md](SUPPORT.md) before copying its
+files or proposing changes.
+
 ## Layout
 
 - `codex/AGENTS.md`: portable source for the live global `AGENTS.md` in the
