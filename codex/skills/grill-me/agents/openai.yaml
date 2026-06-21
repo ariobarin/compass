@@ -1,7 +1,7 @@
 interface:
   display_name: "Grill Me"
   short_description: "Stress test plans one question at a time"
-  default_prompt: "Use $grill-me to stress test my plan one question at a time and recommend an answer for each question."
+  default_prompt: "Use $grill-me to stress test my plan one question at a time, recommending a concrete answer for each consequential unknown."
 
 policy:
   allow_implicit_invocation: true
