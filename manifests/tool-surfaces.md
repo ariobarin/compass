@@ -17,7 +17,7 @@ and cache paths out of this repo.
 | node_repl MCP | Runs JavaScript and browser automation helpers | No | High | Binary paths, pipes, env vars, and trusted client hashes are machine-local. |
 | Web search | Reads current web sources | No | Medium | Use for unstable facts and source attribution. Do not encode search results as permanent rules without review. |
 | Skills | Load task-specific instructions, references, scripts, and assets | Yes | Medium | Keep descriptions concise. Move details into `SKILL.md` and references. |
-| Agents | Spawn focused Codex sessions with custom instructions | Yes | Medium | Keep agents narrow and explicit. Read-only agents should set `sandbox_mode = "read-only"`. |
+| Agents | Spawn focused Codex sessions with custom instructions | Yes | Medium | Keep agents narrow and explicit. Pure explorers should use read-only sandboxing. Critics that validate behavior can run tools while staying non-editing by role. |
 
 ## Review Checklist
 

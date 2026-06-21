@@ -3,6 +3,15 @@
 This reference is portable. It distills the established local authoring docs and
 prior site sweeps without depending on their original paths.
 
+## Contents
+
+- [Cold-Start Discovery](#cold-start-discovery)
+- [Candidate Selection](#candidate-selection)
+- [Generation Routes](#generation-routes)
+- [Implementation Shapes](#implementation-shapes)
+- [Validation Loop](#validation-loop)
+- [Common Authoring Failures](#common-authoring-failures)
+
 ## Cold-Start Discovery
 
 Use this when the site has no current tool inventory.

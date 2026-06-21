@@ -20,20 +20,23 @@ this repo. They are service-side state, not portable files.
 - `AGENTS.md`: repo-local maintenance guidance for this portable config repo.
   Use this for codex-portable process and review rules.
 - `codex/keybindings.json`: portable keyboard bindings.
-- `codex/agents/`: reusable global custom agents. Project-specific custom
-  agents belong in the target repo.
-- `codex/skills/`: reusable global custom skills in this repo's portable source
-  tree, excluding system and plugin cache skills. Project-specific skills
+- `codex/agents/`: reusable global custom agents installed into the live Codex
+  home. Project-specific custom agents belong in the target repo.
+- `codex/skills/`: reusable global custom skills installed into the live Codex
+  home, excluding system and plugin cache skills. Project-specific skills
   belong in the target repo.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
-- `workflows/`: durable operating notes for recurring work.
+- `workflows/`: repo-side operating notes for recurring maintenance work. These
+  are not installed into the live Codex home.
+  Use `workflows/addition-intake.md` before promoting new portable artifacts.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
   live Codex home.
-- `manifests/portable-files.toml`: the allowlist and local-only denylist.
-- `manifests/tool-surfaces.md`: review notes for tools that can touch local or
-  external state.
-- `scripts/`: snapshot, diff, install, and health check helpers.
+- `manifests/portable-files.toml`: the install allowlist, repo-only list, and
+  local-only denylist.
+- `manifests/tool-surfaces.md`: repo-side review notes for tools that can touch
+  local or external state.
+- `scripts/`: repo-side snapshot, diff, install, and health check helpers.
 
 ## Common commands
 
@@ -92,3 +95,5 @@ otherwise the default `%USERPROFILE%\.codex` home.
 - Keep machine-specific values in ignored local files or in live config only.
 - Keep skill descriptions concise. Put detailed instructions in `SKILL.md` and
   references.
+- Promote additions through a PR after checking nearby docs, manifests, and
+  install maps for stale guidance.

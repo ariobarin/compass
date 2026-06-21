@@ -18,8 +18,10 @@ skills = [
   "action-items-to-prs",
   "benchmark-infra-reviewer",
   "benchmark-run-operator",
+  "codex-portable",
   "git-branch-resolver",
   "grill-me",
+  "orchestration-controller",
   "subagent-driven-development",
   "to-prd",
   "ui-ux-pro-max",
@@ -36,10 +38,20 @@ install_automatically = false
 reason = "Live config.toml includes generated runtime paths, marketplaces, project trust, and MCP server wiring."
 
 [repo_only]
+# These paths are repository-root paths. The [codex] section above maps files
+# from the repo's codex/ directory into the live Codex home.
+files = [
+  "AGENTS.md",
+  "README.md",
+]
+
 dirs = [
   "local-docs",
+  "manifests",
+  "scripts",
+  "workflows",
 ]
-reason = "These docs guide repository maintenance but are not installed into a live Codex home."
+reason = "These files guide repository maintenance but are not installed into a live Codex home."
 
 [local_only]
 files = [

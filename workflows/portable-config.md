@@ -3,6 +3,10 @@
 Use this workflow when changing Codex setup that should survive a new machine,
 fresh profile, or copied repo checkout.
 
+This is repo-maintainer guidance. It is not installed into the live Codex home.
+Installed agentic guidance lives under `codex/AGENTS.md`, `codex/agents/`, and
+`codex/skills/`.
+
 These scripts target `-CodexHome` when passed, otherwise `$env:CODEX_HOME`,
 otherwise the default `%USERPROFILE%\.codex` home.
 
@@ -55,7 +59,8 @@ review:
 
 - generated marketplace timestamps and local cache paths;
 - app runtime and MCP binary paths;
-- MCP server transport wiring, URLs, OAuth callback overrides, and token or header config;
+- MCP server transport wiring, URLs, OAuth callback overrides, and token or
+  header config;
 - `AGENTS.override.md` behavior or local `rules/` approvals that were accepted
   interactively on one machine;
 - project trust entries for one machine;
@@ -79,6 +84,8 @@ as a skill, workflow doc, or reviewed config change instead.
 
 ## Related Workflows
 
+- [addition-intake.md](addition-intake.md): promoting new portable artifacts and
+  checking related stale guidance.
 - [plan-template.md](plan-template.md): planning large or risky work.
 - [read-only-research.md](read-only-research.md): mapping code paths before
   edits.

@@ -68,12 +68,15 @@ git branch -r --no-color
 git remote -v
 ```
 
-When the user has opted into refreshing remote refs and the task is
-`audit/report`, cleanup, or PR refresh work, add:
+When the user explicitly opts into refreshing remote refs for `audit/report`,
+cleanup, or PR refresh work, run:
 
 ```powershell
 git fetch --all --prune
 ```
+
+Treat that as a ref refresh, not read-only inspection, because it updates local
+remote-tracking refs.
 
 If the current shell is not inside the target repo, stop and ask for the
 target `owner/repo` or local repo path before doing PR inspection or cleanup.
@@ -188,8 +191,8 @@ Delete only after explicit cleanup approval and evidence:
 
 ## Verification gates
 
-Before reporting completion, re-read current state. If remote refresh is
-allowed, include fetch or prune first:
+Before reporting completion, re-read current state. If the user explicitly
+opted into refreshing remote refs, run:
 
 ```powershell
 git fetch --all --prune
