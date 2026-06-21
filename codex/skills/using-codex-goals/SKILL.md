@@ -8,15 +8,32 @@ description: Draft and run durable Codex goal contracts. Use when starting, resu
 Use this skill when the user starts, refines, delegates, resumes, or reviews a
 Codex `/goal`. Treat a goal as a durable work contract, not a prompt prefix.
 
-## Docs Baseline
+## Mental Model
+
+Codex goals are active state in one context, not portable markdown. A controller
+can send a goal-shaped contract to a child, but the child has active goal state
+only after it applies that contract with goal tools in its own context.
+
+Goals persist a thread-bound objective and inject continuation behavior on later
+turns. The agent still uses the normal planning and tool loop, but the stopping
+rules change:
+
+1. Preserve the original objective unless the user explicitly replaces it.
+2. Treat later user turns as amendments, constraints, or status checks by
+   default.
+3. Keep the goal active while work is incomplete, under review, waiting on CI,
+   or waiting on external state.
+4. Mark complete only after evidence proves the completion predicate.
+5. Mark blocked only when the same blocker repeats across the required goal
+   turns and no meaningful progress remains possible.
+
+## Product Grounding
 
 OpenAI's Codex docs describe `/goal` as the slash command that sets a
 persistent goal for Codex, and subagents as delegated agents that Codex starts
 for specific tasks. This skill treats cross-thread goal activation as an
 explicit action in the child context rather than a text transfer from the
 parent.
-
-## Observed Codex Behavior
 
 As observed in Codex on June 17-18, 2026:
 
@@ -29,21 +46,6 @@ As observed in Codex on June 17-18, 2026:
   was unavailable in the observed sessions.
 
 Treat these as observed product behavior, not as permanent platform guarantees.
-
-## Mental Model
-
-Codex goals persist a thread-bound objective and inject continuation behavior on
-later turns. The agent still uses the normal planning and tool loop, but the
-stopping rules change:
-
-1. Preserve the original objective unless the user explicitly replaces it.
-2. Treat later user turns as amendments, constraints, or status checks by
-   default.
-3. Keep the goal active while work is incomplete, under review, waiting on CI,
-   or waiting on external state.
-4. Mark complete only after evidence proves the completion predicate.
-5. Mark blocked only when the same blocker repeats across the required goal
-   turns and no meaningful progress remains possible.
 
 ## Activation Rule
 
