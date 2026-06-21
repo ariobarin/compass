@@ -11,57 +11,7 @@ Hosted Codex web settings, cloud task history, repository connections, and
 workspace connector installs such as Slack or Linear are also out of scope for
 this repo. They are service-side state, not portable files.
 
-## Philosophy
-
-This project is a reviewed source for a personal Codex operating system. It is
-not a raw export of one machine and it is not a universal template to copy
-blindly. The goal is to make durable agent behavior small, reviewable,
-installable, and easy to reason about.
-
-The configuration optimizes for trusted-machine autonomy with human-owned
-policy. Codex should be able to move quickly when the machine and repository are
-trusted, but durable behavior should still be explicit, scoped, and reviewable
-through normal PRs.
-
-We put guidance at the narrowest authority level that can carry it:
-
-- `codex/AGENTS.md` is only for short global defaults that should affect every
-  Codex session.
-- `codex/skills/` and `codex/agents/` carry reusable runtime judgment.
-- `workflows/` and `local-docs/` carry repo-maintainer procedure, rationale,
-  and lessons that should not become runtime behavior.
-- `scripts/` and `manifests/` carry mechanical checks and portability
-  boundaries that should not depend on memory.
-- `codex/config.review.toml` is a reviewed fragment for stable choices, not a
-  replacement for live generated config.
-
-Skills in this repo are meant to shape judgment before they prescribe steps. A
-good skill teaches the role the agent is taking on, why that role exists, what
-failure mode it prevents, and what boundary preserves good judgment. Procedures
-belong after that, mostly for exact, fragile, or repeatedly mishandled work.
-If a capability only makes sense for one project, it belongs in that project
-instead of in this portable global setup.
-
-Agents are treated as distinct roles, not interchangeable workers with longer
-prompts. A worker owns implementation. A critic validates claims without owning
-the diff. A repo explorer gathers current evidence. A controller keeps the
-parent objective visible, asks sharper questions when workers are blocked, and
-routes work without becoming the implementer.
-
-Installed runtime docs should speak directly to the agent that will use them.
-They should say how to operate. Maintainer history, dated observations, package
-terminology, and why a rule exists belong in repo-maintainer docs instead. The
-destination of a document determines its voice, authority, and assumptions.
-
-Strong claims should come from current evidence: files, commands, tests, GitHub
-state, or live drift checks. Memory and prior chats can orient the search, but
-they should not replace current verification. If a property must not drift, the
-preference is to encode it in `doctor.ps1`, manifests, install maps, or CI
-rather than trust future agents to remember it.
-
-Remote state stays user-owned. A ready PR is a good stopping point. Merges,
-force pushes, branch deletion, PR closure, retargeting, and other remote state
-changes require explicit user intent.
+For the philosophy behind this repo's shape, see [philosophy.md](philosophy.md).
 
 ## Layout
 
