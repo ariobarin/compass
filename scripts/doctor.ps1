@@ -116,47 +116,62 @@ foreach ($path in @(
     }
 }
 
-$blockedNames = @(
-    "AGENTS.override.md",
-    "auth.json",
-    "history.jsonl",
-    "session_index.jsonl",
-    "installation_id",
-    "cap_sid"
-)
+$manifestPath = Join-Path $repoRoot "manifests\portable-files.toml"
+$manifestText = Get-Content -Raw -LiteralPath $manifestPath
+
+function Get-ManifestArrayValues {
+    param(
+        [string]$Text,
+        [string]$Section,
+        [string]$Key
+    )
+
+    $sectionPattern = "(?ms)^\[$([regex]::Escape($Section))\]\s*(.*?)(?=^\[|\z)"
+    $sectionMatch = [regex]::Match($Text, $sectionPattern)
+    if (-not $sectionMatch.Success) {
+        return @()
+    }
+
+    $keyPattern = "(?ms)^\s*$([regex]::Escape($Key))\s*=\s*\[(.*?)^\s*\]"
+    $keyMatch = [regex]::Match($sectionMatch.Groups[1].Value, $keyPattern)
+    if (-not $keyMatch.Success) {
+        return @()
+    }
+
+    return @(
+        [regex]::Matches($keyMatch.Groups[1].Value, '"([^"]+)"') |
+            ForEach-Object { $_.Groups[1].Value }
+    )
+}
+
+$blockedNames = @(Get-ManifestArrayValues -Text $manifestText -Section "local_only" -Key "files")
+if ($blockedNames.Count -eq 0) {
+    $problems.Add("missing local-only files in portable manifest")
+}
 
 foreach ($blocked in $blockedNames) {
     $matches = Get-DoctorChildItem -Kind File -Filter $blocked
     foreach ($match in $matches) {
-        $problems.Add("blocked local-only file tracked in repo tree: $($match.FullName)")
+        $problems.Add("blocked local-only file in repo tree: $($match.FullName)")
     }
 }
 
-$blockedDirs = @(
-    ".sandbox",
-    ".sandbox-bin",
-    ".sandbox-secrets",
-    ".tmp",
-    ".local",
-    "archived_sessions",
-    "automations",
-    "browser",
-    "cache",
-    "computer-use",
-    "log",
-    "memories",
-    "memories_extensions",
-    "node_repl",
-    "plugins",
-    "process_manager",
-    "rules",
-    "sessions",
-    "sqlite",
-    "threads",
-    "tmp",
-    "vendor_imports",
-    "worktrees"
-)
+$blockedPatterns = @(Get-ManifestArrayValues -Text $manifestText -Section "local_only" -Key "patterns")
+if ($blockedPatterns.Count -eq 0) {
+    $problems.Add("missing local-only patterns in portable manifest")
+}
+
+foreach ($blockedPattern in $blockedPatterns) {
+    $matches = Get-DoctorChildItem -Kind File -Filter $blockedPattern
+    foreach ($match in $matches) {
+        $problems.Add("blocked local-only file pattern in repo tree: $($match.FullName)")
+    }
+}
+
+$blockedDirs = @(Get-ManifestArrayValues -Text $manifestText -Section "local_only" -Key "dirs")
+if ($blockedDirs.Count -eq 0) {
+    $problems.Add("missing local-only dirs in portable manifest")
+}
 
 foreach ($dir in Get-DoctorChildItem -Kind Directory) {
     if ($dir.FullName -match "\\.git(\\|$)") {
@@ -267,8 +282,6 @@ foreach ($agentFile in $agentFiles) {
     }
 }
 
-$manifestPath = Join-Path $repoRoot "manifests\portable-files.toml"
-$manifestText = Get-Content -Raw -LiteralPath $manifestPath
 $skillsMatch = [regex]::Match($manifestText, "(?ms)^skills\s*=\s*\[(.*?)^\]")
 if (-not $skillsMatch.Success) {
     $problems.Add("missing skills allowlist in portable manifest")
