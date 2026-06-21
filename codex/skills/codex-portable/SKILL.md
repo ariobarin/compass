@@ -1,52 +1,42 @@
 ---
 name: codex-portable
-description: Edit the codex-portable repo for durable Codex setup changes. Use when updating Codex config, skills, agents, workflows, manifests, or install wiring.
+description: Maintain codex-portable durable setup. Use when editing installed skills or agents, repo workflows, manifests, scripts, or install wiring.
 ---
 
 # Codex Portable
 
-Use this skill when the task is to change the reviewed portable Codex setup in
-this repo, not just explain it.
+Use this skill when changing `codex-portable` itself. Its job is to route durable
+setup changes to the right source file while preserving the install boundary.
 
-## Start Here
+## Stance
 
-1. Read the repo-root `AGENTS.md` and `local-docs/maintenance-learnings.md`.
-2. Read `workflows/portable-config.md` for the repo-to-live flow.
-3. Read `workflows/addition-intake.md` when deciding whether the change belongs
-   in a skill, agent, workflow, script, manifest entry, or config fragment.
+Treat this repo as reviewed source, not a backup of live `~/.codex`. Keep
+installed agentic behavior separate from repo-maintainer guidance. Let repo-local
+docs carry procedure instead of reconstructing the maintenance flow from memory.
 
-## Core Rule
+## Read First
 
-Treat the current portable configuration as editable source, not a frozen
-snapshot.
+- Read the repo-root `AGENTS.md` and `local-docs/maintenance-learnings.md`.
+- Read `workflows/portable-config.md` for repo-to-live install, snapshot, or
+  drift work.
+- Read `workflows/addition-intake.md` before adding rules, skills, agents,
+  workflows, scripts, manifests, or config fragments.
 
-When the user wants durable Codex behavior changed, modify or append the right
-files in this repo. Treat existing portable files as editable source.
+## Route Changes
 
-Use the reviewed repo copy as the change surface when it owns the behavior.
-Reserve live `~/.codex` edits for validation, drift checks, or explicitly live
-state.
-
-## Route The Change
-
-- Update `codex/AGENTS.md` for session-wide defaults that should travel with the
-  portable setup.
-- Update `codex/config.review.toml` for stable config fragments that should be
-  reviewed, not auto-installed.
-- Update `codex/skills/` for specialized agent behavior.
-- Update `codex/agents/` for focused reviewer or researcher personas.
-- Update `workflows/` for repeated human processes.
-- Update `scripts/` for mechanical checks or sync logic.
-- Update `local-docs/` for repo-only maintenance lessons.
-- Update `manifests/portable-files.toml` and `scripts/common.ps1` when adding an
-  installed skill or changing an install surface that those files map.
+- Installed agentic behavior: `codex/AGENTS.md`, `codex/agents/`,
+  `codex/skills/`.
+- Repo-maintainer guidance: root `AGENTS.md`, `workflows/`, `local-docs/`,
+  `manifests/`, `scripts/`.
+- Reviewed config fragments: `codex/config.review.toml`; do not treat it as a
+  direct replacement for live `config.toml`.
+- Installed skill additions: update `manifests/portable-files.toml` and
+  `scripts/common.ps1` together.
 
 ## Validate The Repo Change
 
-1. Update the durable artifact and any required install wiring in the same
-   branch.
-2. Run `.\scripts\doctor.ps1`.
-3. Run `python $env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py <skill-folder>`
-   for skill edits.
-4. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when live drift matters.
-5. Use a PR as the review unit.
+- Run `.\scripts\doctor.ps1` before calling the change done.
+- For skill edits, run the local skill validator when present, using the active
+  Codex home instead of a hard-coded user path.
+- Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when live drift matters.
+- Use a PR as the review unit.
