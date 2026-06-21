@@ -30,9 +30,8 @@ should handle a mechanical check. A manifest should define a boundary.
 
 ## Review Expectations
 
-Prefer small PRs with clear motivation. Public PR text should describe the
-change neutrally and avoid personal preferences unless they are part of the
-project philosophy itself.
+Prefer small PRs with clear motivation. In the title and body, name the
+boundary, behavior, or risk the change improves.
 
 When in doubt, explain why a file belongs in this portable repo instead of in a
 target project, local Codex home, plugin cache, or ignored machine-local file.
