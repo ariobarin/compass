@@ -1,4 +1,5 @@
 /.codex-live-draft/
+/.local/
 /backups/
 /local.toml
 *.local.toml

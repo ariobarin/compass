@@ -94,6 +94,8 @@ as a skill, workflow doc, or reviewed config change instead.
 - [addition-intake.md](addition-intake.md): promoting new portable artifacts and
   checking related stale guidance.
 - [plan-template.md](plan-template.md): planning large or risky work.
+- [multi-thread-pr-coordination.md](multi-thread-pr-coordination.md): keeping
+  parallel audit threads out of public PR sprawl.
 - [read-only-research.md](read-only-research.md): mapping code paths before
   edits.
 - [agent-failures.md](agent-failures.md): converting repeated failures into

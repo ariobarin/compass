@@ -73,6 +73,7 @@ dirs = [
   ".sandbox-bin",
   ".sandbox-secrets",
   ".tmp",
+  ".local",
   "archived_sessions",
   "automations",
   "browser",

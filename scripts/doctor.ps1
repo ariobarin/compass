@@ -12,9 +12,85 @@ catch {
     $liveHome = Join-Path $env:USERPROFILE ".codex"
 }
 $problems = New-Object System.Collections.Generic.List[string]
+$trackedFiles = @()
+$pathSeparators = @([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) | Select-Object -Unique
+
+function Get-DoctorFullPath {
+    param([string]$Path)
+
+    return [System.IO.Path]::GetFullPath($Path).TrimEnd($pathSeparators)
+}
+
+$localScratchRoot = Get-DoctorFullPath -Path (Join-Path $repoRoot ".local")
+
+function Test-LocalScratchPath {
+    param([string]$Path)
+
+    $fullPath = Get-DoctorFullPath -Path $Path
+    if ($fullPath -eq $localScratchRoot) {
+        return $true
+    }
+
+    foreach ($separator in $pathSeparators) {
+        if ($fullPath.StartsWith("$localScratchRoot$separator", [System.StringComparison]::OrdinalIgnoreCase)) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Get-DoctorChildItem {
+    param(
+        [ValidateSet("File", "Directory")]
+        [string]$Kind,
+        [string]$Filter = "*"
+    )
+
+    $items = New-Object System.Collections.Generic.List[object]
+
+    function Add-DoctorChildren {
+        param([string]$Path)
+
+        foreach ($child in Get-ChildItem -LiteralPath $Path -Force -ErrorAction SilentlyContinue) {
+            if ($child.PSIsContainer) {
+                if ($child.FullName -match "\\.git(\\|$)") {
+                    continue
+                }
+
+                if (Test-LocalScratchPath -Path $child.FullName) {
+                    continue
+                }
+
+                if ($Kind -eq "Directory" -and $child.Name -like $Filter) {
+                    $items.Add($child)
+                }
+
+                Add-DoctorChildren -Path $child.FullName
+                continue
+            }
+
+            if ($Kind -eq "File" -and $child.Name -like $Filter) {
+                $items.Add($child)
+            }
+        }
+    }
+
+    Add-DoctorChildren -Path $repoRoot
+    return $items
+}
 
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     $problems.Add("git is not on PATH")
+}
+else {
+    $trackedFiles = @(& git -C $repoRoot ls-files 2>$null)
+    foreach ($trackedFile in $trackedFiles) {
+        $trackedPath = Get-DoctorFullPath -Path (Join-Path $repoRoot $trackedFile)
+        if (Test-LocalScratchPath -Path $trackedPath) {
+            $problems.Add("tracked local scratch path: $trackedFile")
+        }
+    }
 }
 
 foreach ($path in @(
@@ -28,6 +104,7 @@ foreach ($path in @(
     "local-docs\maintenance-learnings.md",
     "workflows\addition-intake.md",
     "workflows\portable-config.md",
+    "workflows\multi-thread-pr-coordination.md",
     "workflows\plan-template.md",
     "workflows\read-only-research.md",
     "workflows\agent-failures.md",
@@ -49,7 +126,7 @@ $blockedNames = @(
 )
 
 foreach ($blocked in $blockedNames) {
-    $matches = Get-ChildItem -Path $repoRoot -Recurse -Force -File -Filter $blocked -ErrorAction SilentlyContinue
+    $matches = Get-DoctorChildItem -Kind File -Filter $blocked
     foreach ($match in $matches) {
         $problems.Add("blocked local-only file tracked in repo tree: $($match.FullName)")
     }
@@ -60,6 +137,7 @@ $blockedDirs = @(
     ".sandbox-bin",
     ".sandbox-secrets",
     ".tmp",
+    ".local",
     "archived_sessions",
     "automations",
     "browser",
@@ -80,7 +158,7 @@ $blockedDirs = @(
     "worktrees"
 )
 
-foreach ($dir in Get-ChildItem -Path $repoRoot -Recurse -Force -Directory -ErrorAction SilentlyContinue) {
+foreach ($dir in Get-DoctorChildItem -Kind Directory) {
     if ($dir.FullName -match "\\.git(\\|$)") {
         continue
     }
@@ -90,7 +168,7 @@ foreach ($dir in Get-ChildItem -Path $repoRoot -Recurse -Force -Directory -Error
     }
 }
 
-$textFiles = Get-ChildItem -Path $repoRoot -Recurse -Force -File |
+$textFiles = Get-DoctorChildItem -Kind File |
     Where-Object {
         $_.FullName -notmatch "\\.git\\" -and
         $_.Extension -in @(".md", ".toml", ".json", ".ps1", ".yaml", ".yml", ".txt")
