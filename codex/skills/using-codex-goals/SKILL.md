@@ -27,28 +27,15 @@ rules change:
 5. Mark blocked only when the same blocker repeats across the required goal
    turns and no meaningful progress remains possible.
 
-## Product Grounding
+## Goal State Boundary
 
-OpenAI's Codex docs describe `/goal` as the slash command that sets a
-persistent goal for Codex, and subagents as delegated agents that Codex starts
-for specific tasks. This skill treats cross-thread goal activation as an
-explicit action in the child context rather than a text transfer from the
-parent.
+Goal state is local to the context that activates it. Delegated `/goal` text
+sent to another thread or subagent is plain text until the child applies it in
+that context.
 
-Codex product mechanics can change. Use this contract unless current tooling
-shows a different boundary:
-
-- delegated `/goal` text sent to another thread or subagent is plain text until
-  the child applies it;
-- a child that needs active goal state applies it by calling `create_goal` for
-  itself;
-- parent completion stays with the controller, even when a child completes its
-  slice;
-- spawned subagents may create their own goals when goal tools are available,
-  but nested subagent spawning is not an assumed capability.
-
-Treat these as operating assumptions to verify, not as permanent platform
-guarantees.
+A child that needs active goal state calls `create_goal` for its own slice.
+Parent completion authority stays with the controller. A child completion is
+evidence for the parent goal, not completion of the parent goal.
 
 ## Activation Rule
 
@@ -87,11 +74,10 @@ For ready-to-copy controller, worker, monitor, and subagent templates, read
 
 ## Subagent Handoffs
 
-Pass a narrowed goal-shaped contract instead of the whole parent goal. In
-observed Codex behavior, delegated messages to other threads and spawned
-subagents treated `/goal` text as plain text. If the child needs active goal
-state, ask that child to apply the goal to itself by calling `create_goal` for
-its own slice.
+Pass a narrowed goal-shaped contract instead of the whole parent goal. Delegated
+messages to other threads and spawned subagents treat `/goal` text as plain
+text until the child applies it. If the child needs active goal state, ask that
+child to apply the goal to itself by calling `create_goal` for its own slice.
 
 Use fresh subagents for independent slices. The controller keeps ownership of
 the parent goal, integrates outputs, verifies final evidence, and decides when

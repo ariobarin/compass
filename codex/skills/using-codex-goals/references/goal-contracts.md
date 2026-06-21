@@ -7,7 +7,7 @@ completion predicates.
 ## Contents
 
 - Goal Brief Template
-- Delegation State Boundary
+- Goal State Boundary
 - Controller Goal Template
 - Worker Goal Template
 - Monitor Goal Template
@@ -35,21 +35,18 @@ Subagents:
 Use this form to turn broad intent into a durable contract. Keep every field
 concrete enough that another agent can verify it from named evidence.
 
-## Delegation State Boundary
+## Goal State Boundary
 
-Codex product mechanics can change. Use this contract unless current tooling
-shows a different boundary:
+Goal state is local to the context that activates it:
 
 - delegated `/goal` text to another thread or spawned subagent is plain text
   until the child applies it;
-- a child that needed active goal state applied it by calling `create_goal` for
+- a child that needs active goal state applies it by calling `create_goal` for
   itself;
 - the parent controller keeps completion authority for the parent goal;
-- spawned subagents may create goals when goal tools are available, while nested
-  subagent spawning is not an assumed capability.
-
-Treat these as operating assumptions to verify rather than permanent platform
-guarantees.
+- child completion is evidence for the parent goal, not completion of the
+  parent goal;
+- nested fan-out stays controller-owned.
 
 ## Controller Goal Template
 
@@ -116,10 +113,10 @@ what cadence to use between checks.
 
 Use this as a contract. Active goal state exists only after the child applies
 goal tools in its own context.
-In observed Codex behavior, delegated messages to other threads and spawned
-subagents treated `/goal` text as plain text. If the child needs active goal
-state, ask that child to apply the goal to itself by calling `create_goal` for
-its own slice.
+Delegated messages to other threads and spawned subagents treat `/goal` text as
+plain text until the child applies it. If the child needs active goal state, ask
+that child to apply the goal to itself by calling `create_goal` for its own
+slice.
 
 ```text
 Parent goal:
@@ -181,8 +178,8 @@ Choose the orchestration surface deliberately:
 
 - Use subagents for bounded worker slices that should report back to the
   controller. Spawned subagents can create their own goals when goal tools are
-  available. Do not assume they can spawn nested subagents unless the current
-  tool surface proves it.
+  available. Keep nested fan-out controller-owned: children return proposed
+  slices, and the controller spawns the next layer.
 - Use separate threads for durable, user-visible work streams that may need to
   persist independently in the sidebar.
 - For tree-shaped work, keep fan-out controller-owned. Let children return
