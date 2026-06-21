@@ -11,6 +11,8 @@ Hosted Codex web settings, cloud task history, repository connections, and
 workspace connector installs such as Slack or Linear are also out of scope for
 this repo. They are service-side state, not portable files.
 
+For the philosophy behind this repo's shape, see [philosophy.md](philosophy.md).
+
 ## Layout
 
 - `codex/AGENTS.md`: portable source for the live global `AGENTS.md` in the
