@@ -8,9 +8,15 @@
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+*.log
+AGENTS.override.md
 auth.json
 history.jsonl
 session_index.jsonl
+installation_id
+cap_sid
+models_cache.json
+.codex-global-state.json
 logs_*.sqlite*
 state_*.sqlite*
 memories_*.sqlite*
