@@ -26,6 +26,8 @@ foreach ($path in @(
     "manifests\tool-surfaces.md",
     "local-docs\README.md",
     "local-docs\maintenance-learnings.md",
+    "workflows\addition-intake.md",
+    "workflows\portable-config.md",
     "workflows\plan-template.md",
     "workflows\read-only-research.md",
     "workflows\agent-failures.md",
@@ -102,6 +104,77 @@ foreach ($skillFile in $skillFiles) {
     $descriptionText = $description.Matches[0].Groups[1].Value.Trim()
     if ($descriptionText.Length -gt $maxDescriptionLength) {
         $problems.Add("skill description over $maxDescriptionLength chars: $($skillFile.FullName)")
+    }
+}
+
+function Get-TopLevelTomlStringValues {
+    param([string]$Text)
+
+    $topLevelValues = @{}
+    $currentKey = $null
+    $currentValue = New-Object System.Text.StringBuilder
+    $inMultilineString = $false
+    $inTable = $false
+
+    foreach ($line in ($Text -split "`r?`n")) {
+        if ($inMultilineString) {
+            $closingIndex = $line.IndexOf('"""')
+            if ($closingIndex -ge 0) {
+                [void]$currentValue.AppendLine($line.Substring(0, $closingIndex))
+                $topLevelValues[$currentKey] = $currentValue.ToString()
+                $currentKey = $null
+                [void]$currentValue.Clear()
+                $inMultilineString = $false
+            }
+            else {
+                [void]$currentValue.AppendLine($line)
+            }
+            continue
+        }
+
+        if ($line -match '^\s*\[') {
+            $inTable = $true
+            continue
+        }
+
+        if ($inTable) {
+            continue
+        }
+
+        $multiline = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"""(.*)$')
+        if ($multiline.Success) {
+            $key = $multiline.Groups[1].Value
+            $remainingText = $multiline.Groups[2].Value
+            $closingIndex = $remainingText.IndexOf('"""')
+            if ($closingIndex -ge 0) {
+                $topLevelValues[$key] = $remainingText.Substring(0, $closingIndex)
+            }
+            else {
+                $currentKey = $key
+                [void]$currentValue.Clear()
+                [void]$currentValue.AppendLine($remainingText)
+                $inMultilineString = $true
+            }
+            continue
+        }
+
+        $assignment = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"([^"]*)"\s*(#.*)?$')
+        if ($assignment.Success) {
+            $topLevelValues[$assignment.Groups[1].Value] = $assignment.Groups[2].Value
+        }
+    }
+
+    return $topLevelValues
+}
+
+$agentFiles = Get-ChildItem -Path (Join-Path $repoRoot "codex\agents") -File -Filter "*.toml" -ErrorAction SilentlyContinue
+foreach ($agentFile in $agentFiles) {
+    $agentText = Get-Content -Raw -LiteralPath $agentFile.FullName
+    $topLevelValues = Get-TopLevelTomlStringValues -Text $agentText
+    $topLevelText = $topLevelValues.Values -join "`n"
+
+    if ($topLevelText -match "(?i)\bread-only\b" -and ($topLevelValues["sandbox_mode"] -ne "read-only")) {
+        $problems.Add("read-only agent missing sandbox_mode: $($agentFile.FullName)")
     }
 }
 

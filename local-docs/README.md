@@ -11,6 +11,10 @@ catch drift before config is copied into a live machine.
 
 - [maintenance-learnings.md](maintenance-learnings.md): local principles for
   making useful changes to this repo without bloating the portable Codex setup.
+- [../workflows/addition-intake.md](../workflows/addition-intake.md): promotion
+  flow for new repo-maintenance workflows, installed skills and agents,
+  repo-side scripts and manifests, and config fragments. Workflows guide repo
+  maintenance and are not installed into the live Codex home.
 
 ## Boundary
 
