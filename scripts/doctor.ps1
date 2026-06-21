@@ -94,6 +94,8 @@ else {
 }
 
 foreach ($path in @(
+    ".gitattributes",
+    ".github\workflows\portable-checks.yml",
     "AGENTS.md",
     "codex\AGENTS.md",
     "codex\keybindings.json",
