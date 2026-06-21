@@ -82,8 +82,8 @@ time-sensitive.
 
 ## Use critic review when requested
 
-Use `neutral-critic` when the user request, repo guidance, or action source asks
-for an independent review gate.
+Use the `neutral-critic` agent when the user request, repo guidance, or action
+source asks for an independent review gate.
 
 Give the critic concrete evidence:
 

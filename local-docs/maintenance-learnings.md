@@ -15,6 +15,29 @@ The best default is boring and explicit. Keep ordinary files in ordinary Codex
 locations, keep generated state out of git, and make promotion from repo to live
 config a deliberate copy step with a diff.
 
+## Install Boundary
+
+Installed agentic documentation changes future Codex behavior. It belongs in
+`codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`, and should describe
+durable role, stance, judgment, and capability boundaries.
+
+Installed docs should speak to the agent that will use them at runtime. State
+the contract directly. Do not put provenance, dated observations, platform
+caveats, or repo review history into installed skills or agents when the agent
+just needs to act. Put that context in repo-maintainer docs instead.
+
+For goal delegation, the installed skill should say how goal state works: goal
+state is local to the context that activates it, delegated `/goal` text is plain
+text until the child applies it, and parent completion authority stays with the
+controller. The reason this wording exists belongs here, not in the runtime
+skill.
+
+Repo-maintainer documentation helps humans and agents maintain this repository.
+It belongs in the root `AGENTS.md`, `workflows/`, `local-docs/`, `manifests/`,
+or `scripts/`, and should explain promotion rules, checks, local review habits,
+and portability boundaries. These surfaces are not copied into live Codex as
+agent behavior.
+
 ## Context Discipline
 
 - Keep `codex/AGENTS.md` short. It should hold personal defaults that genuinely
@@ -24,8 +47,9 @@ config a deliberate copy step with a diff.
 - If a rule only makes sense while editing `codex-portable`, it belongs in the
   repo-root `AGENTS.md`, `workflows/`, or `local-docs/`, not in
   `codex/AGENTS.md`.
-- Put detailed guidance in `workflows/`, skill references, scripts, manifests,
-  or local docs.
+- Put detailed guidance in the narrowest surface: installed skill references for
+  reusable agent capability, workflows or local docs for repo maintenance,
+  scripts for mechanical checks, and manifests for boundaries.
 - Add durable guidance only after repeated mistakes or clear workflow friction.
 - Prefer evidence over preference. A new rule should name the failure it
   prevents or the review path it improves.
@@ -34,11 +58,23 @@ config a deliberate copy step with a diff.
 
 ## Change Routing
 
-- A repeated human process belongs in `workflows/`.
-- A task-specific agent capability belongs in `codex/skills/`.
-- A mechanical or reproducible check belongs in `scripts/`.
-- A capability boundary or portability decision belongs in `manifests/`.
-- A maintenance lesson for this repo belongs in `local-docs/`.
+Use `workflows/addition-intake.md` when promoting a new durable artifact into the
+portable repo.
+
+- A repeated codex-portable maintenance process belongs in `workflows/`.
+- A reusable personal skill that should be installed into the user-home skill
+  store belongs in `codex/skills/`.
+- `codex/skills/` mirrors the active Codex home skill store. It is separate
+  from project `.agents/skills` discovery inside target repos.
+- A project-specific skill belongs in the target repo, not in `codex-portable`.
+- A reusable custom agent that should be installed belongs in `codex/agents/`.
+- A project-specific custom agent belongs in the target repo.
+- A shareable bundle of skills, hooks, apps, or MCP config belongs in a plugin
+  repo or repo-scoped plugin folder, not in the live plugin cache.
+- A mechanical or reproducible repo check belongs in `scripts/`.
+- A repo-side capability boundary or portability decision belongs in
+  `manifests/`.
+- A repo-side maintenance lesson belongs in `local-docs/`.
 - A live preference that should affect every Codex session belongs in
   `codex/AGENTS.md` only after review.
 
@@ -84,3 +120,13 @@ Any tool that can touch browser state, GitHub, the filesystem, local processes,
 MCP servers, or network resources should have a review path in
 `manifests/tool-surfaces.md`. Keep auth, cookies, generated paths, runtime pipes,
 and cache state local.
+
+## Local Override Surfaces
+
+Keep local override and approval-accumulation surfaces out of this repo unless
+they are deliberately adopted as reviewed portable policy.
+
+- `AGENTS.override.md` stays local.
+- `rules/` stays local by default.
+- Project `AGENTS.md`, project `.codex/agents/`, and project skill folders stay
+  with the target repo.

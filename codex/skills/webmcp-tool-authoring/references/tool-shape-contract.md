@@ -3,6 +3,15 @@
 This contract supersedes older notes that told action tools to return
 `{ content: [] }`. Current WebMCP tools return one structured value.
 
+## Contents
+
+- [Site Layout Assumptions](#site-layout-assumptions)
+- [Core Rules](#core-rules)
+- [Navigation And Mutation Returns](#navigation-and-mutation-returns)
+- [Declarative Tool Rules](#declarative-tool-rules)
+- [Tool Description Examples](#tool-description-examples)
+- [Contract Checklist](#contract-checklist)
+
 ## Site Layout Assumptions
 
 Each site should maintain:
