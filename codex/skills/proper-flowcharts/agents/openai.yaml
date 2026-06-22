@@ -1,0 +1,7 @@
+interface:
+  display_name: "Proper Flowcharts"
+  short_description: "Readable, standard, useful flowcharts"
+  default_prompt: "Use $proper-flowcharts to turn this workflow into a clear, readable flowchart."
+
+policy:
+  allow_implicit_invocation: true
