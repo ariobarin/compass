@@ -14,6 +14,11 @@ When they accumulate, preserve evidence, stop only the labeled failing slice,
 repair what can be repaired, and keep healthy slices moving only when the
 comparison remains valid.
 
+Recoverable invalid rows are work, not caveats. Prosecute them until each one is
+countable, intentionally rerun, cleanly rescored, or proven nonrecoverable under
+the benchmark protocol. Do not let safe isolated capacity sit idle while
+recoverable rows are serializing without a recorded protocol reason.
+
 For a new agent family or fresh integration, treat the work as onboarding first
 and run operation second. Read the upstream repo and nearest local launcher
 before inventing local glue.
@@ -52,9 +57,11 @@ Read the references that match the task:
 6. Monitor worker state, result-root growth, exact error clusters, and scheduler
    state while it runs.
 7. Pause only the labeled stack if invalid rows are accumulating.
-8. Count results only after terminal artifacts exist and final aggregation has
+8. Treat missing, invalid, or unscored rows as a recovery queue until they are
+   classified as countable, recoverable, or protocol-unsafe to retry.
+9. Count results only after terminal artifacts exist and final aggregation has
    been rebuilt.
-9. If the user needs a refreshed report or comparison CSVs, rebuild them from
+10. If the user needs a refreshed report or comparison CSVs, rebuild them from
    the canonical final artifacts instead of mixing raw rerun directories and
    ad hoc counts.
 

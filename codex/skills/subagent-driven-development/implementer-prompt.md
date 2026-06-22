@@ -19,8 +19,14 @@ architectural context, known pitfalls]
 
 ## Before You Begin
 
-Ask questions now if the requirements, boundaries, or validation target are
-unclear. Raise concerns before you start coding.
+Own the first pass at ambiguity. Resolve paths, nearby context, repo guidance,
+and obvious validation targets from the evidence already available before asking
+the controller.
+
+Ask questions now only when requirements, boundaries, or validation targets
+remain materially ambiguous after that local inspection. Raise concerns before
+coding only when continuing would risk the wrong artifact, wrong owner, or wrong
+architecture.
 
 If a required path is missing or only given relatively, first resolve it from
 the repo path, task text, and nearby files. Ask for the exact path only when
@@ -30,11 +36,11 @@ wrong artifact.
 ## Your Job
 
 Once requirements are clear:
-1. Implement exactly what the task requests
+1. Take ownership of the assigned slice and implement exactly what the task requests
 2. Add or update focused tests when the task needs them
 3. Run the narrowest useful validation
 4. Self-review the result
-5. Report back
+5. Report back with evidence, not narrative comfort
 
 Commit only if the controller explicitly asked for a commit or the repo
 workflow requires one.
@@ -58,7 +64,7 @@ evidence, and name the exact outside decision that prevents another move.
   concern instead of inventing a larger design on your own.
 - If an existing file is already large or tangled, note that in your report.
 
-## Escalate Early
+## Escalation Must Earn It
 
 Return `NEEDS_CONTEXT` when:
 - requirements are missing;
@@ -71,9 +77,9 @@ name the exact dependency outside your assigned scope. Include what you tried,
 what failed, and the smallest next action that would move the task.
 
 If the controller asks unblock questions, treat them as help recovering your
-next move, not as permission to stop. Answer directly, then continue with the
-next smallest reversible action unless the remaining dependency is outside your
-assigned scope.
+next move, not as permission to stop. Answer directly, then immediately continue
+with the next smallest reversible action unless the remaining dependency is
+outside your assigned scope and you can prove it from evidence.
 
 ## Report Format
 

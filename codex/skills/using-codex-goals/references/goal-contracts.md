@@ -72,7 +72,7 @@ Good controller scopes often include:
 - route blockers into concrete next actions;
 - keep live docs or handoffs current only when they reflect real state.
 
-## Worker Goal Template
+## Worker Ownership Contract
 
 Use this when a child thread or subagent owns one executable slice.
 
@@ -88,8 +88,10 @@ If stuck or failing:
 Subagents:
 ```
 
-Good worker scopes keep one owner, one slice, one done condition, and one
-evidence set.
+Worker scopes must make ownership felt. Keep one owner, one slice, one done
+condition, and one evidence set. The worker owns local inspection, repair,
+validation, and evidence preservation until the slice is done, rerouted, or a
+specific outside decision has been proven.
 
 ## Monitor Goal Template
 
@@ -117,14 +119,17 @@ line. A blocker is a claim that must be compressed until it turns into one of
 three things: a concrete local next action, a reroute to a better owner, or a
 specific external decision that cannot be made from the workspace.
 
-Good contracts tell the worker what to do when stuck:
+Strong contracts tell the worker what to do when stuck:
 
 - inspect the exact failure;
 - name what was tried and what it proved;
-- try the smallest reversible repair;
+- execute the smallest reversible repair still inside scope;
 - use a bounded validation;
 - ask the controller only when the remaining decision is genuinely outside the
   worker's authority.
+
+Stuck is not a place to rest. It is pressure to convert uncertainty into the
+next local action, a better owner, or a proven external dependency.
 
 ## Subagent Slice Template
 

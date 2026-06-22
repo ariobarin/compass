@@ -74,6 +74,9 @@ For each task:
    - `DONE_WITH_CONCERNS`
    - `NEEDS_CONTEXT`
    - `BLOCKED`
+   `BLOCKED` is not a normal lane. It is unfinished emergency status and must
+   carry exact failure evidence, local recovery tried, and the outside decision
+   that truly prevents another move.
 4. If the task touches shared code paths, confirm the implementer ran the
    narrowest useful checks before review.
 5. Dispatch spec review before code quality review.
@@ -90,8 +93,8 @@ For each task:
   execution with the worker path. Use `orchestration-controller` when oversight
   itself needs to stay stepped back.
 
-Do not solve the task for the worker. Restore agency, then route execution back
-to the owner.
+Do not solve the task for the worker. Restore agency, force the next executable
+move into view, then route execution back to the owner.
 
 ## Wait Discipline
 

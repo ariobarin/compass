@@ -32,7 +32,8 @@ Hold the level above execution:
 
 - keep the parent objective and completion evidence in view;
 - treat worker statuses as claims to interpret, not decisions to accept;
-- ask questions that help workers recover the next move;
+- force status claims into evidence, next action, reroute, recovery, or proven
+  external dependency;
 - detect when effort has become thrash;
 - choose cadence, review paths, reroutes, and handoffs;
 - verify outcomes against the parent goal.

@@ -68,7 +68,7 @@ the underlying task.
 
 ```text
 Worker: I am blocked.
-Controller: What exactly failed?
+Controller: I do not accept BLOCKED yet. What exactly failed?
 Controller: What did you try, and what did it prove?
 Controller: What is the next smallest reversible action?
 Controller: What would you do next if the user replied only with "continue"?
@@ -101,7 +101,8 @@ What is the original objective?
 What is the current evidence?
 What attempts changed the state?
 What is the next smallest reversible action?
-Should a fresh worker take over because your context is saturated?
+If your context is saturated, produce the transfer packet now so the controller
+can cut over to a fresh worker.
 ```
 
 If a fresh worker is needed, route the task with the objective, evidence,
