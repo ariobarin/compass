@@ -1,0 +1,7 @@
+interface:
+  display_name: "PR Review Loop"
+  short_description: "Iterate a PR to review-ready"
+  default_prompt: "Use $pr-review-loop to iterate on this pull request with explicit PR identity, review gates, current-head checks, and merge-boundary discipline."
+
+policy:
+  allow_implicit_invocation: true

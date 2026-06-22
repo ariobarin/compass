@@ -13,6 +13,10 @@ When the user frames the work as a Codex `/goal`, pair this with
 `using-codex-goals` so each PR group has a completion predicate and evidence
 ledger before publishing.
 
+When the work centers on iterating an existing PR or review thread rather than
+creating fresh PR groups, pair this with `pr-review-loop` so PR identity,
+review gates, and merge authority stay explicit.
+
 ## Start with the source
 
 Read local guidance before editing:
