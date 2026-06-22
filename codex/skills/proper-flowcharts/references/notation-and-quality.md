@@ -38,7 +38,8 @@ Use this reference when creating, revising, or reviewing flowcharts. The shape m
 - Use call-boundary nodes for external or model calls. The call node should name the call. Parse or interpret the result in the following decision node.
 - Keep append and feedback steps precise. Browser observations, tool results, inspected schemas, metadata records, and summary artifacts are different state updates.
 - Show causal visibility. If a result is appended before the next model, service, or human decision, make that feedback edge explicit.
-- Show required inspection, lookup, schema retrieval, authorization, or other detail steps between a low-detail index and concrete execution.
+- Show inspection, lookup, schema retrieval, authorization, or other detail steps when the real process requires them before concrete execution.
+- If a low-detail index can be used directly, draw direct execution and optional detail retrieval as separate labeled branches.
 
 Generic call-boundary pattern:
 
@@ -114,6 +115,7 @@ When an artifact has toggles, filters, modes, or variants:
 - Preserve comparison context. Toggling should keep the selected diagram, scroll position, and comparable view whenever the selected diagram still exists.
 - If a selected diagram is unavailable in a temporary mode, fall back cleanly and restore it when the mode becomes available again.
 - A superficial label swap is not a meaningful mode difference. Verify that the flow changes in the correct way or remove the implied distinction.
+- Do not pre-bake several modes into one graph unless the view is explicitly teaching their comparison.
 
 ## Source, Certainty, And Change
 
@@ -143,6 +145,7 @@ Quality rules:
 - Use separate diagrams when systems or alternatives have genuinely different control flow.
 - When comparing variants, verify that variant-specific labels, notes, and branches only appear in the matching variant.
 - Treat examples and screenshots as evidence of a pattern to inspect. Fix the pattern across the artifact when it recurs.
+- Before finalizing, re-check the source against every branch that looks surprising, especially missing back edges, one-way retries, and paths that skip setup or observation steps.
 
 ## Annotations
 
@@ -185,7 +188,8 @@ For semantic validation, check:
 
 - expected required steps are present;
 - paths are possible under the documented rules;
-- low-detail discovery paths include required inspection or detail retrieval before concrete execution;
+- low-detail paths include required inspection or detail retrieval only when required by the actual process;
+- direct execution from low-detail context appears only when it is a real supported path;
 - call outputs flow to decisions, then to separate branch actions;
 - append steps record the right kind of state;
 - critic or reviewer findings are consolidated by source evidence and independently repeated failures.
