@@ -99,6 +99,46 @@ function Get-PortableFileMap {
     return $items
 }
 
+function Get-RetiredPortableFileMap {
+    param([string]$CodexHome)
+
+    $items = New-Object System.Collections.Generic.List[object]
+
+    $items.Add([pscustomobject]@{
+        Type = "dir"
+        LivePath = Join-Path (Join-Path $CodexHome "skills") "codex-portable"
+    })
+
+    return $items
+}
+
+function Backup-LiveItem {
+    param(
+        [string]$LivePath,
+        [string]$BackupRoot,
+        [string]$LiveRoot,
+        [string]$Type
+    )
+
+    if (-not (Test-Path $LivePath)) {
+        return
+    }
+
+    Assert-PathUnderRoot -Path $LivePath -Root $LiveRoot
+
+    $relative = $LivePath.Substring($LiveRoot.Length).TrimStart("\")
+    $backupPath = Join-Path $BackupRoot $relative
+
+    if ($Type -eq "dir") {
+        New-Item -ItemType Directory -Force (Split-Path -Parent $backupPath) | Out-Null
+        Copy-Item -LiteralPath $LivePath -Destination $backupPath -Recurse -Force
+        return
+    }
+
+    New-DirectoryForFile -Path $backupPath
+    Copy-Item -LiteralPath $LivePath -Destination $backupPath -Force
+}
+
 function Copy-PortableItem {
     param(
         [string]$Source,
