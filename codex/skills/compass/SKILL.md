@@ -8,7 +8,7 @@ description: Maintain Compass durable setup. Use when editing installed skills o
 Use this skill when changing Compass itself. Its job is to route durable setup
 changes to the right source file while preserving the install boundary.
 
-Repository: [ariobarin/codex-portable](https://github.com/ariobarin/codex-portable).
+Repository: [ariobarin/compass](https://github.com/ariobarin/compass).
 
 ## Stance
 
