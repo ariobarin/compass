@@ -23,7 +23,7 @@ if (-not $Apply) {
         Write-Host "  $($item.LivePath) -> $($item.RepoPath)"
     }
     Write-Host ""
-    Write-Host "run with -Apply to refresh this repo from the live Codex and Agents homes"
+    Write-Host "run with -Apply to refresh this repo from the live Codex home and user skill home"
     exit 0
 }
 

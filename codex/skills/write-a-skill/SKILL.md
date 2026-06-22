@@ -86,7 +86,7 @@ because this repo does.
 
 ## Portable Repo Wiring
 
-When the skill should install into a live Codex home, update all of these in
+When the skill should install into the user skill home, update all of these in
 the same branch:
 
 1. `codex/skills/<name>/`
@@ -119,7 +119,7 @@ Run the narrowest checks that prove the skill is well-formed and portable:
 
 Run `.\scripts\verify-live.ps1 -SkipCodexCommand` only when live drift matters.
 Expected drift is fine for branch-only skills that are not meant to be
-installed yet.
+installed into `$HOME/.agents/skills` yet.
 
 ## Review Pass
 

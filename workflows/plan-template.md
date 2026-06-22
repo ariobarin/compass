@@ -4,7 +4,8 @@ Use this template for large, ambiguous, risky, or multi-step work. Keep the plan
 short enough to guide execution, not so detailed that it becomes a second
 implementation.
 
-This is repo-maintainer guidance and is not installed into the live Codex home.
+This is repo-maintainer guidance and is not installed into a live Codex home or
+user skill home.
 Put reusable agent behavior in `codex/agents/` or `codex/skills/` instead.
 
 Prefer native `/plan` or Plan mode when it is available and the work is still

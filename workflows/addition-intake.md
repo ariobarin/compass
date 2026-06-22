@@ -50,8 +50,8 @@ the repeated problem.
 
 ## Runtime Vs Maintainer Guidance
 
-Decide whether the artifact is meant to be installed into a live Codex or Agents
-home, or only used to maintain this repo.
+Decide whether the artifact is meant to be installed into a live Codex home,
+user skill home, or only used to maintain this repo.
 
 Installed agentic guidance changes how future Codex sessions behave. Put that
 in `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`, and keep it focused

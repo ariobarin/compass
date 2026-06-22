@@ -1,7 +1,7 @@
 # Maintenance Learnings
 
 These notes guide changes to Compass. They are repo-local learning
-material, not live Codex config.
+material, not live installed configuration.
 
 ## What Good Looks Like
 
@@ -12,8 +12,8 @@ script for a mechanical check, and a manifest for capability or portability
 boundaries.
 
 The best default is boring and explicit. Keep ordinary files in ordinary Codex
-locations, keep generated state out of git, and make promotion from repo to live
-config a deliberate copy step with a diff.
+and user skill locations, keep generated state out of git, and make promotion
+from repo to live install targets a deliberate copy step with a diff.
 
 ## Install Boundary
 

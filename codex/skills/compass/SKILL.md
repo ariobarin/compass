@@ -12,9 +12,10 @@ Repository: [ariobarin/compass](https://github.com/ariobarin/compass).
 
 ## Stance
 
-Treat this repo as reviewed source, not a backup of live `~/.codex`. Keep
-installed agentic behavior separate from repo-maintainer guidance. Let repo-local
-docs carry procedure instead of reconstructing the maintenance flow from memory.
+Treat this repo as reviewed source, not a backup of live `~/.codex` or
+`$HOME/.agents`. Keep installed agentic behavior separate from repo-maintainer
+guidance. Let repo-local docs carry procedure instead of reconstructing the
+maintenance flow from memory.
 
 ## Read First
 
@@ -39,6 +40,6 @@ docs carry procedure instead of reconstructing the maintenance flow from memory.
 
 - Run `.\scripts\doctor.ps1` before calling the change done.
 - For skill edits, run the local skill validator when present, using the active
-  Codex home instead of a hard-coded user path.
+  Codex home for bundled system tooling instead of a hard-coded user path.
 - Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when live drift matters.
 - Use a PR as the review unit.

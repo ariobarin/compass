@@ -34,7 +34,7 @@ if (-not $Apply) {
     }
 
     Write-Host ""
-    Write-Host "run with -Apply to copy these files into the live Codex and Agents homes"
+    Write-Host "run with -Apply to copy these files into the live Codex home and user skill home"
     exit 0
 }
 

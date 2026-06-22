@@ -1,7 +1,7 @@
 # Repository Guidance
 
 Compass is the reviewed source for portable Codex setup. It is not a raw backup
-of `~/.codex`.
+of `~/.codex` or `$HOME/.agents`.
 
 - `codex/AGENTS.md` is the portable source for the live global
   `~/.codex/AGENTS.md`. Only put session-wide defaults there.
@@ -11,8 +11,8 @@ of `~/.codex`.
 - If a rule only makes sense while editing Compass, put it here or in
   `workflows/` or `local-docs/`, not in installed agentic docs.
 - Repo-maintainer guidance belongs in this file, `workflows/`, `local-docs/`,
-  `manifests/`, or `scripts/`. These surfaces are not copied into live Codex as
-  agent behavior.
+  `manifests/`, or `scripts/`. These surfaces are not copied into live install
+  targets as agent behavior.
 - Keep `codex/AGENTS.md` short and global.
 - Put detailed operating behavior in the narrowest surface: installed agents or
   skills for reusable agent capability, repo workflows for Compass
@@ -36,8 +36,8 @@ of `~/.codex`.
 - Flag changes that accidentally expand the portable scope by committing auth,
   sessions, logs, caches, browser state, SQLite files, generated plugin state,
   or other local-only Codex data.
-- Flag changes that hardcode `~/.codex` or `%USERPROFILE%\\.codex` when the
-  path should respect `CODEX_HOME`.
+- Flag changes that hardcode `~/.codex`, `%USERPROFILE%\\.codex`, or
+  `$HOME/.agents` when the path should respect `CODEX_HOME` or `-AgentsHome`.
 - Flag config changes that introduce undocumented keys, stale settings, or
   stronger default authority without a current-doc justification.
 - Flag guidance that routes project-specific behavior into Compass

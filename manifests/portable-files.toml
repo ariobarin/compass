@@ -1,4 +1,4 @@
-# Human-owned Codex and Agents files that this repo is allowed to track.
+# Human-owned Codex setup files that this repo is allowed to track.
 
 [codex]
 # The live target is the active Codex home: $CODEX_HOME when set, otherwise
@@ -46,7 +46,7 @@ reason = "Live config.toml includes generated runtime paths, marketplaces, proje
 [repo_only]
 # These paths are repository-root paths. The [codex] section above maps files
 # from the repo's codex/ directory into the live Codex home. The [agents]
-# section maps repo skills into the user Agents home.
+# section maps repo skills into the user skill home.
 files = [
   "AGENTS.md",
   "README.md",
@@ -58,7 +58,7 @@ dirs = [
   "scripts",
   "workflows",
 ]
-reason = "These files guide repository maintenance but are not installed into a live Codex or Agents home."
+reason = "These files guide repository maintenance but are not installed into a live Codex home or user skill home."
 
 [local_only]
 files = [

@@ -2,10 +2,10 @@
 
 Reviewed source for my human-owned Codex setup.
 
-This repo is intentionally an allowlist, not a backup of the whole Codex home. The
-live Codex directory contains auth, logs, sessions, caches, databases, generated
-plugin state, browser state, and machine-specific runtime paths. Those are not
-portable and should not be committed.
+This repo is intentionally an allowlist, not a backup of the whole Codex home or
+user skill home. The live Codex directory contains auth, logs, sessions, caches,
+databases, generated plugin state, browser state, and machine-specific runtime
+paths. Those are not portable and should not be committed.
 
 Hosted Codex web settings, cloud task history, repository connections, and
 workspace connector installs such as Slack or Linear are also out of scope for
@@ -36,10 +36,10 @@ files or proposing changes.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
 - `workflows/`: repo-side operating notes for recurring maintenance work. These
-  are not installed into a live Codex or Agents home.
+  are not installed into a live Codex home or user skill home.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
-  live Codex or Agents home.
+  live Codex home or user skill home.
 - `manifests/portable-files.toml`: the install allowlist, repo-only list, and
   local-only denylist.
 - `manifests/tool-surfaces.md`: repo-side review notes for tools that can touch
@@ -67,7 +67,7 @@ ask Codex to report active instruction sources:
 .\scripts\verify-live.ps1
 ```
 
-Install reviewed portable files into the live Codex and user skill homes:
+Install reviewed portable files into the live Codex home and user skill home:
 
 ```powershell
 .\scripts\install.ps1 -Apply
