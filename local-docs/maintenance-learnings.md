@@ -1,6 +1,6 @@
 # Maintenance Learnings
 
-These notes guide changes to `codex-portable`. They are repo-local learning
+These notes guide changes to Compass. They are repo-local learning
 material, not live Codex config.
 
 ## What Good Looks Like
@@ -44,7 +44,7 @@ agent behavior.
   apply everywhere.
 - Treat `codex/AGENTS.md` as the portable copy of the live global
   `~/.codex/AGENTS.md`, not as repo-local maintenance notes.
-- If a rule only makes sense while editing `codex-portable`, it belongs in the
+- If a rule only makes sense while editing Compass, it belongs in the
   repo-root `AGENTS.md`, `workflows/`, or `local-docs/`, not in
   `codex/AGENTS.md`.
 - Put detailed guidance in the narrowest surface: installed skill references for
@@ -61,12 +61,12 @@ agent behavior.
 Use `workflows/addition-intake.md` when promoting a new durable artifact into the
 portable repo.
 
-- A repeated codex-portable maintenance process belongs in `workflows/`.
+- A repeated Compass maintenance process belongs in `workflows/`.
 - A reusable personal skill that should be installed into the user-home skill
   store belongs in `codex/skills/`.
 - `codex/skills/` mirrors the active Codex home skill store. It is separate
   from project `.agents/skills` discovery inside target repos.
-- A project-specific skill belongs in the target repo, not in `codex-portable`.
+- A project-specific skill belongs in the target repo, not in Compass.
 - A reusable custom agent that should be installed belongs in `codex/agents/`.
 - A project-specific custom agent belongs in the target repo.
 - A shareable bundle of skills, hooks, apps, or MCP config belongs in a plugin

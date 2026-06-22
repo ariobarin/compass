@@ -76,7 +76,7 @@ function Get-PortableFileMap {
         "action-items-to-prs",
         "benchmark-infra-reviewer",
         "benchmark-run-operator",
-        "codex-portable",
+        "compass",
         "git-branch-resolver",
         "grill-me",
         "orchestration-controller",

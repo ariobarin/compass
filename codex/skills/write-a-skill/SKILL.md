@@ -1,16 +1,16 @@
 ---
 name: write-a-skill
-description: Create or revise portable Codex skills with metadata, install wiring, and validation. Use when adding or refreshing a skill in codex-portable.
+description: Create or revise portable Codex skills with metadata, install wiring, and validation. Use when adding or refreshing a skill in Compass.
 ---
 
 # Write A Skill
 
-Use this skill for the codex-portable maintenance path, not as a replacement
+Use this skill for the Compass maintenance path, not as a replacement
 for generic skill-design guidance. The job here is to turn a repeated Codex
 workflow into a portable, reviewable skill that fits the current repo
 conventions and install surface.
 
-This skill is for reusable global skills that belong in `codex-portable`.
+This skill is for reusable global skills that belong in Compass.
 If the capability only makes sense for one project or repository, keep that
 skill in the target repo instead of promoting it here.
 
@@ -29,9 +29,9 @@ more cleanly.
 
 For skill placement, distinguish global from project-local scope:
 
-- reusable cross-repo developer capability: `codex-portable` skill;
+- reusable cross-repo developer capability: Compass skill;
 - codebase-specific workflow, schema, or policy: put the skill in that target
-  repo instead of `codex-portable`.
+  repo instead of Compass.
 
 ## Start From Real Trigger Examples
 
@@ -50,7 +50,7 @@ capability is the same.
 
 ## Preferred Skill Shape
 
-For codex-portable skills, the normal installable shape is:
+For Compass skills, the normal installable shape is:
 
 ```text
 skill-name/
@@ -100,7 +100,7 @@ When a skill belongs in the target repo rather than in the portable global
 setup, do not wire it into `manifests/portable-files.toml` or
 `scripts/common.ps1`.
 
-Do not pull a project-specific skill into `codex-portable` just because you are
+Do not pull a project-specific skill into Compass just because you are
 editing it from this repo. If the skill mainly exists to serve one repository,
 its home should usually be that repository.
 

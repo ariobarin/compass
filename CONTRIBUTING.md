@@ -1,7 +1,7 @@
 # Contributing
 
-This repo is reviewed source for a portable Codex setup. It is not a raw
-backup of a live Codex home, and contributions should preserve that boundary.
+Compass is reviewed source for a portable Codex setup. It is not a raw backup
+of a live Codex home, and contributions should preserve that boundary.
 
 Good changes make the setup easier to review, reinstall, explain, or verify.
 They do not add private machine state, generated runtime state, or broad agent

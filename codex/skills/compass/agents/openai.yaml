@@ -1,0 +1,7 @@
+interface:
+  display_name: "Compass"
+  short_description: "Maintain portable Codex setup"
+  default_prompt: "Use $compass to update durable Codex setup in https://github.com/ariobarin/compass while preserving the install boundary."
+
+policy:
+  allow_implicit_invocation: true
