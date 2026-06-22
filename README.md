@@ -29,10 +29,13 @@ files or proposing changes.
 - `codex/keybindings.json`: portable keyboard bindings.
 - `codex/agents/`: reusable global custom agents installed into the live Codex
   home. Project-specific custom agents belong in the target repo.
-- `codex/skills/`: reusable global custom skills installed into the live Codex
-  home for the current personal skill store, excluding system and plugin cache
-  skills. Project-specific `.agents/skills` belong in the target repo. Broader
-  sharing should usually happen through a plugin.
+- `codex/skills/`: reusable global custom skills installed into this setup's
+  current personal skill store, currently `$CODEX_HOME/skills`, excluding system
+  and plugin cache skills. Current Codex docs describe `$HOME/.agents/skills`
+  for user-authored skills and repo `.agents/skills` for project skills, so do
+  not change this install target without live discovery verification.
+  Project-specific `.agents/skills` belong in the target repo. Broader sharing
+  should usually happen through a plugin.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
 - `workflows/`: repo-side operating notes for recurring maintenance work. These

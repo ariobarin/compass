@@ -70,8 +70,9 @@ function Get-PortableFileMap {
         LivePath = Join-Path $CodexHome "agents"
     })
 
-    # This repo mirrors the current personal skill store under the active
-    # Codex home. Project `.agents/skills` stay with the target repo.
+    # This repo mirrors this setup's active personal skill store under the
+    # Codex home. Keep project `.agents/skills` in the target repo. Verify live
+    # discovery before migrating this install target.
     foreach ($skill in @(
         "action-items-to-prs",
         "benchmark-infra-reviewer",

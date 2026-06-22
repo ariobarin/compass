@@ -62,10 +62,12 @@ Use `workflows/addition-intake.md` when promoting a new durable artifact into th
 portable repo.
 
 - A repeated Compass maintenance process belongs in `workflows/`.
-- A reusable personal skill that should be installed into the user-home skill
-  store belongs in `codex/skills/`.
-- `codex/skills/` mirrors the active Codex home skill store. It is separate
-  from project `.agents/skills` discovery inside target repos.
+- A reusable personal skill that should be installed into this setup's active
+  personal skill store belongs in `codex/skills/`.
+- `codex/skills/` currently mirrors `$CODEX_HOME/skills` for this setup.
+  Current Codex docs describe `$HOME/.agents/skills` for user skills and
+  project `.agents/skills` discovery inside target repos. Treat any migration
+  as an install map change that needs live verification.
 - A project-specific skill belongs in the target repo, not in Compass.
 - A reusable custom agent that should be installed belongs in `codex/agents/`.
 - A project-specific custom agent belongs in the target repo.

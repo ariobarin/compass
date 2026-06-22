@@ -79,6 +79,29 @@ Do not treat live `automations/` state as the portable form of a reusable
 workflow. If an automation pattern should survive across machines, capture it
 as a skill, workflow doc, or reviewed config change instead.
 
+## Skill Discovery Targets
+
+Current Codex docs describe repo skills under `.agents/skills` while walking
+from the current working directory up to the repo root, user skills under
+`$HOME/.agents/skills`, admin skills under `/etc/codex/skills`, and plugins as
+the distribution unit for reusable skills outside one repo. See
+https://developers.openai.com/codex/skills.
+
+Compass still mirrors this setup's active personal skill store from
+`codex/skills/` into `$CODEX_HOME/skills`. That is an install map decision, not
+a claim that target projects should use that path.
+
+Before changing `scripts/common.ps1`, `manifests/portable-files.toml`, or skill
+install paths:
+
+1. Run current Codex in the target environment and confirm which skill roots
+   appear in the active instruction list.
+2. Check both `$CODEX_HOME/skills` and `$HOME/.agents/skills` for duplicate or
+   stale skills.
+3. Update README, manifest comments, and this workflow in the same PR as any
+   install map change.
+4. Use a dedicated migration PR if the live target moves to `.agents`.
+
 ## New machines
 
 1. Install Codex normally.
