@@ -199,7 +199,7 @@ $textFiles = Get-DoctorChildItem -Kind File |
     }
 
 foreach ($file in $textFiles) {
-    $content = Get-Content -Raw -LiteralPath $file.FullName
+    $content = Get-Content -Raw -Encoding UTF8 -LiteralPath $file.FullName
     if ($content -match "[^\x00-\x7F]") {
         $problems.Add("non-ASCII text in: $($file.FullName)")
     }
@@ -214,7 +214,7 @@ $dashCheckedFiles = Get-DoctorChildItem -Kind File |
 $blockedDashChars = @([char]0x2013, [char]0x2014)
 
 foreach ($file in $dashCheckedFiles) {
-    $content = Get-Content -Raw -LiteralPath $file.FullName
+    $content = Get-Content -Raw -Encoding UTF8 -LiteralPath $file.FullName
     foreach ($dashChar in $blockedDashChars) {
         if ($content.Contains($dashChar)) {
             $problems.Add("non-ASCII dash text in: $($file.FullName)")
