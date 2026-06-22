@@ -1,17 +1,20 @@
 param(
     [switch]$Apply,
-    [string]$CodexHome
+    [string]$CodexHome,
+    [string]$AgentsHome
 )
 
 . "$PSScriptRoot\common.ps1"
 
 $repoRoot = Get-RepoRoot
 $liveHome = Get-CodexHome -CodexHome $CodexHome
-$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome
+$agentsHome = Get-AgentsHome -AgentsHome $AgentsHome
+$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome
 $retiredItems = Get-RetiredPortableFileMap -CodexHome $liveHome
 
 Write-Host "repo: $repoRoot"
-Write-Host "live: $liveHome"
+Write-Host "codex: $liveHome"
+Write-Host "agents: $agentsHome"
 Write-Host ""
 
 if (-not $Apply) {
@@ -31,7 +34,7 @@ if (-not $Apply) {
     }
 
     Write-Host ""
-    Write-Host "run with -Apply to copy these files into the live Codex home"
+    Write-Host "run with -Apply to copy these files into the live Codex and Agents homes"
     exit 0
 }
 
@@ -41,10 +44,10 @@ New-Item -ItemType Directory -Force $backupRoot | Out-Null
 
 foreach ($item in $items) {
     if (Test-Path $item.LivePath) {
-        Backup-LiveItem -LivePath $item.LivePath -BackupRoot $backupRoot -LiveRoot $liveHome -Type $item.Type
+        Backup-LiveItem -LivePath $item.LivePath -BackupRoot $backupRoot -LiveRoot $item.LiveRoot -BackupScope $item.BackupScope -Type $item.Type
     }
 
-    Copy-PortableItem -Source $item.RepoPath -Destination $item.LivePath -Type $item.Type -AllowedRoot $liveHome
+    Copy-PortableItem -Source $item.RepoPath -Destination $item.LivePath -Type $item.Type -AllowedRoot $item.LiveRoot
     Write-Host "installed: $($item.LivePath)"
 }
 
@@ -53,7 +56,7 @@ foreach ($item in $retiredItems) {
         continue
     }
 
-    Backup-LiveItem -LivePath $item.LivePath -BackupRoot $backupRoot -LiveRoot $liveHome -Type $item.Type
+    Backup-LiveItem -LivePath $item.LivePath -BackupRoot $backupRoot -LiveRoot $item.LiveRoot -BackupScope $item.BackupScope -Type $item.Type
     Remove-Item -LiteralPath $item.LivePath -Recurse -Force
     Write-Host "removed retired: $($item.LivePath)"
 }

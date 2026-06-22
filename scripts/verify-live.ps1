@@ -1,5 +1,6 @@
 param(
     [string]$CodexHome,
+    [string]$AgentsHome,
     [switch]$SkipCodexCommand,
     [switch]$RequireInSync,
     [int]$TimeoutSeconds = 180
@@ -9,7 +10,8 @@ param(
 
 $repoRoot = Get-RepoRoot
 $liveHome = Get-CodexHome -CodexHome $CodexHome
-$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome
+$agentsHome = Get-AgentsHome -AgentsHome $AgentsHome
+$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome
 $drift = New-Object System.Collections.Generic.List[string]
 $missing = New-Object System.Collections.Generic.List[string]
 
@@ -59,7 +61,8 @@ foreach ($item in $items) {
 }
 
 Write-Host "repo: $repoRoot"
-Write-Host "live: $liveHome"
+Write-Host "codex: $liveHome"
+Write-Host "agents: $agentsHome"
 
 if ($missing.Count -gt 0) {
     Write-Host ""
@@ -76,7 +79,7 @@ if ($drift.Count -gt 0) {
         Write-Host "  $path"
     }
 }
-else {
+elseif ($missing.Count -eq 0) {
     Write-Host "portable files match live allowlist"
 }
 

@@ -64,11 +64,10 @@ portable repo.
 - A repeated Compass maintenance process belongs in `workflows/`.
 - A reusable personal skill that should be installed into this setup's active
   personal skill store belongs in `codex/skills/`.
-- `codex/skills/` currently mirrors `$CODEX_HOME/skills` for this setup.
-  Current Codex docs describe `$HOME/.agents/skills` for user skills and
-  project `.agents/skills` discovery inside target repos. Treat any migration
-  as an install map change that needs live verification.
-- A project-specific skill belongs in the target repo, not in Compass.
+- `codex/skills/` is the reviewed source tree for user skills that install to
+  `$HOME/.agents/skills`.
+- Project `.agents/skills` discovery belongs in the target repo, not in
+  Compass.
 - A reusable custom agent that should be installed belongs in `codex/agents/`.
 - A project-specific custom agent belongs in the target repo.
 - A shareable bundle of skills, hooks, apps, or MCP config belongs in a plugin
@@ -107,7 +106,7 @@ Before calling a change done:
 - let GitHub Actions run on the PR.
 
 Expected drift is still useful evidence. For example, branch-only changes should
-show drift until the user explicitly installs them into the live Codex home.
+show drift until the user explicitly installs them into the live install targets.
 
 ## Failure Learning
 

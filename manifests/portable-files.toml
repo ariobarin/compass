@@ -1,4 +1,4 @@
-# Human-owned Codex files that this repo is allowed to track.
+# Human-owned Codex and Agents files that this repo is allowed to track.
 
 [codex]
 # The live target is the active Codex home: $CODEX_HOME when set, otherwise
@@ -14,10 +14,12 @@ dirs = [
   "agents",
 ]
 
-# This allowlist models this setup's active personal skill store under
-# $CODEX_HOME/skills. Current Codex docs describe $HOME/.agents/skills for
-# user-authored skills and repo .agents/skills for project skills, so changing
-# this install target needs a live discovery verification pass first.
+[agents]
+# User skills install to the current user skill home, separate from the
+# Codex home used for AGENTS.md, keybindings, and custom agents.
+home = "$HOME\\.agents"
+skills_dir = "$HOME\\.agents\\skills"
+
 skills = [
   "action-items-to-prs",
   "benchmark-infra-reviewer",
@@ -43,7 +45,8 @@ reason = "Live config.toml includes generated runtime paths, marketplaces, proje
 
 [repo_only]
 # These paths are repository-root paths. The [codex] section above maps files
-# from the repo's codex/ directory into the live Codex home.
+# from the repo's codex/ directory into the live Codex home. The [agents]
+# section maps repo skills into the user Agents home.
 files = [
   "AGENTS.md",
   "README.md",
@@ -55,7 +58,7 @@ dirs = [
   "scripts",
   "workflows",
 ]
-reason = "These files guide repository maintenance but are not installed into a live Codex home."
+reason = "These files guide repository maintenance but are not installed into a live Codex or Agents home."
 
 [local_only]
 files = [

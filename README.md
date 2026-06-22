@@ -29,20 +29,17 @@ files or proposing changes.
 - `codex/keybindings.json`: portable keyboard bindings.
 - `codex/agents/`: reusable global custom agents installed into the live Codex
   home. Project-specific custom agents belong in the target repo.
-- `codex/skills/`: reusable global custom skills installed into this setup's
-  current personal skill store, currently `$CODEX_HOME/skills`, excluding system
-  and plugin cache skills. Current Codex docs describe `$HOME/.agents/skills`
-  for user-authored skills and repo `.agents/skills` for project skills, so do
-  not change this install target without live discovery verification.
+- `codex/skills/`: reviewed source for reusable user skills installed into
+  `$HOME/.agents/skills`, excluding system and plugin cache skills.
   Project-specific `.agents/skills` belong in the target repo. Broader sharing
   should usually happen through a plugin.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
 - `workflows/`: repo-side operating notes for recurring maintenance work. These
-  are not installed into the live Codex home.
+  are not installed into a live Codex or Agents home.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
-  live Codex home.
+  live Codex or Agents home.
 - `manifests/portable-files.toml`: the install allowlist, repo-only list, and
   local-only denylist.
 - `manifests/tool-surfaces.md`: repo-side review notes for tools that can touch
@@ -51,7 +48,7 @@ files or proposing changes.
 
 ## Common commands
 
-Preview the difference between this repo and the live Codex home:
+Preview the difference between this repo and the live install targets:
 
 ```powershell
 .\scripts\diff-live.ps1
@@ -63,14 +60,14 @@ Check the repo for obvious portability mistakes:
 .\scripts\doctor.ps1
 ```
 
-Check whether live Codex files match the portable allowlist and ask Codex to
-report active instruction sources:
+Check whether live Codex and user skill files match the portable allowlist and
+ask Codex to report active instruction sources:
 
 ```powershell
 .\scripts\verify-live.ps1
 ```
 
-Install reviewed portable files into the live Codex home:
+Install reviewed portable files into the live Codex and user skill homes:
 
 ```powershell
 .\scripts\install.ps1 -Apply
@@ -85,8 +82,9 @@ Refresh the repo from the current live allowlist:
 Without `-Apply`, `snapshot.ps1` and `install.ps1` run in review mode and explain
 what they would change.
 
-All scripts target `-CodexHome` when passed, otherwise `$env:CODEX_HOME`,
-otherwise the default `%USERPROFILE%\.codex` home.
+Scripts use `-CodexHome` for Codex-home files, otherwise `$env:CODEX_HOME`,
+otherwise `%USERPROFILE%\.codex`. They use `-AgentsHome` for user skills,
+otherwise `$HOME\.agents`.
 
 ## Rules
 

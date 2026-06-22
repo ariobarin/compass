@@ -1,12 +1,14 @@
 param(
-    [string]$CodexHome
+    [string]$CodexHome,
+    [string]$AgentsHome
 )
 
 . "$PSScriptRoot\common.ps1"
 
 $repoRoot = Get-RepoRoot
 $liveHome = Get-CodexHome -CodexHome $CodexHome
-$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome
+$agentsHome = Get-AgentsHome -AgentsHome $AgentsHome
+$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome
 $hadDiff = $false
 
 foreach ($item in $items) {
