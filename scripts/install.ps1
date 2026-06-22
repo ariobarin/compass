@@ -8,6 +8,7 @@ param(
 $repoRoot = Get-RepoRoot
 $liveHome = Get-CodexHome -CodexHome $CodexHome
 $items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome
+$retiredItems = Get-RetiredPortableFileMap -CodexHome $liveHome
 
 Write-Host "repo: $repoRoot"
 Write-Host "live: $liveHome"
@@ -19,6 +20,16 @@ if (-not $Apply) {
     foreach ($item in $items) {
         Write-Host "  $($item.RepoPath) -> $($item.LivePath)"
     }
+
+    $existingRetiredItems = @($retiredItems | Where-Object { Test-Path $_.LivePath })
+    if ($existingRetiredItems.Count -gt 0) {
+        Write-Host ""
+        Write-Host "planned retired removals:"
+        foreach ($item in $existingRetiredItems) {
+            Write-Host "  $($item.LivePath)"
+        }
+    }
+
     Write-Host ""
     Write-Host "run with -Apply to copy these files into the live Codex home"
     exit 0
@@ -30,20 +41,21 @@ New-Item -ItemType Directory -Force $backupRoot | Out-Null
 
 foreach ($item in $items) {
     if (Test-Path $item.LivePath) {
-        $relative = $item.LivePath.Substring($liveHome.Length).TrimStart("\")
-        $backupPath = Join-Path $backupRoot $relative
-        if ($item.Type -eq "dir") {
-            New-Item -ItemType Directory -Force (Split-Path -Parent $backupPath) | Out-Null
-            Copy-Item -LiteralPath $item.LivePath -Destination $backupPath -Recurse -Force
-        }
-        else {
-            New-DirectoryForFile -Path $backupPath
-            Copy-Item -LiteralPath $item.LivePath -Destination $backupPath -Force
-        }
+        Backup-LiveItem -LivePath $item.LivePath -BackupRoot $backupRoot -LiveRoot $liveHome -Type $item.Type
     }
 
     Copy-PortableItem -Source $item.RepoPath -Destination $item.LivePath -Type $item.Type -AllowedRoot $liveHome
     Write-Host "installed: $($item.LivePath)"
+}
+
+foreach ($item in $retiredItems) {
+    if (-not (Test-Path $item.LivePath)) {
+        continue
+    }
+
+    Backup-LiveItem -LivePath $item.LivePath -BackupRoot $backupRoot -LiveRoot $liveHome -Type $item.Type
+    Remove-Item -LiteralPath $item.LivePath -Recurse -Force
+    Write-Host "removed retired: $($item.LivePath)"
 }
 
 Write-Host ""

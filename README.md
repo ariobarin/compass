@@ -1,6 +1,6 @@
-# codex-portable
+# Compass
 
-Portable source for the human-owned Codex setup.
+Reviewed source for my human-owned Codex setup.
 
 This repo is intentionally an allowlist, not a backup of the whole Codex home. The
 live Codex directory contains auth, logs, sessions, caches, databases, generated
@@ -25,7 +25,7 @@ files or proposing changes.
   defaults there. Keep `AGENTS.override.md` local, and keep project
   `AGENTS.md` files in the target repo.
 - `AGENTS.md`: repo-local maintenance guidance for this portable config repo.
-  Use this for codex-portable process and review rules.
+  Use this for Compass process and review rules.
 - `codex/keybindings.json`: portable keyboard bindings.
 - `codex/agents/`: reusable global custom agents installed into the live Codex
   home. Project-specific custom agents belong in the target repo.

@@ -1,6 +1,6 @@
 # Security Policy
 
-This repo contains reviewed source for a portable Codex setup. It should never
+Compass contains reviewed source for a portable Codex setup. It should never
 contain auth tokens, session data, logs, browser state, generated plugin caches,
 SQLite state, or private machine-only runtime files.
 

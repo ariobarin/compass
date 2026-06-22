@@ -1,7 +1,7 @@
 # Addition Intake Workflow
 
 Use this workflow when deciding whether a new Codex rule, workflow, skill,
-agent, script, manifest entry, or config fragment belongs in `codex-portable`.
+agent, script, manifest entry, or config fragment belongs in Compass.
 This is maintainer guidance for promoting durable artifacts, not a runtime rule
 for every Codex turn.
 
@@ -56,7 +56,7 @@ only used to maintain this repo.
 Installed agentic guidance changes how future Codex sessions behave. Put that
 in `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`, and keep it focused
 on durable role, stance, judgment, and capability boundaries. Do not include
-codex-portable maintenance process, PR hygiene, install-map details, or one-repo
+Compass maintenance process, PR hygiene, install-map details, or one-repo
 review habits in installed agentic docs.
 
 Repo-maintainer guidance helps humans and agents edit this repository. Put that

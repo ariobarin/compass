@@ -1,14 +1,14 @@
 ---
-name: codex-portable
-description: Maintain codex-portable durable setup. Use when editing installed skills or agents, repo workflows, manifests, scripts, or install wiring.
+name: compass
+description: Maintain Compass durable setup. Use when editing installed skills or agents, repo workflows, manifests, scripts, or install wiring.
 ---
 
-# Codex Portable
+# Compass
 
-Use this skill when changing `codex-portable` itself. Its job is to route durable
-setup changes to the right source file while preserving the install boundary.
+Use this skill when changing Compass itself. Its job is to route durable setup
+changes to the right source file while preserving the install boundary.
 
-Repository: [ariobarin/codex-portable](https://github.com/ariobarin/codex-portable).
+Repository: [ariobarin/compass](https://github.com/ariobarin/compass).
 
 ## Stance
 
