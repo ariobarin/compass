@@ -9,6 +9,11 @@ Use this skill when a benchmark run is a live system to operate, not just a
 script to start. The run is not trustworthy until the stack, timeout, workers,
 artifacts, and comparison set have been verified.
 
+Invalid rows are not harmless progress. They are contamination until classified.
+When they accumulate, preserve evidence, stop only the labeled failing slice,
+repair what can be repaired, and keep healthy slices moving only when the
+comparison remains valid.
+
 For a new agent family or fresh integration, treat the work as onboarding first
 and run operation second. Read the upstream repo and nearest local launcher
 before inventing local glue.

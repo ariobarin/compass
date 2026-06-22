@@ -11,6 +11,7 @@ completion predicates.
 - Controller Goal Template
 - Worker Goal Template
 - Monitor Goal Template
+- Blocker Pressure
 - Subagent Slice Template
 - Child Goal Activation Snippet
 - Delegation Flow
@@ -60,7 +61,7 @@ Scope:
 Out of scope:
 Evidence required:
 If waiting:
-If blocked:
+If stuck or failing:
 Subagents:
 ```
 
@@ -83,7 +84,7 @@ Scope:
 Out of scope:
 Evidence required:
 If waiting:
-If blocked:
+If stuck or failing:
 Subagents:
 ```
 
@@ -102,12 +103,28 @@ Scope:
 Out of scope:
 Evidence required:
 If waiting:
-If blocked:
+If stuck or failing:
 Subagents:
 ```
 
 Good monitor scopes say when to intervene, what drift counts as off-task, and
 what cadence to use between checks.
+
+## Blocker Pressure
+
+Do not write goal contracts that make `BLOCKED` feel like an acceptable finish
+line. A blocker is a claim that must be compressed until it turns into one of
+three things: a concrete local next action, a reroute to a better owner, or a
+specific external decision that cannot be made from the workspace.
+
+Good contracts tell the worker what to do when stuck:
+
+- inspect the exact failure;
+- name what was tried and what it proved;
+- try the smallest reversible repair;
+- use a bounded validation;
+- ask the controller only when the remaining decision is genuinely outside the
+  worker's authority.
 
 ## Subagent Slice Template
 
@@ -216,3 +233,7 @@ Use waiting rules for external systems:
 Do not treat failed setup, stale review, or a partial run as completed waiting.
 Convert it into worker questions, owner reroute, a real monitor, or the concrete
 dependency that remains.
+
+Waiting must prove itself. If there is no named external event to wait for, the
+goal is not waiting. It is asking for the next repair, review, reroute, or
+inspection move.

@@ -82,3 +82,16 @@ fix made: added a role-forming orchestration-controller skill for control-plane 
 verification: `py -3 "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" codex\skills\orchestration-controller`, `.\scripts\doctor.ps1`, and `git diff --check` passed before PR
 should become durable guidance: yes, as a focused skill rather than a broad global rule
 ```
+
+```text
+date: 2026-06-22
+repo or workflow: WebMCP weekend benchmark controller
+task: oversee a benchmark worker through hosted and DGX A3/CUGA/WebOperator runs, recovery, reporting, and pause
+first failure: controller guidance was structurally correct but emotionally weak, so worker blocker and waiting claims still felt like acceptable resting states until the controller adopted a stronger refusal-to-collapse posture
+downstream effects: benchmark work repeatedly drifted toward tidy blocker packets, idle waiting, partial-run acceptance, and controller uncertainty before stronger steering converted those states into concrete repair, rerun, pause, or evidence-preservation actions
+evidence: stronger controller language produced better behavior: the controller challenged weak blockers, directed partitioning and recovery, stopped active runs cleanly when the user paused, and preserved artifacts instead of accepting "blocked" as the final state
+root cause category: workflow mismatch, weak verification
+fix made: strengthened installed controller, goal, subagent, PR-ledger, and benchmark-run guidance so `BLOCKED` and passive waiting are treated as pressure claims rather than endpoints
+verification: skill validation, `git diff --check`, and targeted source review before PR
+should become durable guidance: yes, in runtime skills that shape controller and worker stance
+```

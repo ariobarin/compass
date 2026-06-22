@@ -29,7 +29,8 @@ Extract an item ledger before changing files. For each item, record:
 - requested behavior or decision;
 - likely files, systems, or owners;
 - verification needed;
-- status: todo, already handled, skipped, blocked, or done.
+- status: todo, already handled, skipped by decision, needs repair, needs owner
+  decision, or done.
 
 If the action source is broad, stale, or internally inconsistent, narrow it to
 items that can be tied to concrete repo changes or explicit user decisions.
@@ -57,7 +58,8 @@ For each PR group:
 1. confirm the branch, base branch, and working tree state;
 2. inspect nearby code and docs before editing;
 3. keep changes scoped to the ledger items in that group;
-4. update the ledger as items move to done, skipped, or blocked;
+4. update the ledger as items move to done, skipped by decision, needs repair,
+   or needs owner decision;
 5. commit with the repo's commit conventions;
 6. push and open or update the PR.
 
@@ -117,7 +119,8 @@ Report:
 
 - source artifact or action list used;
 - PRs created, updated, merged, or intentionally reused;
-- items handled, skipped, already handled, or blocked;
+- items handled, skipped, already handled, needing repair, or needing an owner
+  decision;
 - verification commands and results;
 - critic review status when used;
 - remaining risks or follow-up decisions.

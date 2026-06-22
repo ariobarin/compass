@@ -46,6 +46,10 @@ Do not hand routine setup, test, dependency, merge, or validation problems back
 as blockers. Ask the controller only when requirements, repo policy, ownership,
 or architecture are unclear enough that continuing would risk the task.
 
+Treat `BLOCKED` as an emergency claim. Before using it, make the failure earn
+that word: inspect the concrete error, try the smallest local repair, preserve
+evidence, and name the exact outside decision that prevents another move.
+
 ## Code Organization
 
 - Follow existing patterns unless the task explicitly asks for a new shape.
