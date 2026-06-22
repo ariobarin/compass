@@ -1,5 +1,6 @@
 param(
-    [string]$CodexHome
+    [string]$CodexHome,
+    [string]$AgentsHome
 )
 
 . "$PSScriptRoot\common.ps1"
@@ -10,6 +11,12 @@ try {
 }
 catch {
     $liveHome = Join-Path $env:USERPROFILE ".codex"
+}
+try {
+    $agentsHomePath = Get-AgentsHome -AgentsHome $AgentsHome
+}
+catch {
+    $agentsHomePath = Join-Path $HOME ".agents"
 }
 $problems = New-Object System.Collections.Generic.List[string]
 $trackedFiles = @()
@@ -321,7 +328,7 @@ else {
 
     $skillsRoot = [System.IO.Path]::GetFullPath((Join-Path (Join-Path $repoRoot "codex") "skills")).TrimEnd("\")
     $mappedSkills = @(
-        Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome |
+        Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHomePath |
             Where-Object {
                 $_.Type -eq "dir" -and
                 [System.IO.Path]::GetFullPath($_.RepoPath).TrimEnd("\").StartsWith(
@@ -347,7 +354,8 @@ else {
 }
 
 Write-Host "repo: $repoRoot"
-Write-Host "live: $liveHome"
+Write-Host "codex: $liveHome"
+Write-Host "agents: $agentsHomePath"
 
 if ($problems.Count -gt 0) {
     Write-Host ""

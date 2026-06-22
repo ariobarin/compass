@@ -3,12 +3,14 @@
 Use this workflow when changing Codex setup that should survive a new machine,
 fresh profile, or copied repo checkout.
 
-This is repo-maintainer guidance. It is not installed into the live Codex home.
+This is repo-maintainer guidance. It is not installed into a live Codex home or
+user skill home.
 Installed agentic guidance lives under `codex/AGENTS.md`, `codex/agents/`, and
 `codex/skills/`.
 
-These scripts target `-CodexHome` when passed, otherwise `$env:CODEX_HOME`,
-otherwise the default `%USERPROFILE%\.codex` home.
+These scripts use `-CodexHome` for Codex-home files, otherwise
+`$env:CODEX_HOME`, otherwise the default `%USERPROFILE%\.codex` home. They use
+`-AgentsHome` for user skills, otherwise `$HOME\.agents`.
 
 ## Change flow
 
@@ -78,6 +80,33 @@ review:
 Do not treat live `automations/` state as the portable form of a reusable
 workflow. If an automation pattern should survive across machines, capture it
 as a skill, workflow doc, or reviewed config change instead.
+
+## Skill Discovery Targets
+
+Current Codex docs describe repo skills under `.agents/skills` while walking
+from the current working directory up to the repo root, user skills under
+`$HOME/.agents/skills`, admin skills under `/etc/codex/skills`, and plugins as
+the distribution unit for reusable skills outside one repo. See
+https://developers.openai.com/codex/skills.
+
+Compass keeps `codex/skills/` as the reviewed repo source tree, but installs
+those user skills into `$HOME/.agents/skills`. That is the direction of the
+current Codex skill model. Target projects should use their own
+`.agents/skills` folders for project-specific skills.
+
+The old `$CODEX_HOME/skills` copies of Compass-owned skills are retired install
+artifacts. `install.ps1 -Apply` backs them up and removes them after installing
+the reviewed copies into `$HOME/.agents/skills`.
+
+Before changing `scripts/common.ps1`, `manifests/portable-files.toml`, or these
+skill install paths again:
+
+1. Run current Codex in the target environment and confirm which skill roots
+   appear in the active instruction list.
+2. Check `$CODEX_HOME/skills` for stale owned copies that would create duplicate
+   active skills.
+3. Update README, manifest comments, and this workflow in the same PR as any
+   install map change.
 
 ## New machines
 

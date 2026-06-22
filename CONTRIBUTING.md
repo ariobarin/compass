@@ -1,7 +1,8 @@
 # Contributing
 
 Compass is reviewed source for a portable Codex setup. It is not a raw backup
-of a live Codex home, and contributions should preserve that boundary.
+of a live Codex home or user skill home, and contributions should preserve that
+boundary.
 
 Good changes make the setup easier to review, reinstall, explain, or verify.
 They do not add private machine state, generated runtime state, or broad agent
@@ -21,7 +22,8 @@ behavior just because it happened to be useful once.
 ## Scope
 
 Installed agentic behavior belongs under `codex/AGENTS.md`, `codex/agents/`,
-or `codex/skills/`. Repo-maintainer guidance belongs in `AGENTS.md`,
+or `codex/skills/`. User skills install from `codex/skills/` into
+`$HOME/.agents/skills`. Repo-maintainer guidance belongs in `AGENTS.md`,
 `workflows/`, `local-docs/`, `manifests/`, or `scripts/`.
 
 Use the narrowest surface that fits the change. A skill should teach a durable
@@ -34,4 +36,5 @@ Prefer small PRs with clear motivation. In the title and body, name the
 boundary, behavior, or risk the change improves.
 
 When in doubt, explain why a file belongs in this portable repo instead of in a
-target project, local Codex home, plugin cache, or ignored machine-local file.
+target project, local Codex home, user skill home, plugin cache, or ignored
+machine-local file.

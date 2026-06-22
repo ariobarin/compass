@@ -50,8 +50,8 @@ the repeated problem.
 
 ## Runtime Vs Maintainer Guidance
 
-Decide whether the artifact is meant to be installed into the live Codex home or
-only used to maintain this repo.
+Decide whether the artifact is meant to be installed into a live Codex home,
+user skill home, or only used to maintain this repo.
 
 Installed agentic guidance changes how future Codex sessions behave. Put that
 in `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`, and keep it focused
@@ -74,6 +74,8 @@ Skills and agents need extra review because they shape future agent behavior.
   assets.
 - Exclude system skills and plugin cache skills unless the repo intentionally
   owns a local copy.
+- Install user skills into `$HOME/.agents/skills`; keep `codex/skills/` as the
+  reviewed source tree.
 - Add each portable skill name to `manifests/portable-files.toml`.
 - Add each portable skill to `Get-PortableFileMap` in `scripts/common.ps1`.
 - Give agents a sandbox that matches their evidence path. Pure explorers that

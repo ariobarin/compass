@@ -4,7 +4,8 @@ Use this workflow when launching multiple Codex threads, worktrees, or agents
 against one repository objective. The goal is parallel discovery without public
 PR sprawl.
 
-This is repo-maintainer guidance. It is not installed into the live Codex home.
+This is repo-maintainer guidance. It is not installed into a live Codex home or
+user skill home.
 Use it from this checkout when coordinating local branches, scratch notes, and
 reviewable upstream PRs.
 

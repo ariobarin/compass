@@ -20,6 +20,37 @@ function Get-CodexHome {
     return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($default)
 }
 
+function Get-AgentsHome {
+    param([string]$AgentsHome)
+
+    if ($AgentsHome) {
+        return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($AgentsHome)
+    }
+
+    $default = Join-Path $HOME ".agents"
+    return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($default)
+}
+
+function Get-PortableSkillNames {
+    return @(
+        "action-items-to-prs",
+        "benchmark-infra-reviewer",
+        "benchmark-run-operator",
+        "compass",
+        "git-branch-resolver",
+        "grill-me",
+        "orchestration-controller",
+        "subagent-driven-development",
+        "to-prd",
+        "ui-ux-pro-max",
+        "using-codex-goals",
+        "webmcp-eval-triage",
+        "webmcp-tool-authoring",
+        "webmcp-verify-tool",
+        "write-a-skill"
+    )
+}
+
 function New-DirectoryForFile {
     param([string]$Path)
 
@@ -51,8 +82,13 @@ function Assert-PathUnderRoot {
 function Get-PortableFileMap {
     param(
         [string]$RepoRoot,
-        [string]$CodexHome
+        [string]$CodexHome,
+        [string]$AgentsHome
     )
+
+    if (-not $AgentsHome) {
+        $AgentsHome = Get-AgentsHome
+    }
 
     $items = New-Object System.Collections.Generic.List[object]
 
@@ -61,6 +97,8 @@ function Get-PortableFileMap {
             Type = "file"
             RepoPath = Join-Path (Join-Path $RepoRoot "codex") $relative
             LivePath = Join-Path $CodexHome $relative
+            LiveRoot = $CodexHome
+            BackupScope = "codex"
         })
     }
 
@@ -68,31 +106,20 @@ function Get-PortableFileMap {
         Type = "dir"
         RepoPath = Join-Path (Join-Path $RepoRoot "codex") "agents"
         LivePath = Join-Path $CodexHome "agents"
+        LiveRoot = $CodexHome
+        BackupScope = "codex"
     })
 
-    # This repo mirrors the current personal skill store under the active
-    # Codex home. Project `.agents/skills` stay with the target repo.
-    foreach ($skill in @(
-        "action-items-to-prs",
-        "benchmark-infra-reviewer",
-        "benchmark-run-operator",
-        "compass",
-        "git-branch-resolver",
-        "grill-me",
-        "orchestration-controller",
-        "subagent-driven-development",
-        "to-prd",
-        "ui-ux-pro-max",
-        "using-codex-goals",
-        "webmcp-eval-triage",
-        "webmcp-tool-authoring",
-        "webmcp-verify-tool",
-        "write-a-skill"
-    )) {
+    # User skills follow the current user skill home. Project `.agents/skills`
+    # stay with the target repo.
+    $userSkillsHome = Join-Path $AgentsHome "skills"
+    foreach ($skill in Get-PortableSkillNames) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             RepoPath = Join-Path (Join-Path (Join-Path $RepoRoot "codex") "skills") $skill
-            LivePath = Join-Path (Join-Path $CodexHome "skills") $skill
+            LivePath = Join-Path $userSkillsHome $skill
+            LiveRoot = $AgentsHome
+            BackupScope = "agents"
         })
     }
 
@@ -104,10 +131,14 @@ function Get-RetiredPortableFileMap {
 
     $items = New-Object System.Collections.Generic.List[object]
 
-    $items.Add([pscustomobject]@{
-        Type = "dir"
-        LivePath = Join-Path (Join-Path $CodexHome "skills") "codex-portable"
-    })
+    foreach ($skill in @(@(Get-PortableSkillNames) + @("codex-portable"))) {
+        $items.Add([pscustomobject]@{
+            Type = "dir"
+            LivePath = Join-Path (Join-Path $CodexHome "skills") $skill
+            LiveRoot = $CodexHome
+            BackupScope = "codex"
+        })
+    }
 
     return $items
 }
@@ -117,6 +148,7 @@ function Backup-LiveItem {
         [string]$LivePath,
         [string]$BackupRoot,
         [string]$LiveRoot,
+        [string]$BackupScope,
         [string]$Type
     )
 
@@ -127,7 +159,11 @@ function Backup-LiveItem {
     Assert-PathUnderRoot -Path $LivePath -Root $LiveRoot
 
     $relative = $LivePath.Substring($LiveRoot.Length).TrimStart("\")
-    $backupPath = Join-Path $BackupRoot $relative
+    $backupBase = $BackupRoot
+    if ($BackupScope) {
+        $backupBase = Join-Path $BackupRoot $BackupScope
+    }
+    $backupPath = Join-Path $backupBase $relative
 
     if ($Type -eq "dir") {
         New-Item -ItemType Directory -Force (Split-Path -Parent $backupPath) | Out-Null

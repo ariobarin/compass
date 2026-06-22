@@ -2,10 +2,10 @@
 
 Reviewed source for my human-owned Codex setup.
 
-This repo is intentionally an allowlist, not a backup of the whole Codex home. The
-live Codex directory contains auth, logs, sessions, caches, databases, generated
-plugin state, browser state, and machine-specific runtime paths. Those are not
-portable and should not be committed.
+This repo is intentionally an allowlist, not a backup of the whole Codex home or
+user skill home. The live Codex directory contains auth, logs, sessions, caches,
+databases, generated plugin state, browser state, and machine-specific runtime
+paths. Those are not portable and should not be committed.
 
 Hosted Codex web settings, cloud task history, repository connections, and
 workspace connector installs such as Slack or Linear are also out of scope for
@@ -29,17 +29,17 @@ files or proposing changes.
 - `codex/keybindings.json`: portable keyboard bindings.
 - `codex/agents/`: reusable global custom agents installed into the live Codex
   home. Project-specific custom agents belong in the target repo.
-- `codex/skills/`: reusable global custom skills installed into the live Codex
-  home for the current personal skill store, excluding system and plugin cache
-  skills. Project-specific `.agents/skills` belong in the target repo. Broader
-  sharing should usually happen through a plugin.
+- `codex/skills/`: reviewed source for reusable user skills installed into
+  `$HOME/.agents/skills`, excluding system and plugin cache skills.
+  Project-specific `.agents/skills` belong in the target repo. Broader sharing
+  should usually happen through a plugin.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
 - `workflows/`: repo-side operating notes for recurring maintenance work. These
-  are not installed into the live Codex home.
+  are not installed into a live Codex home or user skill home.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
-  live Codex home.
+  live Codex home or user skill home.
 - `manifests/portable-files.toml`: the install allowlist, repo-only list, and
   local-only denylist.
 - `manifests/tool-surfaces.md`: repo-side review notes for tools that can touch
@@ -48,7 +48,7 @@ files or proposing changes.
 
 ## Common commands
 
-Preview the difference between this repo and the live Codex home:
+Preview the difference between this repo and the live install targets:
 
 ```powershell
 .\scripts\diff-live.ps1
@@ -60,14 +60,14 @@ Check the repo for obvious portability mistakes:
 .\scripts\doctor.ps1
 ```
 
-Check whether live Codex files match the portable allowlist and ask Codex to
-report active instruction sources:
+Check whether live Codex and user skill files match the portable allowlist and
+ask Codex to report active instruction sources:
 
 ```powershell
 .\scripts\verify-live.ps1
 ```
 
-Install reviewed portable files into the live Codex home:
+Install reviewed portable files into the live Codex home and user skill home:
 
 ```powershell
 .\scripts\install.ps1 -Apply
@@ -82,8 +82,9 @@ Refresh the repo from the current live allowlist:
 Without `-Apply`, `snapshot.ps1` and `install.ps1` run in review mode and explain
 what they would change.
 
-All scripts target `-CodexHome` when passed, otherwise `$env:CODEX_HOME`,
-otherwise the default `%USERPROFILE%\.codex` home.
+Scripts use `-CodexHome` for Codex-home files, otherwise `$env:CODEX_HOME`,
+otherwise `%USERPROFILE%\.codex`. They use `-AgentsHome` for user skills,
+otherwise `$HOME\.agents`.
 
 ## Rules
 

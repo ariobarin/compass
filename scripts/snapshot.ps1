@@ -1,16 +1,19 @@
 param(
     [switch]$Apply,
-    [string]$CodexHome
+    [string]$CodexHome,
+    [string]$AgentsHome
 )
 
 . "$PSScriptRoot\common.ps1"
 
 $repoRoot = Get-RepoRoot
 $liveHome = Get-CodexHome -CodexHome $CodexHome
-$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome
+$agentsHome = Get-AgentsHome -AgentsHome $AgentsHome
+$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome
 
 Write-Host "repo: $repoRoot"
-Write-Host "live: $liveHome"
+Write-Host "codex: $liveHome"
+Write-Host "agents: $agentsHome"
 Write-Host ""
 
 if (-not $Apply) {
@@ -20,7 +23,7 @@ if (-not $Apply) {
         Write-Host "  $($item.LivePath) -> $($item.RepoPath)"
     }
     Write-Host ""
-    Write-Host "run with -Apply to refresh this repo from the live Codex home"
+    Write-Host "run with -Apply to refresh this repo from the live Codex home and user skill home"
     exit 0
 }
 
