@@ -49,6 +49,10 @@ When top-up or missing-task recovery is needed:
 5. Mark rows by provenance: original, rerun, rescore, or manual classification.
 6. Re-run final aggregation after recovery.
 
+Missing or recoverable invalid rows are not presentation caveats until they have
+been prosecuted. Recover them with controlled reruns, rescoring, or
+classification until each remaining gap has a concrete nonrecoverable reason.
+
 Avoid overlapping bulk wrappers. They make state and attribution unclear.
 
 ## Final Aggregation

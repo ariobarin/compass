@@ -24,8 +24,14 @@ rules change:
 3. Keep the goal active while work is incomplete, under review, waiting on CI,
    or waiting on external state.
 4. Mark complete only after evidence proves the completion predicate.
-5. Mark blocked only when the same blocker repeats across the required goal
-   turns and no meaningful progress remains possible.
+5. Treat blocked as a severe claim, not a resting state. Mark blocked only when
+   the same external constraint survives repeated pressure and no meaningful
+   local progress remains possible.
+
+A goal makes surrender more expensive, not easier. A tidy blocker report, a
+partial run, a stalled review, or a handoff that explains failure does not end a
+goal. Convert it into repair, reroute, review, recovery, or a named external
+decision until the completion predicate is truly satisfied.
 
 ## Goal State Boundary
 
@@ -51,6 +57,10 @@ When drafting or clarifying a goal, shape it as a concrete contract with a
 finish line, scope boundary, verification evidence, waiting rule, blocker rule,
 and any subagent slices. Prefer named files, repos, PRs, commands, checks,
 artifacts, and review signals over broad intent.
+
+Write blocker rules as pressure rules. They should force the agent to say what
+failed, what was tried, what evidence changed, what local move remains, and what
+external decision, if any, truly cannot be made from the workspace.
 
 For ready-to-copy controller, worker, monitor, and subagent templates, read
 [goal-contracts.md](references/goal-contracts.md).

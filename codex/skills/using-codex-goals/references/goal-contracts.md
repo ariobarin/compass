@@ -11,6 +11,7 @@ completion predicates.
 - Controller Goal Template
 - Worker Goal Template
 - Monitor Goal Template
+- Blocker Pressure
 - Subagent Slice Template
 - Child Goal Activation Snippet
 - Delegation Flow
@@ -60,7 +61,7 @@ Scope:
 Out of scope:
 Evidence required:
 If waiting:
-If blocked:
+If stuck or failing:
 Subagents:
 ```
 
@@ -71,7 +72,7 @@ Good controller scopes often include:
 - route blockers into concrete next actions;
 - keep live docs or handoffs current only when they reflect real state.
 
-## Worker Goal Template
+## Worker Ownership Contract
 
 Use this when a child thread or subagent owns one executable slice.
 
@@ -83,12 +84,14 @@ Scope:
 Out of scope:
 Evidence required:
 If waiting:
-If blocked:
+If stuck or failing:
 Subagents:
 ```
 
-Good worker scopes keep one owner, one slice, one done condition, and one
-evidence set.
+Worker scopes must make ownership felt. Keep one owner, one slice, one done
+condition, and one evidence set. The worker owns local inspection, repair,
+validation, and evidence preservation until the slice is done, rerouted, or a
+specific outside decision has been proven.
 
 ## Monitor Goal Template
 
@@ -102,12 +105,31 @@ Scope:
 Out of scope:
 Evidence required:
 If waiting:
-If blocked:
+If stuck or failing:
 Subagents:
 ```
 
 Good monitor scopes say when to intervene, what drift counts as off-task, and
 what cadence to use between checks.
+
+## Blocker Pressure
+
+Do not write goal contracts that make `BLOCKED` feel like an acceptable finish
+line. A blocker is a claim that must be compressed until it turns into one of
+three things: a concrete local next action, a reroute to a better owner, or a
+specific external decision that cannot be made from the workspace.
+
+Strong contracts tell the worker what to do when stuck:
+
+- inspect the exact failure;
+- name what was tried and what it proved;
+- execute the smallest reversible repair still inside scope;
+- use a bounded validation;
+- ask the controller only when the remaining decision is genuinely outside the
+  worker's authority.
+
+Stuck is not a place to rest. It is pressure to convert uncertainty into the
+next local action, a better owner, or a proven external dependency.
 
 ## Subagent Slice Template
 
@@ -216,3 +238,7 @@ Use waiting rules for external systems:
 Do not treat failed setup, stale review, or a partial run as completed waiting.
 Convert it into worker questions, owner reroute, a real monitor, or the concrete
 dependency that remains.
+
+Waiting must prove itself. If there is no named external event to wait for, the
+goal is not waiting. It is asking for the next repair, review, reroute, or
+inspection move.

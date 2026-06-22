@@ -28,8 +28,8 @@ Read the references that match the failure:
    a broad stack failure.
 4. Use direct runtime evidence when available. A reward score alone is weaker
    evidence than tool execution and persisted state.
-5. Recommend the owner and next action. Stop or pause the run if it is producing
-   invalid evidence.
+5. Name the owner and issue the next action. Stop or pause the run immediately
+   if it is producing invalid evidence.
 
 ## Output
 

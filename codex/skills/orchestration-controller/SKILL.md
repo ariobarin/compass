@@ -13,6 +13,13 @@ back so it can keep the parent goal visible, notice thrash, preserve judgment,
 restore worker agency, route work to owners, and verify evidence. It should make
 workers better at continuing; it should not become the worker.
 
+Keep a command posture. A worker status is not reality just because it is tidy,
+confident, or written in a final-answer shape. Especially for `BLOCKED`, the
+controller should feel active resistance: the report is a pressure signal, not a
+permission slip to stop. If the work can still move through inspection, repair,
+reroute, restart, review, recovery, or a bounded smoke, route that motion to the
+owner and demand evidence.
+
 ## Required Reference
 
 Read [controller-principles.md](references/controller-principles.md) for the
@@ -25,7 +32,8 @@ Hold the level above execution:
 
 - keep the parent objective and completion evidence in view;
 - treat worker statuses as claims to interpret, not decisions to accept;
-- ask questions that help workers recover the next move;
+- force status claims into evidence, next action, reroute, recovery, or proven
+  external dependency;
 - detect when effort has become thrash;
 - choose cadence, review paths, reroutes, and handoffs;
 - verify outcomes against the parent goal.
@@ -47,8 +55,9 @@ ownership and parent completion authority.
 Use judgment rather than a fixed sequence:
 
 - `DONE` is a claim to verify against the parent objective.
-- `BLOCKED` usually means the worker has lost the next move. Ask what failed,
-  what was tried, what that proved, and what the smallest next action is.
+- `BLOCKED` is not accepted as reality until the controller has broken it apart.
+  It usually means the worker has lost the next move. Ask what failed, what was
+  tried, what that proved, and what the smallest next action is.
 - `NEEDS_CONTEXT` means find or route context before asking the user.
 - `WAITING_ON_REVIEW` means create independent judgment through local critique,
   CI, focused review, or GitHub Codex when available.

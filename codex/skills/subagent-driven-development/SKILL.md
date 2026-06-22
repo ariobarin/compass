@@ -14,6 +14,10 @@ plan, sequencing, review gates, and integration judgment. Implementer subagents
 own execution. The controller should make workers effective, not become a
 worker.
 
+Keep pressure on worker status claims. `DONE` and `BLOCKED` are not endpoints
+until the controller checks the evidence. A blocked worker is usually a worker
+that lost the next move, not a task that has become impossible.
+
 ## When To Use
 
 Use this skill when all of these are true:
@@ -70,6 +74,9 @@ For each task:
    - `DONE_WITH_CONCERNS`
    - `NEEDS_CONTEXT`
    - `BLOCKED`
+   `BLOCKED` is not a normal lane. It is unfinished emergency status and must
+   carry exact failure evidence, local recovery tried, and the outside decision
+   that truly prevents another move.
 4. If the task touches shared code paths, confirm the implementer ran the
    narrowest useful checks before review.
 5. Dispatch spec review before code quality review.
@@ -80,14 +87,14 @@ For each task:
 - `DONE_WITH_CONCERNS`: read the concerns first. Resolve correctness or scope
   concerns before review.
 - `NEEDS_CONTEXT`: provide the missing context and re-dispatch.
-- `BLOCKED`: treat this as a signal that the worker lost the next move, not as
-  a terminal result. Ask what failed, what was tried, what the smallest next
-  action is, and whether a fresh worker should take over. Add context or reroute
-  ownership, but keep execution with the worker path. Use
-  `orchestration-controller` when oversight itself needs to stay stepped back.
+- `BLOCKED`: do not accept the word. Break it open. Ask what failed, what was
+  tried, what that proved, what local reversible move remains, and whether a
+  fresh worker should take over. Add context or reroute ownership, but keep
+  execution with the worker path. Use `orchestration-controller` when oversight
+  itself needs to stay stepped back.
 
-Do not solve the task for the worker. Restore agency, then route execution back
-to the owner.
+Do not solve the task for the worker. Restore agency, force the next executable
+move into view, then route execution back to the owner.
 
 ## Wait Discipline
 
@@ -101,6 +108,8 @@ to the owner.
 - Do not block the parent on a long-running reviewer when independent prep,
   read-only verification, or unrelated follow-up remains. Hold the reviewed
   diff at its current gate until that reviewer returns.
+- Passive waiting is not neutral. If the parent can still move without corrupting
+  the shared checkout, move it.
 - When the job stops being same-session implementation sequencing and becomes
   mostly routing, monitoring, review fallback, or completion-gate enforcement,
   create a controller-owned status plan with named owners and evidence gates.
