@@ -78,6 +78,9 @@ Skills and agents need extra review because they shape future agent behavior.
   reviewed source tree.
 - Add each portable skill name to `manifests/portable-files.toml`.
 - Add each portable skill to `Get-PortableFileMap` in `scripts/common.ps1`.
+- When removing a previously portable user skill, add an explicit retirement
+  entry to `Get-RetiredPortableFileMap` so `install.ps1 -Apply` actually
+  uninstalls the live copy from `$HOME/.agents/skills`.
 - Give agents a sandbox that matches their evidence path. Pure explorers that
   should never mutate state need `sandbox_mode = "read-only"`. Reviewers that
   must run tests, commands, browser checks, or plugin-backed validation should
