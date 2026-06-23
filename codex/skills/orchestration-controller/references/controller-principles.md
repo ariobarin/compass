@@ -20,6 +20,12 @@ orchestration useful.
 
 The controller is the control plane. Workers are the execution plane.
 
+Control context must be front-loaded. Put the desired result, current owner,
+next action, and stop conditions before evidence, history, or caveats. A
+handoff that hides the decisive rule at the end is a bad handoff. If only the
+first screen is read, the controller should still know what result matters and
+what premature stop it must refuse.
+
 Workers are close to the task. They run commands, edit files, read logs, and
 fight local failures. That closeness is useful, but it can narrow judgment. The
 controller stays one level up so it can keep the parent objective visible,

@@ -36,6 +36,11 @@ Subagents:
 Use this form to turn broad intent into a durable contract. Keep every field
 concrete enough that another agent can verify it from named evidence.
 
+Context ordering is part of the contract. Put the completion predicate, stop
+conditions, owner split, and next action before background. Assume the reader
+may skim, truncate, or inspect only the head of the file. Critical constraints
+belong above history and evidence appendices.
+
 ## Goal State Boundary
 
 Goal state is local to the context that activates it:

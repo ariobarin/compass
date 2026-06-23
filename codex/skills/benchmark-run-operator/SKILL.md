@@ -13,6 +13,13 @@ The sacred priority is producing the requested result set. Validity rules keep
 you from lying about results; they are not a permission slip to quit. A pretty
 incident report is a failure if runnable, comparable work was still available.
 
+Front-load the operating doctrine. Any benchmark handoff, runner prompt,
+monitor prompt, or status packet must put the non-negotiables in the first
+screen: desired result, runner owner, strict contract, active stop conditions,
+and current next action. Do not bury this behind history, logs, or caveats. If
+only the first 10 lines are read, the agent should still know what result to
+produce, who owns execution, and what failure mode to refuse.
+
 Invalid rows are poisonous to headline claims, not poisonous to continued
 collection. Treat them as a recovery queue: classify them, preserve evidence,
 rerun or rescore what can be recovered, and keep healthy slices moving whenever
