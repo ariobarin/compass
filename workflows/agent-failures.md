@@ -95,3 +95,16 @@ fix made: strengthened installed controller, goal, subagent, PR-ledger, and benc
 verification: skill validation, `git diff --check`, and targeted source review before PR
 should become durable guidance: yes, in runtime skills that shape controller and worker stance
 ```
+
+```text
+date: 2026-06-23
+repo or workflow: WebOperator qwen3.6 Flash Verified Hard benchmark operation
+task: continue a strict two-arm WebOperator qwen3.6 Flash A/B run and recover partial or invalid rows into usable results
+first failure: benchmark guidance made invalid rows and documented blockers feel like acceptable stop points, and key priorities were not front-loaded strongly enough, so a timeout row and provider rejection were treated as a run-ending blocker instead of as result artifacts, recovery candidates, or a reason to keep unaffected slices moving
+downstream effects: the orchestrator absorbed the runner role instead of creating a separate runner thread, the active runner was stopped after task 29 timed out, task 31 was killed mid-run, the heartbeat was paused, critical context was too easy to miss behind evidence and caveats, and no naive-arm rows or paired results were produced before the user corrected the priority
+evidence: q36r3 monitor showed only 5 valid no-arm rows, 2 invalid no-arm rows, 251 no-arm missing rows, 258 naive missing rows, and no paired-valid results while safe work was still available
+root cause category: workflow mismatch, weak verification
+fix made: strengthened benchmark-run, artifact-validation, stack-operations, eval-triage, goal, and controller guidance so result production is the sacred priority, invalid rows are a recovery queue, alleged blockers are suspect, healthy comparable slices keep moving, monitor errors are alarms rather than verdicts, long benchmark execution gets a named runner owner while the orchestrator stays in the control plane, and critical context is front-loaded before background
+verification: skill validation, doctor check, and diff review before PR
+should become durable guidance: yes, in installed runtime skills and the maintenance failure journal
+```

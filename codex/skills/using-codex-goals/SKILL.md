@@ -33,6 +33,12 @@ partial run, a stalled review, or a handoff that explains failure does not end a
 goal. Convert it into repair, reroute, review, recovery, or a named external
 decision until the completion predicate is truly satisfied.
 
+When the user asked for results, a blocker report is not completion. It is an
+alleged blocker under pressure. Do not mark complete because the report is neat,
+because the failure is well explained, or because one row or worker became ugly.
+Keep the goal open and drive the next result-producing move unless the user
+explicitly accepts an incomplete endpoint.
+
 ## Goal State Boundary
 
 Goal state is local to the context that activates it. Delegated `/goal` text

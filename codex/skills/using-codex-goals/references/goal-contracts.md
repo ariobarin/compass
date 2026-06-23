@@ -36,6 +36,11 @@ Subagents:
 Use this form to turn broad intent into a durable contract. Keep every field
 concrete enough that another agent can verify it from named evidence.
 
+Context ordering is part of the contract. Put the completion predicate, stop
+conditions, owner split, and next action before background. Assume the reader
+may skim, truncate, or inspect only the head of the file. Critical constraints
+belong above history and evidence appendices.
+
 ## Goal State Boundary
 
 Goal state is local to the context that activates it:
@@ -92,6 +97,30 @@ Worker scopes must make ownership felt. Keep one owner, one slice, one done
 condition, and one evidence set. The worker owns local inspection, repair,
 validation, and evidence preservation until the slice is done, rerouted, or a
 specific outside decision has been proven.
+
+For long-running benchmark or process work, prefer a runner thread over letting
+the controller become the runner. The runner owns the shell process, logs,
+artifacts, immediate local recovery, and status packets. The controller owns the
+parent objective, comparison contract, cadence, reroutes, and final evidence
+audit.
+
+Example runner-thread slice:
+
+```text
+/goal Run <benchmark label or process> to terminal artifacts under <contract>.
+
+Done means:
+Scope: own the live shell process, local logs, artifact roots, immediate retry or
+  recovery within the stated contract, and status packets.
+Out of scope: changing the parent benchmark contract, widening arms or variants,
+  declaring parent completion, or accepting a blocker without controller review.
+Evidence required: process table, artifact counts, terminal summaries, exact
+  error clusters, paths to logs, and next recovery action when rows are missing
+  or invalid.
+If stuck or failing: keep healthy comparable slices moving when safe, preserve
+  evidence, identify the smallest poisoned slice, and ask the controller only
+  for a benchmark-validity decision that cannot be made locally.
+```
 
 ## Monitor Goal Template
 
@@ -193,6 +222,11 @@ Use this flow when the parent goal has independent slices:
 The controller keeps final parent completion authority. A child can say its slice
 is done, and the controller verifies that every slice and cross-slice requirement
 satisfies the parent goal.
+
+For long-running execution, delegation is not optional ceremony. It preserves
+judgment. Create the runner thread before launch when the run will take longer
+than a normal turn, needs periodic wakeups, or may require local recovery while
+the controller sleeps.
 
 ## Fan-Out Rules
 

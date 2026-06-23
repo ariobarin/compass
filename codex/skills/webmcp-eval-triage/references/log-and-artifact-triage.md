@@ -59,8 +59,16 @@ Check:
 - Error-rate trend.
 - Stack health and content checks.
 
-If invalid rows are accumulating, pause the labeled run before it pollutes more
-results.
+If invalid rows are accumulating, pause the smallest poisoned labeled slice
+before it corrupts provenance or comparability, then immediately debug why the
+rows are invalid. Do not stop unrelated healthy work just to make the situation
+feel clean. Keep collecting terminal artifacts wherever the task set, stack
+state, scorer configuration, and provenance remain comparable. Assume invalid
+rows are fixable until protocol evidence proves otherwise.
+
+Monitor errors are alarms, not verdicts. They demand classification and a next
+productive action. They do not, by themselves, justify giving up on the requested
+result set.
 
 ## Missing-Task Recovery
 
@@ -72,6 +80,10 @@ When recovering missing rows:
 - Count a task only after the terminal summary artifact exists.
 - Rebuild final aggregates after recovery.
 - Record which rows are original, rerun, rescore, or manually classified.
+
+Recovery should overshoot toward motion. If several independent single-site
+rows are missing and safe stacks exist, run disjoint slices in tandem with clear
+labels and provenance instead of serializing everything behind one bad row.
 
 ## Output Pattern
 

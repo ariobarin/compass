@@ -53,6 +53,9 @@ Skills should shape judgment before they prescribe steps. Start by making the
 agent understand the role it is taking on, why that role exists, what failure
 mode it prevents, and what boundaries preserve good judgment.
 
+- Front-load action-critical guidance. If only the first screen or first 10
+  lines are read, the agent should still see the role, non-negotiables, next
+  action, and failure mode to avoid.
 - Lead with the mental model, not a checklist.
 - Use procedures only for fragile or exact operations.
 - Prefer principles, boundaries, and short examples over exhaustive branches.
