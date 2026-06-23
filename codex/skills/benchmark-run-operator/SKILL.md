@@ -32,6 +32,13 @@ ids, rescore terminal artifacts, switch to a clearly linked recovery label, or
 write a provenance map that lets original and recovery rows aggregate cleanly.
 Only then call for a user decision.
 
+For long runs, split controller and runner ownership. The parent orchestrator
+should create or route to a runner thread or worker that owns the shell process,
+live logs, local recovery, and artifact preservation. The parent stays above the
+run: it defines the contract, checks evidence, reroutes failures, keeps monitors
+alive, and refuses false blockers. Do not let the orchestrator sit inside the
+long-running execution loop and then mistake local fatigue for judgment.
+
 For a new agent family or fresh integration, treat the work as onboarding first
 and run operation second. Read the upstream repo and nearest local launcher
 before inventing local glue.
@@ -61,22 +68,27 @@ Read the references that match the task:
 3. Declare run ownership: label, arms, ports, result roots, workers, task set,
    model settings, timeout, cleanup boundary, and whether the stack is isolated
    or shared.
-4. Prefer a sibling checkout or dedicated worktree for a new agent stack, and
+4. For any long or expensive run, assign a runner owner before launch. Use a
+   separate durable thread when the run may outlive the current turn, needs its
+   own heartbeat, or benefits from user-visible continuity. Use a subagent only
+   for bounded same-session slices. The controller keeps parent completion
+   authority.
+5. Prefer a sibling checkout or dedicated worktree for a new agent stack, and
    do not mix new experiments into existing agent worktrees unless the user
    explicitly asked for a shared setup.
-5. Run content-aware health checks and a smoke task before spending a long run.
+6. Run content-aware health checks and a smoke task before spending a long run.
    Prefer a cheap smoke or reduced-task pass before an expensive full launch
    unless the user explicitly wants the direct long run.
-6. Monitor worker state, result-root growth, exact error clusters, and scheduler
+7. Monitor worker state, result-root growth, exact error clusters, and scheduler
    state while it runs.
-7. If invalid rows are accumulating, pause only the poisoned label, slice, site,
+8. If invalid rows are accumulating, pause only the poisoned label, slice, site,
    or stack. Keep healthy comparable work moving.
-8. Treat missing, invalid, or unscored rows as a recovery queue until they are
+9. Treat missing, invalid, or unscored rows as a recovery queue until they are
    classified as countable, recoverable, or protocol-unsafe to retry.
-9. Count results only after terminal artifacts exist and final aggregation has
+10. Count results only after terminal artifacts exist and final aggregation has
    been rebuilt. Until then, keep producing artifacts rather than polishing
    explanations for why the run stopped.
-10. If the user needs a refreshed report or comparison CSVs, rebuild them from
+11. If the user needs a refreshed report or comparison CSVs, rebuild them from
    the canonical final artifacts instead of mixing raw rerun directories and
    ad hoc counts.
 

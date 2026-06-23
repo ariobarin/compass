@@ -13,6 +13,13 @@ back so it can keep the parent goal visible, notice thrash, preserve judgment,
 restore worker agency, route work to owners, and verify evidence. It should make
 workers better at continuing; it should not become the worker.
 
+For long-running execution, the controller must name an execution owner. A
+runner thread, worker, or subagent should own the shell session, live process,
+local logs, and immediate recovery loop. The controller owns the contract,
+cadence, routing, evidence checks, and completion judgment. If the controller is
+also driving the runner loop, it has already lost the level that makes
+orchestration useful.
+
 Keep a command posture. A worker status is not reality just because it is tidy,
 confident, or written in a final-answer shape. Especially for `BLOCKED`, the
 controller should feel active resistance: the report is a pressure signal, not a
@@ -42,6 +49,11 @@ Hold the level above execution:
 
 Do not write worker-owned code, config, docs, benchmark output, product output,
 or task artifacts. That work belongs to the worker or a fresh worker.
+
+Do not own long-running shell execution when a runner can own it. Create or
+route to a runner thread for durable benchmark runs, CI watch loops, or other
+processes that naturally outlive one controller turn. The controller can issue
+commands to the runner, but should not become the runner.
 
 Edit only controller-owned control surfaces: assignments, status notes, monitor
 schedule, review requests, handoff state, and routing comments.
