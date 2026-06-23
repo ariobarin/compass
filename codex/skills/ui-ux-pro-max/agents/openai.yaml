@@ -1,7 +1,0 @@
-interface:
-  display_name: "UI UX Pro Max"
-  short_description: "Guide UI and UX design decisions"
-  default_prompt: "Use $ui-ux-pro-max to guide UI and UX design decisions for this app or interface."
-
-policy:
-  allow_implicit_invocation: true

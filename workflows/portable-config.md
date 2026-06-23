@@ -95,8 +95,9 @@ current Codex skill model. Target projects should use their own
 `.agents/skills` folders for project-specific skills.
 
 The old `$CODEX_HOME/skills` copies of Compass-owned skills are retired install
-artifacts. `install.ps1 -Apply` backs them up and removes them after installing
-the reviewed copies into `$HOME/.agents/skills`.
+artifacts. Explicitly retired user skills in `$HOME/.agents/skills` are too.
+`install.ps1 -Apply` backs them up and removes them after installing the
+reviewed copies into `$HOME/.agents/skills`.
 
 Before changing `scripts/common.ps1`, `manifests/portable-files.toml`, or these
 skill install paths again:

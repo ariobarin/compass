@@ -10,7 +10,7 @@ $repoRoot = Get-RepoRoot
 $liveHome = Get-CodexHome -CodexHome $CodexHome
 $agentsHome = Get-AgentsHome -AgentsHome $AgentsHome
 $items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome
-$retiredItems = Get-RetiredPortableFileMap -CodexHome $liveHome
+$retiredItems = Get-RetiredPortableFileMap -CodexHome $liveHome -AgentsHome $agentsHome
 
 Write-Host "repo: $repoRoot"
 Write-Host "codex: $liveHome"

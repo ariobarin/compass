@@ -42,7 +42,6 @@ function Get-PortableSkillNames {
         "orchestration-controller",
         "subagent-driven-development",
         "to-prd",
-        "ui-ux-pro-max",
         "using-codex-goals",
         "webmcp-eval-triage",
         "webmcp-tool-authoring",
@@ -127,16 +126,30 @@ function Get-PortableFileMap {
 }
 
 function Get-RetiredPortableFileMap {
-    param([string]$CodexHome)
+    param(
+        [string]$CodexHome,
+        [string]$AgentsHome
+    )
 
     $items = New-Object System.Collections.Generic.List[object]
 
-    foreach ($skill in @(@(Get-PortableSkillNames) + @("codex-portable"))) {
+    foreach ($skill in @(@(Get-PortableSkillNames) + @("codex-portable", "ui-ux-pro-max"))) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $CodexHome "skills") $skill
             LiveRoot = $CodexHome
             BackupScope = "codex"
+        })
+    }
+
+    # Keep retired user-skill removals explicit so install does not delete
+    # unrelated personal skills that Compass does not own.
+    foreach ($skill in @("ui-ux-pro-max")) {
+        $items.Add([pscustomobject]@{
+            Type = "dir"
+            LivePath = Join-Path (Join-Path $AgentsHome "skills") $skill
+            LiveRoot = $AgentsHome
+            BackupScope = "agents"
         })
     }
 
