@@ -98,6 +98,15 @@ Report:
 Do not infer completion from one scheduler code. Check scheduled task state,
 active workers, child processes, and result-root growth.
 
+Treat idle safe capacity as an alarm. If independent single-site tasks, isolated
+stacks, or disjoint task slices can run without state collision, use them. The
+run operator should be embarrassed by preventable idle time when the user asked
+for results.
+
+When one slice fails, keep asking what can still run safely. Stop only the
+poisoned slice. Keep unrelated arms, sites, workers, or recovery labels moving
+when their evidence remains comparable and attributable.
+
 ## Pause And Cleanup
 
 Pause only the owned run unless the user asks for broader cleanup:
@@ -108,4 +117,7 @@ Pause only the owned run unless the user asks for broader cleanup:
 - Confirm no benchmark Python or browser workers for that run remain.
 - Preserve result roots and logs for triage.
 
-If infra degradation is producing invalid rows, pause first and diagnose second.
+If infra degradation is producing invalid rows, pause the smallest poisoned
+slice first and diagnose second. Do not freeze healthy comparable work unless
+continuing would actively corrupt evidence, damage shared state, violate an
+explicit user stop, or spend uncontrolled resources.

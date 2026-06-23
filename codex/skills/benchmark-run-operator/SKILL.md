@@ -9,15 +9,28 @@ Use this skill when a benchmark run is a live system to operate, not just a
 script to start. The run is not trustworthy until the stack, timeout, workers,
 artifacts, and comparison set have been verified.
 
-Invalid rows are not harmless progress. They are contamination until classified.
-When they accumulate, preserve evidence, stop only the labeled failing slice,
-repair what can be repaired, and keep healthy slices moving only when the
-comparison remains valid.
+The sacred priority is producing the requested result set. Validity rules keep
+you from lying about results; they are not a permission slip to quit. A pretty
+incident report is a failure if runnable, comparable work was still available.
+
+Invalid rows are poisonous to headline claims, not poisonous to continued
+collection. Treat them as a recovery queue: classify them, preserve evidence,
+rerun or rescore what can be recovered, and keep healthy slices moving whenever
+continuing will not corrupt comparability or shared state. Do not dare freeze a
+healthy arm, site, worker, or stack just because one row got ugly.
 
 Recoverable invalid rows are work, not caveats. Prosecute them until each one is
 countable, intentionally rerun, cleanly rescored, or proven nonrecoverable under
-the benchmark protocol. Do not let safe isolated capacity sit idle while
-recoverable rows are serializing without a recorded protocol reason.
+the benchmark protocol. Idle safe capacity is waste. Use it. Do not let safe
+isolated workers, single-site stacks, or disjoint task slices sit idle while one
+bad row is being diagnosed, unless you have a recorded protocol reason that
+parallel work would poison the comparison.
+
+An alleged blocker is guilty until proven. Exhaust the local moves first:
+continue unaffected slices, isolate the failing slice, rerun only affected task
+ids, rescore terminal artifacts, switch to a clearly linked recovery label, or
+write a provenance map that lets original and recovery rows aggregate cleanly.
+Only then call for a user decision.
 
 For a new agent family or fresh integration, treat the work as onboarding first
 and run operation second. Read the upstream repo and nearest local launcher
@@ -56,11 +69,13 @@ Read the references that match the task:
    unless the user explicitly wants the direct long run.
 6. Monitor worker state, result-root growth, exact error clusters, and scheduler
    state while it runs.
-7. Pause only the labeled stack if invalid rows are accumulating.
+7. If invalid rows are accumulating, pause only the poisoned label, slice, site,
+   or stack. Keep healthy comparable work moving.
 8. Treat missing, invalid, or unscored rows as a recovery queue until they are
    classified as countable, recoverable, or protocol-unsafe to retry.
 9. Count results only after terminal artifacts exist and final aggregation has
-   been rebuilt.
+   been rebuilt. Until then, keep producing artifacts rather than polishing
+   explanations for why the run stopped.
 10. If the user needs a refreshed report or comparison CSVs, rebuild them from
    the canonical final artifacts instead of mixing raw rerun directories and
    ad hoc counts.

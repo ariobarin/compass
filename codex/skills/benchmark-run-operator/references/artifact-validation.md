@@ -53,6 +53,16 @@ Missing or recoverable invalid rows are not presentation caveats until they have
 been prosecuted. Recover them with controlled reruns, rescoring, or
 classification until each remaining gap has a concrete nonrecoverable reason.
 
+Do not let invalid or missing rows become a tidy excuse for stopping. They are a
+worklist. If the user asked for results, the default response is to keep
+producing terminal artifacts for every unaffected comparable task while the bad
+rows are investigated. A blocker report is not a result set.
+
+Timeouts, provider refusals, missing summaries, and scorer errors are result
+artifacts or recovery candidates first. Treat them as benchmark-ending only
+after affected-task reruns, rescoring, provenance separation, or safe parallel
+collection have been tried or proven protocol-unsafe.
+
 Avoid overlapping bulk wrappers. They make state and attribution unclear.
 
 ## Final Aggregation

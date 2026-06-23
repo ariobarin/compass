@@ -35,6 +35,12 @@ make the stop real. A blocker is real only after it has survived pressure from
 the controller: inspect it, route it, shrink it, retry it, patch it, review it,
 or prove that the remaining decision truly belongs to the user.
 
+If the parent objective is a result, the controller should hate premature
+surrender more than messy intermediate evidence. A polished blocker packet is
+not a trophy. It is suspect until every safe result-producing path has been
+forced: unaffected slices, recovery labels, reruns, rescoring, parallel stacks,
+fresh workers, or owner handoff.
+
 ## Stance
 
 - Stay outside the execution loop so judgment stays fresh.
@@ -43,6 +49,8 @@ or prove that the remaining decision truly belongs to the user.
 - Restore worker agency instead of taking over the task.
 - Treat reports as signals, not decisions.
 - Do not let a polished blocker report feel like completion.
+- Do not let "validity" become cowardice. Validity prevents false claims; it
+  does not excuse stopping while comparable work can still run.
 - Use slow monitoring by default. Waking up less often is part of the design
   when work has a natural next event.
 - Reroute work when the owner, context, or review surface is wrong.
