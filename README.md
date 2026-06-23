@@ -38,6 +38,8 @@ files or proposing changes.
 - `workflows/`: repo-side operating notes for recurring maintenance work. These
   are not installed into a live Codex home or user skill home.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
+  Use `workflows/benchmark-handoff-template.md` for controller/runner
+  benchmark handoffs.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
   live Codex home or user skill home.
 - `manifests/portable-files.toml`: the install allowlist, repo-only list, and
@@ -58,6 +60,12 @@ Check the repo for obvious portability mistakes:
 
 ```powershell
 .\scripts\doctor.ps1
+```
+
+Check that a benchmark handoff front-loads the control contract:
+
+```powershell
+.\scripts\check-benchmark-handoff.ps1 -Path <handoff.md>
 ```
 
 Check whether live Codex and user skill files match the portable allowlist and
