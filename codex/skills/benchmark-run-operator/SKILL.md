@@ -89,7 +89,8 @@ Read the references that match the task:
 7. Monitor worker state, result-root growth, exact error clusters, and scheduler
    state while it runs.
 8. If invalid rows are accumulating, pause only the poisoned label, slice, site,
-   or stack. Keep healthy comparable work moving.
+   or stack, then immediately debug why the rows are invalid. Keep healthy
+   comparable work moving.
 9. Treat missing, invalid, or unscored rows as a recovery queue until they are
    classified as countable, recoverable, or protocol-unsafe to retry.
 10. Count results only after terminal artifacts exist and final aggregation has

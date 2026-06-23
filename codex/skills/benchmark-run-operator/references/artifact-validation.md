@@ -52,6 +52,8 @@ When top-up or missing-task recovery is needed:
 Missing or recoverable invalid rows are not presentation caveats until they have
 been prosecuted. Recover them with controlled reruns, rescoring, or
 classification until each remaining gap has a concrete nonrecoverable reason.
+Assume the row is fixable until the artifact, scorer, stack, or protocol
+evidence proves otherwise.
 
 Do not let invalid or missing rows become a tidy excuse for stopping. They are a
 worklist. If the user asked for results, the default response is to keep

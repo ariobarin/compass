@@ -60,9 +60,11 @@ Check:
 - Stack health and content checks.
 
 If invalid rows are accumulating, pause the smallest poisoned labeled slice
-before it pollutes more results. Do not stop unrelated healthy work just to make
-the situation feel clean. Keep collecting terminal artifacts wherever the task
-set, stack state, and provenance remain comparable.
+before it corrupts provenance or comparability, then immediately debug why the
+rows are invalid. Do not stop unrelated healthy work just to make the situation
+feel clean. Keep collecting terminal artifacts wherever the task set, stack
+state, scorer configuration, and provenance remain comparable. Assume invalid
+rows are fixable until protocol evidence proves otherwise.
 
 Monitor errors are alarms, not verdicts. They demand classification and a next
 productive action. They do not, by themselves, justify giving up on the requested

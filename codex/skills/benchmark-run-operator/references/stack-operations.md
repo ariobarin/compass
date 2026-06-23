@@ -118,6 +118,8 @@ Pause only the owned run unless the user asks for broader cleanup:
 - Preserve result roots and logs for triage.
 
 If infra degradation is producing invalid rows, pause the smallest poisoned
-slice first and diagnose second. Do not freeze healthy comparable work unless
-continuing would actively corrupt evidence, damage shared state, violate an
-explicit user stop, or spend uncontrolled resources.
+slice before it corrupts provenance or comparability, then immediately diagnose
+and repair the cause. Do not freeze healthy comparable work unless continuing
+would actively corrupt evidence, damage shared state, violate an explicit user
+stop, or spend uncontrolled resources. Assume the invalid rows are fixable until
+protocol evidence proves otherwise.
