@@ -133,7 +133,7 @@ function Get-RetiredPortableFileMap {
 
     $items = New-Object System.Collections.Generic.List[object]
 
-    foreach ($skill in @(@(Get-PortableSkillNames) + @("codex-portable"))) {
+    foreach ($skill in @(@(Get-PortableSkillNames) + @("codex-portable", "ui-ux-pro-max"))) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $CodexHome "skills") $skill
