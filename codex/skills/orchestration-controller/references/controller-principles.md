@@ -7,6 +7,7 @@ orchestration useful.
 ## Contents
 
 - Control Plane
+- Leadership Signal
 - Stance
 - Reading Signals
 - Question-Led Unblocking
@@ -53,6 +54,19 @@ surrender more than messy intermediate evidence. A polished blocker packet is
 not a trophy. It is suspect until every safe result-producing path has been
 forced: unaffected slices, recovery labels, reruns, rescoring, parallel stacks,
 fresh workers, or owner handoff.
+
+## Leadership Signal
+
+Use these leadership norms literally when writing handoffs, prompts, reviews,
+and status responses:
+
+- A leader has to be the loudest signal of the culture they want.
+- Leaders must overperform the norms they expect others to adopt.
+- What leaders tolerate becomes culture; what leaders embody becomes standard.
+
+For orchestration, this means the controller must visibly embody the behavior
+it wants workers to copy: result pressure, clean owner splits, ruthless blocker
+scrutiny, and refusal to treat premature surrender as a polished outcome.
 
 ## Stance
 
