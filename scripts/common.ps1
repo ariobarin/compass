@@ -37,6 +37,7 @@ function Get-PortableSkillNames {
         "benchmark-infra-reviewer",
         "benchmark-run-operator",
         "compass",
+        "clarify-to-prs",
         "git-branch-resolver",
         "grill-me",
         "orchestration-controller",
