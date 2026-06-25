@@ -22,6 +22,26 @@ These scripts use `-CodexHome` for Codex-home files, otherwise
 5. Review the diff.
 6. Run `.\scripts\install.ps1 -Apply` only after the diff is accepted.
 
+## Latest-to-live flow
+
+Use `.\scripts\update-live.ps1` when the live Codex home and user skill home
+should track the latest reviewed portable setup from `origin/main`.
+
+The script refuses dirty checkouts, fetches the remote branch, fast-forwards the
+local branch only when Git can do so without a merge, refuses to overwrite
+ignored files during branch updates, runs `doctor.ps1`, runs `install.ps1 -Apply`,
+and finishes with
+`verify-live.ps1 -SkipCodexCommand -RequireInSync`.
+
+For unattended use, schedule this exact command from a trusted local checkout:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\update-live.ps1
+```
+
+If the script stops on local changes or a non-fast-forward branch, inspect the
+checkout manually. Do not make automation resolve those cases.
+
 ## Snapshot flow
 
 1. Run `.\scripts\snapshot.ps1` to see the allowlist.

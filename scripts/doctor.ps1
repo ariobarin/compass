@@ -117,6 +117,7 @@ foreach ($path in @(
     "workflows\plan-template.md",
     "workflows\read-only-research.md",
     "workflows\agent-failures.md",
+    "scripts\update-live.ps1",
     "scripts\verify-live.ps1"
 )) {
     $fullPath = Join-Path $repoRoot $path
