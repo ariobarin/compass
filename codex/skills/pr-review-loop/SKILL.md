@@ -10,6 +10,10 @@ or a code change. The job is to keep PR identity, review gates, current-head
 state, and merge authority explicit from first inspection through final ready
 state.
 
+Review gates are mandatory. Run `neutral-critic` for every PR review loop. For
+any `ariobarin/*` repository, request or run `@codex` too. Do not treat either
+gate as optional, advisory, or covered by local checks.
+
 This skill covers two common postures:
 
 - iterate on the exact PR or branch the user named;
@@ -29,9 +33,10 @@ stale-rebuild, re-review, and merge-boundary patterns.
    source material on current main, or stay read-only.
 3. Patch only the scope needed for the current PR claim or the approved rebuild.
 4. Run the narrowest checks that cover the changed behavior.
-5. Request or run the required review paths.
+5. Run `neutral-critic` for every PR loop, and request or run `@codex` for
+   every `ariobarin/*` PR. Add any repo-specific gates on top of these.
 6. After any material push, re-read the head SHA and re-request review on that
-   new head before calling the PR ready.
+   new head before calling the PR ready or merging.
 7. Merge only when the user or repo workflow explicitly authorized it.
 
 ## Rules
@@ -40,9 +45,14 @@ stale-rebuild, re-review, and merge-boundary patterns.
   PR unless they ask for a rebuild or branch surgery.
 - If the user wants current-main work and the old PR is stale, treat the old PR
   as source material only and rebuild cleanly on current main.
-- If `@codex` and `neutral-critic` are both required, do not claim readiness
-  until both current-head reviews are green or the remaining blocker is
-  explicit.
+- `neutral-critic` is required for every PR review loop. Do not claim
+  readiness or merge without a green current-head result unless the user
+  explicitly removes that gate.
+- In any `ariobarin/*` repo, `@codex` is required in addition to
+  `neutral-critic`. Do not leave the Codex gate conditional, vague, or treated
+  as polish.
+- Local checks do not satisfy review gates. They prove the code path; they do
+  not replace reviewer approval.
 - If review is silent, use the approved fallback path rather than waiting
   passively.
 - If the user performs merges, stop at merge boundary with the exact next merge

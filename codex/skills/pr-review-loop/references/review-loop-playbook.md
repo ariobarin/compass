@@ -3,6 +3,16 @@
 Use this reference when PR work needs explicit branch identity, review gates,
 current-head re-review, or stale-PR rebuild handling.
 
+## Standing Review Gates
+
+`neutral-critic` is mandatory for every PR review loop. For any `ariobarin/*`
+repository, `@codex` is also mandatory. These are readiness gates, not
+nice-to-have checks.
+
+Do not mark a PR ready or merge it while a required review gate is missing,
+stale, failed, or still waiting on actionable findings. A local test run can
+support the case for readiness, but it never replaces reviewer approval.
+
 ## Named PR Loop
 
 When the user names a specific PR or branch:
@@ -46,9 +56,9 @@ Preserve exact PR identity only when the user asked to keep iterating that PR.
 
 ## Dual Review Gates
 
-When both `@codex` and `neutral-critic` are required:
+When both `@codex` and `neutral-critic` apply:
 
-- treat both as real gates, not optional polish;
+- treat both as blocking gates;
 - route actionable findings back through the implementation path;
 - after fixes, re-run the narrow checks and re-request review on the new head;
 - if one reviewer is silent and fallback is allowed, use the allowed fallback
