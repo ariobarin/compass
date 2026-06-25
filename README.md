@@ -73,6 +73,13 @@ Install reviewed portable files into the live Codex home and user skill home:
 .\scripts\install.ps1 -Apply
 ```
 
+Fetch latest `main`, fast-forward the checkout, install reviewed portable
+files, and verify the live allowlist:
+
+```powershell
+.\scripts\update-live.ps1
+```
+
 Refresh the repo from the current live allowlist:
 
 ```powershell
