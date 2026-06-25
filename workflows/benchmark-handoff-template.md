@@ -37,7 +37,8 @@ controller instructions:
 - keep completion authority
 - verify runner evidence before accepting status claims
 - reroute failures into concrete next actions
-- reject polished blocker reports while safe result-producing work remains
+- reject polished blocker reports while debug, repair, rerun, or isolation work
+  remains
 
 evidence and history:
 - handoff path:
@@ -52,3 +53,6 @@ Before sending the handoff, run:
 ```powershell
 .\scripts\check-benchmark-handoff.ps1 -Path <handoff.md>
 ```
+
+This template contains placeholders. Use `-AllowPlaceholders` only to check the
+template shape, never for a real handoff.

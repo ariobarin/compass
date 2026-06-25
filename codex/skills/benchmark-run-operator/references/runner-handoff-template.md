@@ -4,19 +4,6 @@ Use this when a benchmark run, recovery loop, or monitor handoff may move
 between controller and runner owners. Put the control contract first so the
 next owner can act without reading the full history.
 
-## First-Screen Contract
-
-Front-load these fields:
-
-- objective;
-- done means;
-- runner owner;
-- controller owner;
-- current next action;
-- stop conditions;
-- validity contract;
-- recovery stance.
-
 ## Template
 
 ```text
@@ -52,7 +39,8 @@ controller instructions:
 - keep completion authority
 - verify runner evidence before accepting status claims
 - reroute failures into concrete next actions
-- reject polished blocker reports while safe result-producing work remains
+- reject polished blocker reports while debug, repair, rerun, or isolation work
+  remains
 
 evidence and history:
 - handoff path:
@@ -62,6 +50,19 @@ evidence and history:
 - relevant prior decisions:
 ```
 
+## First-Screen Contract
+
+Front-load these fields:
+
+- objective;
+- done means;
+- runner owner;
+- controller owner;
+- current next action;
+- stop conditions;
+- validity contract;
+- recovery stance.
+
 ## Use Notes
 
 - The runner owns local execution and immediate recovery, not parent-goal
@@ -69,3 +70,5 @@ evidence and history:
 - The controller owns cadence, scope changes, review paths, and completion.
 - If a handoff hides owners, stop conditions, or next action below the first
   screen, rewrite it before passing control.
+- This template contains placeholders. Use `-AllowPlaceholders` only to check
+  the template shape, never for a real handoff.

@@ -2,7 +2,9 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Path,
 
-    [int]$FirstScreenLines = 25
+    [int]$FirstScreenLines = 25,
+
+    [switch]$AllowPlaceholders
 )
 
 $fullPath = [System.IO.Path]::GetFullPath($Path)
@@ -13,8 +15,69 @@ if (-not (Test-Path -LiteralPath $fullPath)) {
 
 $text = Get-Content -Raw -Encoding UTF8 -LiteralPath $fullPath
 $lines = @($text -split "`r?`n")
-$firstScreen = ($lines | Select-Object -First $FirstScreenLines) -join "`n"
+$firstScreenLinesValue = @($lines | Select-Object -First $FirstScreenLines)
+$firstScreen = $firstScreenLinesValue -join "`n"
 $problems = New-Object System.Collections.Generic.List[string]
+
+function Get-FirstScreenField {
+    param([string]$FieldName)
+
+    $fieldPattern = "^$([regex]::Escape($FieldName))\s*:\s*(.*)$"
+    for ($index = 0; $index -lt $firstScreenLinesValue.Count; $index++) {
+        $match = [regex]::Match(
+            $firstScreenLinesValue[$index],
+            $fieldPattern,
+            [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+        )
+        if (-not $match.Success) {
+            continue
+        }
+
+        $fieldLines = New-Object System.Collections.Generic.List[string]
+        $fieldLines.Add($match.Groups[1].Value.Trim())
+
+        for ($nextIndex = $index + 1; $nextIndex -lt $firstScreenLinesValue.Count; $nextIndex++) {
+            $line = $firstScreenLinesValue[$nextIndex]
+            if ($line -match "^\S[^:]*:\s*") {
+                break
+            }
+
+            if ($line -match "^\s+\S") {
+                $fieldLines.Add($line.Trim())
+                continue
+            }
+
+            break
+        }
+
+        return ($fieldLines -join " ").Trim()
+    }
+
+    return $null
+}
+
+function Test-FirstScreenField {
+    param(
+        [string]$Name,
+        [string]$FieldName,
+        [switch]$RequireValue
+    )
+
+    $value = Get-FirstScreenField -FieldName $FieldName
+    if ($null -eq $value) {
+        $problems.Add("missing $Name in first $FirstScreenLines lines")
+        return
+    }
+
+    if ($RequireValue -and [string]::IsNullOrWhiteSpace($value)) {
+        $problems.Add("missing $Name value in first $FirstScreenLines lines")
+        return
+    }
+
+    if (-not $AllowPlaceholders -and $value -match "(?i)<[^>]+>|\b(todo|tbd|fixme|replace me)\b") {
+        $problems.Add("placeholder $Name value in first $FirstScreenLines lines")
+    }
+}
 
 function Test-Pattern {
     param(
@@ -30,16 +93,19 @@ function Test-Pattern {
     }
 }
 
-Test-Pattern -Name "objective" -Pattern "(?im)^\s*objective\s*:" -FirstScreenOnly
-Test-Pattern -Name "done means" -Pattern "(?im)^\s*done means\s*:" -FirstScreenOnly
-Test-Pattern -Name "runner owner" -Pattern "(?im)^\s*runner owner\s*:" -FirstScreenOnly
-Test-Pattern -Name "controller owner" -Pattern "(?im)^\s*controller owner\s*:" -FirstScreenOnly
-Test-Pattern -Name "current next action" -Pattern "(?im)^\s*current next action\s*:" -FirstScreenOnly
-Test-Pattern -Name "stop conditions" -Pattern "(?im)^\s*stop conditions\s*:" -FirstScreenOnly
-Test-Pattern -Name "validity contract" -Pattern "(?im)^\s*validity contract\s*:" -FirstScreenOnly
-Test-Pattern -Name "recovery stance" -Pattern "(?im)^\s*recovery stance\s*:" -FirstScreenOnly
+Test-FirstScreenField -Name "objective" -FieldName "objective" -RequireValue
+Test-FirstScreenField -Name "done means" -FieldName "done means" -RequireValue
+Test-FirstScreenField -Name "runner owner" -FieldName "runner owner" -RequireValue
+Test-FirstScreenField -Name "controller owner" -FieldName "controller owner" -RequireValue
+Test-FirstScreenField -Name "current next action" -FieldName "current next action" -RequireValue
+Test-FirstScreenField -Name "stop conditions" -FieldName "stop conditions" -RequireValue
+Test-FirstScreenField -Name "validity contract" -FieldName "validity contract" -RequireValue
+Test-FirstScreenField -Name "recovery stance" -FieldName "recovery stance"
 
-Test-Pattern -Name "debug-and-repair invalid row stance" -Pattern "(?is)invalid rows.*debug.*repair|debug.*repair.*invalid rows"
+$recoveryStance = Get-FirstScreenField -FieldName "recovery stance"
+if ($null -ne $recoveryStance -and $recoveryStance -notmatch "(?is)invalid rows.*debug.*repair|debug.*repair.*invalid rows") {
+    $problems.Add("missing debug-and-repair invalid row stance in recovery stance")
+}
 Test-Pattern -Name "smallest poisoned slice rule" -Pattern "(?is)smallest poisoned.*slice|pause only.*poisoned"
 Test-Pattern -Name "healthy comparable work rule" -Pattern "(?is)healthy comparable work|unrelated comparable work|unaffected comparable"
 
@@ -58,8 +124,27 @@ foreach ($duplicate in $duplicateParagraphs) {
     $problems.Add("duplicate paragraph: $sample")
 }
 
-if ($text -match "(?i)\bblock(?:ed|er|ers|ing)?\b" -and $text -notmatch "(?is)recovery|rerun|rescore|debug|repair|next action") {
-    $problems.Add("blocker language appears without recovery or next-action language")
+if (-not $AllowPlaceholders -and $text -match "(?i)<[^>]+>|\b(todo|tbd|fixme|replace me)\b") {
+    $problems.Add("placeholder text appears in handoff")
+}
+
+$blockerContextPattern = "(?is)\bdebug\b|\brepair\b|\brerun\b|\brescore\b|\bretry\b|\breproduce\b|\bisolat(?:e|ion)\b|smallest poisoned"
+$blockerParagraphs = @(
+    [regex]::Split($text.Trim(), "(\r?\n\s*){2,}") |
+        ForEach-Object { $_.Trim() } |
+        Where-Object { $_ -match "(?i)\bblock(?:ed|er|ers|ing)?\b" }
+)
+foreach ($paragraph in $blockerParagraphs) {
+    if ($paragraph -match $blockerContextPattern) {
+        continue
+    }
+
+    $sample = $paragraph
+    if ($sample.Length -gt 90) {
+        $sample = $sample.Substring(0, 90)
+    }
+    $problems.Add("blocker language appears without local recovery or next-action context: $sample")
+    break
 }
 
 if ($problems.Count -gt 0) {

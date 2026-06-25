@@ -68,6 +68,9 @@ Check that a benchmark handoff front-loads the control contract:
 .\scripts\check-benchmark-handoff.ps1 -Path <handoff.md>
 ```
 
+The checker rejects blank values and unfilled placeholders by default. Use
+`-AllowPlaceholders` only when checking template shape.
+
 Check whether live Codex and user skill files match the portable allowlist and
 ask Codex to report active instruction sources:
 
