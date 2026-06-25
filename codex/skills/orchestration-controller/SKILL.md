@@ -90,6 +90,9 @@ objective, or a recorded user-accepted incomplete endpoint.
 
 - Use `using-codex-goals` when the parent work should be expressed as a durable
   goal contract or when workers need self-applied slice goals.
+- Use `pr-review-loop` when the controlled work is a pull request that needs
+  explicit PR identity, current-head review discipline, or merge-boundary
+  enforcement.
 - Use `subagent-driven-development` when the controller is sequencing
   implementation tasks with staged review in the same session.
 - Use domain-specific operator or reviewer skills for the system being

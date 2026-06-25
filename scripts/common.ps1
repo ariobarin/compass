@@ -40,6 +40,7 @@ function Get-PortableSkillNames {
         "git-branch-resolver",
         "grill-me",
         "orchestration-controller",
+        "pr-review-loop",
         "subagent-driven-development",
         "to-prd",
         "using-codex-goals",

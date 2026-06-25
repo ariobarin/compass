@@ -54,6 +54,9 @@ line-ending requirements.
 Read [pr-host-fallbacks.md](references/pr-host-fallbacks.md) when PR work
 depends on repo context, GitHub access, or multi-remote fork handling.
 
+Use `pr-review-loop` when the task centers on iterating a named PR through
+review, fixes, re-review, and merge gates after branch state is clear.
+
 ## Inventory first
 
 Start by collecting current local state:
