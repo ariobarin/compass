@@ -112,13 +112,15 @@ foreach ($path in @(
     "local-docs\README.md",
     "local-docs\maintenance-learnings.md",
     "workflows\addition-intake.md",
+    "workflows\benchmark-handoff-template.md",
     "workflows\portable-config.md",
     "workflows\multi-thread-pr-coordination.md",
     "workflows\plan-template.md",
     "workflows\read-only-research.md",
     "workflows\agent-failures.md",
     "scripts\update-live.ps1",
-    "scripts\verify-live.ps1"
+    "scripts\verify-live.ps1",
+    "scripts\check-benchmark-handoff.ps1"
 )) {
     $fullPath = Join-Path $repoRoot $path
     if (-not (Test-Path $fullPath)) {
