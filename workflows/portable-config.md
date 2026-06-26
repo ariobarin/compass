@@ -143,6 +143,8 @@ skill install paths again:
 
 - [addition-intake.md](addition-intake.md): promoting new portable artifacts and
   checking related stale guidance.
+- [which-llm-plugin.md](which-llm-plugin.md): installing and refreshing the
+  separately owned `which-llm` plugin without tracking generated cache state.
 - [plan-template.md](plan-template.md): planning large or risky work.
 - [multi-thread-pr-coordination.md](multi-thread-pr-coordination.md): keeping
   parallel audit threads out of public PR sprawl.

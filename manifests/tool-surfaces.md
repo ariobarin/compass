@@ -12,7 +12,7 @@ and cache paths out of this repo.
 | Chrome plugin | Uses logged-in Chrome state and browser tabs | Partial | High | Prefer when session state, cookies, extensions, or the regular browser profile matter. Do not commit profile paths or cookies. |
 | Computer Use plugin | Controls Windows desktop apps | Partial | High | Useful fallback for visual desktop tasks. Keep runtime paths local. |
 | Documents plugin | Creates and edits document artifacts | Partial | Medium | Portable skill knowledge is fine. Generated files belong in task outputs, not config. |
-| which-llm plugin | Looks up current model costs, slugs, and benchmarks | Partial | Medium | Plugin source can be documented. Plugin cache and snapshots stay local. |
+| which-llm plugin | Looks up current model costs, slugs, and benchmarks | Partial | Medium | Install and update route lives in `workflows/which-llm-plugin.md`. Plugin cache and snapshots stay local. |
 | Third-party MCP servers | Connect to external tools or context over STDIO or HTTP | Partial | High | Keep transport commands, server URLs, OAuth callback settings, env vars, tokens, and per-server tool policy local or project-scoped unless a generic shared default is clearly justified. |
 | node_repl MCP | Runs JavaScript and browser automation helpers | No | High | Binary paths, pipes, env vars, and trusted client hashes are machine-local. |
 | Web search | Reads current web sources | No | Medium | Use for unstable facts and source attribution. Do not encode search results as permanent rules without review. |
