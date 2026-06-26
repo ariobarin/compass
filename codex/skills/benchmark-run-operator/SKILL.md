@@ -54,8 +54,6 @@ before inventing local glue.
 
 Read the references that match the task:
 
-- [runner-handoff-template.md](references/runner-handoff-template.md): first-screen
-  controller and runner contract for handoffs, wakeups, and resumed ownership.
 - [benchmark-protocol.md](references/benchmark-protocol.md): comparison design,
   A/B validity, smoke gates, success metrics, and accepted confounds.
 - [stack-operations.md](references/stack-operations.md): stack ownership,
