@@ -143,8 +143,6 @@ skill install paths again:
 
 - [addition-intake.md](addition-intake.md): promoting new portable artifacts and
   checking related stale guidance.
-- [benchmark-handoff-template.md](benchmark-handoff-template.md): front-loaded
-  benchmark controller/runner handoff shape.
 - [plan-template.md](plan-template.md): planning large or risky work.
 - [multi-thread-pr-coordination.md](multi-thread-pr-coordination.md): keeping
   parallel audit threads out of public PR sprawl.

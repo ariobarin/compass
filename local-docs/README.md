@@ -15,9 +15,6 @@ catch drift before config is copied into a live machine.
   flow for new repo-maintenance workflows, installed skills and agents,
   repo-side scripts and manifests, and config fragments. Workflows guide repo
   maintenance and are not installed into a live Codex home or user skill home.
-- [../workflows/benchmark-handoff-template.md](../workflows/benchmark-handoff-template.md):
-  first-screen benchmark handoff template for controller/runner ownership,
-  validity contracts, stop conditions, and invalid-row recovery stance.
 
 ## Boundary
 
