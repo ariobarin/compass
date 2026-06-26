@@ -38,6 +38,8 @@ files or proposing changes.
 - `workflows/`: repo-side operating notes for recurring maintenance work. These
   are not installed into a live Codex home or user skill home.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
+  Use `workflows/which-llm-plugin.md` for the durable `which-llm` plugin
+  install and update route.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
   live Codex home or user skill home.
 - `manifests/portable-files.toml`: the install allowlist, repo-only list, and
@@ -108,6 +110,8 @@ otherwise `$HOME\.agents`.
 - If you intentionally author a plugin, keep the plugin source and marketplace
   metadata in a normal repo path or dedicated plugin repo, not in live cache
   directories.
+- Keep plugin install routes in workflows. Keep installed plugin cache and
+  generated marketplace state local.
 - Keep machine-specific values in ignored local files or in live config only.
 - Keep skill descriptions concise. Put detailed instructions in `SKILL.md` and
   references.
