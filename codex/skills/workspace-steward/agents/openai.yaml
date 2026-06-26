@@ -1,0 +1,7 @@
+interface:
+  display_name: "Workspace Steward"
+  short_description: "Shape durable multi-repo workspaces"
+  default_prompt: "Use $workspace-steward to set up or maintain an umbrella workspace with clear repos, worktrees, artifacts, tmp space, and cleanup rules."
+
+policy:
+  allow_implicit_invocation: true
