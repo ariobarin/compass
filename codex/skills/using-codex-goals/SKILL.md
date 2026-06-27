@@ -88,6 +88,10 @@ For ready-to-copy controller, worker, monitor, and subagent templates, read
    goal-shaped contract in plain text and describe it as a contract rather than
    active goal state.
 
+When the objective becomes mostly routing, monitoring, or runner ownership
+rather than direct execution in the current context, keep the goal as the
+contract and use `orchestration-controller` for oversight.
+
 ## Subagent Handoffs
 
 Pass a narrowed goal-shaped contract instead of the whole parent goal. Delegated
@@ -109,6 +113,8 @@ goal.
 
 - Use `subagent-driven-development` when a goal already has independent
   implementation slices and needs controller-led subagent execution.
+- Use `orchestration-controller` when the goal needs durable oversight, monitor
+  cadence, or a separate runner owner for long-running execution.
 - Use `action-items-to-prs` when a goal should become one or more PR-scoped
   changes.
 - Use `git-branch-resolver` when a goal depends on branch, worktree, or PR

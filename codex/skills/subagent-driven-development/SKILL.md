@@ -31,6 +31,7 @@ Use another workflow when:
 
 - the work is still exploratory or the plan is not real yet;
 - tasks are tightly coupled and need continuous shared context;
+- the work needs a separate runner owner, wakeups, or monitoring across turns;
 - branch or worktree triage should happen first;
 - the user asked only for brainstorming, review, or a one-shot manual change.
 
@@ -165,8 +166,8 @@ Never:
 - Pair with `action-items-to-prs` when the plan comes from a report, audit, or
   issue list that should become PR-scoped work.
 - Pair with `orchestration-controller` when the parent task is mostly routing,
-  monitoring, review fallback, or completion-gate enforcement instead of
-  implementation sequencing.
+  monitoring, runner ownership, review fallback, or completion-gate enforcement
+  instead of implementation sequencing.
 
 ## Output
 

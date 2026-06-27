@@ -27,11 +27,15 @@ permission slip to stop. If the work can still move through inspection, repair,
 reroute, restart, review, recovery, or a bounded smoke, route that motion to the
 owner and demand evidence.
 
-## Required Reference
+## Required References
 
-Read [controller-principles.md](references/controller-principles.md) for the
-role model, worker signal heuristics, unblock examples, monitor posture, review
-routing, and handoff shape.
+Read these before using the skill:
+
+- [controller-principles.md](references/controller-principles.md): role model,
+  worker signal heuristics, unblock examples, monitor posture, review routing,
+  and handoff shape.
+- [controller-playbooks.md](references/controller-playbooks.md): choose between
+  goals, same-session subagent execution, and controller-runner orchestration.
 
 ## Role
 
