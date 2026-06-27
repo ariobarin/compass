@@ -17,6 +17,10 @@ When the work centers on iterating an existing PR or review thread rather than
 creating fresh PR groups, pair this with `pr-review-loop` so PR identity,
 review gates, and merge authority stay explicit.
 
+When the source items are ambiguous, disputed, or mixed with already-handled
+work, pair this with `clarify-to-prs` first so the ledger is confirmed before
+grouping PR work.
+
 ## Start with the source
 
 Read local guidance before editing:
