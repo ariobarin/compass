@@ -67,12 +67,12 @@ git status --short --branch
 git remote -v
 ```
 
-3. Classify uncertain directories by evidence, not name:
+3. Classify each uncertain directory by evidence, not name:
 
 ```powershell
-git rev-parse --git-common-dir
-git worktree list --porcelain
-git status --short --branch
+git -C <candidate> rev-parse --git-common-dir
+git -C <candidate> worktree list --porcelain
+git -C <candidate> status --short --branch
 ```
 
 4. Inspect dirty state and preserve useful work before moving or deleting files.
