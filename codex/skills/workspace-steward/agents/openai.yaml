@@ -1,0 +1,7 @@
+interface:
+  display_name: "Workspace Steward"
+  short_description: "Organize multi-repo workspaces"
+  default_prompt: "Use $workspace-steward to organize or audit an umbrella workspace with clean main checkouts, PR worktrees, experiments, local docs, artifacts, tmp space, and cleanup boundaries."
+
+policy:
+  allow_implicit_invocation: true

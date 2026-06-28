@@ -47,6 +47,7 @@ function Get-PortableSkillNames {
         "webmcp-eval-triage",
         "webmcp-tool-authoring",
         "webmcp-verify-tool",
+        "workspace-steward",
         "write-a-skill"
     )
 }
