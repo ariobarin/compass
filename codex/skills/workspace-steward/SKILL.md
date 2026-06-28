@@ -6,11 +6,31 @@ description: Organize and audit local multi-repo workspaces with clean main chec
 # Workspace Steward
 
 Use this skill to make a workspace easier to enter, operate, and review while
-preserving active work and evidence. The first move is judgment, not cleanup.
+preserving active work and evidence. The first move is to make the requested
+change earn its place.
 
 An umbrella workspace coordinates multiple child repos and local operating
 surfaces. It is not automatically a monorepo, and its root might not be the repo
 that a command should operate on.
+
+## Decision Filter
+
+Run this filter in order before changing layout, moving files, adding scripts,
+or automating cleanup:
+
+1. Challenge the requirement. State the current confusion, repeated cost, or
+   safety risk the change is meant to fix.
+2. Remove what does not earn maintenance. Delete proposed buckets, docs, scripts,
+   or conventions that do not solve that stated problem.
+3. Simplify what remains. Prefer fewer paths, clearer names, and existing Git
+   or shell behavior over new process.
+4. Speed up only after the shape is right. Add aliases, scripts, templates, or
+   manifests only when they shorten a proven workflow.
+5. Automate last. Automate only stable, repeated operations with clear inputs,
+   outputs, rollback, and preservation boundaries.
+
+If a proposed folder, move, script, or automation fails an earlier filter, stop
+and report the smaller change that survived.
 
 ## Operating Model
 
