@@ -173,3 +173,41 @@ function Test-PortableGuardLauncherSilent {
         $problems.Add("portable hook PowerShell launcher emitted output for ${Name}: $($result.Output.Trim())")
     }
 }
+
+function Test-PortableGuardLauncherContext {
+    param(
+        [string]$Name,
+        [hashtable]$Payload,
+        [string]$ExpectedContext
+    )
+
+    if (-not (Test-Path -LiteralPath $portableHookLauncherPath)) {
+        return
+    }
+
+    $result = Invoke-PortableGuardLauncherCase -Name $Name -Payload $Payload
+    if ($result.ExitCode -ne 0) {
+        return
+    }
+
+    $output = $result.Output.Trim()
+    if (-not $output) {
+        $problems.Add("portable hook PowerShell launcher emitted no context for ${Name}")
+        return
+    }
+
+    try {
+        $parsed = $output | ConvertFrom-Json
+    }
+    catch {
+        $problems.Add("portable hook PowerShell launcher emitted invalid context JSON for ${Name}: $output")
+        return
+    }
+
+    if ($parsed.hookSpecificOutput.hookEventName -ne "UserPromptSubmit") {
+        $problems.Add("portable hook PowerShell launcher unexpected context event for ${Name}: $($parsed.hookSpecificOutput.hookEventName)")
+    }
+    if ($parsed.hookSpecificOutput.additionalContext -ne $ExpectedContext) {
+        $problems.Add("portable hook PowerShell launcher unexpected context for ${Name}: $($parsed.hookSpecificOutput.additionalContext)")
+    }
+}
