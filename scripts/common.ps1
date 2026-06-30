@@ -93,7 +93,7 @@ function Get-PortableFileMap {
 
     $items = New-Object System.Collections.Generic.List[object]
 
-    foreach ($relative in @("AGENTS.md", "keybindings.json")) {
+    foreach ($relative in @("AGENTS.md", "hooks.json", "keybindings.json")) {
         $items.Add([pscustomobject]@{
             Type = "file"
             RepoPath = Join-Path (Join-Path $RepoRoot "codex") $relative
@@ -103,13 +103,15 @@ function Get-PortableFileMap {
         })
     }
 
-    $items.Add([pscustomobject]@{
-        Type = "dir"
-        RepoPath = Join-Path (Join-Path $RepoRoot "codex") "agents"
-        LivePath = Join-Path $CodexHome "agents"
-        LiveRoot = $CodexHome
-        BackupScope = "codex"
-    })
+    foreach ($relative in @("agents", "hooks")) {
+        $items.Add([pscustomobject]@{
+            Type = "dir"
+            RepoPath = Join-Path (Join-Path $RepoRoot "codex") $relative
+            LivePath = Join-Path $CodexHome $relative
+            LiveRoot = $CodexHome
+            BackupScope = "codex"
+        })
+    }
 
     # User skills follow the current user skill home. Project `.agents/skills`
     # stay with the target repo.

@@ -18,6 +18,7 @@ and cache paths out of this repo.
 | Web search | Reads current web sources | No | Medium | Use for unstable facts and source attribution. Do not encode search results as permanent rules without review. |
 | Skills | Load task-specific instructions, references, scripts, and assets | Yes | Medium | Keep descriptions concise. Move details into `SKILL.md` and references. |
 | Agents | Spawn focused Codex sessions with custom instructions | Yes | Medium | Keep agents narrow and explicit. Pure explorers should use read-only sandboxing. Critics that validate behavior can run tools while staying non-editing by role. |
+| Hooks | Run trusted commands around Codex tool use and turn closeout | Yes | High | Keep hook code small, local, and reviewed. Hooks must not carry secrets, network calls, machine paths, or auth state. Runtime hooks should fail open when dependencies are missing, with `doctor.ps1` catching invalid portable copies. |
 
 ## Review Checklist
 
