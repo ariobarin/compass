@@ -50,15 +50,15 @@ When top-up or missing-task recovery is needed:
 6. Re-run final aggregation after recovery.
 
 Missing or recoverable invalid rows are not presentation caveats until they have
-been prosecuted. Recover them with controlled reruns, rescoring, or
+been investigated. Recover them with controlled reruns, rescoring, or
 classification until each remaining gap has a concrete nonrecoverable reason.
 Assume the row is fixable until the artifact, scorer, stack, or protocol
 evidence proves otherwise.
 
-Do not let invalid or missing rows become a tidy excuse for stopping. They are a
+Do not let invalid or missing rows become the default reason to stop. They are a
 worklist. If the user asked for results, the default response is to keep
-producing terminal artifacts for every unaffected comparable task while the bad
-rows are investigated. A blocker report is not a result set.
+producing terminal artifacts for every unaffected comparable task while the
+invalid rows are investigated. A blocker report is not a result set.
 
 Timeouts, provider refusals, missing summaries, and scorer errors are result
 artifacts or recovery candidates first. Treat them as benchmark-ending only

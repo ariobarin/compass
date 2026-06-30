@@ -24,18 +24,19 @@ rules change:
 3. Keep the goal active while work is incomplete, under review, waiting on CI,
    or waiting on external state.
 4. Mark complete only after evidence proves the completion predicate.
-5. Treat blocked as a severe claim, not a resting state. Mark blocked only when
-   the same external constraint survives repeated pressure and no meaningful
+5. Treat blocked as a serious claim, not a resting state. Mark blocked only when
+   the same external constraint has been actively tested and no meaningful
    local progress remains possible.
 
-A goal makes surrender more expensive, not easier. A tidy blocker report, a
-partial run, a stalled review, or a handoff that explains failure does not end a
-goal. Convert it into repair, reroute, review, recovery, or a named external
-decision until the completion predicate is truly satisfied.
+A goal raises the bar for stopping. A tidy blocker report, a partial run, a
+stalled review, or a handoff that explains failure does not end a goal. Convert
+it into repair, reroute, review, recovery, or a named external decision until
+the completion predicate is truly satisfied.
 
 When the user asked for results, a blocker report is not completion. It is an
-alleged blocker under pressure. Do not mark complete because the report is neat,
-because the failure is well explained, or because one row or worker became ugly.
+unfinished signal to investigate. Do not mark complete because the report is
+neat, because the failure is well explained, or because one row or worker became
+invalid.
 Keep the goal open and drive the next result-producing move unless the user
 explicitly accepts an incomplete endpoint.
 
@@ -64,9 +65,9 @@ finish line, scope boundary, verification evidence, waiting rule, blocker rule,
 and any subagent slices. Prefer named files, repos, PRs, commands, checks,
 artifacts, and review signals over broad intent.
 
-Write blocker rules as pressure rules. They should force the agent to say what
-failed, what was tried, what evidence changed, what local move remains, and what
-external decision, if any, truly cannot be made from the workspace.
+Write blocker rules as active evidence rules. They should require the agent to
+say what failed, what was tried, what evidence changed, what local move remains,
+and what external decision, if any, truly cannot be made from the workspace.
 
 For ready-to-copy controller, worker, monitor, and subagent templates, read
 [goal-contracts.md](references/goal-contracts.md).
