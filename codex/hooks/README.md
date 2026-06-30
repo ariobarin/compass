@@ -2,6 +2,11 @@
 
 These hooks are global Codex hooks carried by Compass.
 
+`portable_guard.py` is a thin launcher. Hook behavior belongs in
+`guard/<hook>.py`, and hook-specific notes belong in `docs/<hook>.md`.
+Hook commands pass reviewed guard module names to the launcher. The runner does
+not auto-discover Python files from the guard directory.
+
 Hook commands resolve from the active Codex home. If `CODEX_HOME` is set, they
 run from that home instead of assuming the default `~/.codex`.
 
