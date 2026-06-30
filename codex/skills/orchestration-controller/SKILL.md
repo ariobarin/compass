@@ -17,15 +17,15 @@ For long-running execution, the controller must name an execution owner. A
 runner thread, worker, or subagent should own the shell session, live process,
 local logs, and immediate recovery loop. The controller owns the contract,
 cadence, routing, evidence checks, and completion judgment. If the controller is
-also driving the runner loop, it has already lost the level that makes
+also driving the runner loop, it is no longer holding the level that makes
 orchestration useful.
 
-Keep a command posture. A worker status is not reality just because it is tidy,
+Keep a control posture. A worker status is not reality just because it is tidy,
 confident, or written in a final-answer shape. Especially for `BLOCKED`, the
-controller should feel active resistance: the report is a pressure signal, not a
-permission slip to stop. If the work can still move through inspection, repair,
+controller should require active review: the report is an unresolved signal, not
+authorization to stop. If the work can still move through inspection, repair,
 reroute, restart, review, recovery, or a bounded smoke, route that motion to the
-owner and demand evidence.
+owner and ask for evidence.
 
 ## Required Reference
 
@@ -39,7 +39,7 @@ Hold the level above execution:
 
 - keep the parent objective and completion evidence in view;
 - treat worker statuses as claims to interpret, not decisions to accept;
-- force status claims into evidence, next action, reroute, recovery, or proven
+- turn status claims into evidence, next action, reroute, recovery, or proven
   external dependency;
 - detect when effort has become thrash;
 - choose cadence, review paths, reroutes, and handoffs;
@@ -67,7 +67,7 @@ ownership and parent completion authority.
 Use judgment rather than a fixed sequence:
 
 - `DONE` is a claim to verify against the parent objective.
-- `BLOCKED` is not accepted as reality until the controller has broken it apart.
+- `BLOCKED` is not accepted as reality until the controller has tested it.
   It usually means the worker has lost the next move. Ask what failed, what was
   tried, what that proved, and what the smallest next action is.
 - `NEEDS_CONTEXT` means find or route context before asking the user.

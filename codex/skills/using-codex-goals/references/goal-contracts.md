@@ -118,7 +118,7 @@ Evidence required: process table, artifact counts, terminal summaries, exact
   error clusters, paths to logs, and next recovery action when rows are missing
   or invalid.
 If stuck or failing: keep healthy comparable slices moving when safe, preserve
-  evidence, identify the smallest poisoned slice, and ask the controller only
+  evidence, identify the smallest affected slice, and ask the controller only
   for a benchmark-validity decision that cannot be made locally.
 ```
 
@@ -144,7 +144,7 @@ what cadence to use between checks.
 ## Blocker Pressure
 
 Do not write goal contracts that make `BLOCKED` feel like an acceptable finish
-line. A blocker is a claim that must be compressed until it turns into one of
+line. A blocker is a claim that must be tested until it turns into one of
 three things: a concrete local next action, a reroute to a better owner, or a
 specific external decision that cannot be made from the workspace.
 
@@ -157,8 +157,8 @@ Strong contracts tell the worker what to do when stuck:
 - ask the controller only when the remaining decision is genuinely outside the
   worker's authority.
 
-Stuck is not a place to rest. It is pressure to convert uncertainty into the
-next local action, a better owner, or a proven external dependency.
+Stuck is a signal to convert uncertainty into the next local action, a better
+owner, or a proven external dependency.
 
 ## Subagent Slice Template
 
