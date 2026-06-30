@@ -1,0 +1,7 @@
+interface:
+  display_name: "Clarify To PRs"
+  short_description: "Turn unclear work into PR plans"
+  default_prompt: "Use $clarify-to-prs to turn these issues or review notes into a confirmed evidence-backed PR plan before editing."
+
+policy:
+  allow_implicit_invocation: true
