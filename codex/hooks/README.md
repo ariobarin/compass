@@ -4,6 +4,9 @@ These hooks are global Codex hooks carried by `codex-portable`.
 
 - Dirty worktree closeout: on `Stop`, asks Codex to continue once when the current repo or immediate child repos have dirty files or unpushed commits, so the final answer names the leftover state.
 - Public artifact dash guard: on `PreToolUse`, blocks public commit, tag, and PR commands that contain Unicode dash characters, and blocks any patch that adds those characters.
+- Understanding check focus: on `UserPromptSubmit`, asks Codex to answer only
+  the user's understanding check when the prompt directly asks "do you
+  understand what I mean", `dykwim`, or `ykwim`.
 
 The hook commands resolve from the active Codex home. If `CODEX_HOME` is set,
 they run from that home instead of assuming the default `~/.codex`.
@@ -18,5 +21,7 @@ Opt-outs:
   closeout.
 - `CODEX_PORTABLE_DISABLE_CHILD_REPO_SCAN=1` keeps git closeout limited to the
   current repository.
+- `CODEX_PORTABLE_DISABLE_UNDERSTANDING_CHECK=1` disables understanding check
+  focus.
 
 Codex requires hook trust review after these hooks are installed into a live Codex home. Open `/hooks` and trust the current definitions.

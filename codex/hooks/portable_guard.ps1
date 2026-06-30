@@ -39,13 +39,20 @@ foreach ($runner in $runners) {
             $inputText = [Console]::In.ReadToEnd()
         }
         $oldPythonIoEncoding = [Environment]::GetEnvironmentVariable("PYTHONIOENCODING", "Process")
+        $oldOutputEncoding = $global:OutputEncoding
+        $oldConsoleOutputEncoding = [Console]::OutputEncoding
+        $utf8Encoding = New-Object System.Text.UTF8Encoding $false
         [Environment]::SetEnvironmentVariable("PYTHONIOENCODING", "utf-8", "Process")
+        $global:OutputEncoding = $utf8Encoding
+        [Console]::OutputEncoding = $utf8Encoding
         try {
             $inputText | & $exe @runnerArgs $guard
             $guardExitCode = $LASTEXITCODE
         }
         finally {
             [Environment]::SetEnvironmentVariable("PYTHONIOENCODING", $oldPythonIoEncoding, "Process")
+            $global:OutputEncoding = $oldOutputEncoding
+            [Console]::OutputEncoding = $oldConsoleOutputEncoding
         }
         exit $guardExitCode
     }

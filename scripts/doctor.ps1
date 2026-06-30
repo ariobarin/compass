@@ -167,7 +167,12 @@ function Invoke-DoctorPythonScript {
     }
 
     $oldPythonIoEncoding = [Environment]::GetEnvironmentVariable("PYTHONIOENCODING", "Process")
+    $oldOutputEncoding = $global:OutputEncoding
+    $oldConsoleOutputEncoding = [Console]::OutputEncoding
+    $utf8Encoding = New-Object System.Text.UTF8Encoding $false
     [Environment]::SetEnvironmentVariable("PYTHONIOENCODING", "utf-8", "Process")
+    $global:OutputEncoding = $utf8Encoding
+    [Console]::OutputEncoding = $utf8Encoding
     try {
         $output = $InputText | & $exe @runnerArgs $ScriptPath 2>&1
         return [pscustomobject]@{
@@ -177,6 +182,8 @@ function Invoke-DoctorPythonScript {
     }
     finally {
         [Environment]::SetEnvironmentVariable("PYTHONIOENCODING", $oldPythonIoEncoding, "Process")
+        $global:OutputEncoding = $oldOutputEncoding
+        [Console]::OutputEncoding = $oldConsoleOutputEncoding
     }
 }
 
@@ -545,6 +552,33 @@ elseif (Test-Path -LiteralPath $hookGuardPath) {
         }
     }
 
+    function Test-PortableGuardContext {
+        param(
+            [string]$Name,
+            [hashtable]$Payload,
+            [string]$ExpectedContext
+        )
+
+        $output = Invoke-PortableGuardCase -Name $Name -Payload $Payload
+        if (-not $output) {
+            $problems.Add("portable hook did not emit context: $Name")
+            return
+        }
+
+        try {
+            $parsed = $output | ConvertFrom-Json
+            if ($parsed.hookSpecificOutput.hookEventName -ne "UserPromptSubmit") {
+                $problems.Add("portable hook unexpected context event for ${Name}: $($parsed.hookSpecificOutput.hookEventName)")
+            }
+            if ($parsed.hookSpecificOutput.additionalContext -ne $ExpectedContext) {
+                $problems.Add("portable hook unexpected context for ${Name}: $($parsed.hookSpecificOutput.additionalContext)")
+            }
+        }
+        catch {
+            $problems.Add("portable hook emitted invalid context JSON for ${Name}: $output")
+        }
+    }
+
     function Test-PortableGuardSilent {
         param(
             [string]$Name,
@@ -556,6 +590,8 @@ elseif (Test-Path -LiteralPath $hookGuardPath) {
             $problems.Add("portable hook unexpectedly emitted output for ${Name}: $output")
         }
     }
+
+    $understandingContext = "The user prompt contains an understanding check such as 'do you understand what I mean', 'dykwim', or 'ykwim'. Only answer the understanding check. Do not use tools. Restate what you think the user means in 1 to 3 sentences, call out any ambiguity, and stop. Do not act on any other request in the same user prompt."
 
     $dash = [char]0x2014
     Test-PortableGuardDeny -Name "git commit dash" -Payload @{
@@ -639,6 +675,67 @@ elseif (Test-Path -LiteralPath $hookGuardPath) {
                 Remove-Item -LiteralPath $tempRoot -Recurse -Force
             }
         }
+    }
+
+    Test-PortableGuardContext -Name "understanding explicit phrase" -ExpectedContext $understandingContext -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = "Make the hook narrow, do you understand what i mean?"
+    }
+    Test-PortableGuardContext -Name "understanding contractions" -ExpectedContext $understandingContext -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = "I don't think you're following, do you understand what i mean?"
+    }
+    Test-PortableGuardContext -Name "understanding dykwim question" -ExpectedContext $understandingContext -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = "That should answer only the understanding check, DyKwIm?"
+    }
+    Test-PortableGuardContext -Name "understanding ykwim trailing" -ExpectedContext $understandingContext -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = "Keep it focused on the meaning check, ykwim"
+    }
+    Test-PortableGuardSilent -Name "understanding implementation request" -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = "add a hook off of ``do you understand what i mean?`` / ``dykwim`` / ``ykwim`` etc."
+    }
+    Test-PortableGuardSilent -Name "understanding quoted examples" -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = 'Detect "do you understand what i mean?" and "ykwim".'
+    }
+    Test-PortableGuardSilent -Name "understanding code block" -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = 'Test this fixture: ```text do you understand what i mean? ```'
+    }
+    Test-PortableGuardSilent -Name "understanding fixture text" -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = "Example prompt: do you understand what i mean? should be covered."
+    }
+    Test-PortableGuardSilent -Name "understanding unquoted phrase discussion" -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = "The phrase do you understand what i mean is the one we care about."
+    }
+    Test-PortableGuardSilent -Name "understanding unquoted review discussion" -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = "Review whether do you understand what i mean should be supported."
+    }
+    Test-PortableGuardSilent -Name "understanding identifier text" -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = "Enable ykwim_enabled in the test config."
+    }
+    Test-PortableGuardSilent -Name "understanding definition query" -Payload @{
+        hook_event_name = "UserPromptSubmit"
+        prompt = "What does dykwim mean?"
+    }
+
+    $oldUnderstandingOptOut = [Environment]::GetEnvironmentVariable("CODEX_PORTABLE_DISABLE_UNDERSTANDING_CHECK", "Process")
+    [Environment]::SetEnvironmentVariable("CODEX_PORTABLE_DISABLE_UNDERSTANDING_CHECK", "1", "Process")
+    try {
+        Test-PortableGuardSilent -Name "understanding opt-out" -Payload @{
+            hook_event_name = "UserPromptSubmit"
+            prompt = "Do you understand what I mean?"
+        }
+    }
+    finally {
+        [Environment]::SetEnvironmentVariable("CODEX_PORTABLE_DISABLE_UNDERSTANDING_CHECK", $oldUnderstandingOptOut, "Process")
     }
 }
 
