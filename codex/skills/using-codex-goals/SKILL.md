@@ -25,19 +25,20 @@ rules change:
    or waiting on external state.
 4. Mark complete only after evidence proves the completion predicate.
 5. Treat blocked as a severe claim, not a resting state. Mark blocked only when
-   the same external constraint survives repeated pressure and no meaningful
-   local progress remains possible.
+   the same blocking condition has held for at least three consecutive goal
+   turns and no meaningful local progress remains possible.
 
-A goal makes surrender more expensive, not easier. A tidy blocker report, a
-partial run, a stalled review, or a handoff that explains failure does not end a
-goal. Convert it into repair, reroute, review, recovery, or a named external
-decision until the completion predicate is truly satisfied.
+A tidy blocker report, a partial run, a stalled review, or a handoff that
+explains failure does not end a goal. Convert it into repair, reroute, review,
+recovery, or a named external decision until the completion predicate is truly
+satisfied or the same blocker has repeated across at least three goal turns.
 
 When the user asked for results, a blocker report is not completion. It is an
-alleged blocker under pressure. Do not mark complete because the report is neat,
-because the failure is well explained, or because one row or worker became ugly.
-Keep the goal open and drive the next result-producing move unless the user
-explicitly accepts an incomplete endpoint.
+unfinished signal to investigate. Do not mark complete because the report is
+neat, because the failure is well explained, because evidence is partial or
+stale, or because one row or worker became invalid. Keep the goal open and drive
+the next result-producing move unless the user explicitly accepts an incomplete
+endpoint.
 
 ## Goal State Boundary
 
@@ -83,7 +84,8 @@ For ready-to-copy controller, worker, monitor, and subagent templates, read
 5. On interruption or continuation, resume from the durable objective and the
    latest authoritative state, not only from prior chat memory.
 6. Before marking complete, audit every explicit requirement against current
-   evidence. Weak, indirect, stale, or missing evidence means keep working.
+   evidence. Weak, partial, indirect, stale, or missing evidence means keep
+   working.
 7. If goal tools are unavailable in the current context, keep using the same
    goal-shaped contract in plain text and describe it as a contract rather than
    active goal state.
