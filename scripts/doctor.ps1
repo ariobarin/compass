@@ -105,6 +105,11 @@ foreach ($path in @(
     ".github\workflows\portable-checks.yml",
     "AGENTS.md",
     "codex\AGENTS.md",
+    "codex\hooks.json",
+    "codex\hooks\README.md",
+    "codex\hooks\portable_guard.py",
+    "codex\hooks\portable_guard.ps1",
+    "codex\hooks\portable_guard.sh",
     "codex\keybindings.json",
     "codex\config.review.toml",
     "manifests\portable-files.toml",
@@ -123,6 +128,70 @@ foreach ($path in @(
     $fullPath = Join-Path $repoRoot $path
     if (-not (Test-Path $fullPath)) {
         $problems.Add("missing required file: $path")
+    }
+}
+
+function Get-DoctorPythonRunner {
+    $candidates = New-Object System.Collections.Generic.List[object]
+
+    if ($env:OS -eq "Windows_NT") {
+        $candidates.Add(@("py", "-3"))
+    }
+
+    $candidates.Add(@("python3"))
+    $candidates.Add(@("python"))
+
+    foreach ($candidate in $candidates) {
+        $exe = $candidate[0]
+        if (-not (Get-Command $exe -ErrorAction SilentlyContinue)) {
+            continue
+        }
+
+        $runnerArgs = @()
+        if ($candidate.Count -gt 1) {
+            $runnerArgs = @($candidate[1..($candidate.Count - 1)])
+        }
+
+        & $exe @runnerArgs "--version" *> $null
+        if ($LASTEXITCODE -eq 0) {
+            return @($candidate)
+        }
+    }
+
+    return @()
+}
+
+function Invoke-DoctorPythonScript {
+    param(
+        [string[]]$Runner,
+        [string]$ScriptPath,
+        [string]$InputText
+    )
+
+    $exe = $Runner[0]
+    $runnerArgs = @()
+    if ($Runner.Count -gt 1) {
+        $runnerArgs = @($Runner[1..($Runner.Count - 1)])
+    }
+
+    $oldPythonIoEncoding = [Environment]::GetEnvironmentVariable("PYTHONIOENCODING", "Process")
+    $oldOutputEncoding = $global:OutputEncoding
+    $oldConsoleOutputEncoding = [Console]::OutputEncoding
+    $utf8Encoding = New-Object System.Text.UTF8Encoding $false
+    [Environment]::SetEnvironmentVariable("PYTHONIOENCODING", "utf-8", "Process")
+    $global:OutputEncoding = $utf8Encoding
+    [Console]::OutputEncoding = $utf8Encoding
+    try {
+        $output = $InputText | & $exe @runnerArgs $ScriptPath 2>&1
+        return [pscustomobject]@{
+            ExitCode = $LASTEXITCODE
+            Output = ($output -join "`n")
+        }
+    }
+    finally {
+        [Environment]::SetEnvironmentVariable("PYTHONIOENCODING", $oldPythonIoEncoding, "Process")
+        $global:OutputEncoding = $oldOutputEncoding
+        [Console]::OutputEncoding = $oldConsoleOutputEncoding
     }
 }
 
@@ -351,6 +420,49 @@ else {
         if ($manifestSkills -notcontains $skill) {
             $problems.Add("skill in install map missing from manifest: $skill")
         }
+    }
+}
+
+$hooksJsonPath = Join-Path $repoRoot "codex\hooks.json"
+try {
+    [void](Get-Content -Raw -Encoding UTF8 -LiteralPath $hooksJsonPath | ConvertFrom-Json)
+}
+catch {
+    $problems.Add("invalid hooks.json: $($_.Exception.Message)")
+}
+
+$hookGuardPath = Join-Path $repoRoot "codex\hooks\portable_guard.py"
+$pythonRunner = @(Get-DoctorPythonRunner)
+if ($pythonRunner.Count -eq 0) {
+    $problems.Add("no runnable Python found for portable hook guard")
+}
+elseif (Test-Path -LiteralPath $hookGuardPath) {
+    $payload = @{ hook_event_name = "UnknownEvent" } | ConvertTo-Json -Compress -Depth 4
+    $result = Invoke-DoctorPythonScript -Runner $pythonRunner -ScriptPath $hookGuardPath -InputText $payload
+    if ($result.ExitCode -ne 0) {
+        $problems.Add("portable hook guard failed unknown event smoke")
+    }
+    elseif ($result.Output.Trim()) {
+        $problems.Add("portable hook guard emitted output for unknown event: $($result.Output.Trim())")
+    }
+}
+
+$hookLauncherPath = Join-Path $repoRoot "codex\hooks\portable_guard.ps1"
+if (Test-Path -LiteralPath $hookLauncherPath) {
+    $oldCodexHome = [Environment]::GetEnvironmentVariable("CODEX_HOME", "Process")
+    [Environment]::SetEnvironmentVariable("CODEX_HOME", (Join-Path $repoRoot "codex"), "Process")
+    try {
+        $payload = @{ hook_event_name = "UnknownEvent" } | ConvertTo-Json -Compress -Depth 4
+        $launcherOutput = $payload | & $hookLauncherPath 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            $problems.Add("portable hook PowerShell launcher failed")
+        }
+        elseif (($launcherOutput -join "`n").Trim()) {
+            $problems.Add("portable hook PowerShell launcher emitted output for unknown event")
+        }
+    }
+    finally {
+        [Environment]::SetEnvironmentVariable("CODEX_HOME", $oldCodexHome, "Process")
     }
 }
 
