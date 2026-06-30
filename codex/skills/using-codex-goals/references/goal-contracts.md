@@ -148,6 +148,12 @@ line. A blocker is a claim that must be compressed until it turns into one of
 three things: a concrete local next action, a reroute to a better owner, or a
 specific external decision that cannot be made from the workspace.
 
+When using goal tools, mark blocked only when the same blocking condition has
+held for at least three consecutive goal turns and no meaningful local progress
+remains possible. If any local repair, bounded validation, owner reroute, or
+narrower question can still move the goal, keep the goal active and take that
+step. Do not mark complete for partial, indirect, stale, or missing evidence.
+
 Strong contracts tell the worker what to do when stuck:
 
 - inspect the exact failure;
