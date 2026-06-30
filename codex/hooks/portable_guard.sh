@@ -12,11 +12,11 @@ if [ ! -f "$guard" ]; then
 fi
 
 if command -v python3 >/dev/null 2>&1; then
-  exec python3 "$guard"
+  exec python3 "$guard" "$@"
 fi
 
 if command -v python >/dev/null 2>&1; then
-  exec python "$guard"
+  exec python "$guard" "$@"
 fi
 
 exit 0

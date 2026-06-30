@@ -1,4 +1,5 @@
 $ErrorActionPreference = "SilentlyContinue"
+$guardModules = @($args)
 
 if ($env:CODEX_HOME) {
     $codexHome = $env:CODEX_HOME
@@ -47,7 +48,7 @@ foreach ($runner in $runners) {
         $global:OutputEncoding = $utf8Encoding
         [Console]::OutputEncoding = $utf8Encoding
         try {
-            $inputText | & $exe @runnerArgs $guard
+            $inputText | & $exe @runnerArgs $guard @guardModules
             $guardExitCode = $LASTEXITCODE
         }
         finally {
