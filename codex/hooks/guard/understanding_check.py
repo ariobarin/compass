@@ -27,7 +27,7 @@ UNDERSTANDING_CONTEXT = (
     "Understanding-check override: make this turn about answering the user's "
     "understanding check, not carrying out other requested work. Inspect the "
     "repo or search the web if needed to understand the reference. Then state "
-    "whether you understand, restate the likely meaning in 1 to 3 sentences, "
+    "whether you understand, restate the likely meaning, "
     "and name any remaining ambiguity."
 )
 PHRASE_DISCUSSION_BEFORE_RE = re.compile(
