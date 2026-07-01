@@ -40,6 +40,8 @@ files or proposing changes.
 - `workflows/`: repo-side operating notes for recurring maintenance work. These
   are not installed into a live Codex home or user skill home.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
+  Use `workflows/codex-restart-recovery.md` for restart-only recovery of
+  unfinished local Codex sessions.
   Use `workflows/which-llm-plugin.md` for the durable `which-llm` plugin
   install and update route.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
@@ -62,6 +64,12 @@ Check the repo for obvious portability mistakes:
 
 ```powershell
 .\scripts\doctor.ps1
+```
+
+Preview local Codex sessions that would be resumed after a restart:
+
+```powershell
+.\scripts\codex-restart-recovery.ps1 -DryRun
 ```
 
 Check whether live Codex and user skill files match the portable allowlist and

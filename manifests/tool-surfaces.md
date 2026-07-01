@@ -19,6 +19,7 @@ and cache paths out of this repo.
 | Skills | Load task-specific instructions, references, scripts, and assets | Yes | Medium | Keep descriptions concise. Move details into `SKILL.md` and references. |
 | Agents | Spawn focused Codex sessions with custom instructions | Yes | Medium | Keep agents narrow and explicit. Pure explorers should use read-only sandboxing. Critics that validate behavior can run tools while staying non-editing by role. |
 | Hooks | Run trusted commands around Codex tool use and turn closeout | Yes | High | Keep hook code small, local, and reviewed. Hooks must not carry secrets, network calls, machine paths, or auth state. Runtime hooks should fail open when dependencies are missing, with `doctor.ps1` catching invalid portable copies. |
+| Restart recovery script | Registers a Windows logon task and can resume saved Codex sessions once per boot | Partial | High | Keep scheduled-task instances, logs, and session state local. Review the script and workflow here, cap resumed sessions, and avoid recurring polling. |
 
 ## Review Checklist
 

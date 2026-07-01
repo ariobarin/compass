@@ -101,6 +101,11 @@ Do not treat live `automations/` state as the portable form of a reusable
 workflow. If an automation pattern should survive across machines, capture it
 as a skill, workflow doc, or reviewed config change instead.
 
+For restart-only local recovery of unfinished sessions, use
+`workflows/codex-restart-recovery.md` and
+`scripts/codex-restart-recovery.ps1`. The scheduled task remains machine-local,
+while the reviewable recovery logic lives in this repo.
+
 ## Skill Discovery Targets
 
 Current Codex docs describe repo skills under `.agents/skills` while walking
@@ -143,6 +148,8 @@ skill install paths again:
 
 - [addition-intake.md](addition-intake.md): promoting new portable artifacts and
   checking related stale guidance.
+- [codex-restart-recovery.md](codex-restart-recovery.md): installing a
+  restart-only local recovery task for unfinished Codex sessions.
 - [which-llm-plugin.md](which-llm-plugin.md): installing and refreshing the
   separately owned `which-llm` plugin without tracking generated cache state.
 - [plan-template.md](plan-template.md): planning large or risky work.
