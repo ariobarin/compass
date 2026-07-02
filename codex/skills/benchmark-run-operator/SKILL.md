@@ -9,41 +9,42 @@ Use this skill when a benchmark run is a live system to operate, not just a
 script to start. The run is not trustworthy until the stack, timeout, workers,
 artifacts, and comparison set have been verified.
 
-The sacred priority is producing the requested result set. Validity rules keep
-you from lying about results; they are not a permission slip to quit. A pretty
-incident report is a failure if runnable, comparable work was still available.
+The priority is producing the requested result set with valid provenance.
+Validity rules keep reports honest and guide whether the next route should be
+continue, pause, repair, rerun, rescore, reroute, or ask for authority. A status
+packet is not a substitute for that route decision.
 
 Front-load the operating doctrine. Any benchmark handoff, runner prompt,
 monitor prompt, or status packet must put the non-negotiables in the first
 screen: desired result, runner owner, strict contract, active stop conditions,
 and current next action. Do not bury this behind history, logs, or caveats. If
 only the first 10 lines are read, the agent should still know what result to
-produce, who owns execution, and what failure mode to refuse.
+produce, who owns execution, and what risk to diagnose.
 
-Invalid rows are poisonous to headline claims, not poisonous to continued
-collection. Treat them as a recovery queue: classify them, preserve evidence,
-rerun or rescore what can be recovered, and keep healthy slices moving whenever
-continuing will not corrupt comparability or shared state. Do not dare freeze a
-healthy arm, site, worker, or stack just because one row got ugly.
+Invalid rows are poisonous to headline claims. Treat them as a diagnostic
+signal and recovery queue: classify them, preserve evidence, identify the
+poisoned label, rerun or rescore what can be recovered, and decide whether
+healthy slices can continue without corrupting comparability or shared state.
 
-Recoverable invalid rows are work, not caveats. Prosecute them until each one is
+Recoverable invalid rows are work, not caveats. Work them until each one is
 countable, intentionally rerun, cleanly rescored, or proven nonrecoverable under
-the benchmark protocol. Idle safe capacity is waste. Use it. Do not let safe
-isolated workers, single-site stacks, or disjoint task slices sit idle while one
-bad row is being diagnosed, unless you have a recorded protocol reason that
-parallel work would poison the comparison.
+the benchmark protocol. Idle safe capacity is a signal to inspect. Use safe
+isolated workers, single-site stacks, or disjoint task slices only when they
+have clear ownership, comparable provenance, and no state collision with the
+diagnosis underway.
 
-An alleged blocker is guilty until proven. Exhaust the local moves first:
-continue unaffected slices, isolate the failing slice, rerun only affected task
-ids, rescore terminal artifacts, switch to a clearly linked recovery label, or
-write a provenance map that lets original and recovery rows aggregate cleanly.
-Only then call for a user decision.
+Treat an alleged blocker as a diagnosis request. Step back and name the failed
+action, current state, owner, evidence, local recovery tried, smallest
+reversible move, and any external decision that truly prevents progress.
+Continue unaffected slices, isolate the failing slice, rerun affected task ids,
+rescore terminal artifacts, switch to a clearly linked recovery label, or write
+a provenance map only after that route is safe and attributable.
 
 For long runs, split controller and runner ownership. The parent orchestrator
 should create or route to a runner thread or worker that owns the shell process,
 live logs, local recovery, and artifact preservation. The parent stays above the
 run: it defines the contract, checks evidence, reroutes failures, keeps monitors
-alive, and refuses false blockers. Do not let the orchestrator sit inside the
+alive, and diagnoses blocker claims. Do not let the orchestrator sit inside the
 long-running execution loop and then mistake local fatigue for judgment.
 
 For a new agent family or fresh integration, treat the work as onboarding first
@@ -89,8 +90,8 @@ Read the references that match the task:
 7. Monitor worker state, result-root growth, exact error clusters, and scheduler
    state while it runs.
 8. If invalid rows are accumulating, pause only the poisoned label, slice, site,
-   or stack, then immediately debug why the rows are invalid. Keep healthy
-   comparable work moving.
+   or stack, then debug why the rows are invalid. Continue healthy comparable
+   work only when provenance remains clean.
 9. Treat missing, invalid, or unscored rows as a recovery queue until they are
    classified as countable, recoverable, or protocol-unsafe to retry.
 10. Count results only after terminal artifacts exist and final aggregation has

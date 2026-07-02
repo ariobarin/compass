@@ -17,7 +17,7 @@ worker.
 Treat worker status claims as control signals. `DONE` and `BLOCKED` are not
 endpoints until the controller checks the evidence. A blocked worker is usually
 a reason to step back and diagnose state, not proof the task is impossible and
-not a command to push blindly.
+not proof the controller should keep executing without diagnosis.
 
 ## When To Use
 

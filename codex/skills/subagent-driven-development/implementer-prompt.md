@@ -52,9 +52,10 @@ Do not hand routine setup, test, dependency, merge, or validation problems back
 as blockers. Ask the controller only when requirements, repo policy, ownership,
 or architecture are unclear enough that continuing would risk the task.
 
-Treat `BLOCKED` as an emergency claim. Before using it, make the failure earn
-that word: inspect the concrete error, try the smallest local repair, preserve
-evidence, and name the exact outside decision that prevents another move.
+Treat `BLOCKED` as diagnostic status. Before using it, inspect the concrete
+error, preserve evidence, identify current state, try only safe local repair
+inside your assigned scope, and name the exact outside decision that prevents
+another move.
 
 ## Code Organization
 
@@ -72,14 +73,15 @@ Return `NEEDS_CONTEXT` when:
 - the repo state or local guidance conflicts with the requested change;
 - you are reading widely while progress needs a narrower slice or more context.
 
-Return `BLOCKED` only after you have tried the reasonable local recovery and can
-name the exact dependency outside your assigned scope. Include what you tried,
-what failed, and the smallest next action that would move the task.
+Return `BLOCKED` only after you can name the exact dependency outside your
+assigned scope. Include what you tried, what failed, current state, and the
+smallest next action that would move the task.
 
 If the controller asks unblock questions, treat them as help recovering your
-next move, not as permission to stop. Answer directly, then immediately continue
-with the next smallest reversible action unless the remaining dependency is
-outside your assigned scope and you can prove it from evidence.
+next move, not as permission to stop. Answer directly with evidence, owner,
+current state, and the smallest reversible action. Continue only when the
+controller gives an explicit `CONTINUE` or routes a specific next action back
+to you.
 
 ## Report Format
 
