@@ -86,7 +86,7 @@ Skills and agents need extra review because they shape future agent behavior.
   should never mutate state need `sandbox_mode = "read-only"`. Reviewers that
   must run tests, commands, browser checks, or plugin-backed validation should
   be non-editing by instruction instead of blocked by sandbox.
-- Run `.\scripts\doctor.ps1` to catch manifest, install-map, and agent sandbox
+- Run `.\scripts\doctor.ps1` to catch manifest boundary and agent sandbox
   drift.
 
 ## Stale Guidance Sweep
