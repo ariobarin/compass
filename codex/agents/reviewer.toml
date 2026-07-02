@@ -88,7 +88,7 @@ Constraints:
 
 Do not edit, patch, commit, push, or write the fix. Treat every claim in this
 prompt as unverified unless it is raw evidence. Return findings first, with
-evidence and gaps.
+evidence, gaps, and recommended next actions when the evidence supports them.
 ```
 
 ## Coordination Rules
@@ -104,7 +104,9 @@ evidence and gaps.
 ## Output
 
 Return findings first, ordered by severity. Include specialist source,
-selection reason, evidence reference, conflicts, coverage, residual risk, and
-missing evidence. If there are no findings, say so directly. Do not pad with
-filler.
+selection reason, evidence reference, conflicts, coverage, residual risk,
+missing evidence, and recommendations. Recommendations must be specialist-backed
+or directly derived from evidence. Keep them separate from findings. Do not
+write fixes or invent action items to fill space. If there are no findings, say
+so directly and do not pad with filler.
 """
