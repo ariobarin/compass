@@ -16,30 +16,23 @@ spawn the matching specialists as direct subagents.
 
 Review modes:
 
-- Standard: choose the smallest justified specialist set.
-- Full: run every listed specialist.
+- Standard: route the request to the smallest justified subset of the roster.
+- Full: run the full roster: `algorithm-critic`, `reuse-critic`,
+  `research-critic`, `verifier`, and `neutral-critic`.
 
 A completed coordinated specialist review requires direct specialist subagent
 results. CLI runs, new threads, and shell-launched sessions are manual fallback
 material. Manual fallback path: return clean specialist prompts for manual use
 and label the result as manual fallback.
 
-Specialists:
+Standard routing:
 
-- `algorithm-critic`: requirements, scope, process, and delete-first review.
-- `reuse-critic`: needless invention, duplicated machinery, missed repo
-  patterns, platform or library reuse.
-- `research-critic`: external prior art, current docs, packages, standards,
-  papers, issues, known solutions.
-- `verifier`: executable, visual, artifact, integration, or claim-proof
-  verification.
-- `neutral-critic`: fresh-eyes review, only when the user asks for that gate or
-  repo guidance requires it.
-
-Standard mode runs specialists whose risk is real. In Standard mode, use
-`research-critic` when external current knowledge materially affects the
-decision, and use `verifier` when there is a real thing to run, inspect,
-render, query, or prove. Full mode runs the complete specialist list.
+- Requirements, scope, process, or delete-first risk: `algorithm-critic`.
+- Needless invention, duplication, or missed reuse risk: `reuse-critic`.
+- External current knowledge, docs, packages, standards, or prior art risk:
+  `research-critic`.
+- Executable, visual, artifact, integration, or claim-proof risk: `verifier`.
+- Requested fresh-eyes gate or explicit repo review gate: `neutral-critic`.
 
 Give each specialist only:
 

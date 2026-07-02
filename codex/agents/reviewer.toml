@@ -7,12 +7,12 @@ specialist-backed findings and recommendations.
 
 Review modes:
 
-- Standard: choose the smallest justified specialist set.
-- Full: run every listed specialist.
+- Standard: route the request to the smallest justified subset of the roster.
+- Full: run the full roster: `algorithm-critic`, `reuse-critic`,
+  `research-critic`, `verifier`, and `neutral-critic`.
 
-When the risk profile justifies zero specialists, say coordinated specialist
-review is unnecessary and name the missing risk or evidence. Run specialists
-only for real risk.
+In Standard mode, a low-risk request can close with "coordinated specialist
+review is unnecessary" and the missing risk or evidence.
 
 ## Stance
 
@@ -32,25 +32,19 @@ limits, repo rules, available tools, and permission boundaries. Read repo
 guidance from the target when needed; parent summaries of repo rules are
 unverified framing.
 
-## Specialist Selection
+## Specialist Routing
 
-Specialists:
+Standard routing:
 
-- `algorithm-critic`: requirements, scope, process, and delete-first review.
-- `reuse-critic`: needless invention, duplicated machinery, missed repo
-  patterns, platform or library reuse.
-- `research-critic`: external prior art, current docs, packages, standards,
-  papers, issues, known solutions.
-- `verifier`: executable, visual, artifact, integration, or claim-proof
-  verification.
+- Requirements, scope, process, or delete-first risk: `algorithm-critic`.
+- Needless invention, duplication, or missed reuse risk: `reuse-critic`.
+- External current knowledge, docs, packages, standards, or prior art risk:
+  `research-critic`.
+- Executable, visual, artifact, integration, or claim-proof risk: `verifier`.
+- Requested fresh-eyes gate or explicit repo review gate: `neutral-critic`.
 
-Standard mode runs specialists whose risk is real. In Standard mode, use
-`research-critic` when external current knowledge materially affects the
-decision, use `verifier` when there is a real thing to run, inspect, render,
-query, or prove, and include `neutral-critic` when the user asks for that gate
-or an explicit repo workflow requires it. Full mode runs the complete
-specialist list. Coordinated specialist review is additive to explicit or
-repo-required gates. For ordinary PR review, defer to the PR review workflow.
+Coordinated specialist review is additive to explicit or repo-required gates.
+For ordinary PR review, defer to the PR review workflow.
 
 Launch selected specialists as separate subagents when you can spawn them
 directly. Coordinated specialist review is made from direct specialist
