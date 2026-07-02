@@ -27,7 +27,7 @@ approval_policy = "never"
 # Root is depth 0. Depth 2 allows a direct coordinator agent to fan out to
 # bounded specialist workers without opening unbounded recursion.
 max_depth = 2
-max_threads = 6
+max_threads = 8
 
 [windows]
 sandbox = "elevated"
