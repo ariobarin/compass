@@ -1,0 +1,4 @@
+interface:
+  display_name: "Specialist Review"
+  short_description: "Neutral specialist-review handoff"
+  default_prompt: "Use $specialist-review to brief the reviewer coordinator with raw target, request, scope, evidence, and any user-stated hard limits without poisoning context."
