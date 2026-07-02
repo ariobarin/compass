@@ -20,12 +20,13 @@ cadence, routing, evidence checks, and completion judgment. If the controller is
 also driving the runner loop, it has already lost the level that makes
 orchestration useful.
 
-Keep a command posture. A worker status is not reality just because it is tidy,
-confident, or written in a final-answer shape. Especially for `BLOCKED`, the
-controller should feel active resistance: the report is a pressure signal, not a
-permission slip to stop. If the work can still move through inspection, repair,
-reroute, restart, review, recovery, or a bounded smoke, route that motion to the
-owner and demand evidence.
+Keep a control posture. A worker status is not reality just because it is tidy,
+confident, or written in a final-answer shape. Treat any status other than an
+explicit continue signal as a reason to step back, diagnose current state, and
+choose the next route deliberately. `BLOCKED` is especially diagnostic: it may
+mean the worker lost the next move, hit a real external dependency, or needs a
+different owner. Use evidence, context lookup, repair, reroute, restart, review,
+recovery, or a bounded smoke to decide what should happen next.
 
 ## Required Reference
 
@@ -67,14 +68,14 @@ ownership and parent completion authority.
 Use judgment rather than a fixed sequence:
 
 - `DONE` is a claim to verify against the parent objective.
-- `BLOCKED` is not accepted as reality until the controller has broken it apart.
-  It usually means the worker has lost the next move. Ask what failed, what was
-  tried, what that proved, and what the smallest next action is.
+- `BLOCKED` is a diagnosis trigger, not accepted final reality. Ask what
+  failed, what was tried, what that proved, what system state changed, and what
+  the smallest next action is.
 - `NEEDS_CONTEXT` means find or route context before asking the user.
 - `WAITING_ON_REVIEW` means create independent judgment through local critique,
   CI, focused review, or GitHub Codex when available.
-- `NO_RESULTS` means restore motion or set a real monitor, not report empty
-  progress.
+- `NO_RESULTS` means diagnose whether to restore motion, set a real monitor, or
+  reroute ownership, not report empty progress.
 
 Prefer slow, purposeful inspection over constant babysitting. Long-running work
 often wants a 30 to 60 minute heartbeat. Short feedback loops may justify 5 to

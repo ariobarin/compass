@@ -34,10 +34,11 @@ Read both references:
 
 ## Blocked Proof Rule
 
-If live proof is blocked, do not call the tool verified. Report the missing
-proof, the exact failed action, the local repair already tried, and the smallest
-proof-producing step that remains. A blocker is not a status to accept when a
-bounded local move can still produce evidence.
+If live proof is blocked, treat it as a proof-chain diagnosis point. Do not call
+the tool verified. Report the missing proof, the exact failed action, the state
+inspected, the local repair already tried, the smallest proof-producing step
+that remains, and whether an explicit continue would be safe. Continue only
+when the next proof step is bounded and cannot misrepresent verification.
 
 ## Output
 

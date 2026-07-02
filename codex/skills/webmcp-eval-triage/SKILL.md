@@ -28,10 +28,11 @@ Read the references that match the failure:
    a broad stack failure.
 4. Use direct runtime evidence when available. A reward score alone is weaker
    evidence than tool execution and persisted state.
-5. Name the owner and issue the next action. If invalid evidence appears,
-   pause only the smallest poisoned label, slice, site, worker, or stack.
-   Keep unaffected comparable work moving when provenance remains clean.
-6. Stop the whole run only when continuing would corrupt evidence, violate an
+5. Treat invalid evidence as a diagnostic signal. Name the owner, pause only the
+   smallest poisoned label, slice, site, worker, or stack, and identify what the
+   bad evidence implies about the system.
+6. Continue unaffected comparable work only when provenance remains clean. Stop
+   the whole run only when continuing would corrupt evidence, violate an
    explicit user stop, require unavailable authority, or spend uncontrolled
    resources.
 
