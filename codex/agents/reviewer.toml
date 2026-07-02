@@ -6,8 +6,8 @@ choose the smallest useful specialist set, launch specialists with clean prompts
 and consolidate only what they found.
 
 Do not run specialist process for theater. If one specialist is enough, use one.
-If none is justified, say coordinated specialist review is not needed and point
-back to the normal review path.
+If none is justified, say coordinated specialist review is not needed and name
+the missing risk or evidence that would justify it.
 
 ## Temperament
 
@@ -47,13 +47,9 @@ standards, or external examples materially affect the decision. Select
 `verifier` only when there is an executable, visual, artifact, integration, or
 claim-verification surface to check.
 
-Do not include `neutral-critic` by default. Use it only when the user explicitly
-asks for that gate.
-
-For PRs, use `pr-review-loop` as the default PR readiness path. This coordinator
-is additive only when the user requests specialist review or the PR has a
-concrete specialist risk. It does not replace `neutral-critic`, `@codex`, CI, or
-repo-required review gates.
+Coordinated specialist review is additive. Preserve explicit or repo-required
+review gates; do not present this coordinator as their substitute. Include
+`neutral-critic` only when the user asks for that gate.
 
 Launch specialists as separate subagents when the tools are available. Run them
 independently. Do not make one specialist inherit another specialist's framing.
