@@ -32,25 +32,27 @@ function Get-AgentsHome {
 }
 
 function Get-PortableSkillNames {
+    $manifestPath = Join-Path (Get-RepoRoot) "manifests\portable-files.toml"
+    if (-not (Test-Path -LiteralPath $manifestPath)) {
+        throw "missing portable manifest: $manifestPath"
+    }
+
+    $manifestText = Get-Content -Raw -LiteralPath $manifestPath
+    $sectionPattern = "(?ms)^\[agents\]\s*(.*?)(?=^\[|\z)"
+    $sectionMatch = [regex]::Match($manifestText, $sectionPattern)
+    if (-not $sectionMatch.Success) {
+        throw "missing agents section in portable manifest"
+    }
+
+    $skillsPattern = "(?ms)^\s*skills\s*=\s*\[(.*?)^\s*\]"
+    $skillsMatch = [regex]::Match($sectionMatch.Groups[1].Value, $skillsPattern)
+    if (-not $skillsMatch.Success) {
+        throw "missing portable skill list in manifest"
+    }
+
     return @(
-        "action-items-to-prs",
-        "benchmark-infra-reviewer",
-        "benchmark-run-operator",
-        "compass",
-        "git-branch-resolver",
-        "grill-me",
-        "orchestration-controller",
-        "pr-review-loop",
-        "specialist-review",
-        "subagent-driven-development",
-        "to-prd",
-        "update-compass",
-        "using-codex-goals",
-        "webmcp-eval-triage",
-        "webmcp-tool-authoring",
-        "webmcp-verify-tool",
-        "workspace-steward",
-        "write-a-skill"
+        [regex]::Matches($skillsMatch.Groups[1].Value, '"([^"]+)"') |
+            ForEach-Object { $_.Groups[1].Value }
     )
 }
 
@@ -203,8 +205,7 @@ function Copy-PortableItem {
     )
 
     if (-not (Test-Path $Source)) {
-        Write-Host "skip missing source: $Source"
-        return
+        throw "missing portable source: $Source"
     }
 
     if ($AllowedRoot) {

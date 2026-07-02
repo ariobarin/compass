@@ -33,8 +33,8 @@ maintenance flow from memory.
   `manifests/`, `scripts/`.
 - Reviewed config fragments: `codex/config.review.toml`; do not treat it as a
   direct replacement for live `config.toml`.
-- Installed skill additions: update `manifests/portable-files.toml` and
-  `scripts/common.ps1` together.
+- Installed skill additions: update `manifests/portable-files.toml`;
+  `scripts/common.ps1` reads that manifest for the install map.
 
 ## Validate The Repo Change
 

@@ -77,7 +77,7 @@ Skills and agents need extra review because they shape future agent behavior.
 - Install user skills into `$HOME/.agents/skills`; keep `codex/skills/` as the
   reviewed source tree.
 - Add each portable skill name to `manifests/portable-files.toml`.
-- Add each portable skill to `Get-PortableFileMap` in `scripts/common.ps1`.
+- `scripts/common.ps1` reads portable skill names from that manifest.
 - When removing a previously portable user skill, keep its legacy Codex-home
   retirement entry and add an explicit user-home retirement entry to
   `Get-RetiredPortableFileMap` so `install.ps1 -Apply` actually uninstalls
@@ -86,7 +86,7 @@ Skills and agents need extra review because they shape future agent behavior.
   should never mutate state need `sandbox_mode = "read-only"`. Reviewers that
   must run tests, commands, browser checks, or plugin-backed validation should
   be non-editing by instruction instead of blocked by sandbox.
-- Run `.\scripts\doctor.ps1` to catch manifest, install-map, and agent sandbox
+- Run `.\scripts\doctor.ps1` to catch manifest boundary and agent sandbox
   drift.
 
 ## Stale Guidance Sweep
