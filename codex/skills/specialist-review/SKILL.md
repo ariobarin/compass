@@ -6,8 +6,7 @@ description: Route explicit coordinated specialist review requests to the review
 # Specialist Review
 
 Use this skill only when the user invokes `$specialist-review`, explicitly asks
-for coordinated specialist review, asks for a clean review handoff, or known
-contaminated context would weaken direct review.
+for coordinated specialist review, or asks for a clean specialist handoff.
 
 Do not use this skill for ordinary PR review. PR review loops belong to
 `pr-review-loop`; this skill is an additive specialist layer only when the user
