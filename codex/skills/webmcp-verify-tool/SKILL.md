@@ -32,6 +32,13 @@ Read both references:
 7. Confirm those docs and fixtures match the live verified surface before
    calling the change done.
 
+## Blocked Proof Rule
+
+If live proof is blocked, do not call the tool verified. Report the missing
+proof, the exact failed action, the local repair already tried, and the smallest
+proof-producing step that remains. A blocker is not a status to accept when a
+bounded local move can still produce evidence.
+
 ## Output
 
 Report the tool, page, served file, rebuild or refresh step, browser evidence,

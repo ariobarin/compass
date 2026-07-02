@@ -68,15 +68,20 @@ For each task:
    [implementer-prompt.md](implementer-prompt.md), plus the full task text,
    absolute repo path, exact files or artifacts to inspect, scope boundaries,
    nearby files, validation target, and known pitfalls.
-2. Require questions before coding when requirements or context are unclear.
+2. Require implementers to own the first pass at ambiguity. They must inspect
+   repo guidance, paths, nearby files, existing patterns, and obvious validation
+   targets before asking. Questions are allowed only after local context is
+   exhausted and the remaining ambiguity is material enough that continuing
+   risks the wrong artifact, owner, or architecture.
 3. Require one concrete status on return:
    - `DONE`
    - `DONE_WITH_CONCERNS`
    - `NEEDS_CONTEXT`
    - `BLOCKED`
-   `BLOCKED` is not a normal lane. It is unfinished emergency status and must
-   carry exact failure evidence, local recovery tried, and the outside decision
-   that truly prevents another move.
+   `BLOCKED` is not a normal lane. It is unfinished emergency status. Before
+   reporting `BLOCKED`, name the exact failed action, evidence, local recovery
+   tried, next smallest reversible move, and the external decision that truly
+   prevents progress. If any bounded local move remains, take it.
 4. If the task touches shared code paths, confirm the implementer ran the
    narrowest useful checks before review.
 5. Dispatch spec review before code quality review.

@@ -98,10 +98,10 @@ Report:
 Do not infer completion from one scheduler code. Check scheduled task state,
 active workers, child processes, and result-root growth.
 
-Treat idle safe capacity as an alarm. If independent single-site tasks, isolated
-stacks, or disjoint task slices can run without state collision, use them. The
-run operator should be embarrassed by preventable idle time when the user asked
-for results.
+Treat idle safe capacity as an alarm. Preventable idle safe capacity is a
+run-control failure when the user asked for results. If independent single-site
+tasks, isolated stacks, or disjoint task slices can run without state collision,
+name the owner, label the evidence path, and use them.
 
 When one slice fails, keep asking what can still run safely. Stop only the
 poisoned slice. Keep unrelated arms, sites, workers, or recovery labels moving
