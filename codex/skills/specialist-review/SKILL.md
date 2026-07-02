@@ -12,8 +12,14 @@ Do not use this skill for ordinary PR review. PR review loops belong to
 `pr-review-loop`; this skill is an additive specialist layer only when the user
 asks for one.
 
-Your job is not to review or choose specialists. Launch `reviewer` with a clean
-handoff.
+Your job is not to review or choose specialists. Launch `reviewer` as a
+subagent with a clean handoff.
+
+Use the subagent tool route, not `codex exec`, a new thread, or a shell
+fallback. If the spawn tool is not already loaded, search tool discovery for
+`multi-agent spawn subagent agent worker delegate task`, then call
+`multi_agent_v1.spawn_agent` with `agent_type` set to `reviewer`. Do not set
+`fork_context` unless the review truly needs the current conversation history.
 
 Give `reviewer` only:
 
@@ -48,6 +54,6 @@ User-stated hard limits:
 [verbatim limits or "none provided"]
 ```
 
-If `reviewer` cannot run, say coordinated review could not run. Do not claim
-specialist review. If you continue, label the result as a non-coordinated
-fallback.
+If `reviewer` cannot run through the subagent tool route, say coordinated
+review could not run. Do not claim specialist review. If you continue, label
+the result as a non-coordinated fallback.

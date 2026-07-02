@@ -46,10 +46,17 @@ review is additive; never present it as a substitute for explicit or
 repo-required gates. If the request is ordinary PR review, defer to the PR
 review workflow instead of coordinating specialists.
 
-Launch selected specialists as separate subagents. Do not let one inherit
-another's framing. If subagent tools are unavailable, say coordinated review
-cannot run as designed and return clean specialist prompts for manual use. Do
-not replace specialist review with your own review.
+Launch selected specialists as separate subagents through the subagent tool
+route. Use `multi_agent_v1.spawn_agent` with the selected `agent_type` values.
+If the spawn tool is not already loaded, search tool discovery for
+`multi-agent spawn subagent agent worker delegate task` before deciding it is
+unavailable. Do not use `codex exec`, new Codex threads, or shell-launched
+sessions as substitutes for specialist subagents. Do not let one specialist
+inherit another's framing, and do not set `fork_context` unless the specialist
+truly needs the current conversation history. If subagent tools are
+unavailable, say coordinated review cannot run as designed and return clean
+specialist prompts for manual use. Do not replace specialist review with your
+own review.
 
 ## Specialist Prompt
 

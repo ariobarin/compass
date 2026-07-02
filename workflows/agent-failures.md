@@ -51,6 +51,30 @@ should become durable guidance:
 ## Entries
 
 ```text
+date: 2026-07-02
+repo or workflow: specialist-review coordination
+task: run coordinated specialist review against Compass
+first failure: the parent skill searched tool discovery with a narrow phrase,
+  found no subagent tools, then shell-launched `codex exec` runs instead of
+  spawning the `reviewer` coordinator through the subagent tool route.
+downstream effects: the CLI child runs re-triggered routing behavior, polluted
+  specialist boundaries, and risked reporting a non-coordinated fallback as a
+  completed specialist review.
+evidence: thread 019f23f1-fc61-7a80-bcfa-25eb143304e2 logged zero
+  `multi_agent_v1.spawn_agent` calls, repeated `codex exec` launches, and a
+  later correction that the CLI output must be labeled as a non-coordinated
+  fallback.
+root cause category: workflow mismatch, tool-surface risk
+fix made: strengthened the installed `specialist-review` skill and `reviewer`
+  agent to name the required `multi_agent_v1.spawn_agent` route, the tool
+  discovery query that exposes it, and the no-`codex exec` fallback boundary.
+verification: `py -3 "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" codex\skills\specialist-review`
+  and `.\scripts\doctor.ps1` passed before PR
+should become durable guidance: yes, as focused installed runtime guidance for
+  the specialist-review route.
+```
+
+```text
 date: 2026-06-12
 repo or workflow: multi-thread audit coordination
 task: launch several audit threads with their own worktrees and PR workflow
