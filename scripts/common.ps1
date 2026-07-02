@@ -41,7 +41,7 @@ function Get-PortableSkillNames {
         "grill-me",
         "orchestration-controller",
         "pr-review-loop",
-        "reviewer",
+        "review",
         "subagent-driven-development",
         "to-prd",
         "using-codex-goals",

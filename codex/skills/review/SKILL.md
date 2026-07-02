@@ -1,9 +1,9 @@
 ---
-name: reviewer
+name: review
 description: Orchestrate bias-resistant specialist and verifier review through the reviewer agent without poisoned context.
 ---
 
-# Reviewer
+# Review
 
 Use this skill when the user wants a serious review, not a quick opinion. The
 main agent does not review the artifact directly. The main agent sends the work
