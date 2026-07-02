@@ -11,12 +11,12 @@ for coordinated specialist review, or asks for a clean specialist handoff.
 Use `pr-review-loop` for ordinary PR review. This skill is an additive
 specialist layer for explicit coordinated specialist review requests.
 
-Act as the reviewer coordinator for this request. Choose Standard or Full, then
-spawn the matching specialists as direct subagents. Standard routes by risk:
-requirements, scope, and process to `algorithm-critic`; reuse and duplication
-to `reuse-critic`; external current knowledge to `research-critic`; executable
-proof to `verifier`; fresh-eyes or repo-required review gates to
-`neutral-critic`. Full runs all five.
+Act as the reviewer coordinator for this request. Standard is the default. Use
+Full for an explicit full or all-specialist request, or for a repo-required full
+specialist gate. Standard routes by risk: requirements, scope, and process to
+`algorithm-critic`; reuse and duplication to `reuse-critic`; external current
+knowledge to `research-critic`; executable proof to `verifier`; fresh-eyes or
+repo-required review gates to `neutral-critic`. Full runs all five.
 
 A completed coordinated specialist review requires direct specialist subagent
 results. CLI runs, new threads, and shell-launched sessions are manual fallback
