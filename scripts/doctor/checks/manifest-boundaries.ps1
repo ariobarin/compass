@@ -115,6 +115,16 @@ foreach ($dir in Get-DoctorChildItem -Kind Directory) {
         continue
     }
 
+    # Curated reference material under a skill (docs, templates) may depict a
+    # target project layout, including local-only dir names such as tmp/ and
+    # worktrees/. That is authored content describing another workspace, not
+    # live Codex local state in this repo, so exempt it from the dir-name guard.
+    # The file and pattern checks above still scan it for auth, sessions, logs,
+    # sqlite, and the like.
+    if ($dir.FullName -match "[\\/]codex[\\/]skills[\\/][^\\/]+[\\/]references[\\/]") {
+        continue
+    }
+
     if ($blockedDirs -contains $dir.Name) {
         $problems.Add("blocked local-only directory in repo tree: $($dir.FullName)")
     }
