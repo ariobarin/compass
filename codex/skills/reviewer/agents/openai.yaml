@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reviewer"
+  short_description: "Bias-resistant specialist review"
+  default_prompt: "Use $reviewer to run a hard specialist review through the reviewer coordinator without poisoning context."
