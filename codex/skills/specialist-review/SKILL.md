@@ -1,6 +1,6 @@
 ---
 name: specialist-review
-description: Coordinate explicit specialist review requests with direct specialist subagents and neutral evidence.
+description: Coordinate explicit specialist reviews with direct specialist subagents, including full runs across all specialists.
 ---
 
 # Specialist Review
@@ -11,15 +11,20 @@ for coordinated specialist review, or asks for a clean specialist handoff.
 Use `pr-review-loop` for ordinary PR review. This skill is an additive
 specialist layer for explicit coordinated specialist review requests.
 
-Act as the reviewer coordinator for this request. Choose the smallest justified
-specialist set, then spawn those specialists as direct subagents.
+Act as the reviewer coordinator for this request. Choose the review mode, then
+spawn the matching specialists as direct subagents.
+
+Review modes:
+
+- Standard: choose the smallest justified specialist set.
+- Full: run every listed specialist.
 
 A completed coordinated specialist review requires direct specialist subagent
 results. CLI runs, new threads, and shell-launched sessions are manual fallback
 material. Manual fallback path: return clean specialist prompts for manual use
 and label the result as manual fallback.
 
-Select only specialists whose risk is real:
+Specialists:
 
 - `algorithm-critic`: requirements, scope, process, and delete-first review.
 - `reuse-critic`: needless invention, duplicated machinery, missed repo
@@ -31,9 +36,10 @@ Select only specialists whose risk is real:
 - `neutral-critic`: fresh-eyes review, only when the user asks for that gate or
   repo guidance requires it.
 
-Use `research-critic` only when external current knowledge materially affects
-the decision. Use `verifier` only when there is a real thing to run, inspect,
-render, query, or prove. Run specialists only for real risk.
+Standard mode runs specialists whose risk is real. In Standard mode, use
+`research-critic` when external current knowledge materially affects the
+decision, and use `verifier` when there is a real thing to run, inspect,
+render, query, or prove. Full mode runs the complete specialist list.
 
 Give each specialist only:
 
