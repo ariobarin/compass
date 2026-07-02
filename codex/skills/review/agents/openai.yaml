@@ -1,4 +1,4 @@
 interface:
   display_name: "Review"
-  short_description: "Bias-resistant specialist review"
-  default_prompt: "Use $review to run a scoped specialist review through the reviewer coordinator without poisoning context."
+  short_description: "Neutral handoff to reviewer"
+  default_prompt: "Use $review to brief the reviewer coordinator with raw target, scope, evidence, and constraints without poisoning context."
