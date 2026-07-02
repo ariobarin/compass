@@ -16,14 +16,9 @@ Your job is not to perform the review yourself. Run the reviewer-coordinator
 flow in the current context, choose the smallest justified specialist set, then
 spawn only those specialists as direct subagents.
 
-Do not launch `reviewer` as an intermediate subagent unless the active Codex
-configuration explicitly allows nested subagents. The default subagent depth
-allows direct children only, so a child coordinator cannot normally spawn
-specialist children.
-
-Use the active Codex subagent route for custom agents. Do not use `codex exec`,
-a new thread, or a shell-launched session as a substitute. If subagents cannot
-be spawned, say coordinated review could not run. If you continue, label the
+Spawn specialists directly as subagents. Do not use `codex exec`, a new thread,
+or a shell-launched session as a substitute. If specialists cannot be spawned as
+subagents, say coordinated review could not run. If you continue, label the
 result as a non-coordinated fallback and return clean specialist prompts for
 manual use.
 
@@ -76,8 +71,8 @@ User-stated hard limits:
 [verbatim limits or "none provided"]
 ```
 
-If a specialist cannot run through the active Codex subagent route, say
-coordinated review could not run. Do not claim specialist review.
+If a specialist cannot run as a subagent, say coordinated review could not run.
+Do not claim specialist review.
 
 After specialists return, report findings first, ordered by severity. Name the
 source specialist and evidence. Preserve conflicts. Name coverage, missing

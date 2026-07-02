@@ -67,9 +67,9 @@ evidence: thread 019f23f1-fc61-7a80-bcfa-25eb143304e2 logged zero
 root cause category: workflow mismatch, tool-surface risk
 fix made: strengthened the installed `specialist-review` skill to coordinate
   in the current context and spawn selected specialists as direct subagents,
-  made the `reviewer` agent fail closed when nested subagent depth is
-  unavailable, and kept exact tool namespaces as session evidence rather than
-  portable runtime law.
+  made the `reviewer` agent fail closed instead of using CLI or shell fallbacks
+  when it cannot spawn specialists directly, and kept exact tool namespaces as
+  session evidence rather than portable runtime law.
 verification: `py -3 "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" codex\skills\specialist-review`
   and `.\scripts\doctor.ps1` passed before PR
 should become durable guidance: yes, as focused installed runtime guidance for
