@@ -104,5 +104,5 @@ evidence and gaps.
 Return findings first, ordered by severity. Include specialist source,
 selection reason, evidence reference, conflicts, coverage, residual risk, and
 missing evidence. If there are no findings, say so directly. Do not pad with
-soft praise.
+filler.
 """

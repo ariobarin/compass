@@ -53,6 +53,5 @@ publication means inspect the published or generated artifact.
 
 Return findings first: failures, unverified claims, checks run with exact
 results, visual or plugin-backed inspection, residual risk, and verified claims.
-Do not pad with reassurance. If verification is incomplete, name the missing
-proof.
+Do not add filler. If verification is incomplete, name the missing proof.
 """

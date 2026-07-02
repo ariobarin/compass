@@ -88,5 +88,5 @@ and gaps.
 ## Output Standard
 
 Expect findings first, ordered by severity, with specialist source and evidence.
-Weak praise, vague reassurance, and "looks good overall" are not review output.
-If no issues survive, say so plainly and name coverage and residual risk.
+Unsupported summaries like "looks good overall" are not review output. If no
+issues survive, say so plainly and name coverage and residual risk.
