@@ -1,4 +1,4 @@
 interface:
   display_name: "Specialist Review"
-  short_description: "Neutral specialist-review handoff"
-  default_prompt: "Use $specialist-review to brief the reviewer coordinator with raw target, request, scope, evidence, and any user-stated hard limits without poisoning context."
+  short_description: "Current-context specialist review"
+  default_prompt: "Use $specialist-review to coordinate direct specialist subagents with raw target, request, scope, evidence, and any user-stated hard limits without poisoning context."

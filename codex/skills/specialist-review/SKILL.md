@@ -1,6 +1,6 @@
 ---
 name: specialist-review
-description: Route explicit coordinated specialist review requests to the reviewer coordinator with a neutral handoff.
+description: Coordinate explicit specialist review requests in the current context with direct specialist subagents and neutral evidence.
 ---
 
 # Specialist Review
@@ -12,16 +12,38 @@ Do not use this skill for ordinary PR review. PR review loops belong to
 `pr-review-loop`; this skill is an additive specialist layer only when the user
 asks for one.
 
-Your job is not to review or choose specialists. Launch `reviewer` as a
-subagent with a clean handoff.
+Your job is not to perform the review yourself. Run the reviewer-coordinator
+flow in the current context, choose the smallest justified specialist set, then
+spawn only those specialists as direct subagents.
 
-Use the subagent tool route, not `codex exec`, a new thread, or a shell
-fallback. If the spawn tool is not already loaded, search tool discovery for
-`multi-agent spawn subagent agent worker delegate task`, then call
-`multi_agent_v1.spawn_agent` with `agent_type` set to `reviewer`. Do not set
-`fork_context` unless the review truly needs the current conversation history.
+Do not launch `reviewer` as an intermediate subagent unless the active Codex
+configuration explicitly allows nested subagents. The default subagent depth
+allows direct children only, so a child coordinator cannot normally spawn
+specialist children.
 
-Give `reviewer` only:
+Use the active Codex subagent route for custom agents. Do not use `codex exec`,
+a new thread, or a shell-launched session as a substitute. If subagents cannot
+be spawned, say coordinated review could not run. If you continue, label the
+result as a non-coordinated fallback and return clean specialist prompts for
+manual use.
+
+Select only specialists whose risk is real:
+
+- `algorithm-critic`: requirements, scope, process, and delete-first review.
+- `reuse-critic`: needless invention, duplicated machinery, missed repo
+  patterns, platform or library reuse.
+- `research-critic`: external prior art, current docs, packages, standards,
+  papers, issues, known solutions.
+- `verifier`: executable, visual, artifact, integration, or claim-proof
+  verification.
+- `neutral-critic`: fresh-eyes review, only when the user asks for that gate or
+  repo guidance requires it.
+
+Use `research-critic` only when external current knowledge materially affects
+the decision. Use `verifier` only when there is a real thing to run, inspect,
+render, query, or prove. Never run specialists for theater.
+
+Give each specialist only:
 
 - target: repo, PR, branch, commit range, patch, files, artifact paths, or URL;
 - user request and scope;
@@ -54,6 +76,11 @@ User-stated hard limits:
 [verbatim limits or "none provided"]
 ```
 
-If `reviewer` cannot run through the subagent tool route, say coordinated
-review could not run. Do not claim specialist review. If you continue, label
-the result as a non-coordinated fallback.
+If a specialist cannot run through the active Codex subagent route, say
+coordinated review could not run. Do not claim specialist review.
+
+After specialists return, report findings first, ordered by severity. Name the
+source specialist and evidence. Preserve conflicts. Name coverage, missing
+evidence, and residual risk. Put recommendations after findings; they must be
+specialist-backed or directly evidence-derived. Do not invent findings,
+recommendations, or consensus.
