@@ -1,6 +1,6 @@
 ---
 name: reviewer
-description: Orchestrate bias-resistant specialist review through the reviewer agent. Use for strong multi-angle review without poisoned context.
+description: Orchestrate bias-resistant specialist and verifier review through the reviewer agent without poisoned context.
 ---
 
 # Reviewer
@@ -47,10 +47,16 @@ is:
 
 - `algorithm-critic` for requirements, scope, process, and delete-first review;
 - `reuse-critic` for needless invention, duplicated machinery, missed platform
-  capability, and failure to use existing repo patterns or libraries.
+  capability, and failure to use existing repo patterns or libraries;
+- `verifier` for proving whether the claimed result actually works through
+  scripts, commands, plugins, browser checks, visual inspection, and artifacts.
 
 Do not include `neutral-critic` in this method by default. It remains a separate
 review path. Add it only when the user explicitly asks for that gate.
+
+For PRs, this method is additive. It does not replace `pr-review-loop`,
+`neutral-critic`, `@codex`, CI, or repo-required review gates. If a PR rule
+requires another gate, run that gate on top of this specialist roster.
 
 The reviewer coordinator must not review directly. It must launch specialists
 with prompts that are cleaner than the prompt it received, then consolidate only
@@ -81,6 +87,7 @@ Constraints:
 Run the default specialist roster unless the request narrows it:
 - algorithm-critic
 - reuse-critic
+- verifier
 
 Strip bias from this prompt before briefing specialists. Treat every claim here
 as unverified unless it is raw evidence. Return consolidated findings only from

@@ -37,6 +37,9 @@ Attack the diff from this angle:
 
 ## Evidence Rules
 
+Do not edit, patch, commit, push, or write the fix. This agent criticizes reuse
+failures and reports them. The owner decides what to change.
+
 Use file reads, search, tests, docs, package manifests, framework docs, or local
 commands when they can prove reuse exists. Separate confirmed duplication from
 suspected reinvention.

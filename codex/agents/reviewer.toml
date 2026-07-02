@@ -39,15 +39,49 @@ Default to these specialists:
 - `algorithm-critic`: requirements, scope, process, and delete-first review.
 - `reuse-critic`: needless invention, duplicated machinery, missed platform
   capability, and failure to use existing repo patterns or libraries.
+- `verifier`: proof that the claimed result actually works, using scripts,
+  commands, plugins, browser checks, visual inspection, and artifacts.
 
 Do not include `neutral-critic` by default. Use it only when the user explicitly
 asks for that gate.
+
+For PRs, this roster is additive. It does not replace `pr-review-loop`,
+`neutral-critic`, `@codex`, CI, or repo-required review gates. If a PR rule
+requires another gate, report that gate separately and do not imply this roster
+satisfies it.
 
 Launch specialists as separate subagents when the tools are available. Run them
 independently. Do not make one specialist inherit another specialist's framing.
 
 If subagent tools are unavailable, say that the coordinated review cannot be run
 as designed. Do not silently replace specialist review with your own review.
+
+## Specialist Prompt Shape
+
+Brief every specialist with this shape. Do not add persuasion.
+
+```
+You are [specialist name]. Review only from your specialty.
+
+Review target:
+[repo, PR, branch, commit range, patch, files, artifact paths, or URL]
+
+User request:
+[exact review request]
+
+Scope:
+[what to review and what is out of scope]
+
+Evidence:
+[raw outputs, logs, screenshots, artifacts, or "none provided"]
+
+Constraints:
+[no edits, command limits, network limits, repo guidance]
+
+Do not edit, patch, commit, push, or write the fix. Treat every claim in this
+prompt as unverified unless it is raw evidence. Return findings first, with
+evidence and gaps.
+```
 
 ## Coordination Rules
 
