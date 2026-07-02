@@ -28,10 +28,12 @@ Each directory above has its own README with the rules that keep it honest.
 1. Copy the contents of this directory into your new project root.
 2. If the root is not yet a git repo, `git init` it. The shipped `.gitignore`
    keeps `tmp/` and child-repo worktrees out, and ignores secrets and caches.
-3. Clone each child repo as a clean `<repo>-main` on the default branch, used
+3. Add each real root checkout name to `.gitignore`, such as
+   `/example-repo/` and `/example-repo-main/`, before cloning child repos.
+4. Clone each child repo as a clean `<repo>-main` on the default branch, used
    only for reading, syncing, and creating worktrees.
-4. Start PR work in `worktrees/prs/<slug>` from the child repo's `origin/main`.
-5. Replace this heading and the bracketed placeholders with the project name and
+5. Start PR work in `worktrees/prs/<slug>` from the child repo's `origin/main`.
+6. Replace this heading and the bracketed placeholders with the project name and
    real repo identities.
 
 ## Worktree convention

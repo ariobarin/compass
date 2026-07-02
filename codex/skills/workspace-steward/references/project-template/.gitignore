@@ -6,6 +6,10 @@
 /worktrees/prs/*
 !/worktrees/prs/.gitkeep
 
+# Canonical child repo checkouts - add concrete names before cloning.
+# /example-repo/
+# /example-repo-main/
+
 # Secrets and credentials - never commit.
 .env
 .env.*
