@@ -17,8 +17,10 @@ Give `reviewer` only:
 - target: repo, PR, branch, commit range, patch, files, artifact paths, or URL;
 - user request and scope;
 - raw evidence: checks, logs, screenshots, command output, artifacts, or none;
-- constraints: no edits, command limits, network limits, time limits, and repo
-  guidance.
+- user-stated hard limits, if any.
+
+Do not synthesize command, network, time, or repo constraints. The coordinator
+owns operational limits for specialist prompts.
 
 Do not give expected verdicts, confidence, defenses, "already handled" claims,
 hints, favorable summaries, or owner intent unless the target cannot be
@@ -27,8 +29,6 @@ understood without it. Label unavoidable framing as unverified.
 Use this shape:
 
 ```text
-You are coordinating specialist review. Do not review directly.
-
 Review target:
 [target locator]
 
@@ -41,9 +41,10 @@ Scope:
 Evidence:
 [raw evidence or "none provided"]
 
-Constraints:
-[constraints]
+User-stated hard limits:
+[verbatim limits or "none provided"]
 ```
 
 If `reviewer` cannot run, say coordinated review could not run. Do not claim
-specialist review. Use ordinary review only when you label it as a fallback.
+specialist review. If you continue, label the result as a non-coordinated
+fallback.

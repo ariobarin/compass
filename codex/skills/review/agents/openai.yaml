@@ -1,4 +1,4 @@
 interface:
   display_name: "Review"
   short_description: "Neutral handoff to reviewer"
-  default_prompt: "Use $review to brief the reviewer coordinator with raw target, scope, evidence, and constraints without poisoning context."
+  default_prompt: "Use $review to brief the reviewer coordinator with raw target, request, scope, evidence, and any user-stated hard limits without poisoning context."
