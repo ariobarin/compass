@@ -43,6 +43,7 @@ function Get-PortableSkillNames {
         "pr-review-loop",
         "subagent-driven-development",
         "to-prd",
+        "update-compass",
         "using-codex-goals",
         "webmcp-eval-triage",
         "webmcp-tool-authoring",
