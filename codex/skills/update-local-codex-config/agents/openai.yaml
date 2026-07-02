@@ -1,0 +1,4 @@
+interface:
+  display_name: "Update Local Codex"
+  short_description: "Refresh live Codex setup from Compass"
+  default_prompt: "Use $update-local-codex-config to update my live Codex setup from the latest Compass source."
