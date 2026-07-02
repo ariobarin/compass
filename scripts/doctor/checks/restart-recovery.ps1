@@ -47,8 +47,7 @@ function New-RestartRecoveryFixture {
     $sessionId = [guid]::NewGuid().ToString()
     $sessionPath = Join-Path $sessionsRoot "$sessionId.jsonl"
     Set-Content -LiteralPath $sessionPath -Value $Lines -Encoding UTF8
-    $bootUtc = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime.ToUniversalTime()
-    (Get-Item -LiteralPath $sessionPath).LastWriteTimeUtc = $bootUtc.AddMinutes(-5)
+    (Get-Item -LiteralPath $sessionPath).LastWriteTimeUtc = $restartRecoveryBootUtc.AddMinutes(-5)
 
     return [pscustomobject]@{
         CodexHome = $codexHome
@@ -69,8 +68,7 @@ function New-RestartRecoverySessionFile {
     $sessionId = [guid]::NewGuid().ToString()
     $sessionPath = Join-Path $sessionsRoot "$sessionId.jsonl"
     Set-Content -LiteralPath $sessionPath -Value $Lines -Encoding UTF8
-    $bootUtc = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime.ToUniversalTime()
-    (Get-Item -LiteralPath $sessionPath).LastWriteTimeUtc = $bootUtc.AddSeconds(-1 * $SecondsBeforeBoot)
+    (Get-Item -LiteralPath $sessionPath).LastWriteTimeUtc = $restartRecoveryBootUtc.AddSeconds(-1 * $SecondsBeforeBoot)
 
     return [pscustomobject]@{
         SessionId = $sessionId
@@ -105,6 +103,7 @@ else {
     $oldCodexHome = [Environment]::GetEnvironmentVariable("CODEX_HOME", "Process")
 
     try {
+        $restartRecoveryBootUtc = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime.ToUniversalTime()
         New-Item -ItemType Directory -Force -Path $restartRecoveryTemp | Out-Null
         $fakeBin = Join-Path $restartRecoveryTemp "bin"
         New-Item -ItemType Directory -Force -Path $fakeBin | Out-Null
