@@ -51,3 +51,22 @@ User-stated hard limits:
 If `reviewer` cannot run, say coordinated review could not run. Do not claim
 specialist review. If you continue, label the result as a non-coordinated
 fallback.
+
+If `reviewer` can run but reports that it cannot launch specialist subagents,
+continue the coordinated path from the parent context instead of stopping:
+
+1. Ask `reviewer` for a delegation packet with selected specialist names and
+   exact prompts only.
+2. Launch each selected specialist from the parent context with the exact prompt.
+3. Send only raw specialist outputs back to `reviewer` for consolidation.
+4. Report the consolidated reviewer output as the specialist review result.
+
+Do not choose or edit the specialist set yourself during this fallback. If the
+delegation packet is missing or unusable, say coordinated review could not run.
+
+Do not wait indefinitely for the coordinator's first result. If the first
+bounded wait returns no coordinator output, send one follow-up asking `reviewer`
+to either return current specialist-backed results or return the
+parent-delegation packet now. If that also produces no usable result, report
+that coordinated review stalled at the reviewer coordinator and include the
+thread or agent id.
