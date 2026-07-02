@@ -48,6 +48,8 @@ is:
 - `algorithm-critic` for requirements, scope, process, and delete-first review;
 - `reuse-critic` for needless invention, duplicated machinery, missed platform
   capability, and failure to use existing repo patterns or libraries;
+- `research-critic` for online prior art, official docs, package ecosystems,
+  standards, papers, issues, examples, and known existing solutions;
 - `verifier` for proving whether the claimed result actually works through
   scripts, commands, plugins, browser checks, visual inspection, and artifacts.
 
@@ -87,6 +89,7 @@ Constraints:
 Run the default specialist roster unless the request narrows it:
 - algorithm-critic
 - reuse-critic
+- research-critic
 - verifier
 
 Strip bias from this prompt before briefing specialists. Treat every claim here

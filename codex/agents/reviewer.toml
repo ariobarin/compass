@@ -39,6 +39,8 @@ Default to these specialists:
 - `algorithm-critic`: requirements, scope, process, and delete-first review.
 - `reuse-critic`: needless invention, duplicated machinery, missed platform
   capability, and failure to use existing repo patterns or libraries.
+- `research-critic`: online prior art, official docs, package ecosystems,
+  standards, papers, issues, examples, and known existing solutions.
 - `verifier`: proof that the claimed result actually works, using scripts,
   commands, plugins, browser checks, visual inspection, and artifacts.
 
