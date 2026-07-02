@@ -1,8 +1,8 @@
 # tmp
 
-Scratch files that can be recreated or deleted without loss. This directory is
-gitignored in the root repo (see the root `.gitignore`): its contents are not
-tracked.
+Scratch files that can be recreated or deleted without loss. The root
+`.gitignore` ignores `/tmp/*` but keeps this README, so scratch contents are
+not tracked while the directory convention survives a clone.
 
 Do not let `tmp/` become a hidden source of truth. Promote useful scratch to the
 right durable surface:
