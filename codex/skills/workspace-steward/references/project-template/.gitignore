@@ -1,0 +1,24 @@
+# Scratch - recreatable and deletable. Keep the directory, ignore its contents.
+/tmp/*
+!/tmp/README.md
+
+# Child-repo worktrees - linked through git, not tracked in this root repo.
+/worktrees/prs/*
+!/worktrees/prs/.gitkeep
+
+# Secrets and credentials - never commit.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+secrets/
+
+# Machine-only runtime caches and build state.
+**/__pycache__/
+**/.venv/
+**/node_modules/
+**/.pytest_cache/
+**/.cache/
+**/.DS_Store
