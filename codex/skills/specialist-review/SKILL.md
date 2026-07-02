@@ -1,6 +1,6 @@
 ---
 name: specialist-review
-description: Coordinate explicit specialist review requests in the current context with direct specialist subagents and neutral evidence.
+description: Coordinate explicit specialist review requests with direct specialist subagents and neutral evidence.
 ---
 
 # Specialist Review
@@ -11,8 +11,8 @@ for coordinated specialist review, or asks for a clean specialist handoff.
 Use `pr-review-loop` for ordinary PR review. This skill is an additive
 specialist layer for explicit coordinated specialist review requests.
 
-Act as the reviewer coordinator in the current context. Choose the smallest
-justified specialist set, then spawn those specialists as direct subagents.
+Act as the reviewer coordinator for this request. Choose the smallest justified
+specialist set, then spawn those specialists as direct subagents.
 
 A completed coordinated specialist review requires direct specialist subagent
 results. CLI runs, new threads, and shell-launched sessions are manual fallback
