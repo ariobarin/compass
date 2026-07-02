@@ -1,7 +1,8 @@
 param(
     [switch]$Apply,
     [string]$CodexHome,
-    [string]$AgentsHome
+    [string]$AgentsHome,
+    [string]$ClaudeHome
 )
 
 . "$PSScriptRoot\common.ps1"
@@ -9,12 +10,14 @@ param(
 $repoRoot = Get-RepoRoot
 $liveHome = Get-CodexHome -CodexHome $CodexHome
 $agentsHome = Get-AgentsHome -AgentsHome $AgentsHome
-$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome
+$claudeHome = Get-ClaudeHome -ClaudeHome $ClaudeHome
+$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome -ClaudeHome $claudeHome
 $retiredItems = Get-RetiredPortableFileMap -CodexHome $liveHome -AgentsHome $agentsHome
 
 Write-Host "repo: $repoRoot"
 Write-Host "codex: $liveHome"
 Write-Host "agents: $agentsHome"
+Write-Host "claude: $claudeHome"
 Write-Host ""
 
 if (-not $Apply) {

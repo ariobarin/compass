@@ -1,6 +1,7 @@
 param(
     [string]$CodexHome,
     [string]$AgentsHome,
+    [string]$ClaudeHome,
     [switch]$SkipCodexCommand,
     [switch]$RequireInSync,
     [int]$TimeoutSeconds = 180
@@ -11,7 +12,8 @@ param(
 $repoRoot = Get-RepoRoot
 $liveHome = Get-CodexHome -CodexHome $CodexHome
 $agentsHome = Get-AgentsHome -AgentsHome $AgentsHome
-$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome
+$claudeHome = Get-ClaudeHome -ClaudeHome $ClaudeHome
+$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome -ClaudeHome $claudeHome
 $retiredItems = Get-RetiredPortableFileMap -CodexHome $liveHome -AgentsHome $agentsHome
 $drift = New-Object System.Collections.Generic.List[string]
 $missing = New-Object System.Collections.Generic.List[string]
@@ -71,6 +73,7 @@ foreach ($item in $retiredItems) {
 Write-Host "repo: $repoRoot"
 Write-Host "codex: $liveHome"
 Write-Host "agents: $agentsHome"
+Write-Host "claude: $claudeHome"
 
 if ($missing.Count -gt 0) {
     Write-Host ""
