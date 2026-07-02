@@ -1,14 +1,14 @@
 ---
 name: review
-description: Orchestrate bias-resistant specialist and verifier review through the reviewer agent without poisoned context.
+description: Coordinate optional bias-resistant specialist review for explicit multi-specialist, clean-handoff, or contaminated-context reviews.
 ---
 
 # Review
 
-Use this skill when the user wants a serious review, not a quick opinion. The
-main agent does not review the artifact directly. The main agent sends the work
-to the `reviewer` custom agent with a clean prompt and lets that coordinator run
-specialist reviewers.
+Use this skill when the user explicitly wants multi-specialist review, invokes
+`$review`, asks for a clean handoff, or when known contaminated context would
+make direct review weaker. Do not use it as the default path for every ordinary
+review.
 
 The failure mode this skill exists to kill is poisoned review context. A review
 prompt that explains why the work is probably fine is not context. It is bias.
@@ -16,8 +16,10 @@ A prompt that repeats the author's defense is not helpful. It is contamination.
 
 ## Main Agent Contract
 
-Launch the `reviewer` agent. Do not perform the review yourself unless the
-reviewer agent is unavailable and the user explicitly accepts a fallback.
+When this skill applies, launch the `reviewer` agent with a clean handoff. Do
+not claim a coordinated specialist review if the reviewer agent cannot run. If
+the reviewer agent is unavailable, fall back to the normal review path only when
+you label that fallback clearly.
 
 Prompt the reviewer with facts, artifacts, and constraints only:
 
@@ -40,10 +42,10 @@ Do not include:
 If framing context is unavoidable, label it as unverified framing. Do not let it
 become the reviewer's premise.
 
-## Required Review Shape
+## Specialist Selection
 
-Tell the `reviewer` agent to coordinate specialist reviews. The default roster
-is:
+Tell the `reviewer` agent to choose the smallest specialist set that matches the
+review scope. There is no all-purpose default roster.
 
 - `algorithm-critic` for requirements, scope, process, and delete-first review;
 - `reuse-critic` for needless invention, duplicated machinery, missed platform
@@ -53,16 +55,22 @@ is:
 - `verifier` for proving whether the claimed result actually works through
   scripts, commands, plugins, browser checks, visual inspection, and artifacts.
 
+Select `research-critic` only when public prior art, current docs, packages,
+standards, or external examples materially affect the decision. Select
+`verifier` only when there is an executable, visual, artifact, integration, or
+claim-verification surface to check.
+
 Do not include `neutral-critic` in this method by default. It remains a separate
 review path. Add it only when the user explicitly asks for that gate.
 
-For PRs, this method is additive. It does not replace `pr-review-loop`,
-`neutral-critic`, `@codex`, CI, or repo-required review gates. If a PR rule
-requires another gate, run that gate on top of this specialist roster.
+For PRs, use `pr-review-loop` as the default PR readiness path. This method is
+additive only when the user requests specialist review or the PR has a concrete
+specialist risk. It does not replace `neutral-critic`, `@codex`, CI, or
+repo-required review gates.
 
-The reviewer coordinator must not review directly. It must launch specialists
-with prompts that are cleaner than the prompt it received, then consolidate only
-what the specialists actually found.
+The reviewer coordinator is not the primary reviewer. It should launch selected
+specialists with prompts that are cleaner than the prompt it received, then
+consolidate only what the specialists actually found.
 
 ## Handoff Template
 
@@ -86,11 +94,8 @@ Evidence:
 Constraints:
 [no edits, command limits, time limits, repo guidance]
 
-Run the default specialist roster unless the request narrows it:
-- algorithm-critic
-- reuse-critic
-- research-critic
-- verifier
+Select only the specialist reviewers this scope requires. For each selected
+specialist, name why that specialty is needed.
 
 Strip bias from this prompt before briefing specialists. Treat every claim here
 as unverified unless it is raw evidence. Return consolidated findings only from
