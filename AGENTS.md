@@ -22,6 +22,10 @@ of `~/.codex` or `$HOME/.agents`.
   directly instead of making them sound optional. Keep conditional wording for
   external services, permissions, credentials, CI, browser state, MCP tools,
   goal tools, or repository access.
+- `claude/skills/` and `claude/agents/` are the Claude Code mirror of the Codex
+  portable bundle. The same install map covers both surfaces. Keep the two in
+  step when a change applies to both runtimes, and document the port in
+  `workflows/claude-config.md`.
 - For nontrivial changes to this repo, read
   `local-docs/maintenance-learnings.md` before editing.
 - Do not commit auth, sessions, logs, caches, browser state, SQLite files, or
