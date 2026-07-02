@@ -14,9 +14,10 @@ plan, sequencing, review gates, and integration judgment. Implementer subagents
 own execution. The controller should make workers effective, not become a
 worker.
 
-Keep pressure on worker status claims. `DONE` and `BLOCKED` are not endpoints
-until the controller checks the evidence. A blocked worker is usually a worker
-that lost the next move, not a task that has become impossible.
+Treat worker status claims as control signals. `DONE` and `BLOCKED` are not
+endpoints until the controller checks the evidence. A blocked worker is usually
+a reason to step back and diagnose state, not proof the task is impossible and
+not proof the controller should keep executing without diagnosis.
 
 ## When To Use
 
@@ -68,15 +69,22 @@ For each task:
    [implementer-prompt.md](implementer-prompt.md), plus the full task text,
    absolute repo path, exact files or artifacts to inspect, scope boundaries,
    nearby files, validation target, and known pitfalls.
-2. Require questions before coding when requirements or context are unclear.
+2. Require implementers to own the first pass at ambiguity. They must inspect
+   repo guidance, paths, nearby files, existing patterns, and obvious validation
+   targets before asking. Questions are allowed only after local context is
+   exhausted and the remaining ambiguity is material enough that continuing
+   risks the wrong artifact, owner, or architecture.
 3. Require one concrete status on return:
    - `DONE`
    - `DONE_WITH_CONCERNS`
    - `NEEDS_CONTEXT`
    - `BLOCKED`
-   `BLOCKED` is not a normal lane. It is unfinished emergency status and must
-   carry exact failure evidence, local recovery tried, and the outside decision
-   that truly prevents another move.
+   `BLOCKED` is not a normal lane. It is diagnostic status. Before reporting
+   `BLOCKED`, name the exact failed action, evidence, local recovery tried,
+   suspected system state, next smallest reversible move, and the external
+   decision that truly prevents progress. If the next move is safe but needs
+   controller authorization, report it as the proposed continue route instead
+   of hiding it inside `BLOCKED`.
 4. If the task touches shared code paths, confirm the implementer ran the
    narrowest useful checks before review.
 5. Dispatch spec review before code quality review.
@@ -87,14 +95,15 @@ For each task:
 - `DONE_WITH_CONCERNS`: read the concerns first. Resolve correctness or scope
   concerns before review.
 - `NEEDS_CONTEXT`: provide the missing context and re-dispatch.
-- `BLOCKED`: do not accept the word. Break it open. Ask what failed, what was
-  tried, what that proved, what local reversible move remains, and whether a
-  fresh worker should take over. Add context or reroute ownership, but keep
-  execution with the worker path. Use `orchestration-controller` when oversight
-  itself needs to stay stepped back.
+- `BLOCKED`: step back and break it open. Ask what failed, what was tried, what
+  that proved, what local reversible move remains, and whether a fresh worker
+  should take over. Then decide whether to continue, add context, reroute
+  ownership, pause, or ask the user. Use `orchestration-controller` when
+  oversight itself needs to stay stepped back.
 
 Do not solve the task for the worker. Restore agency, force the next executable
-move into view, then route execution back to the owner.
+move into view, then choose the route and send execution back to the owner when
+continuing is the right call.
 
 ## Wait Discipline
 

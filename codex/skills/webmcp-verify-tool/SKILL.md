@@ -32,6 +32,14 @@ Read both references:
 7. Confirm those docs and fixtures match the live verified surface before
    calling the change done.
 
+## Blocked Proof Rule
+
+If live proof is blocked, treat it as a proof-chain diagnosis point. Do not call
+the tool verified. Report the missing proof, the exact failed action, the state
+inspected, the local repair already tried, the smallest proof-producing step
+that remains, and whether an explicit continue would be safe. Continue only
+when the next proof step is bounded and cannot misrepresent verification.
+
 ## Output
 
 Report the tool, page, served file, rebuild or refresh step, browser evidence,

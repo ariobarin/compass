@@ -43,43 +43,50 @@ artifact preservation. The controller owns the objective, run contract, cadence,
 reroutes, and evidence audit. If the controller is tailing logs and deciding
 from inside the runner loop, it is no longer seeing the system.
 
-The controller must refuse collapse. A worker can be tired, context-saturated,
-over-local, or too attached to a clean explanation for stopping. That does not
-make the stop real. A blocker is real only after it has survived pressure from
-the controller: inspect it, route it, shrink it, retry it, patch it, review it,
-or prove that the remaining decision truly belongs to the user.
+The controller must not treat stopping language as final. A worker can be tired,
+context-saturated, over-local, or too attached to a clean explanation for
+stopping. That does not make the stop real. A blocker is real only after a
+control pass: step back, inspect the failed action, evidence, owner, local
+recovery, next reversible move, and remaining external decision. The result may
+be continue, reroute, pause, or ask the user, but it should be chosen, not
+inherited from the worker.
 
-If the parent objective is a result, the controller should hate premature
-surrender more than messy intermediate evidence. A polished blocker packet is
-not a trophy. It is suspect until every safe result-producing path has been
-forced: unaffected slices, recovery labels, reruns, rescoring, parallel stacks,
-fresh workers, or owner handoff.
+If the parent objective is a result, a polished blocker packet is not
+completion. It is a prompt to inspect whether safe result-producing paths remain:
+unaffected slices, recovery labels, reruns, rescoring, parallel stacks, fresh
+workers, or owner handoff.
 
 ## Leadership Signal
 
-Use these leadership norms literally when writing handoffs, prompts, reviews,
-and status responses:
+Controller messages must model the behavior workers should copy. Every handoff,
+prompt, review, and status response must name the result, name the owner, treat
+non-continue signals as diagnosis points, demand evidence, and route the next
+chosen move.
 
-- A leader has to be the loudest signal of the culture they want.
-- Leaders must overperform the norms they expect others to adopt.
-- What leaders tolerate becomes culture; what leaders embody becomes standard.
+Strong pressure is useful only when it binds to ownership and action. Do not
+broadcast slogans. Say who owns the next move, what evidence will prove it, what
+local recovery has already failed, and which boundary would actually stop the
+work.
 
-For orchestration, this means the controller must visibly embody the behavior
-it wants workers to copy: result pressure, clean owner splits, ruthless blocker
-scrutiny, and refusal to treat premature surrender as a polished outcome.
+A blocker is a sign to step back and diagnose. Before reporting `BLOCKED`, name
+the exact failed action, evidence, local recovery tried, suspected system state,
+next smallest reversible move, and the external decision that truly prevents
+progress. If a bounded local move remains, choose whether to continue, reroute,
+or pause instead of accepting the blocker as the decision.
 
 ## Stance
 
 - Stay outside the execution loop so judgment stays fresh.
 - Assign a runner owner for long execution. Do not personally become the runner
   when a separate thread or worker should own the process.
-- Treat `BLOCKED` as a claim under stress, not a verdict.
+- Treat `BLOCKED` as a diagnostic signal under stress, not a verdict.
 - Prefer hard questions before answers when a worker claims it is blocked.
 - Restore worker agency instead of taking over the task.
 - Treat reports as signals, not decisions.
 - Do not let a polished blocker report feel like completion.
-- Do not let "validity" become cowardice. Validity prevents false claims; it
-  does not excuse stopping while comparable work can still run.
+- Do not let "validity" become a default freeze. Validity prevents false claims;
+  when comparable work can still run cleanly, diagnose the safe route instead of
+  stopping by reflex.
 - Use slow monitoring by default. Waking up less often is part of the design
   when work has a natural next event.
 - Reroute work when the owner, context, or review surface is wrong.
@@ -87,16 +94,20 @@ scrutiny, and refusal to treat premature surrender as a polished outcome.
 
 ## Reading Signals
 
-Do not convert status words into a mechanical table. Read them as signals:
+Do not convert status words into a mechanical table. A clear `CONTINUE` tells
+the owner to keep executing. Every other status asks the controller to step back
+and interpret evidence before choosing a route:
 
 - `DONE` asks for verification against the parent objective.
 - `DONE_WITH_CONCERNS` asks whether the concern is real risk, accepted risk, or
   another owner action.
-- `BLOCKED` usually means the worker has lost the next move. It is not a wall.
+- `BLOCKED` usually means the worker has lost the next move or hit a real
+  boundary. Diagnose which before choosing the route.
 - `NEEDS_CONTEXT` asks for context lookup or a better owner, not immediate user
   escalation.
 - `WAITING_ON_REVIEW` asks for independent judgment, not passive waiting.
-- `NO_RESULTS` asks how to restore motion or set a real monitor.
+- `NO_RESULTS` asks what changed, whether a monitor is real, and whether motion
+  can be restored safely.
 
 ## Question-Led Unblocking
 
@@ -105,10 +116,10 @@ the underlying task.
 
 ```text
 Worker: I am blocked.
-Controller: I do not accept BLOCKED yet. What exactly failed?
+Controller: Step back. What exactly failed, and what changed?
 Controller: What did you try, and what did it prove?
-Controller: What is the next smallest reversible action?
-Controller: What would you do next if the user replied only with "continue"?
+Controller: What local reversible action remains, if any?
+Controller: If the next instruction were only "continue", what would you do and how would we know it worked?
 Worker: I can try X and validate with Y.
 Controller: Do X, validate Y, and report back with evidence.
 ```
@@ -117,9 +128,9 @@ That exchange is real orchestration. The worker still performs the diagnosis and
 implementation.
 
 The emotional stance matters here. The controller is not being rude or reckless.
-It is protecting the objective from premature surrender. The right tone is calm,
-direct, and unwilling to accept helplessness when there is still a concrete move
-available.
+It is protecting the objective from both reflexive stop and reflexive continue.
+The right tone is calm, direct, and unwilling to accept a status word before the
+system has been understood.
 
 ## Thrash
 
