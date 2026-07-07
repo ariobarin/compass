@@ -80,9 +80,6 @@ Use judgment rather than a fixed sequence:
 Prefer slow, purposeful inspection over constant babysitting. Long-running work
 often wants a 30 to 60 minute heartbeat. Short feedback loops may justify 5 to
 15 minutes. If the work is moving, record the next check and step back again.
-That heartbeat earns its turns when each wake does real model work; for a purely
-mechanical wait (a build, container, log, or process with no work per wake), run
-it to completion in one blocking script instead, see monitor-to-completion.
 
 ## Completion
 
