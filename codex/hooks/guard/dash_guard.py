@@ -9,7 +9,7 @@ from .common import deny_pre_tool, env_enabled
 DASH_CHARS = chr(0x2013) + chr(0x2014)
 SHELL_ARG = r'"[^"]+"|\'[^\']+\'|\S+'
 PUBLIC_COMMAND_RE = re.compile(
-    rf"\b(git(?:\s+(?:(?:-C|--git-dir|--work-tree|--namespace)\s+(?:{SHELL_ARG})|-c\s+(?:[^\s=]+=(?:{SHELL_ARG})|(?:{SHELL_ARG}))|--[A-Za-z0-9-]+=(?:{SHELL_ARG})|--[A-Za-z0-9-]+|-[A-Za-z]+))*\s+(?:commit|tag)|gh(?:\s+(?:(?:--repo|-R)\s+(?:{SHELL_ARG})|--repo=(?:{SHELL_ARG})))*\s+pr\s+\S+|gh\s+release)\b",
+    rf"\b(git(?:\s+(?:(?:-C|--git-dir|--work-tree|--namespace)\s+(?:{SHELL_ARG})|-c\s+(?:[^\s=]+=(?:{SHELL_ARG})|(?:{SHELL_ARG}))|--[A-Za-z0-9-]+=(?:{SHELL_ARG})|--[A-Za-z0-9-]+|-[A-Za-z]+))*\s+(?:commit|tag)|gh(?:\s+(?:(?:--repo|-R)\s+(?:{SHELL_ARG})|--repo=(?:{SHELL_ARG})))*\s+pr\s+(?:create|edit|comment|close|merge|ready|review|reopen)\b|gh\s+release)\b",
     re.IGNORECASE,
 )
 

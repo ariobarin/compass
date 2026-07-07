@@ -31,6 +31,14 @@ Test-PortableGuardSilent -Name "clean git command" -Payload @{
     }
 }
 
+Test-PortableGuardSilent -Name "read-only gh pr view dash" -Payload @{
+    hook_event_name = "PreToolUse"
+    tool_name = "Bash"
+    tool_input = @{
+        command = "gh pr view 68 $dash note"
+    }
+}
+
 $oldDashOptOut = [Environment]::GetEnvironmentVariable("CODEX_PORTABLE_DISABLE_DASH_GUARD", "Process")
 [Environment]::SetEnvironmentVariable("CODEX_PORTABLE_DISABLE_DASH_GUARD", "1", "Process")
 try {
