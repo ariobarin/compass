@@ -49,8 +49,10 @@ context.
 - Prefer a subagent or a fresh run for self-contained chunks of work only when
   you can preserve the work cleanly. Carry a compact handoff with the objective,
   constraints, branch or file state, pending verification, and known risks. For
-  governed implementation splits, use `subagent-driven-development`; for durable
-  goal state, use `using-codex-goals`.
+  governed implementation splits, use `subagent-driven-development`. When
+  durable goal state matters, use the active runtime's goal-contract route if
+  one is available; otherwise include the objective, owner, completion evidence,
+  and next action in the handoff.
 
 The frontier case is the monitoring thread: one long-running session that
 watches something can dwarf everything else, because each watch cycle is a full
