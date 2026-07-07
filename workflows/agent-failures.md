@@ -67,8 +67,9 @@ root cause category: workflow mismatch, tool-surface risk
 fix made: strengthened the installed `specialist-review` skill to launch the
   `reviewer` coordinator, made `reviewer` require direct specialist subagents,
   made missing delegation fail coordinated specialist review instead of using
-  CLI or shell runs, and kept exact tool namespaces as session evidence rather
-  than portable runtime law.
+  CLI or shell runs, made any clean specialist prompts only a labeled manual
+  fallback outside coordinated review, and kept exact tool namespaces as
+  session evidence rather than portable runtime law.
 verification: `py -3 "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" codex\skills\specialist-review`
   and `.\scripts\doctor.ps1` passed before PR
 should become durable guidance: yes, as focused installed runtime guidance for
