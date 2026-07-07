@@ -66,7 +66,13 @@ delegation packet is missing or unusable, say coordinated review could not run.
 
 Do not wait indefinitely for the coordinator's first result. If the first
 bounded wait returns no coordinator output, send one follow-up asking `reviewer`
-to either return current specialist-backed results or return the
-parent-delegation packet now. If that also produces no usable result, report
-that coordinated review stalled at the reviewer coordinator and include the
-thread or agent id.
+to either return current specialist-backed results, report that specialist
+subagents are still running, or return the parent-delegation packet now.
+
+If `reviewer` says specialist subagents are still running, keep using bounded
+waits for the live coordinator until it returns specialist-backed results,
+reports that it cannot launch or continue specialists, or stops returning status.
+Use the parent-delegation path only when `reviewer` explicitly reports that it
+cannot launch or continue specialist subagents. If follow-up waits stop
+returning usable status, report that coordinated review stalled at the reviewer
+coordinator and include the thread or agent id.
