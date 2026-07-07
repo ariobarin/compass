@@ -95,6 +95,29 @@ Skills and agents need extra review because they shape future agent behavior.
 - Run `.\scripts\doctor.ps1` to catch manifest boundary and agent sandbox
   drift.
 
+## Memory-Only Skills
+
+Treat files under the live Codex memory skills directory (`$CODEX_HOME/memories/skills` or equivalent) as candidate
+legacy material, not active portable skills. They are useful evidence about past
+workflow experiments, but they do not belong in `codex/skills/` until fresh
+examples show the capability is still repeated, portable, and worth installing.
+
+When reviewing a memory-only skill:
+
+- Promote it only when recent repeated examples prove the same capability is
+  still useful across repos or workflows.
+- Fold it into an existing Compass skill when the behavior overlaps a current
+  installed skill.
+- Retire it as stale local history when it no longer maps to current Codex,
+  Compass, or repo workflows.
+- Prefer a maintainer workflow note, local doc, or `*-learnings.md` entry in `local-docs/` when
+  the material explains how to maintain Compass rather than how future Codex
+  sessions should act.
+
+Do not create a new installed global skill from memory-only material unless the
+fresh evidence supports promotion better than a repo-maintainer note or an
+update to an existing Compass skill.
+
 ## Stale Guidance Sweep
 
 Every addition should include a nearby stale-guidance pass:
