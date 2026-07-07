@@ -80,6 +80,18 @@ foreach ($item in $items) {
         continue
     }
 
+    if ($item.Type -eq "derived-agent") {
+        $tempFile = Join-Path ([System.IO.Path]::GetTempPath()) ("compass-derived-agent-" + [guid]::NewGuid().ToString("N") + ".md")
+        Copy-PortableItem -Source $item.RepoPath -Destination $tempFile -Type $item.Type -AllowedRoot (Split-Path -Parent $tempFile)
+        $repoHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $tempFile).Hash
+        $liveHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $item.LivePath).Hash
+        Remove-Item -LiteralPath $tempFile -Force
+        if ($repoHash -ne $liveHash) {
+            $drift.Add($item.LivePath)
+        }
+        continue
+    }
+
     if ($item.Type -eq "derived-skill") {
         $repoMap = Get-DerivedSkillFileMap -Root $item.RepoPath
     }

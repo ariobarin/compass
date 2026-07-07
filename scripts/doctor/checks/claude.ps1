@@ -52,6 +52,7 @@ else {
     $claudeSkillsMatch = [regex]::Match($section, "(?ms)^\s*skills\s*=\s*\[(.*?)^\s*\]")
     $claudeDerivedSkillsMatch = [regex]::Match($section, "(?ms)^\s*derived_skills\s*=\s*\[(.*?)^\s*\]")
     $claudeAgentsMatch = [regex]::Match($section, "(?ms)^\s*agents\s*=\s*\[(.*?)^\s*\]")
+    $claudeDerivedAgentsMatch = [regex]::Match($section, "(?ms)^\s*derived_agents\s*=\s*\[(.*?)^\s*\]")
 
     if (-not $claudeSkillsMatch.Success) {
         $problems.Add("missing claude skills list in portable manifest")
@@ -112,6 +113,7 @@ else {
         }
     }
 
+    $manifestClaudeAgents = @()
     if ($claudeAgentsMatch.Success) {
         $manifestClaudeAgents = @(
             [regex]::Matches($claudeAgentsMatch.Groups[1].Value, '"([^"]+)"') |
@@ -134,6 +136,34 @@ else {
         foreach ($agent in $diskClaudeAgents) {
             if ($manifestClaudeAgents -notcontains $agent) {
                 $problems.Add("claude agent on disk missing from manifest: $agent")
+            }
+        }
+    }
+
+    if ($claudeDerivedAgentsMatch.Success) {
+        $manifestClaudeDerivedAgents = @(
+            [regex]::Matches($claudeDerivedAgentsMatch.Groups[1].Value, '"([^"]+)"') |
+                ForEach-Object { $_.Groups[1].Value } |
+                Sort-Object -Unique
+        )
+
+        foreach ($agent in $manifestClaudeDerivedAgents) {
+            if ($manifestClaudeAgents -contains $agent) {
+                $problems.Add("claude agent listed as direct and derived: $agent")
+            }
+
+            $source = Join-Path (Join-Path (Join-Path $repoRoot "codex") "agents") "$agent.toml"
+            if (-not (Test-Path -LiteralPath $source)) {
+                $problems.Add("claude derived agent source missing from codex agents: $agent")
+            }
+
+            $claudeSource = Join-Path (Join-Path (Join-Path $repoRoot "claude") "agents") "$agent.md"
+            if (Test-Path -LiteralPath $claudeSource) {
+                $problems.Add("claude derived agent also has source mirror: $agent")
+            }
+
+            if (-not $script:ClaudeDerivedAgentFrontmatter.ContainsKey($agent)) {
+                $problems.Add("claude derived agent missing frontmatter entry: $agent")
             }
         }
     }
