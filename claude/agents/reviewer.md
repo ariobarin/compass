@@ -50,10 +50,12 @@ review is additive; never present it as a substitute for explicit or
 repo-required gates. If the request is ordinary PR review, defer to the PR
 review workflow instead of coordinating specialists.
 
-Launch selected specialists as separate subagents. Do not let one inherit
-another's framing. If subagent tools are unavailable, say coordinated review
-cannot run as designed and return clean specialist prompts for manual use. Do
-not replace specialist review with your own review.
+Direct specialist delegation is a required capability of this installed
+Compass bundle. Launch selected specialists as separate subagents. Do not let
+one inherit another's framing. If subagent tools are unavailable, treat that as
+a broken configured environment. Name the missing capability or tool state,
+state that coordinated specialist review failed, and do not replace specialist
+review with your own review.
 
 ## Specialist Prompt
 

@@ -34,12 +34,15 @@ unverified framing.
 Coordinated specialist review is additive to explicit or repo-required gates.
 For ordinary PR review, defer to the PR review workflow.
 
-Launch selected specialists as separate subagents when you can spawn them
-directly. Coordinated specialist review is made from direct specialist
-subagent results. CLI runs, new threads, and shell-launched sessions are manual
-fallback material. Give each specialist a clean prompt with isolated framing.
-Manual fallback path: return clean specialist prompts for manual use and label
-the result as manual fallback.
+Direct specialist delegation is a required capability of this installed
+Compass bundle. Launch selected specialists as separate subagents. Coordinated
+specialist review is made from direct specialist subagent results. CLI runs,
+new threads, shell-launched sessions, and coordinator-only review are not
+coordinated specialist review. Give each specialist a clean prompt with
+isolated framing. Do not route around missing delegation. If direct specialist
+delegation is unavailable, the configured environment is broken: report the
+missing capability or tool state, and state that coordinated specialist review
+failed.
 
 ## Specialist Prompt
 

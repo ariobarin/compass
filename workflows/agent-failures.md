@@ -58,18 +58,17 @@ first failure: the parent skill searched tool discovery with a narrow phrase,
   found no subagent tools, then shell-launched `codex exec` runs instead of
   using Codex subagents for specialist review.
 downstream effects: the CLI child runs re-triggered routing behavior, polluted
-  specialist boundaries, and risked reporting a non-coordinated fallback as a
+  specialist boundaries, and risked reporting non-specialist output as a
   completed specialist review.
 evidence: thread 019f23f1-fc61-7a80-bcfa-25eb143304e2 logged zero
   `multi_agent_v1.spawn_agent` calls, repeated `codex exec` launches, and a
-  later correction that the CLI output must be labeled as a non-coordinated
-  fallback.
+  later correction that the CLI output was not coordinated specialist review.
 root cause category: workflow mismatch, tool-surface risk
-fix made: strengthened the installed `specialist-review` skill to act as the
-  coordinator and spawn selected specialists as direct subagents,
-  made the `reviewer` agent fail closed instead of using CLI or shell fallbacks
-  when it cannot spawn specialists directly, and kept exact tool namespaces as
-  session evidence rather than portable runtime law.
+fix made: strengthened the installed `specialist-review` skill to launch the
+  `reviewer` coordinator, made `reviewer` require direct specialist subagents,
+  made missing delegation fail coordinated specialist review instead of using
+  CLI or shell runs, and kept exact tool namespaces as session evidence rather
+  than portable runtime law.
 verification: `py -3 "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" codex\skills\specialist-review`
   and `.\scripts\doctor.ps1` passed before PR
 should become durable guidance: yes, as focused installed runtime guidance for
