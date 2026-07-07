@@ -17,6 +17,12 @@ Treat this repo as reviewed source, not a backup of a live config home
 separate from repo-maintainer guidance. Let repo-local docs carry procedure
 instead of reconstructing the maintenance flow from memory.
 
+Compass owns the portable bundle. When a bundled skill, agent, hook, script, or
+reviewed config fragment depends on another bundled capability, make the
+capability exact. Fix the source, install map, reviewed config, live verifier,
+or agent contract. Do not add alternate-path, best-effort, or compatibility
+guidance for a capability Compass can provide.
+
 ## Read First
 
 - Read the repo-root `AGENTS.md` and `local-docs/maintenance-learnings.md`.
