@@ -1,0 +1,7 @@
+interface:
+  display_name: "Input Token Economy"
+  short_description: "Spend input tokens on purpose"
+  default_prompt: "Use $input-token-economy to cut re-sent context: read targeted slices not whole files, keep the working set small, and split long sessions instead of one growing thread."
+
+policy:
+  allow_implicit_invocation: true

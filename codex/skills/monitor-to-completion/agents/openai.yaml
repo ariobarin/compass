@@ -1,0 +1,7 @@
+interface:
+  display_name: "Monitor To Completion"
+  short_description: "Run waits in one blocking script, not a poll loop"
+  default_prompt: "Use $monitor-to-completion to run this wait or watch to completion in one blocking script instead of polling in a sleep loop, which re-sends the full context on every wake."
+
+policy:
+  allow_implicit_invocation: true

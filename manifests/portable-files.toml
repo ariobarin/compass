@@ -29,6 +29,8 @@ skills = [
   "compass",
   "git-branch-resolver",
   "grill-me",
+  "input-token-economy",
+  "monitor-to-completion",
   "orchestration-controller",
   "pr-review-loop",
   "root-cause-not-symptom",
