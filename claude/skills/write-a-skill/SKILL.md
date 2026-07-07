@@ -12,7 +12,7 @@ Compass source path, install boundary, and PR checks.
 
 Use Compass only for reusable global skills that should install into the user's
 portable skill home. If the capability only makes sense for one project or
-repository, keep that skill in the target repo under `.agents/skills` instead
+repository, keep that skill in the target repo under `.claude/skills` instead
 of promoting it here.
 
 ## Core Stance
@@ -84,9 +84,9 @@ Treat `claude/skills/` here as the repo's portable source tree for reviewed
 Claude skills, parallel to `codex/skills/` for Codex. Do not assume that every
 project should use the same path just because this repo does.
 
-Avoid duplicating a skill name across Compass and a project `.agents/skills`
-folder. Codex does not merge same-name skills, so duplicates can both appear in
-selectors and create ambiguous routing.
+Avoid duplicating a skill name across Compass and a project `.claude/skills`
+folder. Claude applies same-name skill precedence rules, so duplicates can
+override or qualify each other in ways that change routing.
 
 ## Create Or Edit The Skill
 
@@ -130,7 +130,7 @@ and explain the boundary in the relevant repo docs instead.
 
 When a skill belongs in the target repo rather than in the portable global
 setup, do not wire it into `manifests/portable-files.toml` or
-`scripts/common.ps1`. Put it under that repository's `.agents/skills` tree.
+`scripts/common.ps1`. Put it under that repository's `.claude/skills` tree.
 
 Do not pull a project-specific skill into Compass just because you are
 editing it from this repo. If the skill mainly exists to serve one repository,
