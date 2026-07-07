@@ -25,8 +25,9 @@ Before you write, edit, delete, or swap a line, state in one sentence:
 - X is the mechanism, not the symptom. "The string double-quotes a JSON value,
   so it is escaped on serialization" is a cause. "Quotes are escaped" is a
   symptom.
-- Y is the single site that owns the behavior, not the site that displays it.
-  If you cannot point to one site, the cause is not understood yet.
+- Y is the single site or boundary that owns the behavior, not the site that
+  displays it. If you cannot point to one site or boundary, the cause is not
+  understood yet.
 - Z is why that site owns the behavior.
 
 If you cannot fill X, Y, and Z, stop and investigate. Patching a cause you
@@ -39,7 +40,7 @@ Do not patch again.
 
 A returning symptom is a signal, not a todo. Reopen the cause statement,
 assume your first cause was wrong, and look one layer deeper. One fix per
-cause. A second fix for the same symptom means the first cause was wrong.
+cause. A second fix for the same symptom is reason to re-examine the cause.
 
 ## What This Rules Out
 
