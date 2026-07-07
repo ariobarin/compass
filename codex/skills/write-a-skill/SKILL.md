@@ -12,7 +12,8 @@ use. This skill adds the Compass source path, install boundary, and PR checks.
 
 Use Compass only for reusable global skills that should install into the user's
 portable skill home. If the capability only makes sense for one project or
-repository, keep that skill in the target repo instead of promoting it here.
+repository, keep that skill in the target repo under `.agents/skills` instead
+of promoting it here.
 
 ## Core Stance
 
@@ -24,6 +25,10 @@ behavior. Choose a narrower Compass surface when it fits better:
 - mechanical check: `scripts/`;
 - portability boundary: `manifests/`;
 - repo-only lesson: `local-docs/`.
+
+Use plugins, not Compass user skill folders, when the goal is broader
+distribution, a bundle of multiple reusable skills, or a skill shipped with app
+integrations or MCP servers.
 
 Skills should shape judgment before they prescribe steps. Front-load the role,
 non-negotiables, next action, and failure mode to avoid. Prefer concise
@@ -80,6 +85,10 @@ Treat `codex/skills/` here as the repo's portable source tree for reviewed
 global skills. Do not assume that every project should use the same path just
 because this repo does.
 
+Avoid duplicating a skill name across Compass and a project `.agents/skills`
+folder. Codex does not merge same-name skills, so duplicates can both appear in
+selectors and create ambiguous routing.
+
 ## Create Or Edit The Skill
 
 For a new skill, initialize the folder with the system Skill Creator helper
@@ -131,7 +140,7 @@ and explain the boundary in the relevant repo docs instead.
 
 When a skill belongs in the target repo rather than in the portable global
 setup, do not wire it into `manifests/portable-files.toml` or
-`scripts/common.ps1`.
+`scripts/common.ps1`. Put it under that repository's `.agents/skills` tree.
 
 Do not pull a project-specific skill into Compass just because you are
 editing it from this repo. If the skill mainly exists to serve one repository,
