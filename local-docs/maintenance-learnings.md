@@ -15,6 +15,20 @@ The best default is boring and explicit. Keep ordinary files in ordinary Codex
 and user skill locations, keep generated state out of git, and make promotion
 from repo to live install targets a deliberate copy step with a diff.
 
+## Exact Capability Contracts
+
+Compass owns the portable bundle and its reviewed config fragments. When a
+skill, agent, hook, or script depends on another Compass-owned capability, make
+that dependency exact. Fix the source, install map, config fragment, live
+verification, or reviewer contract until the capability is present and checked.
+
+Do not write installed guidance that offers alternate paths for a capability
+Compass can provide. Alternate-path prose teaches future agents to route around
+broken setup instead of repairing the setup. Keep exceptions narrow: external
+services, credentials, network state, CI availability, browser state, project
+repository access, and other resources Compass does not own can still be
+reported as unavailable.
+
 ## Install Boundary
 
 Installed agentic documentation changes future Codex behavior. It belongs in
