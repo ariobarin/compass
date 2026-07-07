@@ -17,6 +17,27 @@ GitHub access that may be blocked or incomplete.
 - State the intended base repo and base branch before changing PR state when
   the remote layout is ambiguous.
 
+## Generated Diff Artifact Branches
+
+Use this when the user asks to check or recreate a fork-diff branch such as
+`upstream-main-diff`.
+
+- Do not treat a browser 404 as proof that a private branch is missing. Check
+  with authenticated host tooling such as `gh repo view` or `gh api`.
+- Treat generated diff branches as artifact branches first. They may be orphan
+  branches whose intended payload is only a file such as `upstream-main.diff`.
+- Compare the host branch tip against the local remote-tracking ref before
+  trusting local branch state. Artifact branches are often force-written, so a
+  stale local ref can describe old evidence.
+- To verify the payload, compute a fresh binary diff from the declared baseline
+  to the fork head and compare that output to the artifact file.
+- When creating or repairing a single-file artifact branch from Windows or a
+  mixed shell, avoid shell redirection paths that can leak carriage returns into
+  the filename. Prefer a temporary Git index or another tree-construction path
+  that writes the artifact name exactly.
+- Keep generated-diff workflow failures separate from unrelated repo CI or
+  missing-secret failures. Use checks and run logs to prove which owner failed.
+
 ## Local Fallback When GitHub Access Fails
 
 - If `gh`, a connector, or repo permissions cannot read the requested PR, fetch
