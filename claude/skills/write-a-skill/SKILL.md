@@ -5,35 +5,37 @@ description: Create or revise portable skills with metadata, install wiring, and
 
 # Write A Skill
 
-Use this skill for the Compass maintenance path, not as a replacement
-for generic skill-design guidance. The job here is to turn a repeated agent
-workflow into a portable, reviewable skill that fits the current repo
-conventions and install surface.
+Use this skill as the Compass overlay on Skill Creator. Follow the same basic
+model: understand concrete examples, plan reusable resources, create or edit
+the skill folder, validate it, and iterate from real use. This skill adds the
+Compass source path, install boundary, and PR checks.
 
-This skill is for reusable global skills that belong in Compass.
-If the capability only makes sense for one project or repository, keep that
-skill in the target repo instead of promoting it here.
+Use Compass only for reusable global skills that should install into the user's
+portable skill home. If the capability only makes sense for one project or
+repository, keep that skill in the target repo under `.claude/skills` instead
+of promoting it here.
 
-## Decide Whether It Should Be A Skill
+## Core Stance
 
-Before creating or expanding a skill, check whether the problem is actually:
+Create or expand a skill only when the repeated work is specialized agent
+behavior. Choose a narrower Compass surface when it fits better:
 
-- a repeated agent capability: skill;
-- a repo-local human process: `workflows/`;
-- a mechanical check: `scripts/`;
-- a portability boundary: `manifests/`;
-- a repo-only lesson: `local-docs/`.
+- repeated agent capability: `claude/skills/`;
+- repo-local human process: `workflows/`;
+- mechanical check: `scripts/`;
+- portability boundary: `manifests/`;
+- repo-only lesson: `local-docs/`.
 
-Choose a repo-local workflow or script when that surface carries the behavior
-more cleanly.
+Use plugins, not Compass user skill folders, when the goal is broader
+distribution, a bundle of multiple reusable skills, or a skill shipped with app
+integrations or MCP servers.
 
-For skill placement, distinguish global from project-local scope:
+Skills should shape judgment before they prescribe steps. Front-load the role,
+non-negotiables, next action, and failure mode to avoid. Prefer concise
+principles, boundaries, examples, and deterministic scripts over exhaustive
+branching text.
 
-- reusable cross-repo developer capability: Compass skill;
-- codebase-specific workflow, schema, or policy: put the skill in that target
-  repo instead of Compass.
-
-## Start From Real Trigger Examples
+## Understand The Skill
 
 Collect concrete examples from recent prompts, PR comments, or repeated repair
 work. Use those examples to answer:
@@ -48,7 +50,22 @@ one skill and route variants inside it. Group proposal vs existing system, new
 vs old project, review vs create, and similar postures when the underlying
 capability is the same.
 
-## Preferred Skill Shape
+## Plan Reusable Contents
+
+Plan the skill contents the same way Skill Creator does:
+
+1. Work through each concrete example from scratch.
+2. Identify reusable resources that would avoid repeated re-discovery or
+   repeated code generation.
+3. Put detailed reference material under `references/`.
+4. Put deterministic or fragile repeated mechanics under `scripts/`.
+5. Put output resources such as templates or static files under `assets/`.
+
+Keep `SKILL.md` lean. It should carry the core workflow, resource navigation,
+and decision rules. It should not carry long reference material that can be
+loaded only when needed.
+
+## Use The Compass Shape
 
 For Compass skills, the normal installable shape is:
 
@@ -57,6 +74,7 @@ skill-name/
   SKILL.md
   references/
   scripts/
+  assets/
 ```
 
 Use only the folders that the skill actually needs. Keep frontmatter to
@@ -66,19 +84,31 @@ Treat `claude/skills/` here as the repo's portable source tree for reviewed
 Claude skills, parallel to `codex/skills/` for Codex. Do not assume that every
 project should use the same path just because this repo does.
 
-## Author The Skill
+Avoid duplicating a skill name across Compass and a project `.claude/skills`
+folder. Claude applies same-name skill precedence rules, so duplicates can
+override or qualify each other in ways that change routing.
+
+## Create Or Edit The Skill
+
+For a new skill, initialize a folder under `claude/skills/<skill-name>/`. Use
+the matching Codex skill as the source when the behavior applies to both
+runtimes. If editing an existing skill, read its current `SKILL.md` and linked
+resources before changing it.
+
+When authoring:
 
 1. Keep the `name` and `description` metadata present and accurate.
-2. Keep the description specific about both capability and trigger.
-3. Keep `SKILL.md` lean. Put detailed workflows, variants, or domain reference
-   material in one-level-deep files under `references/`.
-4. Keep "when to use" guidance in the description, not in a long trigger
-   section in the body.
+2. Make the description specific about both capability and trigger.
+3. Put all "when to use" trigger guidance in the description, not in a long
+   trigger section in the body.
+4. Keep references one level deep from `SKILL.md` and link every reference from
+   the body with clear read conditions.
 5. Add scripts only for deterministic repeated work, validation, or fragile
-   mechanics.
-6. Use portable paths and assumptions by default. Include local-only paths or
-   machine-specific assumptions only when the repo intentionally owns that
-   boundary.
+   mechanics, and test added scripts directly.
+6. Use portable paths and assumptions by default. Include local-only paths only
+   when Compass intentionally owns that boundary.
+7. Do not add auxiliary docs such as `README.md`, installation guides, quick
+   references, changelogs, or process notes inside the skill folder.
 
 ## Portable Repo Wiring
 
@@ -87,22 +117,28 @@ the same branch:
 
 1. `claude/skills/<name>/`
 2. `manifests/portable-files.toml`
-3. `scripts/common.ps1`
+3. the Codex mirror under `codex/skills/<name>/` when the behavior applies to
+   both runtimes
+4. the `[agents]` section of `manifests/portable-files.toml` when a Codex
+   mirror is added
+
+`scripts/common.ps1` reads the manifest for installed skill names. Change it
+only when the install-map logic itself needs to change.
 
 If the skill is intentionally repo-only, keep it out of the install manifest
 and explain the boundary in the relevant repo docs instead.
 
 When a skill belongs in the target repo rather than in the portable global
 setup, do not wire it into `manifests/portable-files.toml` or
-`scripts/common.ps1`.
+`scripts/common.ps1`. Put it under that repository's `.claude/skills` tree.
 
 Do not pull a project-specific skill into Compass just because you are
 editing it from this repo. If the skill mainly exists to serve one repository,
 its home should usually be that repository.
 
 When promoting a live-only or branch-only skill, make the repo copy complete:
-include the real `SKILL.md` and any references or scripts needed for a normal
-install.
+include the real `SKILL.md` and any references, scripts, or assets needed for a
+normal install.
 
 ## Verify Before Opening Or Updating A PR
 
@@ -115,7 +151,11 @@ Run `.\scripts\verify-live.ps1 -SkipCodexCommand` only when live drift matters.
 Expected drift is fine for branch-only skills that are not meant to be
 installed into `~/.claude/skills` yet.
 
-## Review Pass
+## Iterate And Review
+
+Forward-test complex or fragile skills with fresh agents when that is practical.
+Pass the skill and a realistic task, not the intended answer or your diagnosis.
+Review raw artifacts, diffs, logs, and outputs before trusting the result.
 
 Before calling the PR ready, check for nearby stale patterns:
 
