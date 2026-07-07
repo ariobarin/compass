@@ -23,6 +23,11 @@ if (-not $Apply) {
     Write-Host "review mode: no files will be changed"
     Write-Host "planned snapshots:"
     foreach ($item in $items) {
+        if ($item.Type -eq "derived-skill") {
+            Write-Host "  skip derived: $($item.LivePath) is generated from $($item.RepoPath)"
+            continue
+        }
+
         Write-Host "  $($item.LivePath) -> $($item.RepoPath)"
     }
     Write-Host ""
@@ -31,6 +36,11 @@ if (-not $Apply) {
 }
 
 foreach ($item in $items) {
+    if ($item.Type -eq "derived-skill") {
+        Write-Host "skipped derived: $($item.LivePath)"
+        continue
+    }
+
     Copy-PortableItem -Source $item.LivePath -Destination $item.RepoPath -Type $item.Type -AllowedRoot $repoRoot
     Write-Host "snapshotted: $($item.RepoPath)"
 }

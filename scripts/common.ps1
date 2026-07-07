@@ -101,6 +101,10 @@ function Get-PortableClaudeSkillNames {
     return Get-PortableManifestArray -Section "claude" -Key "skills"
 }
 
+function Get-PortableClaudeDerivedSkillNames {
+    return Get-PortableManifestArray -Section "claude" -Key "derived_skills"
+}
+
 function Get-PortableClaudeAgentNames {
     return Get-PortableManifestArray -Section "claude" -Key "agents"
 }
@@ -196,6 +200,16 @@ function Get-PortableFileMap {
         })
     }
 
+    foreach ($skill in Get-PortableClaudeDerivedSkillNames) {
+        $items.Add([pscustomobject]@{
+            Type = "derived-skill"
+            RepoPath = Join-Path (Join-Path (Join-Path $RepoRoot "codex") "skills") $skill
+            LivePath = Join-Path $claudeSkillsHome $skill
+            LiveRoot = $ClaudeHome
+            BackupScope = "claude"
+        })
+    }
+
     $claudeAgentsHome = Join-Path $ClaudeHome "agents"
     foreach ($agent in Get-PortableClaudeAgentNames) {
         $items.Add([pscustomobject]@{
@@ -263,7 +277,7 @@ function Backup-LiveItem {
     }
     $backupPath = Join-Path $backupBase $relative
 
-    if ($Type -eq "dir") {
+    if ($Type -in @("dir", "derived-skill")) {
         New-Item -ItemType Directory -Force (Split-Path -Parent $backupPath) | Out-Null
         Copy-Item -LiteralPath $LivePath -Destination $backupPath -Recurse -Force
         return
@@ -295,6 +309,22 @@ function Copy-PortableItem {
         }
         New-Item -ItemType Directory -Force (Split-Path -Parent $Destination) | Out-Null
         Copy-Item -LiteralPath $Source -Destination $Destination -Recurse -Force
+        return
+    }
+
+    if ($Type -eq "derived-skill") {
+        if (Test-Path $Destination) {
+            Remove-Item -LiteralPath $Destination -Recurse -Force
+        }
+
+        New-Item -ItemType Directory -Force $Destination | Out-Null
+        Copy-Item -LiteralPath (Join-Path $Source "SKILL.md") -Destination (Join-Path $Destination "SKILL.md") -Force
+
+        $references = Join-Path $Source "references"
+        if (Test-Path -LiteralPath $references) {
+            Copy-Item -LiteralPath $references -Destination (Join-Path $Destination "references") -Recurse -Force
+        }
+
         return
     }
 

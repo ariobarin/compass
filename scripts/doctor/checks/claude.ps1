@@ -50,6 +50,7 @@ if (-not $claudeSectionMatch.Success) {
 else {
     $section = $claudeSectionMatch.Groups[1].Value
     $claudeSkillsMatch = [regex]::Match($section, "(?ms)^\s*skills\s*=\s*\[(.*?)^\s*\]")
+    $claudeDerivedSkillsMatch = [regex]::Match($section, "(?ms)^\s*derived_skills\s*=\s*\[(.*?)^\s*\]")
     $claudeAgentsMatch = [regex]::Match($section, "(?ms)^\s*agents\s*=\s*\[(.*?)^\s*\]")
 
     if (-not $claudeSkillsMatch.Success) {
@@ -60,6 +61,7 @@ else {
         $problems.Add("missing claude agents list in portable manifest")
     }
 
+    $manifestClaudeSkills = @()
     if ($claudeSkillsMatch.Success) {
         $manifestClaudeSkills = @(
             [regex]::Matches($claudeSkillsMatch.Groups[1].Value, '"([^"]+)"') |
@@ -82,6 +84,30 @@ else {
         foreach ($skill in $diskClaudeSkills) {
             if ($manifestClaudeSkills -notcontains $skill) {
                 $problems.Add("claude skill on disk missing from manifest: $skill")
+            }
+        }
+    }
+
+    if ($claudeDerivedSkillsMatch.Success) {
+        $manifestClaudeDerivedSkills = @(
+            [regex]::Matches($claudeDerivedSkillsMatch.Groups[1].Value, '"([^"]+)"') |
+                ForEach-Object { $_.Groups[1].Value } |
+                Sort-Object -Unique
+        )
+
+        foreach ($skill in $manifestClaudeDerivedSkills) {
+            if ($manifestClaudeSkills -contains $skill) {
+                $problems.Add("claude skill listed as direct and derived: $skill")
+            }
+
+            $source = Join-Path (Join-Path (Join-Path $repoRoot "codex") "skills") $skill
+            if (-not (Test-Path -LiteralPath (Join-Path $source "SKILL.md"))) {
+                $problems.Add("claude derived skill source missing from codex skills: $skill")
+            }
+
+            $claudeSource = Join-Path (Join-Path (Join-Path $repoRoot "claude") "skills") $skill
+            if (Test-Path -LiteralPath $claudeSource) {
+                $problems.Add("claude derived skill also has source mirror: $skill")
             }
         }
     }

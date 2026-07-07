@@ -29,6 +29,8 @@ skills = [
   "compass",
   "git-branch-resolver",
   "grill-me",
+  "input-token-economy",
+  "monitor-to-completion",
   "orchestration-controller",
   "pr-review-loop",
   "root-cause-not-symptom",
@@ -65,6 +67,11 @@ skills = [
   "to-prd",
   "workspace-steward",
   "write-a-skill",
+]
+
+derived_skills = [
+  "input-token-economy",
+  "monitor-to-completion",
 ]
 
 agents = [
