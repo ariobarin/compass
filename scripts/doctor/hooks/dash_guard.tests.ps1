@@ -17,6 +17,22 @@ Test-PortableGuardDeny -Name "git global option dash" -ExpectedReasonPattern "pl
     }
 }
 
+Test-PortableGuardDeny -Name "git merge message dash" -ExpectedReasonPattern "plain hyphen" -Payload @{
+    hook_event_name = "PreToolUse"
+    tool_name = "Bash"
+    tool_input = @{
+        command = "git merge --no-ff -m `"bad $dash merge`" main"
+    }
+}
+
+Test-PortableGuardDeny -Name "gh release repo dash" -ExpectedReasonPattern "plain hyphen" -Payload @{
+    hook_event_name = "PreToolUse"
+    tool_name = "Bash"
+    tool_input = @{
+        command = "gh --repo owner/repo release create v1 --title `"bad $dash release`""
+    }
+}
+
 Test-PortableGuardDeny -Name "patch dash" -ExpectedReasonPattern "plain hyphen" -Payload @{
     hook_event_name = "PreToolUse"
     tool_name = "apply_patch"
