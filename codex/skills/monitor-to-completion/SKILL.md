@@ -49,9 +49,9 @@ Run the wait inside the command, then return a short result.
 - Bound it. Always carry a timeout and a failure exit so the turn ends even if
   the condition never holds. A hang is worse than a poll.
 - Use the platform's wait where one exists. docker wait, kubectl wait,
-  Wait-Process, Wait-Event, a single curl with `--fail --retry
-  --retry-all-errors`, or tail -f piped to grep -m1. These exist precisely so
-  you do not hand-roll a sleep loop.
+  Wait-Process, Wait-Event, a single curl with `--fail --retry 30 --retry-all-errors`,
+  or tail -f piped to grep -m1. These exist precisely so you do not hand-roll a
+  sleep loop.
 
 If you genuinely need to re-check something at intervals over a long span, that
 is a scheduled job or a watcher process, not a model turn repeated.
@@ -71,7 +71,7 @@ in a loop.
 - sleep-and-recheck: Start-Sleep then Get-Content then Start-Sleep, repeated,
   to watch a file or process grow.
 - retry-by-pinging: polling an endpoint across turns until it responds, when
-  one curl with `--fail --retry --retry-all-errors` or a single wait does it.
+  one curl with `--fail --retry 30 --retry-all-errors` or a single wait does it.
 - babysit-by-re-read: re-reading the same log every turn to see whether it
   finished, instead of one command that exits when it does.
 - model-as-timer: using the model turn as the clock. The script owns the clock.
