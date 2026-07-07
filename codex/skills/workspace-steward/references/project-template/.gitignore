@@ -21,15 +21,22 @@ secrets/
 
 # Local runtime state - browser profiles, sessions, logs, and databases.
 /browser/
+/browser-profile/
 /cache/
+/caches/
+/profiles/
 /sessions/
 /sqlite/
 /threads/
 /log/
 /logs/
 *.sqlite
+*.sqlite3
 *.sqlite-shm
 *.sqlite-wal
+*.db
+*.db-shm
+*.db-wal
 *.log
 
 # Machine-only runtime caches and build state.
