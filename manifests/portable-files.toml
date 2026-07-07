@@ -43,6 +43,39 @@ skills = [
   "write-a-skill",
 ]
 
+[claude]
+# The live target is the active Claude home: $HOME/.claude. Claude skills
+# install to ~/.claude/skills and agents to ~/.claude/agents.
+home = "$HOME\\.claude"
+skills_dir = "$HOME\\.claude\\skills"
+agents_dir = "$HOME\\.claude\\agents"
+
+skills = [
+  "action-items-to-prs",
+  "benchmark-infra-reviewer",
+  "benchmark-run-operator",
+  "compass",
+  "git-branch-resolver",
+  "grill-me",
+  "orchestration-controller",
+  "pr-review-loop",
+  "specialist-review",
+  "subagent-driven-development",
+  "to-prd",
+  "workspace-steward",
+  "write-a-skill",
+]
+
+agents = [
+  "algorithm-critic",
+  "neutral-critic",
+  "repo-explorer",
+  "research-critic",
+  "reuse-critic",
+  "reviewer",
+  "verifier",
+]
+
 [config]
 review_file = "config.review.toml"
 install_automatically = false

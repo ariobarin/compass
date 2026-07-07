@@ -1,6 +1,7 @@
 param(
     [string]$CodexHome,
-    [string]$AgentsHome
+    [string]$AgentsHome,
+    [string]$ClaudeHome
 )
 
 . "$PSScriptRoot\common.ps1"
@@ -17,6 +18,13 @@ try {
 }
 catch {
     $agentsHomePath = Join-Path $HOME ".agents"
+}
+
+try {
+    $claudeHomePath = Get-ClaudeHome -ClaudeHome $ClaudeHome
+}
+catch {
+    $claudeHomePath = Join-Path $HOME ".claude"
 }
 
 $problems = New-Object System.Collections.Generic.List[string]
@@ -37,7 +45,8 @@ else {
         "checks\skills.ps1",
         "checks\agents.ps1",
         "checks\restart-recovery.ps1",
-        "checks\hooks.ps1"
+        "checks\hooks.ps1",
+        "checks\claude.ps1"
     )) {
         $fullCheckPath = Join-Path $doctorRoot $checkPath
         if (Test-Path -LiteralPath $fullCheckPath) {
@@ -52,6 +61,7 @@ else {
 Write-Host "repo: $repoRoot"
 Write-Host "codex: $liveHome"
 Write-Host "agents: $agentsHomePath"
+Write-Host "claude: $claudeHomePath"
 
 if ($problems.Count -gt 0) {
     Write-Host ""

@@ -23,6 +23,14 @@ function Get-ManifestRepoPaths {
         $paths.Add((ConvertTo-GitPath -Path (Join-Path "codex" $configReviewFile)))
     }
 
+    foreach ($file in @(Get-ManifestArrayValues -Text $manifestText -Section "claude" -Key "files")) {
+        $paths.Add((ConvertTo-GitPath -Path (Join-Path "claude" $file)))
+    }
+
+    foreach ($agent in @(Get-ManifestArrayValues -Text $manifestText -Section "claude" -Key "agents")) {
+        $paths.Add((ConvertTo-GitPath -Path (Join-Path (Join-Path "claude" "agents") "$agent.md")))
+    }
+
     return @($paths)
 }
 
@@ -39,6 +47,14 @@ function Get-ManifestRepoDirPrefixes {
 
     foreach ($skill in @(Get-ManifestArrayValues -Text $manifestText -Section "agents" -Key "skills")) {
         $prefixes.Add("$(ConvertTo-GitPath -Path (Join-Path (Join-Path "codex" "skills") $skill))/")
+    }
+
+    foreach ($dir in @(Get-ManifestArrayValues -Text $manifestText -Section "claude" -Key "dirs")) {
+        $prefixes.Add("$(ConvertTo-GitPath -Path (Join-Path "claude" $dir))/")
+    }
+
+    foreach ($skill in @(Get-ManifestArrayValues -Text $manifestText -Section "claude" -Key "skills")) {
+        $prefixes.Add("$(ConvertTo-GitPath -Path (Join-Path (Join-Path "claude" "skills") $skill))/")
     }
 
     return @($prefixes)
