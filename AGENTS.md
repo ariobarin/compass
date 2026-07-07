@@ -25,9 +25,11 @@ of `~/.codex` or `$HOME/.agents`.
 - For Compass-owned capabilities, fix the config, install map, verifier, or
   agent contract. Do not add alternate-path, best-effort, or compatibility
   prose to installed skills when this repo can make the capability exact.
-- `claude/skills/` and `claude/agents/` are the Claude Code mirror of the Codex
-  portable bundle. The same install map covers both surfaces. Keep the two in
-  step when a change applies to both runtimes, and document the port in
+- Codex is the reviewed source of truth. Claude skills in
+  `[claude].derived_skills` generate from `codex/skills/<name>` at install time,
+  so a change there lands on both runtimes. Only skills in `[claude].skills`
+  keep a hand-maintained `claude/skills/<name>/` override that needs separate
+  edits. `claude/agents/` stays a hand-maintained mirror for now. See
   `workflows/claude-config.md`.
 - For nontrivial changes to this repo, read
   `local-docs/maintenance-learnings.md` before editing.

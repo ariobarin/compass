@@ -3,10 +3,12 @@
 Use this workflow when changing Claude Code setup that should survive a new
 machine, fresh profile, or copied repo checkout.
 
-This is the Claude Code mirror of the Codex portable flow in
-[portable-config.md](portable-config.md). Compass keeps `codex/` as the reviewed
-source for Codex and `claude/` as the reviewed source for Claude Code. Both
-surfaces install from the same repo with the same scripts.
+This is the Claude Code side of the Codex portable flow in
+[portable-config.md](portable-config.md). Codex is the reviewed source of truth.
+Claude skills derive from `codex/skills/` at install time by default, so a change
+lands once and applies to both runtimes. Only skills with Claude-specific wording
+keep a hand-maintained `claude/skills/` override. Both surfaces install from the
+same repo with the same scripts.
 
 These scripts use `-ClaudeHome` for Claude-home files, otherwise `$HOME\.claude`.
 
@@ -19,7 +21,9 @@ These scripts use `-ClaudeHome` for Claude-home files, otherwise `$HOME\.claude`
 
 ## Change flow
 
-1. Edit files in `claude/skills/` or `claude/agents/` first.
+1. Edit the source first: `codex/skills/<name>/` for a derived skill, or
+   `claude/skills/<name>/` for a Claude-specific override. Edit `claude/agents/`
+   for agents.
 2. Run `.\scripts\doctor.ps1`.
 3. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` for a quick drift report.
 4. Run `.\scripts\diff-live.ps1` for a full diff against live files.
@@ -31,17 +35,18 @@ These scripts use `-ClaudeHome` for Claude-home files, otherwise `$HOME\.claude`
 `.\scripts\update-live.ps1` already installs the Claude surface alongside the
 Codex surface. No separate command is needed.
 
-## Porting From Codex
+## Deriving And Overriding Skills
 
 Claude and Codex share the `name` and `description` SKILL.md frontmatter, so
-skill bodies are mostly portable. If the Claude skill can use the Codex source
-without runtime-specific edits, list it in `[claude].derived_skills` instead of
-copying a second source tree. The installer derives the Claude skill from
-`codex/skills/<name>` by copying `SKILL.md` and `references/`, and dropping
-Codex-only metadata such as `agents/openai.yaml`.
+skill bodies are mostly portable. Derivation is the default: list a skill in
+`[claude].derived_skills` and the installer generates the Claude skill from
+`codex/skills/<name>` by copying `SKILL.md` and `references/` and dropping
+Codex-only metadata such as `agents/openai.yaml`. There is no second source tree
+to keep in step.
 
-When a skill needs Claude-specific wording, port `codex/skills/<name>` to
-`claude/skills/<name>`:
+Keep a hand-maintained `claude/skills/<name>/` override only when the skill needs
+Claude-specific wording. List it in `[claude].skills`, not `derived_skills`.
+When porting `codex/skills/<name>` to such an override:
 
 1. Copy `SKILL.md` and any `references/*.md`. References are tool-agnostic prose.
 2. Drop `agents/openai.yaml`. Claude discovers agents from
@@ -55,7 +60,12 @@ When a skill needs Claude-specific wording, port `codex/skills/<name>` to
    - bare `codex` CLI calls: generalize or note the Claude equivalent.
    - Codex-only features such as `/goal`: drop or reword for a generic agent.
 
-When porting a `codex/agents/<name>.toml` agent to `claude/agents/<name>.md`:
+If an override later converges with the Codex source, delete the
+`claude/skills/<name>` tree and move the name from `[claude].skills` to
+`[claude].derived_skills` so it derives again.
+
+When porting a `codex/agents/<name>.toml` agent to a hand-maintained
+`claude/agents/<name>.md` override:
 
 1. Convert TOML to markdown with YAML frontmatter: `name`, `description`, then
    `tools`, `model: inherit`, and an optional `color`.

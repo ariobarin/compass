@@ -34,7 +34,7 @@ guidance for a capability Compass can provide.
 ## Route Changes
 
 - Installed agentic behavior: `codex/AGENTS.md`, `codex/agents/`,
-  `codex/skills/`, and the Claude mirrors `claude/skills/`, `claude/agents/`.
+  `codex/skills/`, and the Claude surface `claude/skills/`, `claude/agents/`.
 - Repo-maintainer guidance: root `AGENTS.md`, `workflows/`, `local-docs/`,
   `manifests/`, `scripts/`.
 - Reviewed config fragments: `codex/config.review.toml`; do not treat it as a
