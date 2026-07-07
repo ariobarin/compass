@@ -30,6 +30,7 @@ skills = [
   "git-branch-resolver",
   "grill-me",
   "orchestration-controller",
+  "pr-merge-closeout",
   "pr-review-loop",
   "root-cause-not-symptom",
   "specialist-review",
