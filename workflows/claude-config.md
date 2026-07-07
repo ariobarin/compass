@@ -34,7 +34,13 @@ Codex surface. No separate command is needed.
 ## Porting From Codex
 
 Claude and Codex share the `name` and `description` SKILL.md frontmatter, so
-skill bodies are mostly portable. When porting a `codex/skills/<name>` skill to
+skill bodies are mostly portable. If the Claude skill can use the Codex source
+without runtime-specific edits, list it in `[claude].derived_skills` instead of
+copying a second source tree. The installer derives the Claude skill from
+`codex/skills/<name>` by copying `SKILL.md` and `references/`, and dropping
+Codex-only metadata such as `agents/openai.yaml`.
+
+When a skill needs Claude-specific wording, port `codex/skills/<name>` to
 `claude/skills/<name>`:
 
 1. Copy `SKILL.md` and any `references/*.md`. References are tool-agnostic prose.

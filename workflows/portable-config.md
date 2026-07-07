@@ -17,6 +17,9 @@ For the Claude Code mirror of this flow, see [claude-config.md](claude-config.md
 The same `install.ps1`, `verify-live.ps1`, `diff-live.ps1`, and `update-live.ps1`
 scripts install the `claude/` surface into `$HOME/.claude` alongside the Codex
 surface.
+Claude skills listed in `[claude].derived_skills` are generated from the
+reviewed `codex/skills/<name>` source during install instead of being duplicated
+under `claude/skills/`.
 
 ## Change flow
 

@@ -53,9 +53,6 @@ home = "$HOME\\.claude"
 skills_dir = "$HOME\\.claude\\skills"
 agents_dir = "$HOME\\.claude\\agents"
 
-# Some Codex skills are intentionally absent here when the Claude surface should
-# be derived by install logic rather than source-mirrored. Current omissions:
-# input-token-economy, monitor-to-completion.
 skills = [
   "action-items-to-prs",
   "benchmark-infra-reviewer",
@@ -70,6 +67,11 @@ skills = [
   "to-prd",
   "workspace-steward",
   "write-a-skill",
+]
+
+derived_skills = [
+  "input-token-economy",
+  "monitor-to-completion",
 ]
 
 agents = [

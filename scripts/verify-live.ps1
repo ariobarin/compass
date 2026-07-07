@@ -34,6 +34,30 @@ function Get-RelativeFileMap {
     return $map
 }
 
+function Get-DerivedSkillFileMap {
+    param([string]$Root)
+
+    $map = @{}
+    if (-not (Test-Path $Root)) {
+        return $map
+    }
+
+    $skillFile = Join-Path $Root "SKILL.md"
+    if (Test-Path -LiteralPath $skillFile) {
+        $map["SKILL.md"] = (Get-FileHash -Algorithm SHA256 -LiteralPath $skillFile).Hash
+    }
+
+    $references = Join-Path $Root "references"
+    if (Test-Path -LiteralPath $references) {
+        foreach ($file in Get-ChildItem -LiteralPath $references -Recurse -File -Force) {
+            $relative = $file.FullName.Substring((Resolve-Path $Root).Path.Length).TrimStart("\")
+            $map[$relative] = (Get-FileHash -Algorithm SHA256 -LiteralPath $file.FullName).Hash
+        }
+    }
+
+    return $map
+}
+
 foreach ($item in $items) {
     if (-not (Test-Path $item.LivePath)) {
         $missing.Add($item.LivePath)
@@ -54,7 +78,12 @@ foreach ($item in $items) {
         continue
     }
 
-    $repoMap = Get-RelativeFileMap -Root $item.RepoPath
+    if ($item.Type -eq "derived-skill") {
+        $repoMap = Get-DerivedSkillFileMap -Root $item.RepoPath
+    }
+    else {
+        $repoMap = Get-RelativeFileMap -Root $item.RepoPath
+    }
     $liveMap = Get-RelativeFileMap -Root $item.LivePath
     $allKeys = @(@($repoMap.Keys) + @($liveMap.Keys) | Sort-Object -Unique)
     foreach ($key in $allKeys) {
