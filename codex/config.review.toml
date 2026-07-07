@@ -23,6 +23,15 @@ service_tier = "default"
 sandbox_mode = "danger-full-access"
 approval_policy = "never"
 
+[agents]
+# The root session is depth 0. The specialist-review skill launches reviewer at
+# depth 1, and reviewer launches specialists at depth 2, so max_depth = 2 permits
+# exactly root -> reviewer -> specialist
+# (config reference: https://developers.openai.com/codex/config-reference).
+# The parent-delegation fallback (PR #91) only works when the parent is the root
+# session (depth 0).
+max_depth = 2
+
 [windows]
 sandbox = "elevated"
 

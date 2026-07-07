@@ -44,6 +44,39 @@ skills = [
   "write-a-skill",
 ]
 
+[claude]
+# The live target is the active Claude home: $HOME/.claude. Claude skills
+# install to ~/.claude/skills and agents to ~/.claude/agents.
+home = "$HOME\\.claude"
+skills_dir = "$HOME\\.claude\\skills"
+agents_dir = "$HOME\\.claude\\agents"
+
+skills = [
+  "action-items-to-prs",
+  "benchmark-infra-reviewer",
+  "benchmark-run-operator",
+  "compass",
+  "git-branch-resolver",
+  "grill-me",
+  "orchestration-controller",
+  "pr-review-loop",
+  "specialist-review",
+  "subagent-driven-development",
+  "to-prd",
+  "workspace-steward",
+  "write-a-skill",
+]
+
+agents = [
+  "algorithm-critic",
+  "neutral-critic",
+  "repo-explorer",
+  "research-critic",
+  "reuse-critic",
+  "reviewer",
+  "verifier",
+]
+
 [config]
 review_file = "config.review.toml"
 install_automatically = false
@@ -54,11 +87,20 @@ reason = "Live config.toml includes generated runtime paths, marketplaces, proje
 # from the repo's codex/ directory into the live Codex home. The [agents]
 # section maps repo skills into the user skill home.
 files = [
+  ".gitattributes",
+  ".gitignore",
   "AGENTS.md",
+  "CODE_OF_CONDUCT.md",
+  "CONTRIBUTING.md",
+  "LICENSE",
   "README.md",
+  "SECURITY.md",
+  "SUPPORT.md",
+  "philosophy.md",
 ]
 
 dirs = [
+  ".github",
   "local-docs",
   "manifests",
   "scripts",

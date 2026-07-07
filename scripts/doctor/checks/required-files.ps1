@@ -46,7 +46,9 @@ foreach ($path in @(
     "scripts\doctor\checks\skills.ps1",
     "scripts\doctor\checks\text-policy.ps1",
     "scripts\doctor\hooks\base.tests.ps1",
-    "scripts\doctor\hooks\common.ps1"
+    "scripts\doctor\hooks\common.ps1",
+    "scripts\doctor\checks\claude.ps1",
+    "workflows\claude-config.md"
 )) {
     $fullPath = Join-Path $repoRoot $path
     if (-not (Test-Path $fullPath)) {

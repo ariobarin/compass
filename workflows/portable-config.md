@@ -10,7 +10,13 @@ Installed agentic guidance lives under `codex/AGENTS.md`, `codex/agents/`, and
 
 These scripts use `-CodexHome` for Codex-home files, otherwise
 `$env:CODEX_HOME`, otherwise the default `%USERPROFILE%\.codex` home. They use
-`-AgentsHome` for user skills, otherwise `$HOME\.agents`.
+`-AgentsHome` for user skills, otherwise `$HOME\.agents`. They use `-ClaudeHome`
+for Claude-home files, otherwise `$HOME\.claude`.
+
+For the Claude Code mirror of this flow, see [claude-config.md](claude-config.md).
+The same `install.ps1`, `verify-live.ps1`, `diff-live.ps1`, and `update-live.ps1`
+scripts install the `claude/` surface into `$HOME/.claude` alongside the Codex
+surface.
 
 ## Change flow
 

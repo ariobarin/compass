@@ -31,28 +31,78 @@ function Get-AgentsHome {
     return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($default)
 }
 
+function Get-ClaudeHome {
+    param([string]$ClaudeHome)
+
+    if ($ClaudeHome) {
+        return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ClaudeHome)
+    }
+
+    $default = Join-Path $HOME ".claude"
+    return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($default)
+}
+
 function Get-PortableSkillNames {
+    $manifestPath = Join-Path (Get-RepoRoot) "manifests\portable-files.toml"
+    if (-not (Test-Path -LiteralPath $manifestPath)) {
+        throw "missing portable manifest: $manifestPath"
+    }
+
+    $manifestText = Get-Content -Raw -LiteralPath $manifestPath
+    $sectionPattern = "(?ms)^\[agents\]\s*(.*?)(?=^\[|\z)"
+    $sectionMatch = [regex]::Match($manifestText, $sectionPattern)
+    if (-not $sectionMatch.Success) {
+        throw "missing agents section in portable manifest"
+    }
+
+    $skillsPattern = "(?ms)^\s*skills\s*=\s*\[(.*?)^\s*\]"
+    $skillsMatch = [regex]::Match($sectionMatch.Groups[1].Value, $skillsPattern)
+    if (-not $skillsMatch.Success) {
+        throw "missing portable skill list in manifest"
+    }
+
     return @(
-        "action-items-to-prs",
-        "benchmark-infra-reviewer",
-        "benchmark-run-operator",
-        "compass",
-        "git-branch-resolver",
-        "grill-me",
-        "orchestration-controller",
-        "pr-review-loop",
-        "root-cause-not-symptom",
-        "specialist-review",
-        "subagent-driven-development",
-        "to-prd",
-        "update-compass",
-        "using-codex-goals",
-        "webmcp-eval-triage",
-        "webmcp-tool-authoring",
-        "webmcp-verify-tool",
-        "workspace-steward",
-        "write-a-skill"
+        [regex]::Matches($skillsMatch.Groups[1].Value, '"([^"]+)"') |
+            ForEach-Object { $_.Groups[1].Value }
     )
+}
+
+function Get-PortableManifestArray {
+    param(
+        [string]$Section,
+        [string]$Key
+    )
+
+    $manifestPath = Join-Path (Get-RepoRoot) "manifests\portable-files.toml"
+    if (-not (Test-Path -LiteralPath $manifestPath)) {
+        throw "missing portable manifest: $manifestPath"
+    }
+
+    $manifestText = Get-Content -Raw -LiteralPath $manifestPath
+    $sectionPattern = "(?ms)^\[$([regex]::Escape($Section))\]\s*(.*?)(?=^\[|\z)"
+    $sectionMatch = [regex]::Match($manifestText, $sectionPattern)
+    if (-not $sectionMatch.Success) {
+        return @()
+    }
+
+    $arrayPattern = "(?ms)^\s*$([regex]::Escape($Key))\s*=\s*\[(.*?)^\s*\]"
+    $arrayMatch = [regex]::Match($sectionMatch.Groups[1].Value, $arrayPattern)
+    if (-not $arrayMatch.Success) {
+        return @()
+    }
+
+    return @(
+        [regex]::Matches($arrayMatch.Groups[1].Value, '"([^"]+)"') |
+            ForEach-Object { $_.Groups[1].Value }
+    )
+}
+
+function Get-PortableClaudeSkillNames {
+    return Get-PortableManifestArray -Section "claude" -Key "skills"
+}
+
+function Get-PortableClaudeAgentNames {
+    return Get-PortableManifestArray -Section "claude" -Key "agents"
 }
 
 function New-DirectoryForFile {
@@ -87,11 +137,16 @@ function Get-PortableFileMap {
     param(
         [string]$RepoRoot,
         [string]$CodexHome,
-        [string]$AgentsHome
+        [string]$AgentsHome,
+        [string]$ClaudeHome
     )
 
     if (-not $AgentsHome) {
         $AgentsHome = Get-AgentsHome
+    }
+
+    if (-not $ClaudeHome) {
+        $ClaudeHome = Get-ClaudeHome
     }
 
     $items = New-Object System.Collections.Generic.List[object]
@@ -126,6 +181,29 @@ function Get-PortableFileMap {
             LivePath = Join-Path $userSkillsHome $skill
             LiveRoot = $AgentsHome
             BackupScope = "agents"
+        })
+    }
+
+    # Claude skills install to ~/.claude/skills and agents to ~/.claude/agents.
+    $claudeSkillsHome = Join-Path $ClaudeHome "skills"
+    foreach ($skill in Get-PortableClaudeSkillNames) {
+        $items.Add([pscustomobject]@{
+            Type = "dir"
+            RepoPath = Join-Path (Join-Path (Join-Path $RepoRoot "claude") "skills") $skill
+            LivePath = Join-Path $claudeSkillsHome $skill
+            LiveRoot = $ClaudeHome
+            BackupScope = "claude"
+        })
+    }
+
+    $claudeAgentsHome = Join-Path $ClaudeHome "agents"
+    foreach ($agent in Get-PortableClaudeAgentNames) {
+        $items.Add([pscustomobject]@{
+            Type = "file"
+            RepoPath = Join-Path (Join-Path (Join-Path $RepoRoot "claude") "agents") "$agent.md"
+            LivePath = Join-Path $claudeAgentsHome "$agent.md"
+            LiveRoot = $ClaudeHome
+            BackupScope = "claude"
         })
     }
 
@@ -204,8 +282,7 @@ function Copy-PortableItem {
     )
 
     if (-not (Test-Path $Source)) {
-        Write-Host "skip missing source: $Source"
-        return
+        throw "missing portable source: $Source"
     }
 
     if ($AllowedRoot) {

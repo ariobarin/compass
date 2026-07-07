@@ -1,6 +1,7 @@
 param(
     [string]$CodexHome,
     [string]$AgentsHome,
+    [string]$ClaudeHome,
     [switch]$SkipCodexCommand,
     [switch]$RequireInSync,
     [int]$TimeoutSeconds = 180
@@ -11,9 +12,12 @@ param(
 $repoRoot = Get-RepoRoot
 $liveHome = Get-CodexHome -CodexHome $CodexHome
 $agentsHome = Get-AgentsHome -AgentsHome $AgentsHome
-$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome
+$claudeHome = Get-ClaudeHome -ClaudeHome $ClaudeHome
+$items = Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome -ClaudeHome $claudeHome
+$retiredItems = Get-RetiredPortableFileMap -CodexHome $liveHome -AgentsHome $agentsHome
 $drift = New-Object System.Collections.Generic.List[string]
 $missing = New-Object System.Collections.Generic.List[string]
+$retired = New-Object System.Collections.Generic.List[string]
 
 function Get-RelativeFileMap {
     param([string]$Root)
@@ -60,9 +64,16 @@ foreach ($item in $items) {
     }
 }
 
+foreach ($item in $retiredItems) {
+    if (Test-Path $item.LivePath) {
+        $retired.Add($item.LivePath)
+    }
+}
+
 Write-Host "repo: $repoRoot"
 Write-Host "codex: $liveHome"
 Write-Host "agents: $agentsHome"
+Write-Host "claude: $claudeHome"
 
 if ($missing.Count -gt 0) {
     Write-Host ""
@@ -79,11 +90,18 @@ if ($drift.Count -gt 0) {
         Write-Host "  $path"
     }
 }
-elseif ($missing.Count -eq 0) {
+if ($retired.Count -gt 0) {
+    Write-Host ""
+    Write-Host "retired portable copies:"
+    foreach ($path in $retired) {
+        Write-Host "  $path"
+    }
+}
+elseif ($missing.Count -eq 0 -and $drift.Count -eq 0) {
     Write-Host "portable files match live allowlist"
 }
 
-if ($RequireInSync -and ($missing.Count -gt 0 -or $drift.Count -gt 0)) {
+if ($RequireInSync -and ($missing.Count -gt 0 -or $drift.Count -gt 0 -or $retired.Count -gt 0)) {
     exit 1
 }
 

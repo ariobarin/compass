@@ -2,7 +2,8 @@ param(
     [string]$Remote = "origin",
     [string]$Branch = "main",
     [string]$CodexHome,
-    [string]$AgentsHome
+    [string]$AgentsHome,
+    [string]$ClaudeHome
 )
 
 . "$PSScriptRoot\common.ps1"
@@ -10,6 +11,7 @@ param(
 $repoRoot = Get-RepoRoot
 $liveHome = Get-CodexHome -CodexHome $CodexHome
 $agentsHomePath = Get-AgentsHome -AgentsHome $AgentsHome
+$claudeHomePath = Get-ClaudeHome -ClaudeHome $ClaudeHome
 
 function Invoke-RepoGit {
     param([string[]]$Arguments)
@@ -71,6 +73,7 @@ Write-Host "remote: $Remote"
 Write-Host "branch: $Branch"
 Write-Host "codex: $liveHome"
 Write-Host "agents: $agentsHomePath"
+Write-Host "claude: $claudeHomePath"
 Write-Host ""
 
 $remoteRef = "refs/remotes/$Remote/$Branch"
@@ -102,6 +105,9 @@ if ($CodexHome) {
 }
 if ($AgentsHome) {
     $homeArgs["AgentsHome"] = $AgentsHome
+}
+if ($ClaudeHome) {
+    $homeArgs["ClaudeHome"] = $ClaudeHome
 }
 
 $installArgs = @{} + $homeArgs
