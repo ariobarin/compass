@@ -95,7 +95,7 @@ Skills and agents need extra review because they shape future agent behavior.
 
 ## Memory-Only Skills
 
-Treat files under `C:\Users\Administrator\.codex\memories\skills` as candidate
+Treat files under the live Codex memory skills directory (`$CODEX_HOME/memories/skills` or equivalent) as candidate
 legacy material, not active portable skills. They are useful evidence about past
 workflow experiments, but they do not belong in `codex/skills/` until fresh
 examples show the capability is still repeated, portable, and worth installing.
@@ -108,7 +108,7 @@ When reviewing a memory-only skill:
   installed skill.
 - Retire it as stale local history when it no longer maps to current Codex,
   Compass, or repo workflows.
-- Prefer a maintainer workflow note, local doc, or failure-learning entry when
+- Prefer a maintainer workflow note, local doc, or `*-learnings.md` entry in `local-docs/` when
   the material explains how to maintain Compass rather than how future Codex
   sessions should act.
 
