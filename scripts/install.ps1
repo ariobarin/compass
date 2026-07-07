@@ -37,17 +37,30 @@ if (-not $Apply) {
     }
 
     Write-Host ""
-    Write-Host "run with -Apply to copy these files into the live Codex home and user skill home"
+    Write-Host "run with -Apply to copy these files into the live Codex home, user skill home, and Claude home"
     exit 0
 }
 
 $stamp = Get-Date -Format "yyyyMMdd-HHmmss"
-$backupRoot = Join-Path $liveHome "portable-backups\$stamp"
-New-Item -ItemType Directory -Force $backupRoot | Out-Null
+$backupRoots = @{}
+
+function Get-ItemBackupRoot {
+    param([string]$LiveRoot)
+
+    if ($backupRoots.ContainsKey($LiveRoot)) {
+        return $backupRoots[$LiveRoot]
+    }
+
+    $root = Join-Path $LiveRoot "portable-backups\$stamp"
+    New-Item -ItemType Directory -Force $root | Out-Null
+    $backupRoots[$LiveRoot] = $root
+    return $root
+}
 
 foreach ($item in $items) {
+    $itemBackupRoot = Get-ItemBackupRoot -LiveRoot $item.LiveRoot
     if (Test-Path $item.LivePath) {
-        Backup-LiveItem -LivePath $item.LivePath -BackupRoot $backupRoot -LiveRoot $item.LiveRoot -BackupScope $item.BackupScope -Type $item.Type
+        Backup-LiveItem -LivePath $item.LivePath -BackupRoot $itemBackupRoot -LiveRoot $item.LiveRoot -BackupScope $item.BackupScope -Type $item.Type
     }
 
     Copy-PortableItem -Source $item.RepoPath -Destination $item.LivePath -Type $item.Type -AllowedRoot $item.LiveRoot
@@ -59,11 +72,12 @@ foreach ($item in $retiredItems) {
         continue
     }
 
-    Backup-LiveItem -LivePath $item.LivePath -BackupRoot $backupRoot -LiveRoot $item.LiveRoot -BackupScope $item.BackupScope -Type $item.Type
+    $itemBackupRoot = Get-ItemBackupRoot -LiveRoot $item.LiveRoot
+    Backup-LiveItem -LivePath $item.LivePath -BackupRoot $itemBackupRoot -LiveRoot $item.LiveRoot -BackupScope $item.BackupScope -Type $item.Type
     Remove-Item -LiteralPath $item.LivePath -Recurse -Force
     Write-Host "removed retired: $($item.LivePath)"
 }
 
 Write-Host ""
-Write-Host "backup: $backupRoot"
+Write-Host "backups: $($backupRoots.Values -join ', ')"
 Write-Host "config.review.toml was not installed automatically"
