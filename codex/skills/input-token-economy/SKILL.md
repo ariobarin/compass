@@ -19,9 +19,9 @@ answer.
 
 Most questions about a file are about a part of it. Read that part.
 
-- Prefer a targeted read over a full one: tail and head for the ends, line
-  ranges for a known region, grep or ripgrep for a symbol, Select-String for a
-  pattern. Go whole-file only when you truly need the whole file, and say why.
+- Prefer a targeted read over a full one: the part you need, an end, a known
+  line range, or the matching lines. Go whole-file only when you truly need the
+  whole file, and say why.
 - One good read beats several full ones. If you will need the same large file
   more than once, read the slice you need, or extract the relevant region once,
   rather than re-reading the whole thing each turn.

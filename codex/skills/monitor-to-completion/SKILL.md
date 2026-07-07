@@ -10,13 +10,17 @@ own, a build, a container, a benchmark run, a log tail, a process, a deploy, a
 rate limit clearing, your default is one command that runs to completion and
 reports once. Not a loop where you sleep, re-check, and sleep again.
 
-The reason is cost, not correctness. A polling loop can produce the right
-answer. But every wake is a full model turn: the entire conversation, files,
-tool outputs, and reasoning history are sent to the model again as input. One
-wait that polls itself thirty times pays for thirty full-context turns. On a
-frontier model with a long thread, that single habit can dwarf the rest of the
-session bill. Waiting is cheap when a script does it and expensive when the
-model does.
+The reason is cost, not correctness (the input-token-economy skill lays out
+why input dominates the bill). A polling loop can produce the right answer, but
+every wake is a full model turn, and one wait that polls itself thirty times
+pays for thirty full-context turns. On a long thread that single habit can dwarf
+the rest of the session bill. Waiting is cheap when a script does it and
+expensive when the model does.
+
+This skill covers mechanical waiting, where the wake does no real model work:
+the thing finishes on its own and you only need to know when. The orchestration
+heartbeat, where each wake decides or reroutes, is a different shape and the one
+exception, covered at the end.
 
 ## The Posture
 
@@ -46,13 +50,15 @@ Run the wait inside the command, then return a short result.
 If you genuinely need to re-check something at intervals over a long span, that
 is a scheduled job or a watcher process, not a model turn repeated.
 
-## When A Loop Across Turns Is Actually Fine
+## The One Exception: Orchestration
 
-Rare, and the exception proves the rule. A loop across turns is defensible only
-when each wake must do real model work a script cannot: read fresh results,
-judge quality, and decide the next variant. Even then, do the waiting inside one
-blocking call and let the wake be about the decision, not about the passage of
-time. If a wake does nothing but sleep and re-read, fold it into the script.
+The legitimate loop across turns is the orchestration-controller heartbeat,
+where each wake does real model work: read fresh results, judge quality, reroute
+ownership, request review, or decide the next variant. That loop earns its
+turns. Even there, do the actual waiting inside one blocking call and let the
+wake be about the decision, not the passage of time. If a wake does nothing but
+sleep and re-read, it is mechanical waiting, and it belongs in this skill, not
+in a loop.
 
 ## What This Rules Out
 
