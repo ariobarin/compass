@@ -76,6 +76,11 @@ Git, and review preferences belong in `codex/AGENTS.md`. Desktop-only UI state,
 undocumented helper fields, and one-machine app toggles do not belong in the
 reviewed config fragment.
 
+Keep `agents.max_depth = 2` when specialist coordinators need to launch one
+specialist layer themselves. Do not raise the depth further without a concrete
+workflow that needs recursive delegation; deeper nesting increases cost,
+latency, and coordination risk.
+
 ## Durable Guidance Edits
 
 When the change affects future Codex behavior across sessions or machines:

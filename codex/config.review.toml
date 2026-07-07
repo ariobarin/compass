@@ -42,3 +42,7 @@ hide_full_access_warning = true
 memories = true
 goals = true
 prevent_idle_sleep = true
+
+[agents]
+# Allow a coordinator subagent to launch one specialist layer.
+max_depth = 2
