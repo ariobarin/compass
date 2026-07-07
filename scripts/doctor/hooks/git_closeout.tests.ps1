@@ -1,5 +1,16 @@
 $portableHookGuardModules = @("git_closeout")
 
+if (Get-Command cmd.exe -ErrorAction SilentlyContinue) {
+    $hooksConfig = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $repoRoot "codex\hooks.json") | ConvertFrom-Json
+    $closeoutHook = $hooksConfig.hooks.Stop[0].hooks[0]
+    if ($closeoutHook.commandWindows -match "\`$home\s*=") {
+        $problems.Add("git closeout hook Windows command assigns read-only home variable")
+    }
+    if ($closeoutHook.commandWindows -notmatch "\`$codexHome") {
+        $problems.Add("git closeout hook Windows command does not use codexHome variable")
+    }
+}
+
 if (Get-Command git -ErrorAction SilentlyContinue) {
     $tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) "compass-hook-$([guid]::NewGuid())"
     try {
