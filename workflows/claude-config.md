@@ -5,10 +5,11 @@ machine, fresh profile, or copied repo checkout.
 
 This is the Claude Code side of the Codex portable flow in
 [portable-config.md](portable-config.md). Codex is the reviewed source of truth.
-Claude skills derive from `codex/skills/` at install time by default, so a change
-lands once and applies to both runtimes. Only skills with Claude-specific wording
-keep a hand-maintained `claude/skills/` override. Both surfaces install from the
-same repo with the same scripts.
+Claude skills and agents derive from `codex/skills/` and `codex/agents/` at
+install time by default, so a change lands once and applies to both runtimes.
+Only skills or agents with Claude-specific wording keep a hand-maintained
+`claude/` override. Both surfaces install from the same repo with the same
+scripts.
 
 These scripts use `-ClaudeHome` for Claude-home files, otherwise `$HOME\.claude`.
 
@@ -64,8 +65,16 @@ If an override later converges with the Codex source, delete the
 `claude/skills/<name>` tree and move the name from `[claude].skills` to
 `[claude].derived_skills` so it derives again.
 
-When porting a `codex/agents/<name>.toml` agent to a hand-maintained
-`claude/agents/<name>.md` override:
+Claude agents also derive by default. List an agent in
+`[claude].derived_agents` and the installer generates `claude/agents/<name>.md`
+from `codex/agents/<name>.toml`, building YAML frontmatter (`name`,
+`description`, `tools`, `model: inherit`, `color`) from the TOML plus the
+per-agent frontmatter map in `scripts/common.ps1`. The body is the TOML
+`developer_instructions` verbatim.
+
+Keep a hand-maintained `claude/agents/<name>.md` override only when the agent
+needs Claude-specific wording. List it in `[claude].agents`, not
+`derived_agents`. When porting `codex/agents/<name>.toml` to such an override:
 
 1. Convert TOML to markdown with YAML frontmatter: `name`, `description`, then
    `tools`, `model: inherit`, and an optional `color`.
