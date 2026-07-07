@@ -48,6 +48,7 @@ User-stated hard limits:
 [verbatim limits or "none provided"]
 ```
 
-If `reviewer` cannot run, say coordinated review could not run. Do not claim
-specialist review. If you continue, label the result as a non-coordinated
-fallback.
+`reviewer` is a required part of this installed Compass bundle. If it cannot
+run, the configured environment is broken. Name the missing capability or tool
+state, and state that coordinated specialist review failed. Do not claim
+specialist review completed.
