@@ -1,6 +1,6 @@
 ---
 name: monitor-to-completion
-description: Run waits and monitoring to completion in one blocking script. Never poll in a sleep loop: each wake re-sends the whole context as fresh input.
+description: "Run waits and monitoring to completion in one blocking script. Never poll in a sleep loop: each wake re-sends the whole context."
 ---
 
 # Monitor To Completion
