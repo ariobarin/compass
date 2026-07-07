@@ -1,0 +1,48 @@
+# Scratch - recreatable and deletable. Keep the directory, ignore its contents.
+/tmp/*
+!/tmp/README.md
+
+# Child-repo worktrees - linked through git, not tracked in this root repo.
+/worktrees/prs/*
+!/worktrees/prs/.gitkeep
+
+# Canonical child repo checkouts - add concrete names before cloning.
+# /example-repo/
+# /example-repo-main/
+
+# Secrets and credentials - never commit.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+secrets/
+
+# Local runtime state - browser profiles, sessions, logs, and databases.
+/browser/
+/browser-profile/
+/cache/
+/caches/
+/profiles/
+/sessions/
+/sqlite/
+/threads/
+/log/
+/logs/
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+*.db
+*.db-shm
+*.db-wal
+*.log
+
+# Machine-only runtime caches and build state.
+**/__pycache__/
+**/.venv/
+**/node_modules/
+**/.pytest_cache/
+**/.cache/
+**/.DS_Store

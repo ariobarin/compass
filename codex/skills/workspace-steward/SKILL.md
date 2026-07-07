@@ -32,6 +32,12 @@ or automating cleanup:
 If a proposed folder, move, script, or automation fails an earlier filter, stop
 and report the smaller change that survived.
 
+When creating a new umbrella workspace from scratch, use
+`references/project-template/` only after the decision filter leaves a full
+skeleton as the smallest useful shape. Read
+`references/project-template/README.md`, copy the template contents into the new
+workspace root, and replace placeholders with real project and repo names.
+
 ## Operating Model
 
 Question the target layout before moving anything. Ask what problem the change

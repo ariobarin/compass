@@ -110,8 +110,18 @@ if ($blockedDirs.Count -eq 0) {
     $problems.Add("missing local-only dirs in portable manifest")
 }
 
+$allowedTemplateLocalDirs = @(
+    Join-Path $repoRoot "codex\skills\workspace-steward\references\project-template\tmp"
+    Join-Path $repoRoot "codex\skills\workspace-steward\references\project-template\worktrees"
+) | ForEach-Object { Get-DoctorFullPath -Path $_ }
+
 foreach ($dir in Get-DoctorChildItem -Kind Directory) {
     if ($dir.FullName -match "\\.git(\\|$)") {
+        continue
+    }
+
+    $dirFullPath = Get-DoctorFullPath -Path $dir.FullName
+    if (($blockedDirs -contains $dir.Name) -and ($allowedTemplateLocalDirs -contains $dirFullPath)) {
         continue
     }
 
