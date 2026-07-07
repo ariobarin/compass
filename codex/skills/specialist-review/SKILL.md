@@ -64,15 +64,9 @@ continue the coordinated path from the parent context instead of stopping:
 Do not choose or edit the specialist set yourself during this fallback. If the
 delegation packet is missing or unusable, say coordinated review could not run.
 
-After launching `reviewer`, keep the coordinated path open until `reviewer`
-returns usable coordinator output, reports that it cannot continue, or the user
-cancels or redirects the task. If the coordinator is quiet, wait again and give
-the user concise status updates rather than switching review paths.
-
-Do not report a stall only because an initial wait returned no output. Treat the
-coordinator as failed only when the reviewer tool hard-fails, the agent
-disappears, or `reviewer` repeatedly reports a blocking error. In that case, say
-coordinated review could not run and include the thread or agent id.
-
-Use any non-coordinated fallback only after explicit user authorization, and
-label it as a non-coordinated fallback.
+Do not wait indefinitely for the coordinator's first result. If the first
+bounded wait returns no coordinator output, send one follow-up asking `reviewer`
+to either return current specialist-backed results or return the
+parent-delegation packet now. If that also produces no usable result, report
+that coordinated review stalled at the reviewer coordinator and include the
+thread or agent id.
