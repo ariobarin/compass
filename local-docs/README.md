@@ -11,6 +11,9 @@ catch drift before config is copied into a live machine.
 
 - [maintenance-learnings.md](maintenance-learnings.md): local principles for
   making useful changes to Compass without bloating the portable setup.
+- [rigor-skill-origin.md](rigor-skill-origin.md): origin and promotion
+  reasoning for the `rigor` skill, distilled from benchmark thread
+  `019f2412` in general terms.
 - [../workflows/addition-intake.md](../workflows/addition-intake.md): promotion
   flow for new repo-maintenance workflows, installed skills and agents,
   repo-side scripts and manifests, and config fragments. Workflows guide repo
