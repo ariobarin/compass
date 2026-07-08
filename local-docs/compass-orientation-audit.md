@@ -2,7 +2,7 @@
 
 This audit covers the first queue from `local-docs/compass-surface-inventory.md`.
 It reviews the surfaces that orient a fresh maintainer before deeper skill and
-agent work.
+agent, hook, and workflow work.
 
 Branch context:
 
@@ -26,6 +26,7 @@ A fresh maintainer should understand these things fast:
 - Compass is reviewed source, not a backup.
 - Runtime context and maintainer context are different audiences.
 - Installed skills and agents must speak to the agent using them.
+- Installed hooks must stay narrow, mechanical, reviewed, and tested.
 - Repo-only docs can preserve history, rationale, and process.
 - Mechanical truth belongs in manifests, scripts, and checks.
 - Pruning is not cosmetic. It removes audience mismatch and weak signal.
@@ -89,7 +90,8 @@ Decision:
 
 - Do not add the full review workflow to root `AGENTS.md`.
 - A short pointer to `workflows/compass-review-program.md` may be useful only
-  when an agent is explicitly auditing skills, agents, or maintainer guidance.
+  when an agent is explicitly auditing skills, agents, hooks, or maintainer
+  guidance.
 
 Recommended PR:
 
@@ -197,6 +199,7 @@ Completed follow-ups:
 
 - The carried-but-not-global route has been designed and wired.
 - The loop governance skill audit has been completed.
+- Hook surfaces have been added to the inventory and review-program route.
 
 ## Verification
 

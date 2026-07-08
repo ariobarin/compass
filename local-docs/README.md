@@ -40,7 +40,7 @@ catch drift before config is copied into a live machine.
   useful Compass capabilities that should travel in the repo but not load into
   every session.
 - [../workflows/addition-intake.md](../workflows/addition-intake.md): promotion
-  flow for new repo-maintenance workflows, installed skills and agents,
+  flow for new repo-maintenance workflows, installed skills, agents, hooks,
   repo-side scripts and manifests, and config fragments. Workflows guide repo
   maintenance and are not installed into a live Codex home or user skill home.
 - [../workflows/compass-review-program.md](../workflows/compass-review-program.md):

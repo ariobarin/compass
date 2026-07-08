@@ -125,12 +125,13 @@ Recommended PR:
 - Add a short `Read First` bullet to `codex/skills/compass/SKILL.md` and
   `claude/skills/compass/SKILL.md`: read
   `workflows/compass-review-program.md` before auditing or pruning installed
-  skills, agents, or maintainer guidance.
+  skills, agents, hooks, or maintainer guidance.
 
 Follow-up status:
 
 - Completed by the review-program routing PR. The Compass skill points audit
-  and pruning work at `workflows/compass-review-program.md`.
+  and pruning work at `workflows/compass-review-program.md`. Later hook-routing
+  PRs extended the same route to installed hook surfaces.
 
 ### L4: `root-cause-not-symptom` should be mirrored or explicitly justified
 
