@@ -4,11 +4,13 @@ This audit packet covers the loop-governance skills listed in
 `local-docs/compass-surface-inventory.md`. It reviews the installed skills that
 shape long-running agent loops before any skill text is rewritten.
 
-Branch context:
+Packet status:
 
-- Base stack: PR #106 through PR #110
-- Inspected current worktree, not memory, for file content
-- No runtime skill text was changed in this audit
+- Refreshed after the loop-governance follow-ups landed.
+- Use current skill sources, manifest state, Claude mirrors, and open PR stack
+  state before deriving new work from this packet.
+- Treat old PR numbers in verification notes as audit history, not routing
+  instructions.
 
 ## Surfaces Reviewed
 
