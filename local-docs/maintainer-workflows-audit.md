@@ -21,7 +21,7 @@ runtime behavior, stale history storage, or process-shaped bloat.
 
 Packet status:
 
-- Refreshed after the review-program gate follow-up landed.
+- Refreshed after the reviewer-authority gate follow-up landed.
 - Use current workflow files, local-doc links, inventory state, and open PR
   stack state before deriving new work from this packet.
 - Treat verification commands as audit history, not current proof.
@@ -37,7 +37,7 @@ Line counts:
 - `agent-failures.md`: 138
 - `claude-config.md`: 73
 - `codex-restart-recovery.md`: 79
-- `compass-review-program.md`: 219
+- `compass-review-program.md`: 224
 - `multi-thread-pr-coordination.md`: 102
 - `plan-template.md`: 56
 - `portable-config.md`: 174
@@ -77,7 +77,7 @@ No pruning is needed now. It should stay as maintainer context.
 The review gate is repo-maintainer workflow guidance, not installed runtime
 behavior. It makes green draft PRs build evidence rather than readiness, then
 routes final readiness through live PR state, stacked-base checks, current-head
-review gates, and `pr-review-loop`.
+review gates, reviewer-authority checks, and `pr-review-loop`.
 
 ### Keep `agent-failures.md`, But Cap Its Job
 
@@ -125,7 +125,9 @@ Decision:
 - Keep the workflow directory as repo-maintainer context.
 - Do not move any workflow into installed runtime guidance.
 - Do not rewrite exact operating workflows now.
-- Keep the Compass review-program gate in repo-local workflow guidance.
+- Keep the Compass review-program gate in repo-local workflow guidance,
+  including the rule that missing reviewer authority leaves the gate
+  unsatisfied.
 - Keep `agent-failures.md` as a failure-to-guidance journal, not a general log.
 - Keep `plan-template.md` as a narrow written artifact shape.
 
@@ -137,7 +139,10 @@ Completed focused PRs:
   reading its current callers and links.
 - `compass-review-program.md` gained a review gate that keeps green draft PRs
   separate from readiness and routes final readiness through `pr-review-loop`.
-- `.\scripts\doctor.ps1` passed for both focused changes.
+- `compass-review-program.md` gained a reviewer-authority gate so a required
+  reviewer that cannot be invoked is named as unsatisfied instead of replaced by
+  self-review or local checks.
+- `.\scripts\doctor.ps1` passed for the focused changes.
 
 ## Verification
 

@@ -207,6 +207,11 @@ support readiness, but they do not replace current-head review gates. After any
 material push, re-read the head SHA and make sure required reviewers are looking
 at that SHA before marking the PR ready.
 
+If the current session lacks authority to invoke a required reviewer, stop at
+that gate and name it as unsatisfied. Do not self-review, count a local check as
+review, or keep stacking PRs as if review happened. Ask for the authority or an
+explicit approved reviewer route.
+
 ## Stop Conditions
 
 Stop and ask for user taste when the decision changes the system's philosophy,

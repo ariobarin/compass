@@ -12,7 +12,8 @@ files before deriving new work.
 - The open review-program stack has converted the obvious gaps into focused
   PRs: review routing, hook coverage, carried capability routing, Claude mirror
   handling, mechanical gates, skill-authoring validation, and review readiness
-  gating.
+  gating, including reviewer-authority handling when a required review gate
+  cannot be invoked from the current session.
 - The failure journal also records completed runtime hardening for
   refusal-to-collapse controller stance and benchmark result production. Treat
   those as evidence that the pressure language landed, not as open permission
@@ -47,6 +48,8 @@ Use this order:
 7. Do not treat green draft PRs as ready. Use the review gate in
    `workflows/compass-review-program.md`: inspect live PR state, verify stacked
    bases and merge order, and route final readiness through `pr-review-loop`.
+   If reviewer authority is missing, name the unsatisfied gate instead of
+   self-reviewing or counting local checks as review.
 
 ## State Classes
 
