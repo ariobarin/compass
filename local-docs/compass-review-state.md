@@ -11,7 +11,8 @@ files before deriving new work.
   audit packet.
 - The open review-program stack has converted the obvious gaps into focused
   PRs: review routing, hook coverage, carried capability routing, Claude mirror
-  handling, mechanical gates, and skill-authoring validation.
+  handling, mechanical gates, skill-authoring validation, and review readiness
+  gating.
 - Most current packets now say no immediate runtime cut is justified. Treat
   those decisions as pressure against invented edits, not as permission to stop
   reading.
@@ -36,6 +37,9 @@ Use this order:
    build a runtime PR on stale audit state.
 5. If a runtime edit is justified, keep the PR narrow: one skill family, one
    hook, one workflow, one manifest boundary, or one mechanical gate.
+6. Do not treat green draft PRs as ready. Use the review gate in
+   `workflows/compass-review-program.md`: inspect live PR state, verify stacked
+   bases and merge order, and route final readiness through `pr-review-loop`.
 
 ## State Classes
 
@@ -44,8 +48,8 @@ Use this order:
   workflows, mechanical truth, and hooks.
 - Waiting for future evidence: first carried demotion, retired Claude cleanup,
   and any retrieval-noise or stale-procedure finding from real use.
-- External current state: draft PRs, check results, review status, and branch
-  bases. Inspect those through Git and GitHub each time.
+- External current state: draft PRs, check results, review status, branch
+  bases, and current head SHAs. Inspect those through Git and GitHub each time.
 
 ## Maintenance Rule
 
