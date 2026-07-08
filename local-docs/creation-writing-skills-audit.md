@@ -28,7 +28,7 @@ Size:
 - `grill-me`: 32 lines in Codex and Claude.
 - `to-prd`: 92 lines in Codex and Claude.
 - `update-compass`: 19 Codex-only lines.
-- `write-a-skill`: 178 Codex lines, 166 Claude lines.
+- `write-a-skill`: 187 Codex lines, 175 Claude lines.
 
 Mirror state:
 
@@ -83,49 +83,38 @@ or misplaced additions.
 
 The skill is longer because it owns real wiring: metadata, source roots,
 manifest entries, Codex prompts, Claude mirrors, validation, and install
-boundaries. The length is justified, but two issues should be corrected.
+boundaries. The length is justified, and the two earlier corrections now define
+the current placement and validation contract.
 
-### Teach The Carried Route
+### `write-a-skill` Teaches The Carried Route
 
-`write-a-skill` still frames placement mostly as a binary choice:
-
-- global Compass skill;
-- target-repo skill.
-
-Compass now has a third route: carried but not global.
-
-That distinction matters. Some material should travel with Compass because it
-is useful portable capability, but it should not load into every session. If
-`write-a-skill` does not teach that route, future agents will keep forcing
-material into the wrong surface.
-
-Completed follow-up: Codex and Claude `write-a-skill` now make new skill work
-choose among:
+`write-a-skill` now makes new skill work choose among:
 
 - globally installed runtime skill;
 - carried but not global capability under `carried/`;
 - target-repo skill.
 
+That distinction matters. Some material should travel with Compass because it is
+useful portable capability, but it should not load into every session. The
+installed authoring skill now teaches that route directly instead of forcing
+material into the wrong surface.
+
 - Completed by the carried skill-authoring PR. Codex and Claude
   `write-a-skill` now teach the carried-but-not-global route.
 
-### Stop Assuming `origin/main` For Stacked Diff Checks
+### Stacked Diff Checks Use The Actual Base
 
-Both `write-a-skill` versions tell agents to run:
+Both `write-a-skill` versions now tell agents to run:
 
-`git diff --check origin/main...HEAD`
+- `git diff --check`;
+- diff checks against the actual PR base for stacked branches instead of
+  assuming `origin/main`.
 
-That is too specific for Compass stack work. Much of the current review program
-is intentionally stacked on earlier PR branches. Checking against `origin/main`
-can include unrelated upstream stack changes and make the validation target
-muddy.
-
-Completed follow-up: whitespace validation now says to use the actual PR base
-when checking a stacked branch, and to use plain `git diff --check` for the
-working tree.
+That keeps Compass stack work from dragging unrelated upstream stack changes
+into the validation target.
 
 - Completed by the carried skill-authoring PR. Codex and Claude
-  `write-a-skill` no longer assume `origin/main...HEAD` for stacked branches.
+  `write-a-skill` now use actual-base wording for stacked branches.
 
 ## Decisions
 
@@ -145,3 +134,19 @@ Completed runtime PR:
 - added the carried-but-not-global route;
 - replaced the `origin/main` diff-check assumption with actual-base wording;
 - ran skill validation and `doctor.ps1`.
+
+## Verification
+
+Commands used while refreshing this audit:
+
+```powershell
+(Get-Content codex\skills\grill-me\SKILL.md).Count
+(Get-Content claude\skills\grill-me\SKILL.md).Count
+(Get-Content codex\skills\to-prd\SKILL.md).Count
+(Get-Content claude\skills\to-prd\SKILL.md).Count
+(Get-Content codex\skills\update-compass\SKILL.md).Count
+(Get-Content codex\skills\write-a-skill\SKILL.md).Count
+(Get-Content claude\skills\write-a-skill\SKILL.md).Count
+rg -n "carried|target-repo|global|origin/main|actual PR base|git diff --check|codex/skills|claude/skills|agents/openai.yaml" codex\skills\write-a-skill\SKILL.md claude\skills\write-a-skill\SKILL.md
+Select-String -Path manifests\portable-files.toml -Pattern "grill-me|to-prd|update-compass|write-a-skill|derived_skills"
+```
