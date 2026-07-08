@@ -23,7 +23,8 @@ of remembered by future agents.
 
 Packet status:
 
-- Refreshed after the snapshot-source follow-up landed.
+- Refreshed after the snapshot-source and Claude retirement-gate follow-ups
+  landed.
 - Use current manifests, scripts, doctor checks, reviewed config fragments, and
   open PR stack state before deriving new work from this packet.
 - Treat completed boundary commands as audit history, not current proof.
