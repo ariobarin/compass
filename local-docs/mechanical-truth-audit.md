@@ -135,7 +135,8 @@ No change is needed now.
 - Keep `config.review.toml` as a fragment, with targeted live verification for
   agent depth.
 - Keep the `snapshot.ps1` review-mode message aligned with the portable map.
-- Add retired Claude cleanup only when a Claude-installed surface is removed.
+- Add retired Claude cleanup only when a Claude-installed surface is removed or
+  demoted.
 
 ## Completed PR Boundary
 
