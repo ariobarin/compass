@@ -53,6 +53,33 @@ should become durable guidance:
 ## Entries
 
 ```text
+date: 2026-07-08
+repo or workflow: Compass PR review-program stack
+task: inspect review-program PRs after Codex review and keep the stack moving
+first failure: the PR loop treated top-level PR comments, review bodies, and
+  check status as enough review evidence, so inline review comments were missed
+  until a later manual API check.
+downstream effects: actionable findings on #184 and #185 were nearly skipped
+  after clean-looking top-level review state, and #187 briefly kept a stale
+  "Recommended PR" item after the runtime guidance had already added it.
+evidence: `gh api repos/ariobarin/compass/pulls/184/comments --paginate` and
+  `gh api repos/ariobarin/compass/pulls/185/comments --paginate` exposed inline
+  comments that `gh pr view ... comments,reviews` did not make obvious; #187
+  later received an inline P3 on `local-docs/pr-review-surfaces-audit.md` even
+  though the top-level review path had already looked clean.
+root cause category: missing context, weak verification
+fix made: added inline review-comment inspection to the Compass review-program
+  gate, review-program state, Codex and Claude `pr-review-loop` runtime
+  guidance, both PR-loop playbooks, and the PR-review surfaces audit packet.
+verification: skill validation for Codex and Claude `pr-review-loop`,
+  `git diff --check`, `.\scripts\doctor.ps1`, GitHub `portable`, current-head
+  Codex review, and explicit pull review comment API checks passed on the
+  affected PRs.
+should become durable guidance: yes, as repo-maintainer failure learning plus
+  focused PR-loop runtime guidance, not as another global session rule.
+```
+
+```text
 date: 2026-07-02
 repo or workflow: specialist-review coordination
 task: run coordinated specialist review against Compass
