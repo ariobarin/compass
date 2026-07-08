@@ -22,6 +22,9 @@ catch drift before config is copied into a live machine.
 - [subagent-pruning-audit.md](subagent-pruning-audit.md): focused comparison
   of `subagent-driven-development` against `orchestration-controller` before
   pruning overlapping controller language.
+- [pr-review-surfaces-audit.md](pr-review-surfaces-audit.md): third queue
+  audit for PR loops, branch resolution, action-item grouping, specialist
+  review, and reviewer agents.
 - [carried-capabilities-design.md](carried-capabilities-design.md): design for
   useful Compass capabilities that should travel in the repo but not load into
   every session.
