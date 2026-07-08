@@ -22,9 +22,9 @@ These scripts use `-ClaudeHome` for Claude-home files, otherwise `$HOME\.claude`
 
 ## Change flow
 
-1. Edit the source first: `codex/skills/<name>/` for a derived skill, or
-   `claude/skills/<name>/` for a Claude-specific override. Edit `claude/agents/`
-   for agents.
+1. Edit the source first: `codex/skills/<name>/` for a derived skill,
+   `codex/agents/<name>.toml` for a derived agent, or the matching `claude/`
+   path for a Claude-specific override.
 2. Run `.\scripts\doctor.ps1`.
 3. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` for a quick drift report.
 4. Run `.\scripts\diff-live.ps1` for a full diff against live files.
