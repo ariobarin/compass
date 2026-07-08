@@ -4,7 +4,7 @@ Use this workflow when changing Codex setup that should survive a new machine,
 fresh profile, or copied repo checkout.
 
 This is repo-maintainer guidance. It is not installed into a live Codex home or
-user skill home.
+user skill home, or Claude home.
 Installed agentic guidance lives under `codex/AGENTS.md`, `codex/agents/`, and
 `codex/skills/`.
 

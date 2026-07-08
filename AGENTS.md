@@ -1,7 +1,7 @@
 # Repository Guidance
 
 Compass is the reviewed source for portable Codex setup. It is not a raw backup
-of `~/.codex` or `$HOME/.agents`.
+of `~/.codex`, `$HOME/.agents`, or `$HOME/.claude`.
 
 - `codex/AGENTS.md` is the portable source for the live global
   `~/.codex/AGENTS.md`. Only put session-wide defaults there.
@@ -47,6 +47,8 @@ of `~/.codex` or `$HOME/.agents`.
   or other local-only Codex data.
 - Flag changes that hardcode `~/.codex`, `%USERPROFILE%\\.codex`, or
   `$HOME/.agents` when the path should respect `CODEX_HOME` or `-AgentsHome`.
+- Flag changes that hardcode `$HOME/.claude` when the path should respect
+  `-ClaudeHome`.
 - Flag config changes that introduce undocumented keys, stale settings, or
   stronger default authority without a current-doc justification.
 - Flag guidance that routes project-specific behavior into Compass
