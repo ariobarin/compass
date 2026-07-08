@@ -61,8 +61,8 @@ When both a second reviewer and `neutral-critic` apply:
 - treat both as blocking gates;
 - route actionable findings back through the implementation path;
 - after fixes, re-run the narrow checks and re-request review on the new head;
-- if one reviewer is silent and fallback is allowed, use the allowed fallback
-  explicitly and report which gate remains unsatisfied.
+- if one reviewer is silent and an alternate route is authorized, use that
+  route explicitly and report which gate remains unsatisfied.
 
 ## Merge Boundary
 
