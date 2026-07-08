@@ -1,7 +1,7 @@
 # Mechanical Truth Audit
 
-This audit covers the manifest, script, and reviewed config surfaces listed in
-`local-docs/compass-surface-inventory.md`.
+This audit packet covers the manifest, script, and reviewed config surfaces
+listed in `local-docs/compass-surface-inventory.md`.
 
 Scope:
 
@@ -20,6 +20,13 @@ Scope:
 
 Purpose: make sure Compass boundaries are checked by mechanical truth instead
 of remembered by future agents.
+
+Packet status:
+
+- Refreshed after the snapshot-source follow-up landed.
+- Use current manifests, scripts, doctor checks, reviewed config fragments, and
+  open PR stack state before deriving new work from this packet.
+- Treat completed boundary commands as audit history, not current proof.
 
 ## Current Shape
 
