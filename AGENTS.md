@@ -7,6 +7,8 @@ of `~/.codex` or `$HOME/.agents`.
   `~/.codex/AGENTS.md`. Only put session-wide defaults there.
 - Installed agentic guidance belongs under `codex/AGENTS.md`,
   `codex/agents/`, or `codex/skills/`.
+- Installed Codex hook behavior belongs under `codex/hooks.json` or
+  `codex/hooks/`.
 - This repo-root `AGENTS.md` is for Compass maintenance guidance.
 - If a rule only makes sense while editing Compass, put it here or in
   `workflows/` or `local-docs/`, not in installed agentic docs.

@@ -84,6 +84,7 @@ portable repo.
   Compass.
 - A reusable custom agent that should be installed belongs in `codex/agents/`.
 - A project-specific custom agent belongs in the target repo.
+- A reviewed Codex hook belongs in `codex/hooks.json` and `codex/hooks/`.
 - A shareable bundle of skills, hooks, apps, or MCP config belongs in a plugin
   repo or repo-scoped plugin folder, not in the live plugin cache.
 - A mechanical or reproducible repo check belongs in `scripts/`.
