@@ -15,6 +15,13 @@ Purpose: make the planning, writing, update, and skill-authoring surfaces carry
 the same standard as Compass itself: understand the job, talk to the right
 agent, cut what does not change behavior, and make placement decisions real.
 
+Packet status:
+
+- Refreshed after the carried skill-authoring follow-ups landed.
+- Use current creation and writing skill sources, manifest state, Claude
+  mirrors, and open PR stack state before deriving new work from this packet.
+- Treat verification commands as audit history, not current proof.
+
 ## Current Shape
 
 Installed state:
