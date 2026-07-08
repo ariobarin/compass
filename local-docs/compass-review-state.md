@@ -13,6 +13,10 @@ files before deriving new work.
   PRs: review routing, hook coverage, carried capability routing, Claude mirror
   handling, mechanical gates, skill-authoring validation, and review readiness
   gating.
+- The failure journal also records completed runtime hardening for
+  refusal-to-collapse controller stance and benchmark result production. Treat
+  those as evidence that the pressure language landed, not as open permission
+  to keep rewriting the same skill families.
 - Most current packets now say no immediate runtime cut is justified. Treat
   those decisions as pressure against invented edits, not as permission to stop
   reading.
@@ -33,11 +37,14 @@ Use this order:
 3. If the packet says no immediate cut and current source confirms it, do not
    manufacture a runtime edit. Look for stale state, a missing mechanical gate,
    or real use evidence instead.
-4. If current source contradicts a packet, refresh the packet first. Do not
+4. If the failure journal has newer durable guidance than the state or packet
+   names, refresh the state or packet first. Do not turn an already-fixed
+   failure into another runtime rewrite.
+5. If current source contradicts a packet, refresh the packet first. Do not
    build a runtime PR on stale audit state.
-5. If a runtime edit is justified, keep the PR narrow: one skill family, one
+6. If a runtime edit is justified, keep the PR narrow: one skill family, one
    hook, one workflow, one manifest boundary, or one mechanical gate.
-6. Do not treat green draft PRs as ready. Use the review gate in
+7. Do not treat green draft PRs as ready. Use the review gate in
    `workflows/compass-review-program.md`: inspect live PR state, verify stacked
    bases and merge order, and route final readiness through `pr-review-loop`.
 
@@ -45,7 +52,8 @@ Use this order:
 
 - Completed or no immediate cut: orientation, loop governance, PR and review
   surfaces, domain-shaped skills, creation and writing skills, maintainer
-  workflows, mechanical truth, and hooks.
+  workflows, mechanical truth, hooks, refusal-to-collapse runtime stance, and
+  benchmark result-production hardening.
 - Waiting for future evidence: first carried demotion, retired Claude cleanup,
   and any retrieval-noise or stale-procedure finding from real use.
 - External current state: draft PRs, check results, review status, branch
