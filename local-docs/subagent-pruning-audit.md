@@ -1,12 +1,12 @@
 # Subagent Pruning Audit
 
 This audit compares `subagent-driven-development` with
-`orchestration-controller` before pruning either skill. It follows the Queue 2
-recommendation in `local-docs/loop-governance-skills-audit.md`.
+`orchestration-controller`. It follows the Queue 2 recommendation in
+`local-docs/loop-governance-skills-audit.md` and records the runtime pruning
+that followed.
 
-No runtime skill text changes in this audit. The job is to define the next
-runtime edit precisely enough that pruning strengthens behavior instead of
-flattening the two skills into one vague controller surface.
+The job is to keep the pruning decision reviewable: pruning should strengthen
+behavior instead of flattening the two skills into one vague controller surface.
 
 ## Surfaces Reviewed
 
@@ -26,11 +26,12 @@ Claude mirror:
 Line counts inspected:
 
 - `orchestration-controller/SKILL.md`: 80
-- `orchestration-controller/references/controller-principles.md`: 164
-- `subagent-driven-development/SKILL.md`: 145
-- `subagent-driven-development/implementer-prompt.md`: 69
-- `subagent-driven-development/spec-reviewer-prompt.md`: 30
-- `subagent-driven-development/code-quality-reviewer-prompt.md`: 28
+- `orchestration-controller/references/controller-principles.md`: 210
+- `subagent-driven-development/SKILL.md`: 182
+- `subagent-driven-development/implementer-prompt.md`: 94
+- `subagent-driven-development/spec-reviewer-prompt.md`: 46
+- `subagent-driven-development/code-quality-reviewer-prompt.md`: 40
+- `claude/skills/subagent-driven-development/SKILL.md`: 182
 
 ## Audience Split
 
@@ -62,12 +63,13 @@ Do not prune that pressure just because `orchestration-controller` also says
 it. The subagent skill would get weaker if its first screen became only task
 mechanics.
 
-Recommended edit:
+Current state:
 
-- Keep a short first-screen statement that the controller owns sequencing,
-  review, and integration while implementers own execution.
-- Keep direct pressure that `DONE` and `BLOCKED` are not endpoints until
+- The first screen says this is a controller skill for implementation fan-out.
+- It keeps direct pressure that `DONE` and `BLOCKED` are not endpoints until
   evidence is checked.
+- It preserves the split: the controller owns sequencing, review, and
+  integration while implementers own execution.
 
 ### S2: Preserve the prompt templates
 
@@ -82,10 +84,10 @@ The three prompt templates are not bloat. They carry executable contracts:
 This is the part of the skill that prevents hand-rolled dispatch text from
 weakening the loop.
 
-Recommended edit:
+Current state:
 
-- Leave the template files in place.
-- Do not fold them into `SKILL.md`.
+- The template files remain in place.
+- They were not folded into `SKILL.md`.
 
 ### S3: Prune repeated blocker questions only where they stop adding force
 
@@ -100,30 +102,26 @@ controller dispatch, controller interpretation, and worker report. The risky
 part is not repetition itself. The risky part is adding words after the point is
 already clear.
 
-Recommended edit:
+Current state:
 
 - Keep the strict `BLOCKED` contract in the implementer prompt.
 - Keep the task dispatch rule that requires concrete status and evidence.
-- Compress `Worker Signals` so it routes statuses without restating the whole
-  blocker investigation.
+- `Worker Signals` routes statuses directly and sends `BLOCKED` through
+  diagnosis instead of treating it as a normal lane.
 
-### S4: Replace fallback-shaped wording
+### S4: Level routing replaced fallback-shaped wording
 
-The phrase `review fallback` appears in `Wait Discipline` and `Useful Pairings`.
-The problem is not that exact word by itself. The problem is that the phrase
-makes orchestration sound like a backup path after same-session implementation
-fails.
+The old phrase made orchestration sound like a backup path after same-session
+implementation failed.
 
-That is the wrong model. When the work becomes routing, monitoring, review, or
-completion-gate enforcement, the system has changed levels. It should route to
-`orchestration-controller` because that is the primary owner for that level.
+That is the wrong model. The current text routes to
+`orchestration-controller` when the work changes level and becomes routing,
+monitoring, review, or completion-gate enforcement.
 
-Recommended edit:
+Current state:
 
-- Replace `review fallback` with level language such as `review routing` or
-  plain `review`.
-- Say the controller should route to `orchestration-controller` when the work
-  stops being same-session implementation sequencing.
+- Codex and Claude route level changes to `orchestration-controller`.
+- The old backup-path wording is absent from both runtime skills.
 
 ### S5: Keep checkout-safety wait rules in the subagent skill
 
@@ -137,11 +135,13 @@ specific to same-session subagents:
 
 Those are not generic orchestration rules. They belong in the subagent skill.
 
-Recommended edit:
+Current state:
 
 - Preserve shared-checkout safety.
-- Prune only generic passive-waiting language that `orchestration-controller`
-  already owns more directly.
+- Keep parent work read-only while a still-active child may touch the shared
+  checkout.
+- Move the parent only when it can still move without corrupting the shared
+  checkout.
 
 ### S6: Keep the Claude mirror paired with the Codex source
 
@@ -149,11 +149,11 @@ The Claude mirror differs from the Codex source only in the useful-pairings
 section: it generalizes the Codex-only `using-codex-goals` reference into a
 durable goal contract.
 
-Recommended edit:
+Current state:
 
-- Apply future pruning to both `codex/skills/subagent-driven-development` and
-  `claude/skills/subagent-driven-development`.
-- Preserve the one runtime-specific difference around goal wording.
+- Codex and Claude `subagent-driven-development` were pruned in step.
+- The runtime-specific difference around goal wording remains: Codex names
+  `using-codex-goals`; Claude uses durable goal contract wording.
 
 ## Completed PR Boundary
 
@@ -190,6 +190,12 @@ Get-Content -Raw codex\skills\subagent-driven-development\implementer-prompt.md
 Get-Content -Raw codex\skills\subagent-driven-development\spec-reviewer-prompt.md
 Get-Content -Raw codex\skills\subagent-driven-development\code-quality-reviewer-prompt.md
 Get-Content -Raw claude\skills\subagent-driven-development\SKILL.md
-git diff --no-index -- codex\skills\subagent-driven-development\SKILL.md claude\skills\subagent-driven-development\SKILL.md
-rg -n -i "control plane|worker|BLOCKED|DONE|review fallback|fallback|restore agency|runner|same-session|implementation fan-out|fresh|controller|status claims" codex\skills\orchestration-controller codex\skills\subagent-driven-development
+(Get-Content codex\skills\orchestration-controller\SKILL.md).Count
+(Get-Content codex\skills\orchestration-controller\references\controller-principles.md).Count
+(Get-Content codex\skills\subagent-driven-development\SKILL.md).Count
+(Get-Content codex\skills\subagent-driven-development\implementer-prompt.md).Count
+(Get-Content codex\skills\subagent-driven-development\spec-reviewer-prompt.md).Count
+(Get-Content codex\skills\subagent-driven-development\code-quality-reviewer-prompt.md).Count
+(Get-Content claude\skills\subagent-driven-development\SKILL.md).Count
+rg -n -i "review fallback|fallback|review routing|orchestration-controller|Worker Signals|BLOCKED|DONE|same-session|implementation fan-out|shared checkout|goal contract|using-codex-goals" codex\skills\subagent-driven-development claude\skills\subagent-driven-development codex\skills\orchestration-controller
 ```
