@@ -6,8 +6,8 @@ current-head re-review, or stale-PR rebuild handling.
 ## Standing Review Gates
 
 `neutral-critic` is mandatory for every PR review loop. For any `ariobarin/*`
-repository, `@codex` is also mandatory. These are readiness gates, not
-nice-to-have checks.
+repository, a second independent reviewer is also mandatory. These are
+readiness gates, not nice-to-have checks.
 
 Do not mark a PR ready or merge it while a required review gate is missing,
 stale, failed, or still waiting on actionable findings. A local test run can
@@ -37,8 +37,8 @@ Useful fields:
 Review conclusions are tied to a head SHA, not just a PR number.
 
 - After a push, force-push, rebase, or retarget, re-read the head SHA.
-- Re-request `@codex` or other required review on the new head when the old
-  review may be stale.
+- Re-request the second reviewer or other required review on the new head when
+  the old review may be stale.
 - Do not call a PR ready based on feedback that clearly targeted an older head.
 
 ## Stale PR Rebuild
@@ -56,7 +56,7 @@ Preserve exact PR identity only when the user asked to keep iterating that PR.
 
 ## Dual Review Gates
 
-When both `@codex` and `neutral-critic` apply:
+When both a second reviewer and `neutral-critic` apply:
 
 - treat both as blocking gates;
 - route actionable findings back through the implementation path;

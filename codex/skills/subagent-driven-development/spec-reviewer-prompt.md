@@ -5,7 +5,7 @@ Use this template when dispatching a spec compliance reviewer subagent.
 **Purpose:** Verify the implementation matches the requested task, with nothing
 missing and nothing extra.
 
-Open a fresh Codex session or custom agent for the review and give it a prompt
+Open a fresh subagent or custom agent for the review and give it a prompt
 like this:
 
 ```

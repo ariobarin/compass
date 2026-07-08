@@ -5,7 +5,7 @@ description: "Oversee worker agents from the control plane: preserve parent goal
 
 # Orchestration Controller
 
-Use this skill when Codex is overseeing other agents, threads, monitors, reviews,
+Use this skill when overseeing other agents, threads, monitors, reviews,
 or long-running work on behalf of a parent objective.
 
 The controller is the control plane, not a stronger worker. It stays stepped
@@ -60,7 +60,7 @@ Edit only controller-owned control surfaces: assignments, status notes, monitor
 schedule, review requests, handoff state, and routing comments.
 
 When a child needs active goal state, tell the child to apply its own goal.
-Delegated `/goal` text is not enough by itself. The controller keeps parent-goal
+Delegated goal text is not enough by itself. The controller keeps parent-goal
 ownership and parent completion authority.
 
 ## Judgment
@@ -73,7 +73,7 @@ Use judgment rather than a fixed sequence:
   the smallest next action is.
 - `NEEDS_CONTEXT` means find or route context before asking the user.
 - `WAITING_ON_REVIEW` means create independent judgment through local critique,
-  CI, focused review, or GitHub Codex when available.
+  CI, focused review, or a second independent reviewer when available.
 - `NO_RESULTS` means diagnose whether to restore motion, set a real monitor, or
   reroute ownership, not report empty progress.
 
@@ -92,8 +92,8 @@ objective, or a recorded user-accepted incomplete endpoint.
 
 ## Related Skills
 
-- Use `using-codex-goals` when the parent work should be expressed as a durable
-  goal contract or when workers need self-applied slice goals.
+- Express the parent work as a durable goal contract when workers need
+  self-applied slice goals and explicit completion evidence.
 - Use `pr-review-loop` when the controlled work is a pull request that needs
   explicit PR identity, current-head review discipline, or merge-boundary
   enforcement.

@@ -43,7 +43,7 @@ as authority.
 Classify each item as one of:
 
 - runtime context: installed agentic behavior under `codex/AGENTS.md`,
-  `codex/agents/`, `codex/skills/`, `claude/agents/`, or `claude/skills/`;
+  `codex/agents/`, or `codex/skills/` (the Claude surface derives from these);
 - maintainer context: repo-only guidance under `AGENTS.md`, `workflows/`,
   `local-docs/`, `manifests/`, or `scripts/`;
 - mechanical truth: scripts, manifests, checks, and reviewed config fragments;

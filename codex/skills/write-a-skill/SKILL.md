@@ -1,19 +1,20 @@
 ---
 name: write-a-skill
-description: Create or revise portable Codex skills with metadata, install wiring, and validation. Use when adding or refreshing a skill in Compass.
+description: Create or revise portable skills with metadata, install wiring, and validation. Use when adding or refreshing a skill in Compass.
 ---
 
 # Write A Skill
 
-Use this skill as the Compass overlay on Skill Creator. Follow the same basic
-model as `$skill-creator`: understand concrete examples, plan reusable
-resources, create or edit the skill folder, validate it, and iterate from real
-use. This skill adds the Compass source path, install boundary, and PR checks.
+Use this skill as the Compass overlay on the system Skill Creator when it is
+available. Follow the same basic model: understand concrete examples, plan
+reusable resources, create or edit the skill folder, validate it, and iterate
+from real use. This skill adds the Compass source path, install boundary, and
+PR checks.
 
 Use Compass only for reusable global skills that should install into the user's
 portable skill home. If the capability only makes sense for one project or
-repository, keep that skill in the target repo under `.agents/skills` instead
-of promoting it here.
+repository, keep that skill in the target repo's own skill folder instead of
+promoting it here.
 
 ## Core Stance
 
@@ -52,7 +53,7 @@ capability is the same.
 
 ## Plan Reusable Contents
 
-Plan the skill contents the same way `$skill-creator` does:
+Plan the skill contents the same way the system Skill Creator does:
 
 1. Work through each concrete example from scratch.
 2. Identify reusable resources that would avoid repeated re-discovery or
@@ -72,7 +73,6 @@ For Compass skills, the normal installable shape is:
 ```text
 skill-name/
   SKILL.md
-  agents/openai.yaml
   references/
   scripts/
   assets/
@@ -81,27 +81,20 @@ skill-name/
 Use only the folders that the skill actually needs. Keep frontmatter to
 `name` and `description` only.
 
-Treat `codex/skills/` here as the repo's portable source tree for reviewed
-global skills. Do not assume that every project should use the same path just
-because this repo does.
+Treat `codex/skills/` as the reviewed source tree. Author each skill once under
+`codex/skills/<name>/`; the install map derives the Claude copy from it, so do
+not keep a separate `claude/skills/<name>/` source. Do not assume every project
+should use the same layout just because this repo does.
 
-Avoid duplicating a skill name across Compass and a project `.agents/skills`
-folder. Codex does not merge same-name skills, so duplicates can both appear in
-selectors and create ambiguous routing.
+Avoid duplicating a skill name across Compass and a project skill folder.
+Runtimes may not merge same-name skills, so duplicates can both appear in
+selectors or override each other in ways that change routing.
 
 ## Create Or Edit The Skill
 
-For a new skill, initialize the folder with the system Skill Creator helper
-when available, targeting Compass instead of the live skill home:
-
-```powershell
-$codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE ".codex" }
-python (Join-Path $codexHome "skills\.system\skill-creator\scripts\init_skill.py") <skill-name> --path .\codex\skills
-```
-
-Add `--resources scripts,references,assets` only for resources the skill
-actually needs. If editing an existing skill, read its current `SKILL.md`,
-`agents/openai.yaml`, and linked resources before changing it.
+For a new skill, initialize a folder under `codex/skills/<skill-name>/`. If
+editing an existing skill, read its current `SKILL.md` and linked resources
+before changing it.
 
 When authoring:
 
@@ -113,11 +106,9 @@ When authoring:
    the body with clear read conditions.
 5. Add scripts only for deterministic repeated work, validation, or fragile
    mechanics, and test added scripts directly.
-6. Keep `agents/openai.yaml` aligned with the skill body. Re-open it after
-   generation and confirm `default_prompt` names the skill with `$skill-name`.
-7. Use portable paths and assumptions by default. Include local-only paths only
+6. Use portable paths and assumptions by default. Include local-only paths only
    when Compass intentionally owns that boundary.
-8. Do not add auxiliary docs such as `README.md`, installation guides, quick
+7. Do not add auxiliary docs such as `README.md`, installation guides, quick
    references, changelogs, or process notes inside the skill folder.
 
 ## Portable Repo Wiring
@@ -126,11 +117,10 @@ When the skill should install into the user skill home, update all of these in
 the same branch:
 
 1. `codex/skills/<name>/`
-2. `manifests/portable-files.toml`
-3. the Claude mirror under `claude/skills/<name>/` when the behavior applies to
-   both runtimes
-4. the `[claude]` section of `manifests/portable-files.toml` when a Claude
-   mirror is added
+2. the `[agents].skills` list in `manifests/portable-files.toml` so the skill
+   installs for Codex
+3. the `[claude].derived_skills` list when the skill should also install for
+   Claude, which derives it from the codex source at install time
 
 `scripts/common.ps1` reads the manifest for installed skill names. Change it
 only when the install-map logic itself needs to change.
@@ -140,28 +130,26 @@ and explain the boundary in the relevant repo docs instead.
 
 When a skill belongs in the target repo rather than in the portable global
 setup, do not wire it into `manifests/portable-files.toml` or
-`scripts/common.ps1`. Put it under that repository's `.agents/skills` tree.
+`scripts/common.ps1`. Put it under that repository's own skill folder.
 
 Do not pull a project-specific skill into Compass just because you are
 editing it from this repo. If the skill mainly exists to serve one repository,
 its home should usually be that repository.
 
 When promoting a live-only or branch-only skill, make the repo copy complete:
-include the real `SKILL.md`, `agents/openai.yaml`, and any references or scripts
-needed for a normal install.
+include the real `SKILL.md`, its skill metadata when the skill carries agent
+metadata, and any references, scripts, or assets needed for a normal install.
 
 ## Verify Before Opening Or Updating A PR
 
 Run the narrowest checks that prove the skill is well-formed and portable:
 
-- PowerShell: `$codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE ".codex" }; python (Join-Path $codexHome "skills\.system\skill-creator\scripts\quick_validate.py") <skill-folder>`
-- Bash: `python "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py" <skill-folder>`
-- `.\scripts\doctor.ps1`
+- `.\scripts\doctor.ps1` (validates skill frontmatter and manifest wiring)
 - `git diff --check origin/main...HEAD`
 
 Run `.\scripts\verify-live.ps1 -SkipCodexCommand` only when live drift matters.
 Expected drift is fine for branch-only skills that are not meant to be
-installed into `$HOME/.agents/skills` yet.
+installed into the user skill home yet.
 
 ## Iterate And Review
 
@@ -173,6 +161,6 @@ Before calling the PR ready, check for nearby stale patterns:
 
 - duplicated or overlapping skills that should route through one capability;
 - false workflow splits in neighboring skills or docs;
-- stale `openai.yaml` text after a skill rewrite;
+- stale description or trigger text after a skill rewrite;
 - manifest or installer lists that forgot the new skill;
 - references that exist on disk but are not linked from `SKILL.md`.

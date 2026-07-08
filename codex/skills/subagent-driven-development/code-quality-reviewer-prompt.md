@@ -5,7 +5,7 @@ Use this template when dispatching a code quality reviewer subagent.
 **Purpose:** Verify the implementation is well-built after spec compliance has
 already passed.
 
-Open a fresh Codex session or custom agent for the review and give it a prompt
+Open a fresh subagent or custom agent for the review and give it a prompt
 like this:
 
 ```

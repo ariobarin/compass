@@ -122,13 +122,15 @@ function Get-PortableClaudeDerivedAgentNames {
 
 # Claude agent frontmatter is install wiring, not runtime guidance, so it lives
 # here next to the derive transform instead of in the manifest. Each derived
-# agent gets these tools and color; model is always inherit.
+# agent gets these tools and color; model is always inherit. The reviewer
+# coordinator has no tools entry, so its derived file omits the tools line.
 $script:ClaudeDerivedAgentFrontmatter = @{
     "algorithm-critic" = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
     "neutral-critic"   = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
     "repo-explorer"    = @{ Tools = "Read, Grep, Glob, Bash"; Color = "blue" }
     "research-critic"  = @{ Tools = "Read, Grep, Glob, Bash, WebSearch, WebFetch"; Color = "red" }
     "reuse-critic"     = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
+    "reviewer"         = @{ Color = "purple" }
     "verifier"         = @{ Tools = "Read, Grep, Glob, Bash"; Color = "green" }
 }
 
