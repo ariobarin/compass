@@ -1,9 +1,17 @@
 # Subagent Pruning Audit
 
-This audit compares `subagent-driven-development` with
+This audit packet compares `subagent-driven-development` with
 `orchestration-controller`. It follows the loop-governance recommendation in
 `local-docs/loop-governance-skills-audit.md` and records the runtime pruning
 that followed.
+
+Packet status:
+
+- Refreshed after the subagent runtime pruning follow-up landed.
+- Use current subagent skill sources, orchestration-controller sources, Claude
+  mirrors, manifest state, and open PR stack state before deriving new work
+  from this packet.
+- Treat verification commands as audit history, not current proof.
 
 The job is to keep the pruning decision reviewable: pruning should strengthen
 behavior instead of flattening the two skills into one vague controller surface.
