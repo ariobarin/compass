@@ -141,9 +141,11 @@ No change is needed now.
 
 ## Completed PR Boundary
 
-The focused script PR proved:
+Completed mechanical follow-ups proved:
 
 - `scripts/snapshot.ps1` review-mode wording names Codex, user skill, and
   Claude homes;
+- Claude-installed surface removal or demotion is gated on explicit retired
+  Claude handling in the same PR;
 - `.\scripts\doctor.ps1` passes;
 - `.\scripts\snapshot.ps1` prints the aligned message.
