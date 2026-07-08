@@ -6,14 +6,14 @@ material, not live installed configuration.
 ## What Good Looks Like
 
 Good changes make the portable setup easier to review, reinstall, and verify
-without making every future Codex turn carry more context. Prefer small durable
-artifacts: a workflow for a recurring process, a skill for a specialized task, a
-script for a mechanical check, and a manifest for capability or portability
-boundaries.
+without making every future agent session carry more context. Prefer small
+durable artifacts: a workflow for a recurring process, a skill for a specialized
+task, a script for a mechanical check, and a manifest for capability or
+portability boundaries.
 
-The best default is boring and explicit. Keep ordinary files in ordinary Codex
-and user skill locations, keep generated state out of git, and make promotion
-from repo to live install targets a deliberate copy step with a diff.
+The best default is boring and explicit. Keep ordinary files in ordinary live
+install target locations, keep generated state out of git, and make promotion
+from repo to those targets a deliberate copy step with a diff.
 
 ## Exact Capability Contracts
 
@@ -50,8 +50,8 @@ skill.
 Repo-maintainer documentation helps humans and agents maintain this repository.
 It belongs in the root `AGENTS.md`, `workflows/`, `local-docs/`, `manifests/`,
 or `scripts/`, and should explain promotion rules, checks, local review habits,
-and portability boundaries. These surfaces are not copied into live Codex as
-agent behavior.
+and portability boundaries. These surfaces are not copied into live install
+targets as agent behavior.
 
 ## Context Discipline
 
