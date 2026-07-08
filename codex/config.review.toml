@@ -17,7 +17,7 @@
 # `codex/AGENTS.md`.
 
 model = "gpt-5.5"
-model_reasoning_effort = "xhigh"
+model_reasoning_effort = "high"
 personality = "pragmatic"
 service_tier = "default"
 sandbox_mode = "danger-full-access"
