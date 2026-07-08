@@ -251,6 +251,8 @@ Queue 5: Creation and writing skills.
 Purpose: ensure planning, writing, and Compass update surfaces embody the same
 show-don't-tell standard as the rest of the repo.
 
+Audit packet: `local-docs/creation-writing-skills-audit.md`
+
 ## Inventory Maintenance
 
 Update this file when:
