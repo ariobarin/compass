@@ -32,13 +32,14 @@ Claude mirrors:
 - `claude/skills/compass/SKILL.md`
 - `claude/skills/orchestration-controller/SKILL.md`
 - `claude/skills/subagent-driven-development/SKILL.md`
+- `root-cause-not-symptom`, derived from `codex/skills/root-cause-not-symptom`
 
 Manifest evidence:
 
 - `using-codex-goals` is Codex-only.
 - `monitor-to-completion` and `input-token-economy` are Claude-derived from
   Codex source.
-- `root-cause-not-symptom` is Codex-only.
+- `root-cause-not-symptom` is Claude-derived from Codex source.
 
 ## Standard
 
@@ -105,27 +106,27 @@ Recommended PR:
 - Future pruning should keep the shared pattern visible: status claims are
   evidence prompts, not endpoints.
 
-### L3: `compass` needs the new review-program route
+### L3: `compass` has the review-program route
 
 Evidence:
 
 - `compass` tells maintainers to read root `AGENTS.md`,
   `local-docs/maintenance-learnings.md`, `workflows/portable-config.md`, and
   `workflows/addition-intake.md`.
-- The new review program, surface inventory, carried design, and carried route
-  now govern audits and skill pruning, but `compass` does not mention them.
+- Codex and Claude `compass` both tell maintainers to read
+  `workflows/compass-review-program.md` before auditing or pruning installed
+  skills, agents, hooks, or maintainer guidance.
+- The root `AGENTS.md` also points Compass audits at the review program.
 
 Decision:
 
 - The skill remains a global keeper.
-- It should learn the review route without absorbing the full review program.
+- Keep the short review-program route in the installed skill without absorbing
+  the full review program.
 
 Recommended PR:
 
-- Add a short `Read First` bullet to `codex/skills/compass/SKILL.md` and
-  `claude/skills/compass/SKILL.md`: read
-  `workflows/compass-review-program.md` before auditing or pruning installed
-  skills, agents, hooks, or maintainer guidance.
+- None now.
 
 Follow-up status:
 
@@ -133,24 +134,23 @@ Follow-up status:
   and pruning work at `workflows/compass-review-program.md`. Later hook-routing
   PRs extended the same route to installed hook surfaces.
 
-### L4: `root-cause-not-symptom` should be mirrored or explicitly justified
+### L4: `root-cause-not-symptom` is mirrored by derivation
 
 Evidence:
 
 - `root-cause-not-symptom` is broad loop-governance behavior: it prevents
   symptomatic fixes before patching.
 - It has no obvious Codex-only dependency in the text inspected.
-- It is not listed under `[claude].skills` or `[claude].derived_skills`.
+- It is listed under `[claude].derived_skills`.
 
 Decision:
 
 - The skill belongs globally for Codex.
-- The Claude gap should be closed or documented.
+- Keep it Claude-derived unless Claude needs runtime-specific wording.
 
 Recommended PR:
 
-- Add `root-cause-not-symptom` to `[claude].derived_skills` if install-time
-  derivation works cleanly. Otherwise document why it stays Codex-only.
+- None now.
 
 Follow-up status:
 
@@ -175,30 +175,27 @@ Recommended PR:
 
 - None.
 
-### L6: `subagent-driven-development` is the first pruning candidate, not a demotion candidate
+### L6: `subagent-driven-development` was pruned without demotion
 
 Evidence:
 
-- It is the longest main skill in this family at 184 lines, plus three prompt
+- It is still the longest main skill in this family at 182 lines, plus three prompt
   templates.
 - Much of the length is necessary because it preserves dispatch and review
   contracts.
-- The skill repeats some controller ideas from `orchestration-controller`,
-  but it also owns a narrower implementation fan-out lane.
-- It contains "review fallback" wording in related-skill routing. That phrase
-  may be harmless in context, but the review program has already identified
-  fallback-shaped language as risky when Compass controls the route.
+- The focused pruning audit preserved the narrower implementation fan-out lane.
+- Codex and Claude now route level changes to `orchestration-controller`
+  without degraded backup-route wording.
 
 Decision:
 
 - Keep it global.
-- Prune only after a focused read against `orchestration-controller` so the
-  implementation fan-out contract stays intact.
+- Future pruning still needs a focused read against `orchestration-controller`
+  so the implementation fan-out contract stays intact.
 
 Recommended PR:
 
-- Audit `subagent-driven-development` against `orchestration-controller` for
-  duplicated controller prose and risky fallback-shaped wording.
+- None now.
 
 Follow-up status:
 
@@ -247,8 +244,8 @@ git status --short --branch
 git fetch origin
 gh pr view 110 --json number,state,isDraft,mergeStateStatus,baseRefName,headRefName,url,title
 Get-Content -Raw <reviewed skill and reference files>
-rg -n -i "fallback|best-effort|if possible|try to|maybe|manual|history|provenance|blocked|waiting|done|complete" codex\skills\<loop family>
-rg -n "\[[^\]]+\]\([^\)]+\.md\)" codex\skills\<loop family>
+rg -n -i "fallback|orchestration-controller|compass-review-program|root-cause-not-symptom|derived_skills|blocked|waiting|done|complete" codex\skills claude\skills manifests\portable-files.toml workflows\compass-review-program.md
+Select-String -Path manifests\portable-files.toml -Pattern "root-cause-not-symptom|derived_skills"
 ```
 
 The grep was an audit aid. The findings come from reading the files named
