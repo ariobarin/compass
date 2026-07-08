@@ -70,7 +70,8 @@ Claude agents also derive by default. List an agent in
 from `codex/agents/<name>.toml`, building YAML frontmatter (`name`,
 `description`, `tools`, `model: inherit`, `color`) from the TOML plus the
 per-agent frontmatter map in `scripts/common.ps1`. The body is the TOML
-`developer_instructions` verbatim.
+`developer_instructions` verbatim. Codex-only fields such as `sandbox_mode` and
+`model_reasoning_effort` are dropped, since Claude has no equivalent.
 
 Keep a hand-maintained `claude/agents/<name>.md` override only when the agent
 needs Claude-specific wording. List it in `[claude].agents`, not
