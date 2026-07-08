@@ -15,6 +15,9 @@ catch drift before config is copied into a live machine.
 - [compass-surface-inventory.md](compass-surface-inventory.md): current map of
   installed skills, agents, hooks, maintainer surfaces, mechanical checks, and
   first audit packets for the Compass review program.
+- [compass-review-state.md](compass-review-state.md): current handoff state for
+  choosing the next Compass review-program PR without manufacturing runtime
+  edits from completed audit packets.
 - [compass-orientation-audit.md](compass-orientation-audit.md): audit packet
   for Compass orientation surfaces before deeper skill and agent reviews.
 - [loop-governance-skills-audit.md](loop-governance-skills-audit.md): audit

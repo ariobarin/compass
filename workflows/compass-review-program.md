@@ -39,7 +39,8 @@ the installed set, the manifest, the Claude mirror, and the retirement path.
 
 Before editing a family of files, create a compact inventory. Use current files
 as authority. Start from `local-docs/compass-surface-inventory.md` when it is
-present, then update it only when the map changes.
+present, and read `local-docs/compass-review-state.md` when continuing the
+existing review program. Update the inventory only when the map changes.
 
 Classify each item as one of:
 
