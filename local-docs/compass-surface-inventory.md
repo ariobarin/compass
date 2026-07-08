@@ -194,8 +194,8 @@ Status:
   `local-docs/carried-capabilities-design.md`, `carried/`,
   `manifests/portable-files.toml`, and `doctor.ps1`.
 - No skill has been moved there yet.
-- The next carried PR should audit and move one capability only. Do not reopen
-  the route design without new evidence.
+- The first carried demotion PR should move one audited capability only, and
+  only after current evidence proves it fails the global-install test.
 
 ## First Audit Queues
 
