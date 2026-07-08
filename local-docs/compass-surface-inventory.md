@@ -6,6 +6,8 @@ map for deciding what to audit next. It is not runtime guidance.
 Source inspected:
 
 - `manifests/portable-files.toml`
+- `codex/hooks.json`
+- `codex/hooks/`
 - `codex/skills/`
 - `codex/agents/`
 - `claude/skills/`
@@ -18,6 +20,9 @@ Source inspected:
 
 - Codex installed skills: 22
 - Codex installed agents: 7
+- Codex installed hook configs: 1
+- Codex hook guard modules: 1
+- Hook doctor test files: 2
 - Claude direct skills: 12
 - Claude derived skills: 4
 - Claude agents: 7
