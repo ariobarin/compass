@@ -1,27 +1,23 @@
 # Plan Template
 
-Use this template for large, ambiguous, risky, or multi-step work. Keep the plan
-short enough to guide execution, not so detailed that it becomes a second
-implementation.
+Use this template only when Compass needs a written plan artifact that will be
+reviewed, handed off, or kept with repo-local evidence.
 
 This is repo-maintainer guidance and is not installed into a live Codex home or
 user skill home.
 Put reusable agent behavior in `codex/agents/` or `codex/skills/` instead.
 
-Prefer native `/plan` or Plan mode when it is available and the work is still
-interactive. Use this template when you need a written plan artifact, a shared
-execution structure, or a durable repo-local workflow note.
+Do not use this for normal in-chat planning. Prefer Plan mode or `update_plan`
+when the work is interactive. Use `using-codex-goals` when the user asks for a
+durable Codex goal. Use this file only when a plan itself is an artifact.
 
-Use it when the user explicitly asks for a goal, target state, success
-criteria, or plan, or when the work clearly needs structured planning.
-
-Draft the goal collaboratively in normal prose. Do not switch into a formal
-goal-management workflow unless the user explicitly asks for that workflow.
+Keep the plan short enough to guide execution. If a section does not change a
+future decision, cut it.
 
 ## Goal
 
-State the concrete end state in one or two paragraphs. Include what must be true
-for the work to count as done.
+State the end state in one or two paragraphs. Include what must be true for the
+work to count as done.
 
 ## Scope
 
@@ -34,16 +30,12 @@ for the work to count as done.
 
 - Files, docs, issues, logs, or commands that must be inspected first:
 - External docs or APIs that may need verification:
-- User assumptions to challenge or clarify:
+- Assumptions to challenge or verify:
 
 ## Execution Steps
 
-1. Read and map the relevant code or workflow.
-2. Decide the smallest durable change that satisfies the goal.
-3. Edit only the files in scope.
-4. Run focused checks.
-5. Broaden checks if shared behavior or user-visible workflows changed.
-6. Commit, push, and open or update a PR when requested.
+Use numbered steps only when order matters. Each step should name an action and
+the evidence it should produce.
 
 ## Verification
 
@@ -60,5 +52,5 @@ for the work to count as done.
 
 ## Open Questions
 
-List only questions that block a safe implementation. Make reasonable
-assumptions for everything else and state them before editing.
+List only questions that block useful progress. Make reasonable assumptions for
+everything else and state them before editing.

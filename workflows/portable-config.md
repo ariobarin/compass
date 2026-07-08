@@ -164,7 +164,7 @@ skill install paths again:
   restart-only local recovery task for unfinished Codex sessions.
 - [which-llm-plugin.md](which-llm-plugin.md): installing and refreshing the
   separately owned `which-llm` plugin without tracking generated cache state.
-- [plan-template.md](plan-template.md): planning large or risky work.
+- [plan-template.md](plan-template.md): durable written plan artifacts.
 - [multi-thread-pr-coordination.md](multi-thread-pr-coordination.md): keeping
   parallel audit threads out of public PR sprawl.
 - [read-only-research.md](read-only-research.md): mapping code paths before
