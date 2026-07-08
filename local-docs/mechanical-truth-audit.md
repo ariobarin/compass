@@ -96,16 +96,16 @@ run with -Apply to refresh this repo from the live Codex home, user skill home, 
 Script output is a maintainer instruction at the moment of action. If it names
 only part of the copy map, it teaches the wrong boundary.
 
-Follow-up status: the current stack updates the `snapshot.ps1` review-mode
-message to name Codex, user skill, and Claude homes.
+Follow-up status: completed. `snapshot.ps1` review mode now names Codex, user
+skill, and Claude homes.
 
 ### Track Retired Claude Cleanup Before It Is Needed
 
 `Get-RetiredPortableFileMap` removes old Compass-owned copies from Codex home
 and user skill home. It does not yet model retired Claude skills or agents.
 
-That is not a bug today because this stack does not remove a Claude-installed
-skill or agent. It is a future demotion risk. The first PR that removes a
+That is not a bug today because no current change removes a Claude-installed
+skill or agent. It remains a future demotion risk. The first PR that removes a
 Claude installed surface should add explicit retired Claude handling in the same
 change, with `verify-live.ps1 -SkipCodexCommand -RequireInSync` as evidence.
 
