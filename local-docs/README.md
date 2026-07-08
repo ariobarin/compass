@@ -15,6 +15,9 @@ catch drift before config is copied into a live machine.
   flow for new repo-maintenance workflows, installed skills and agents,
   repo-side scripts and manifests, and config fragments. Workflows guide repo
   maintenance and are not installed into a live Codex home or user skill home.
+- [../workflows/compass-review-program.md](../workflows/compass-review-program.md):
+  audit method for reviewing installed skills, agents, and maintainer guidance
+  for audience fit, pruning, rerouting, and global-install eligibility.
 
 ## Boundary
 

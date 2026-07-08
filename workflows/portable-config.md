@@ -157,6 +157,9 @@ skill install paths again:
 
 - [addition-intake.md](addition-intake.md): promoting new portable artifacts and
   checking related stale guidance.
+- [compass-review-program.md](compass-review-program.md): auditing installed
+  skills, agents, and maintainer guidance for audience fit, pruning,
+  rerouting, and global-install eligibility.
 - [codex-restart-recovery.md](codex-restart-recovery.md): installing a
   restart-only local recovery task for unfinished Codex sessions.
 - [which-llm-plugin.md](which-llm-plugin.md): installing and refreshing the
