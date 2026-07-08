@@ -19,7 +19,7 @@ Source inspected:
 - Codex installed skills: 22
 - Codex installed agents: 7
 - Claude direct skills: 13
-- Claude derived skills: 2
+- Claude derived skills: 3
 - Claude agents: 7
 - Repo workflows: 10
 
@@ -76,7 +76,8 @@ Claude runtime mirror:
   `orchestration-controller`, `pr-review-loop`, `specialist-review`,
   `subagent-driven-development`, `to-prd`, `workspace-steward`,
   `write-a-skill`
-- derived skills: `input-token-economy`, `monitor-to-completion`
+- derived skills: `input-token-economy`, `monitor-to-completion`,
+  `root-cause-not-symptom`
 - agents: `algorithm-critic`, `neutral-critic`, `repo-explorer`,
   `research-critic`, `reuse-critic`, `reviewer`, `verifier`
 
