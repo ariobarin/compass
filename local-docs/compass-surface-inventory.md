@@ -206,6 +206,9 @@ Purpose: strengthen the agent loops that will run the review program.
 
 Audit packet: `local-docs/loop-governance-skills-audit.md`
 
+Focused pruning packet:
+`local-docs/subagent-pruning-audit.md`
+
 Queue 3: PR and review surfaces.
 
 - `pr-review-loop`
