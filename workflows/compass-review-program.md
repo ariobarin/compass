@@ -157,13 +157,17 @@ Good PR boundaries:
 - add a check that prevents a repeated drift;
 - update maintainer docs after a runtime cleanup.
 
-Each PR should say:
+The review artifact should say:
 
 - what surface was reviewed;
 - what audience it serves;
 - what was cut, moved, or preserved;
 - what behavior should change;
 - what commands or source inspection verified the change.
+
+Keep the PR body consistent with repo convention: short, motivation-first, and
+without headers or checklists. Put detailed evidence in the audit packet, local
+doc, final report, or review comment that travels with the PR.
 
 Run `.\scripts\doctor.ps1` before committing. Run skill validation for skill
 edits when available. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when
