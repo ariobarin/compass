@@ -187,6 +187,8 @@ Queue 1: Compass orientation surfaces.
 
 Purpose: make a fresh maintainer understand Compass fast, with no runtime bloat.
 
+Audit packet: `local-docs/compass-orientation-audit.md`
+
 Queue 2: Loop governance skills.
 
 - `compass`
