@@ -157,18 +157,20 @@ Doctor checks cover mechanical boundaries:
 Do not make `doctor.ps1` judge whether a skill deserves carried status. That is
 reviewer judgment.
 
-## First Candidates
+## Candidate Review State
 
-Do not move these yet. They need audit evidence first.
+Do not move a capability just because it appears in an old candidate list.
+Current audit packets decide the next move.
 
-Likely candidates to review for carried status:
+Audited global keepers:
 
-- benchmark campaign skills;
-- WebMCP tool and eval skills;
-- workspace organization material with project-template assets;
-- any skill whose audience is a campaign operator, not ordinary Codex work.
+- benchmark skills stay global because they prevent expensive long-run collapse;
+- WebMCP skills stay Codex-global because they govern a recurring tool surface
+  where weak evidence is dangerous;
+- `workspace-steward` stays global because workspace mistakes can delete work,
+  hide evidence, or point commands at the wrong repo.
 
-Likely global keepers to audit for pruning instead of demotion:
+Global keepers to audit for pruning instead of demotion:
 
 - `compass`;
 - `using-codex-goals`;
@@ -177,5 +179,6 @@ Likely global keepers to audit for pruning instead of demotion:
 - `root-cause-not-symptom`;
 - PR and review loop skills that shape normal repository work.
 
-The first implementation PR should add the route and checks. The first demotion
-PR should move one audited capability only.
+The first demotion PR should move one audited capability only. It needs current
+evidence that the capability fails the global-install test now, not only that
+the capability is domain-shaped.
