@@ -129,28 +129,3 @@ function Invoke-DoctorPythonScript {
         [Console]::OutputEncoding = $oldConsoleOutputEncoding
     }
 }
-
-function Get-ManifestArrayValues {
-    param(
-        [string]$Text,
-        [string]$Section,
-        [string]$Key
-    )
-
-    $sectionPattern = "(?ms)^\[$([regex]::Escape($Section))\]\s*(.*?)(?=^\[|\z)"
-    $sectionMatch = [regex]::Match($Text, $sectionPattern)
-    if (-not $sectionMatch.Success) {
-        return @()
-    }
-
-    $keyPattern = "(?ms)^\s*$([regex]::Escape($Key))\s*=\s*\[(.*?)^\s*\]"
-    $keyMatch = [regex]::Match($sectionMatch.Groups[1].Value, $keyPattern)
-    if (-not $keyMatch.Success) {
-        return @()
-    }
-
-    return @(
-        [regex]::Matches($keyMatch.Groups[1].Value, '"([^"]+)"') |
-            ForEach-Object { $_.Groups[1].Value }
-    )
-}

@@ -70,15 +70,22 @@ function Get-PortableSkillNames {
 function Get-PortableManifestArray {
     param(
         [string]$Section,
-        [string]$Key
+        [string]$Key,
+        [string]$Text
     )
 
-    $manifestPath = Join-Path (Get-RepoRoot) "manifests\portable-files.toml"
-    if (-not (Test-Path -LiteralPath $manifestPath)) {
-        throw "missing portable manifest: $manifestPath"
+    if ($Text) {
+        $manifestText = $Text
+    }
+    else {
+        $manifestPath = Join-Path (Get-RepoRoot) "manifests\portable-files.toml"
+        if (-not (Test-Path -LiteralPath $manifestPath)) {
+            throw "missing portable manifest: $manifestPath"
+        }
+
+        $manifestText = Get-Content -Raw -LiteralPath $manifestPath
     }
 
-    $manifestText = Get-Content -Raw -LiteralPath $manifestPath
     $sectionPattern = "(?ms)^\[$([regex]::Escape($Section))\]\s*(.*?)(?=^\[|\z)"
     $sectionMatch = [regex]::Match($manifestText, $sectionPattern)
     if (-not $sectionMatch.Success) {
