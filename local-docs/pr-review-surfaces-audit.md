@@ -136,8 +136,7 @@ Decision:
 
 Recommended PR:
 
-- Add the inline review-comment requirement to Codex and Claude `pr-review-loop`
-  runtime guidance and playbooks.
+- None now.
 
 Follow-up status:
 
