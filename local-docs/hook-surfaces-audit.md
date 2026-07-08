@@ -56,8 +56,10 @@ That was incomplete. Compass also installs `codex/hooks.json` and
 `codex/hooks/`. A future maintainer reviewing installed behavior must see hooks
 in the runtime map.
 
-Decision: update the inventory to list hooks as installed Codex runtime
-surfaces.
+Decision: keep the inventory listing hooks as installed Codex runtime surfaces.
+
+Follow-up status: completed. The inventory now lists `codex/hooks.json`,
+`codex/hooks/`, hook doctor checks, and hook doctor test helpers.
 
 ### Keep Hook Behavior Mechanical
 

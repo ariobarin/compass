@@ -193,6 +193,10 @@ Status:
 
 ## First Audit Queues
 
+Status: every first audit queue now has an audit packet. Treat those packets as
+the active work surface for findings and follow-up PRs. Update this inventory
+when the queue map changes, not for routine packet edits.
+
 Queue 1: Compass orientation surfaces.
 
 - `AGENTS.md`
