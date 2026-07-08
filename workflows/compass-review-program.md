@@ -193,6 +193,20 @@ Run `.\scripts\doctor.ps1` before committing. Run skill validation for skill
 edits when available. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when
 live drift matters.
 
+## Review Gate
+
+Green draft PRs are build evidence. They are not readiness.
+
+Before calling a Compass review-program PR ready, inspect the live PR state:
+base branch, head branch, head SHA, check results, review status, and open
+comments. For stacked PRs, verify every base points at the intended previous
+head and name the merge order.
+
+Use `pr-review-loop` for the final review path. Local checks and GitHub checks
+support readiness, but they do not replace current-head review gates. After any
+material push, re-read the head SHA and make sure required reviewers are looking
+at that SHA before marking the PR ready.
+
 ## Stop Conditions
 
 Stop and ask for user taste when the decision changes the system's philosophy,
