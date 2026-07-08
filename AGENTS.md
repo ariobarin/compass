@@ -36,6 +36,8 @@ of `~/.codex`, `$HOME/.agents`, or `$HOME/.claude`.
   source files. See `workflows/claude-config.md`.
 - For nontrivial changes to this repo, read
   `local-docs/maintenance-learnings.md` before editing.
+- For Compass audits, use `workflows/compass-review-program.md` before pruning
+  installed skills, agents, hooks, or maintainer guidance.
 - Do not commit auth, sessions, logs, caches, browser state, SQLite files, or
   generated plugin caches.
 - Run `.\scripts\doctor.ps1` before committing.

@@ -95,9 +95,9 @@ Decision:
 
 Recommended PR:
 
-- Optional narrow PR: add one root-guidance bullet that says to use
-  `workflows/compass-review-program.md` for Compass audits. Skip it if the
-  added line feels like root bloat.
+- Completed by the root audit pointer PR. The added root-guidance bullet points
+  Compass audits to `workflows/compass-review-program.md` without carrying the
+  full rubric.
 
 ### O4: `README.md` serves public orientation, not audit execution
 
@@ -200,6 +200,8 @@ Completed follow-ups:
 - The carried-but-not-global route has been designed and wired.
 - The loop governance skill audit has been completed.
 - Hook surfaces have been added to the inventory and review-program route.
+- Root guidance now points Compass audits to
+  `workflows/compass-review-program.md`.
 
 ## Verification
 
