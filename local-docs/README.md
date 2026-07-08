@@ -19,6 +19,9 @@ catch drift before config is copied into a live machine.
 - [loop-governance-skills-audit.md](loop-governance-skills-audit.md): second
   queue audit for the installed skills that govern goals, orchestration,
   subagents, waiting, context cost, and root-cause discipline.
+- [subagent-pruning-audit.md](subagent-pruning-audit.md): focused comparison
+  of `subagent-driven-development` against `orchestration-controller` before
+  pruning overlapping controller language.
 - [carried-capabilities-design.md](carried-capabilities-design.md): design for
   useful Compass capabilities that should travel in the repo but not load into
   every session.
