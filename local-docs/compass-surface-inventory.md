@@ -175,14 +175,18 @@ Current state:
 
 Design packet: `local-docs/carried-capabilities-design.md`
 
-Route design questions:
+Resolved route contract:
 
-- What directory should hold carried skills or agents?
-- Should carried material keep normal `SKILL.md` shape or use a different
-  package format?
-- How does a target project opt in?
-- How does `doctor.ps1` prevent accidental global installation?
-- How does the Claude mirror handle carried material?
+- `carried/` holds reviewed source that travels with Compass without loading
+  into every Codex or Claude session.
+- Carried skills may keep normal `SKILL.md` shape. Their location keeps them
+  out of global runtime.
+- Target projects opt in from their own repos, or the capability becomes a
+  plugin when it should be shared without becoming personal global context.
+- `doctor.ps1` checks that carried entries are repo-only, present, and not also
+  installed globally.
+- Claude carried material uses `carried/claude/` only when runtime-specific
+  wording is needed.
 
 Status:
 
@@ -190,6 +194,8 @@ Status:
   `local-docs/carried-capabilities-design.md`, `carried/`,
   `manifests/portable-files.toml`, and `doctor.ps1`.
 - No skill has been moved there yet.
+- The next carried PR should audit and move one capability only. Do not reopen
+  the route design without new evidence.
 
 ## First Audit Queues
 
