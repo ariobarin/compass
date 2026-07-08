@@ -86,6 +86,10 @@ portable repo.
   Compass.
 - A reusable custom agent that should be installed belongs in `codex/agents/`.
 - A project-specific custom agent belongs in the target repo.
+- A Claude-specific skill or agent belongs in `claude/skills/` or
+  `claude/agents/`.
+- Shared behavior can use a derived Claude skill when install-time derivation is
+  enough.
 - A reviewed Codex hook belongs in `codex/hooks.json` and `codex/hooks/`.
 - A shareable bundle of skills, hooks, apps, or MCP config belongs in a plugin
   repo or repo-scoped plugin folder, not in the live plugin cache.
@@ -93,8 +97,7 @@ portable repo.
 - A repo-side capability boundary or portability decision belongs in
   `manifests/`.
 - A repo-side maintenance lesson belongs in `local-docs/`.
-- A live preference that should affect every Codex session belongs in
-  `codex/AGENTS.md` only after review.
+- A Codex-wide live preference belongs in `codex/AGENTS.md` only after review.
 
 ## Research First
 
