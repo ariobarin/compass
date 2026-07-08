@@ -27,6 +27,8 @@ catch drift before config is copied into a live machine.
   review, and reviewer agents.
 - [domain-shaped-skills-audit.md](domain-shaped-skills-audit.md): fourth queue
   audit for benchmark, WebMCP, and workspace stewardship skills.
+- [creation-writing-skills-audit.md](creation-writing-skills-audit.md): fifth
+  queue audit for planning, PRD, Compass update, and skill-authoring skills.
 - [carried-capabilities-design.md](carried-capabilities-design.md): design for
   useful Compass capabilities that should travel in the repo but not load into
   every session.
