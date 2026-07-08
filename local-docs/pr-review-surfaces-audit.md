@@ -7,7 +7,7 @@ evidence-backed review.
 
 Packet status:
 
-- Refreshed after the review-surface follow-ups landed.
+- Refreshed after the inline review-comment follow-up landed.
 - Use current review skills, reviewer agents, Claude mirrors, and open PR stack
   state before deriving new work from this packet.
 - Treat verification commands as audit history, not current proof.
@@ -77,7 +77,8 @@ merges, deletes, retargets, or escalates.
 Evidence:
 
 - `pr-review-loop` holds PR identity, review gates, current-head discipline,
-  re-review, stale rebuild posture, and merge boundaries.
+  inline review-comment inspection, re-review, stale rebuild posture, and merge
+  boundaries.
 - `action-items-to-prs` turns broad reports into PR-scoped ledgers with
   verification, critic review, and merge gates.
 - `git-branch-resolver` protects branches, worktrees, remote refs, and PR
@@ -122,20 +123,29 @@ Evidence:
 - The rule still requires the alternate route to be named and justified.
 - Missing required review remains unsatisfied until the authorized alternate
   route is explicit.
+- Codex and Claude `pr-review-loop` now require inline review comments to be
+  inspected separately from top-level review text before readiness or merge
+  safety is claimed.
 
 Decision:
 
 - Keep the current authorized alternate-review-route language.
+- Keep inline review-comment inspection as runtime PR-loop guidance, not only
+  repo-maintainer workflow guidance.
 - Do not restore fallback-shaped wording for Compass-owned review gates.
 
 Recommended PR:
 
-- None now.
+- Add the inline review-comment requirement to Codex and Claude `pr-review-loop`
+  runtime guidance and playbooks.
 
 Follow-up status:
 
 - Completed by the review fallback wording PR. Codex and Claude
   `pr-review-loop` now use authorized alternate-review-route language.
+- Current follow-up adds inline review-comment inspection to Codex and Claude
+  `pr-review-loop` runtime guidance after current PR evidence showed top-level
+  clean review text can coexist with actionable inline comments.
 
 ### R4: The reviewer coordinators are aligned
 
@@ -247,6 +257,7 @@ Recommended order:
 Completed follow-ups:
 
 - `pr-review-loop` fallback-shaped wording was replaced.
+- `pr-review-loop` gained inline review-comment inspection.
 - Codex `reviewer` gained the specialist-selection clarity already present in
   the Claude mirror.
 
@@ -261,4 +272,5 @@ gh pr list --state open --json number,title,isDraft,baseRefName,headRefName,url 
 Get-Content -Raw <reviewed skill, reference, and agent files>
 rg -n -i "fallback|authorized alternate|silent|blocked|optional|advisory|theater|evidence|review gate|current-head|merge|coordinated|specialist" codex\skills\pr-review-loop codex\skills\pr-merge-closeout codex\skills\specialist-review codex\skills\action-items-to-prs codex\skills\git-branch-resolver codex\agents claude\skills\pr-review-loop claude\skills\specialist-review claude\skills\action-items-to-prs claude\skills\git-branch-resolver claude\agents
 rg -n "authorized alternate review route|Specialist Selection|for theater|do not invent findings" codex\skills\pr-review-loop claude\skills\pr-review-loop codex\agents\reviewer.toml claude\agents\reviewer.md
+rg -n "inline review comments|top-level review text|pull review comments" codex\skills\pr-review-loop claude\skills\pr-review-loop workflows\compass-review-program.md local-docs\compass-review-state.md
 ```

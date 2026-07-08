@@ -17,8 +17,10 @@ support the case for readiness, but it never replaces reviewer approval.
 
 When the user names a specific PR or branch:
 
-1. Inspect the live PR first with `gh pr view` or equivalent.
-2. Record base branch, head branch, head SHA, review state, and checks.
+1. Inspect the live PR first with `gh pr view` or equivalent, and inspect inline
+   review comments separately.
+2. Record base branch, head branch, head SHA, review state, inline findings,
+   and checks.
 3. Keep the exact PR identity unless the user explicitly asks for a rebuild,
    retarget, or replacement branch.
 4. Re-run the same live checks after each material push.
@@ -31,6 +33,7 @@ Useful fields:
 - `reviewDecision`
 - `mergeStateStatus`
 - `statusCheckRollup`
+- inline review comments, such as GitHub pull review comments
 
 ## Current-Head Discipline
 
