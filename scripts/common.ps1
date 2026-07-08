@@ -126,7 +126,10 @@ $script:ClaudeDerivedAgentFrontmatter = @{
 }
 
 # Reads top-level key = "value" and key = """multi-line""" strings from a Codex
-# agent TOML file. Shared by the doctor agent check and the Claude derive step.
+# agent TOML file. Used by the codex agent sandbox check
+# (scripts/doctor/checks/agents.ps1) and the Claude agent derive step. This is a
+# narrow scanner, not a full TOML parser: a value body containing a literal """
+# would be truncated, so keep agent bodies free of that sequence.
 function Get-TopLevelTomlStringValues {
     param([string]$Text)
 
