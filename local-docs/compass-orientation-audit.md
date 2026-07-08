@@ -4,11 +4,13 @@ This audit packet covers the Compass orientation surfaces listed in
 `local-docs/compass-surface-inventory.md`. It reviews the surfaces that orient a
 fresh maintainer before deeper skill, agent, hook, and workflow work.
 
-Branch context:
+Packet status:
 
-- Base stack: PR #106 and PR #107
-- Related external PR: #105, `Document loop engineering philosophy`
-- Inspected current worktree, not memory, for file content
+- Refreshed after all first audit packets existed.
+- Use `local-docs/compass-surface-inventory.md` and the current open PR stack
+  as authority for new work.
+- Treat old PR numbers in verification notes as audit history, not routing
+  instructions.
 
 ## Surfaces Reviewed
 
@@ -46,8 +48,8 @@ Evidence:
   maintainer docs and captures exact capability contracts.
 - `workflows/compass-review-program.md` defines the audit stance, inventory
   pass, pruning standard, PR rhythm, and stop conditions.
-- `local-docs/compass-surface-inventory.md` maps current surfaces and audit
-  queues.
+- `local-docs/compass-surface-inventory.md` maps current surfaces and first
+  audit packets.
 
 Decision:
 
@@ -62,7 +64,6 @@ Recommended PR:
 
 Evidence:
 
-- PR #105, `Document loop engineering philosophy`, is merged.
 - Current `philosophy.md` has strong sections on judgment, roles, authority,
   evidence, human-owned power, writing that embodies the system, and durable
   guidance that shapes agent behavior.
@@ -192,13 +193,15 @@ Follow-up status:
 
 Recommended order:
 
-1. Keep future PRs stacked explicitly until the surface-inventory branch or its
-   successor lands.
+1. Keep future PRs stacked explicitly while the review-program stack remains
+   draft and unmerged.
+2. Pick the next PR from current audit packets, current source files, and open
+   PR state, not from the original branch context that created this packet.
 
 Completed follow-ups:
 
 - The carried-but-not-global route has been designed and wired.
-- PR #105 has landed, so `philosophy.md` is the current doctrine source.
+- `philosophy.md` is the current doctrine source.
 - The loop governance skill audit has been completed.
 - Hook surfaces have been added to the inventory and review-program route.
 - Root guidance now points Compass audits to
