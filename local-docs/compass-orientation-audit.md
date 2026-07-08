@@ -7,8 +7,9 @@ fresh maintainer before deeper skill, agent, hook, and workflow work.
 Packet status:
 
 - Refreshed after all first audit packets existed.
-- Use `local-docs/compass-surface-inventory.md` and the current open PR stack
-  as authority for new work.
+- Use `local-docs/compass-surface-inventory.md`,
+  `local-docs/compass-review-state.md`, and the current open PR stack as
+  authority for new work.
 - Treat old PR numbers in verification notes as audit history, not routing
   instructions.
 
@@ -20,6 +21,7 @@ Packet status:
 - `workflows/compass-review-program.md`
 - `local-docs/maintenance-learnings.md`
 - `local-docs/compass-surface-inventory.md`
+- `local-docs/compass-review-state.md`
 
 ## Orientation Standard
 
@@ -50,6 +52,8 @@ Evidence:
   pass, pruning standard, PR rhythm, and stop conditions.
 - `local-docs/compass-surface-inventory.md` maps current surfaces and first
   audit packets.
+- `local-docs/compass-review-state.md` records current handoff state without
+  becoming runtime guidance or a work log.
 
 Decision:
 
@@ -189,6 +193,28 @@ Follow-up status:
 - Completed by the carried-capability route stack. The route now has a design
   note, source directory, manifest section, and doctor checks.
 
+### O8: The review-state handoff belongs in local docs
+
+Evidence:
+
+- `local-docs/compass-review-state.md` tells future maintainers that current
+  packets mostly say no immediate runtime cut is justified.
+- It separates current handoff posture from durable inventory: the inventory
+  maps surfaces, while the state note explains how to continue without
+  manufacturing edits from completed packets.
+- It explicitly says GitHub checks, draft PR state, and branch bases must be
+  inspected live each time.
+
+Decision:
+
+- Keep it as repo-local maintainer context.
+- Do not install it into runtime guidance.
+- Update it only when the review-program state class changes.
+
+Recommended PR:
+
+- None now.
+
 ## Next PR Boundaries
 
 Recommended order:
@@ -206,6 +232,7 @@ Completed follow-ups:
 - Hook surfaces have been added to the inventory and review-program route.
 - Root guidance now points Compass audits to
   `workflows/compass-review-program.md`.
+- The review-program state handoff has been added and mapped in the inventory.
 
 ## Verification
 
