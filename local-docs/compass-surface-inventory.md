@@ -92,7 +92,8 @@ Claude runtime mirror:
 
 Audit pressure:
 
-- Runtime skill text must be audited for audience fit before any rewrite.
+- Runtime skill text and retrieval descriptions must be audited for audience
+  fit before any rewrite.
 - Any Codex skill cleanup needs a Claude mirror decision in the same PR or a
   stated reason why no Claude change applies.
 - Benchmark and WebMCP skills need a global-install eligibility review because
@@ -206,6 +207,12 @@ Status:
 Status: every first audit queue now has an audit packet. Treat those packets as
 the active work surface for findings and follow-up PRs. Update this inventory
 when the queue map changes, not for routine packet edits.
+
+Cross-cutting packet:
+
+- `local-docs/skill-retrieval-audit.md`: installed skill descriptions as
+  retrieval context. Refresh it when a skill description changes or real use
+  shows retrieval noise.
 
 Queue 1: Compass orientation surfaces.
 

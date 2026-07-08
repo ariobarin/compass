@@ -18,6 +18,9 @@ files before deriving new work.
   refusal-to-collapse controller stance and benchmark result production. Treat
   those as evidence that the pressure language landed, not as open permission
   to keep rewriting the same skill families.
+- Skill retrieval descriptions now have their own audit packet. Current
+  descriptions pass source review; refresh the packet only when descriptions
+  change or real retrieval noise appears.
 - Most current packets now say no immediate runtime cut is justified. Treat
   those decisions as pressure against invented edits, not as permission to stop
   reading.
@@ -56,7 +59,7 @@ Use this order:
 - Completed or no immediate cut: orientation, loop governance, PR and review
   surfaces, domain-shaped skills, creation and writing skills, maintainer
   workflows, mechanical truth, hooks, refusal-to-collapse runtime stance, and
-  benchmark result-production hardening.
+  benchmark result-production hardening, and skill retrieval descriptions.
 - Waiting for future evidence: first carried demotion, retired Claude cleanup,
   and any retrieval-noise or stale-procedure finding from real use.
 - External current state: draft PRs, check results, review status, branch
