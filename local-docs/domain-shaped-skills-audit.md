@@ -32,7 +32,7 @@ Codex skills:
 - `codex/skills/workspace-steward/SKILL.md`
 - `codex/skills/workspace-steward/references/project-template/README.md`
 
-Claude mirrors:
+Claude direct mirrors:
 
 - `claude/skills/benchmark-infra-reviewer/SKILL.md`
 - `claude/skills/benchmark-infra-reviewer/references/review-checklist.md`
@@ -41,7 +41,10 @@ Claude mirrors:
 - `claude/skills/benchmark-run-operator/references/stack-operations.md`
 - `claude/skills/benchmark-run-operator/references/artifact-validation.md`
 - `claude/skills/benchmark-run-operator/references/report-rebuild.md`
-- `claude/skills/workspace-steward/SKILL.md`
+
+Claude derived skills:
+
+- `workspace-steward`, derived from `codex/skills/workspace-steward`
 
 Manifest and workflow evidence:
 
@@ -165,34 +168,29 @@ Rationale:
 
 Recommended PR:
 
-- Fix the Claude mirror gap described in D5.
+- None now.
 
-### D5: `workspace-steward` has a Claude mirror gap
+### D5: `workspace-steward` Claude derivation is complete
 
 Evidence:
 
 - The Codex skill includes a project-template route:
   `references/project-template/`.
-- The Claude skill omits that paragraph.
-- `claude/skills/workspace-steward/` currently contains only `SKILL.md`, with
-  no `references/project-template/` assets.
-- `workflows/claude-config.md` says skills that can use Codex source without
-  runtime-specific edits should be listed as `[claude].derived_skills`.
-- `workspace-steward` has no obvious Codex-only runtime dependency in the text
-  inspected.
+- `workspace-steward` is listed under `[claude].derived_skills`.
+- `claude/skills/workspace-steward/` is absent, so there is no stale direct
+  mirror.
+- The Claude installer derives `SKILL.md` and `references/` from the Codex
+  source, including `references/project-template/`.
 
 Decision:
 
-- The behavior should match across runtimes.
-- The likely clean route is to make `workspace-steward` a Claude derived skill,
-  removing the direct Claude source and letting the installer derive
-  `SKILL.md` and `references/` from the Codex source.
+- Keep `workspace-steward` as a Claude derived skill.
+- Do not restore a direct Claude source unless Claude needs runtime-specific
+  wording.
 
 Recommended PR:
 
-- Move `workspace-steward` from `[claude].skills` to
-  `[claude].derived_skills`, remove `claude/skills/workspace-steward/SKILL.md`,
-  and verify that `doctor.ps1` accepts the derived source.
+- None now.
 
 Follow-up status:
 
@@ -212,7 +210,7 @@ Evidence:
 
 Decision:
 
-- Do not prune this queue before the mirror gap is fixed.
+- No pruning is needed now.
 - Revisit pruning only after real use shows retrieval noise or stale procedure.
 
 Recommended PR:
@@ -241,7 +239,9 @@ git fetch origin
 gh pr list --state open --json number,title,isDraft,baseRefName,headRefName,url --limit 40
 Get-Content -Raw <reviewed skill, reference, manifest, and workflow files>
 Get-ChildItem -Recurse -File codex\skills\benchmark-infra-reviewer,codex\skills\benchmark-run-operator,codex\skills\webmcp-eval-triage,codex\skills\webmcp-tool-authoring,codex\skills\webmcp-verify-tool,codex\skills\workspace-steward
-Get-ChildItem -Recurse -File claude\skills\benchmark-infra-reviewer,claude\skills\benchmark-run-operator,claude\skills\workspace-steward
-rg -n -i "fallback|best-effort|if possible|maybe|hopefully|history|provenance|global|carry|carried|project-specific|WebMCP|benchmark|workspace|poison|invalid|blocked|verified|verify|live proof" codex\skills\benchmark-infra-reviewer codex\skills\benchmark-run-operator codex\skills\webmcp-eval-triage codex\skills\webmcp-tool-authoring codex\skills\webmcp-verify-tool codex\skills\workspace-steward claude\skills\benchmark-infra-reviewer claude\skills\benchmark-run-operator claude\skills\workspace-steward workflows\claude-config.md manifests\portable-files.toml
-git diff --no-index -- codex\skills\workspace-steward\SKILL.md claude\skills\workspace-steward\SKILL.md
+Get-ChildItem -Recurse -File claude\skills\benchmark-infra-reviewer,claude\skills\benchmark-run-operator
+Select-String -Path manifests\portable-files.toml -Pattern "derived_skills|workspace-steward"
+Test-Path claude\skills\workspace-steward
+Test-Path codex\skills\workspace-steward\references\project-template\README.md
+rg -n -i "fallback|best-effort|if possible|maybe|hopefully|history|provenance|global|carry|carried|project-specific|WebMCP|benchmark|workspace|poison|invalid|blocked|verified|verify|live proof" codex\skills\benchmark-infra-reviewer codex\skills\benchmark-run-operator codex\skills\webmcp-eval-triage codex\skills\webmcp-tool-authoring codex\skills\webmcp-verify-tool codex\skills\workspace-steward claude\skills\benchmark-infra-reviewer claude\skills\benchmark-run-operator workflows\claude-config.md manifests\portable-files.toml
 ```
