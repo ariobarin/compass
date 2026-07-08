@@ -1,8 +1,8 @@
 # Loop Governance Skills Audit
 
-This audit covers Queue 2 from `local-docs/compass-surface-inventory.md`.
-It reviews the installed skills that shape long-running agent loops before any
-skill text is rewritten.
+This audit packet covers the loop-governance skills listed in
+`local-docs/compass-surface-inventory.md`. It reviews the installed skills that
+shape long-running agent loops before any skill text is rewritten.
 
 Branch context:
 

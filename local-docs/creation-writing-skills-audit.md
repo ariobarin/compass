@@ -1,6 +1,7 @@
 # Creation And Writing Skills Audit
 
-This audit covers Queue 5 from `local-docs/compass-surface-inventory.md`.
+This audit packet covers the creation and writing skills listed in
+`local-docs/compass-surface-inventory.md`.
 
 Scope:
 

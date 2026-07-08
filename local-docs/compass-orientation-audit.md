@@ -1,8 +1,8 @@
 # Compass Orientation Audit
 
-This audit covers the first queue from `local-docs/compass-surface-inventory.md`.
-It reviews the surfaces that orient a fresh maintainer before deeper skill and
-agent, hook, and workflow work.
+This audit packet covers the Compass orientation surfaces listed in
+`local-docs/compass-surface-inventory.md`. It reviews the surfaces that orient a
+fresh maintainer before deeper skill, agent, hook, and workflow work.
 
 Branch context:
 

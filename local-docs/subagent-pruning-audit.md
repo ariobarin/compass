@@ -1,7 +1,7 @@
 # Subagent Pruning Audit
 
 This audit compares `subagent-driven-development` with
-`orchestration-controller`. It follows the Queue 2 recommendation in
+`orchestration-controller`. It follows the loop-governance recommendation in
 `local-docs/loop-governance-skills-audit.md` and records the runtime pruning
 that followed.
 

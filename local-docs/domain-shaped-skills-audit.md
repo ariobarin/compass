@@ -1,9 +1,9 @@
 # Domain-Shaped Skills Audit
 
-This audit covers Queue 4 from `local-docs/compass-surface-inventory.md`.
-It reviews skills that are strong but domain-shaped: benchmark operation,
-benchmark infrastructure review, WebMCP eval and tool work, and workspace
-stewardship.
+This audit packet covers the domain-shaped skills listed in
+`local-docs/compass-surface-inventory.md`. It reviews skills that are strong but
+domain-shaped: benchmark operation, benchmark infrastructure review, WebMCP eval
+and tool work, and workspace stewardship.
 
 No runtime text changes in this audit. The job is to decide what stays global,
 what stays Codex-only, what should be mirrored, and what follow-up PRs should

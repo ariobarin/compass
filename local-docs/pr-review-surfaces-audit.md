@@ -1,8 +1,9 @@
 # PR And Review Surfaces Audit
 
-This audit covers Queue 3 from `local-docs/compass-surface-inventory.md`.
-It reviews the installed skills and agents that turn changes, reports, PRs, and
-specialist requests into evidence-backed review.
+This audit packet covers the PR and review surfaces listed in
+`local-docs/compass-surface-inventory.md`. It reviews the installed skills and
+agents that turn changes, reports, PRs, and specialist requests into
+evidence-backed review.
 
 No runtime text changes in this audit. The job is to decide what deserves
 global context, what should be pruned, and which focused PRs should follow.
