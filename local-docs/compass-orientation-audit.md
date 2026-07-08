@@ -139,45 +139,49 @@ Recommended PR:
 - No immediate cut. Revisit after the first few skill audits prove what
   maintainer history still earns its place.
 
-### O6: The review program is actionable, but its first proof is still ahead
+### O6: The review program has working proof
 
 Evidence:
 
 - `workflows/compass-review-program.md` defines classification, audit
   questions, pruning standards, PR rhythm, and stop conditions.
-- This audit is the first use of that workflow against a real queue.
+- The review stack has now used that workflow across orientation, loop
+  governance, review surfaces, domain-shaped skills, writing skills,
+  maintainer workflows, mechanical truth, and hook surfaces.
+- Later refresh PRs keep audit packets aligned when completed follow-ups make
+  old recommendations stale.
 
 Decision:
 
-- Keep the workflow unchanged for now.
-- Let the first skill-family audits test whether the rubric is too broad,
-  too soft, or missing a decision point.
+- Keep the workflow as the active route for Compass audits.
+- Update it only when actual review friction exposes a missing decision point.
 
 Recommended PR:
 
-- After auditing the loop governance skills, update the workflow only if actual
-  friction appears.
+- None now.
 
-### O7: The carried-but-not-global route is the first structural gap
+### O7: The carried-but-not-global route is wired
 
 Evidence:
 
-- `local-docs/compass-surface-inventory.md` names a carried-but-not-global gap.
-- `manifests/portable-files.toml` has global install surfaces, repo-only
-  surfaces, and local-only denylist surfaces.
-- There is no reviewed directory or manifest category for useful skills that
-  should travel with Compass but not load into every session.
+- `local-docs/carried-capabilities-design.md` defines the route, eligibility
+  test, source shape, manifest contract, demotion flow, promotion flow, project
+  opt-in, Claude handling, and doctor checks.
+- `manifests/portable-files.toml` lists `carried` as repo-only and defines
+  `[carried]` lists for Codex and Claude skills and agents.
+- `local-docs/compass-surface-inventory.md` now names the carried route as
+  current state instead of an open gap.
 
 Decision:
 
-- Do not move skills yet.
-- Design the route before pruning the global skill set.
+- Do not move skills until an audit proves a capability fails the global-install
+  test.
+- Use the carried route for useful material that should travel with Compass but
+  not load into every session.
 
 Recommended PR:
 
-- Add a carried-but-not-global design note covering directory shape, manifest
-  category, install behavior, doctor checks, Claude handling, and project opt-in.
-  See `local-docs/carried-capabilities-design.md`.
+- None now.
 
 Follow-up status:
 
@@ -209,7 +213,8 @@ git status --short --branch
 git fetch origin
 gh pr view 107 --json number,state,isDraft,mergeStateStatus,baseRefName,headRefName,url,title
 gh pr view 105 --json number,state,isDraft,mergeStateStatus,baseRefName,headRefName,url,title,headRefOid
-git grep -n -i "fallback\|best-effort\|compatibility\|maybe\|should\|history\|context" -- AGENTS.md README.md philosophy.md workflows/compass-review-program.md local-docs/maintenance-learnings.md
+rg -n "compass-review-program|carried|\\[carried\\]|Completed follow-ups|Audit packet" AGENTS.md README.md workflows local-docs manifests\portable-files.toml
+Select-String -Path manifests\portable-files.toml -Pattern "\\[carried\\]|carried"
 ```
 
 The grep was an audit aid, not proof of quality. The audit conclusions come
