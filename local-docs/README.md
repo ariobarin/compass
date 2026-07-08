@@ -16,6 +16,9 @@ catch drift before config is copied into a live machine.
   queues for the Compass review program.
 - [compass-orientation-audit.md](compass-orientation-audit.md): first queue
   audit for Compass orientation surfaces before deeper skill and agent reviews.
+- [loop-governance-skills-audit.md](loop-governance-skills-audit.md): second
+  queue audit for the installed skills that govern goals, orchestration,
+  subagents, waiting, context cost, and root-cause discipline.
 - [carried-capabilities-design.md](carried-capabilities-design.md): design for
   useful Compass capabilities that should travel in the repo but not load into
   every session.

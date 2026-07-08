@@ -203,6 +203,8 @@ Queue 2: Loop governance skills.
 
 Purpose: strengthen the agent loops that will run the review program.
 
+Audit packet: `local-docs/loop-governance-skills-audit.md`
+
 Queue 3: PR and review surfaces.
 
 - `pr-review-loop`
