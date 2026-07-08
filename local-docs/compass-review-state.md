@@ -21,6 +21,9 @@ files before deriving new work.
 - Skill retrieval descriptions now have their own audit packet. Current
   descriptions pass source review; refresh the packet only when descriptions
   change or real retrieval noise appears.
+- Agent retrieval descriptions now have their own audit packet. Current Codex
+  and Claude descriptions are aligned; refresh the packet only when agent
+  metadata changes or real delegation noise appears.
 - Most current packets now say no immediate runtime cut is justified. Treat
   those decisions as pressure against invented edits, not as permission to stop
   reading.
@@ -59,7 +62,8 @@ Use this order:
 - Completed or no immediate cut: orientation, loop governance, PR and review
   surfaces, domain-shaped skills, creation and writing skills, maintainer
   workflows, mechanical truth, hooks, refusal-to-collapse runtime stance, and
-  benchmark result-production hardening, and skill retrieval descriptions.
+  benchmark result-production hardening, skill retrieval descriptions, and
+  agent retrieval descriptions.
 - Waiting for future evidence: first carried demotion, retired Claude cleanup,
   and any retrieval-noise or stale-procedure finding from real use.
 - External current state: draft PRs, check results, review status, branch

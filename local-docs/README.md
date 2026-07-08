@@ -25,6 +25,8 @@ catch drift before config is copied into a live machine.
   waiting, context cost, and root-cause discipline.
 - [skill-retrieval-audit.md](skill-retrieval-audit.md): audit packet for
   installed skill descriptions as retrieval context.
+- [agent-retrieval-audit.md](agent-retrieval-audit.md): audit packet for
+  installed agent descriptions as delegation context.
 - [subagent-pruning-audit.md](subagent-pruning-audit.md): focused comparison
   of `subagent-driven-development` against `orchestration-controller` before
   pruning overlapping controller language.
