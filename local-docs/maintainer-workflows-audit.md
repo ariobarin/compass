@@ -26,14 +26,14 @@ skill homes, or Claude homes.
 
 Line counts:
 
-- `addition-intake.md`: 139
-- `agent-failures.md`: 136
+- `addition-intake.md`: 142
+- `agent-failures.md`: 138
 - `claude-config.md`: 73
 - `codex-restart-recovery.md`: 79
-- `compass-review-program.md`: 180
+- `compass-review-program.md`: 204
 - `multi-thread-pr-coordination.md`: 102
-- `plan-template.md`: 64
-- `portable-config.md`: 173
+- `plan-template.md`: 56
+- `portable-config.md`: 174
 - `read-only-research.md`: 50
 - `which-llm-plugin.md`: 72
 
@@ -81,33 +81,28 @@ followed.
 No immediate edit is needed, but future entries should remain rare and should
 name the route they produced.
 
-### Audit `plan-template.md` Next
+### Keep `plan-template.md` Narrow
 
-`plan-template.md` is the weakest fit in the workflow set.
+`plan-template.md` had to justify itself because Compass already has stronger
+planning surfaces:
 
-The repository now has stronger planning surfaces:
-
-- normal Plan mode and `update_plan` for interactive work;
+- Plan mode and `update_plan` for interactive work;
 - `using-codex-goals` for durable goal contracts;
 - `workflows/compass-review-program.md` for the Compass audit loop;
 - focused workflows for exact operations.
 
-That does not prove `plan-template.md` should be removed. It may still be useful
-as a written artifact shape for shared or risky work. But it now needs to earn
-its place. A template that exists because planning is generally useful is weak.
-A template that exists because Compass sometimes needs a durable plan artifact
-is stronger.
+The file now earns its place only as a written artifact shape:
 
-Completed follow-up: `plan-template.md` was revised rather than retired.
+- it is repo-maintainer guidance, not runtime behavior;
+- it tells agents not to use it for normal in-chat planning;
+- it points interactive work to Plan mode or `update_plan`;
+- it points durable Codex goals to `using-codex-goals`;
+- it says to use this template only when a plan itself is an artifact.
 
-The review question should be:
+Decision:
 
-```text
-Does Compass need a repo-local written plan artifact shape that is distinct
-from interactive Plan mode and durable Codex goals?
-```
-
-If yes, narrow the file to that job. If no, remove it and update workflow links.
+- Keep `plan-template.md` as a narrow written plan artifact shape.
+- Do not let it compete with interactive planning or durable goal contracts.
 
 - Completed by the plan-template PR. The file stayed, but it is narrowed to a
   repo-local written plan artifact shape, not a competing planning or goal
@@ -130,3 +125,22 @@ Completed focused PR for `plan-template.md`:
 - updated `portable-config.md`, `local-docs/README.md`, and the surface
   inventory if links change;
 - ran `.\scripts\doctor.ps1`.
+
+## Verification
+
+Commands used while refreshing this audit:
+
+```powershell
+Get-Content -Raw workflows\plan-template.md
+rg -n "plan-template|written plan|Plan mode|using-codex-goals|durable goal|repo-local" workflows local-docs README.md AGENTS.md
+(Get-Content workflows\addition-intake.md).Count
+(Get-Content workflows\agent-failures.md).Count
+(Get-Content workflows\claude-config.md).Count
+(Get-Content workflows\codex-restart-recovery.md).Count
+(Get-Content workflows\compass-review-program.md).Count
+(Get-Content workflows\multi-thread-pr-coordination.md).Count
+(Get-Content workflows\plan-template.md).Count
+(Get-Content workflows\portable-config.md).Count
+(Get-Content workflows\read-only-research.md).Count
+(Get-Content workflows\which-llm-plugin.md).Count
+```
