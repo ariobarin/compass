@@ -156,6 +156,12 @@ else {
             if (-not (Test-Path -LiteralPath $source)) {
                 $problems.Add("claude derived agent source missing from codex agents: $agent")
             }
+            else {
+                $tomlValues = Get-TopLevelTomlStringValues -Text (Get-Content -Raw -LiteralPath $source)
+                if (-not $tomlValues["developer_instructions"]) {
+                    $problems.Add("claude derived agent source missing developer_instructions: $agent")
+                }
+            }
 
             $claudeSource = Join-Path (Join-Path (Join-Path $repoRoot "claude") "agents") "$agent.md"
             if (Test-Path -LiteralPath $claudeSource) {
