@@ -73,6 +73,7 @@ skills = [
 derived_skills = [
   "input-token-economy",
   "monitor-to-completion",
+  "root-cause-not-symptom",
 ]
 
 agents = [
