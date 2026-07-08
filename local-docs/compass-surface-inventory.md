@@ -240,6 +240,8 @@ Queue 4: Domain-shaped skills.
 Purpose: decide what deserves global install, what should be carried, and what
 needs pruning for audience fit.
 
+Audit packet: `local-docs/domain-shaped-skills-audit.md`
+
 Queue 5: Creation and writing skills.
 
 - `grill-me`
