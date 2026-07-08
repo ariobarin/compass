@@ -112,9 +112,10 @@ skill, and Claude homes.
 and user skill home. It does not yet model retired Claude skills or agents.
 
 That is not a bug today because no current change removes a Claude-installed
-skill or agent. It remains a future demotion risk. The first PR that removes a
-Claude installed surface should add explicit retired Claude handling in the same
-change, with `verify-live.ps1 -SkipCodexCommand -RequireInSync` as evidence.
+skill or agent. It remains a future removal gate. The first PR that removes or
+demotes a Claude-installed surface must add explicit retired Claude handling in
+the same change, with `verify-live.ps1 -SkipCodexCommand -RequireInSync` as
+evidence.
 
 Do not add broad deletion logic. Retired removals should stay explicit.
 
