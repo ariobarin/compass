@@ -271,6 +271,26 @@ runtime behavior, stale history storage, or process-shaped bloat.
 
 Audit packet: `local-docs/maintainer-workflows-audit.md`
 
+Queue 7: Mechanical truth.
+
+- `manifests/portable-files.toml`
+- `manifests/tool-surfaces.md`
+- `codex/config.review.toml`
+- `scripts/common.ps1`
+- `scripts/doctor.ps1`
+- `scripts/install.ps1`
+- `scripts/verify-live.ps1`
+- `scripts/update-live.ps1`
+- `scripts/diff-live.ps1`
+- `scripts/snapshot.ps1`
+- `scripts/codex-restart-recovery.ps1`
+- `scripts/doctor/checks/*.ps1`
+
+Purpose: make sure Compass boundaries are checked by scripts and manifests
+instead of remembered by future agents.
+
+Audit packet: `local-docs/mechanical-truth-audit.md`
+
 ## Inventory Maintenance
 
 Update this file when:

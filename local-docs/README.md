@@ -32,6 +32,8 @@ catch drift before config is copied into a live machine.
 - [maintainer-workflows-audit.md](maintainer-workflows-audit.md): audit for
   repo-local workflows that guide Compass maintenance without entering runtime
   context.
+- [mechanical-truth-audit.md](mechanical-truth-audit.md): audit for manifests,
+  scripts, doctor checks, live verification, and reviewed config fragments.
 - [carried-capabilities-design.md](carried-capabilities-design.md): design for
   useful Compass capabilities that should travel in the repo but not load into
   every session.
