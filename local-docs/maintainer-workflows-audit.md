@@ -1,6 +1,6 @@
 # Maintainer Workflows Audit
 
-This audit covers the repo-local workflow set listed in
+This audit packet covers the repo-local workflow set listed in
 `local-docs/compass-surface-inventory.md`.
 
 Scope:
@@ -18,6 +18,13 @@ Scope:
 
 Purpose: ensure maintainer workflows route Compass work without becoming
 runtime behavior, stale history storage, or process-shaped bloat.
+
+Packet status:
+
+- Refreshed after the plan-template follow-up landed.
+- Use current workflow files, local-doc links, inventory state, and open PR
+  stack state before deriving new work from this packet.
+- Treat verification commands as audit history, not current proof.
 
 ## Current Shape
 
