@@ -33,8 +33,8 @@ under `claude/skills/`.
 
 ## Latest-to-live flow
 
-Use `.\scripts\update-live.ps1` when the live Codex home and user skill home
-should track the latest reviewed portable setup from `origin/main`.
+Use `.\scripts\update-live.ps1` when the live Codex home, user skill home, and
+Claude home should track the latest reviewed portable setup from `origin/main`.
 
 The script refuses dirty checkouts, fetches the remote branch, fast-forwards the
 local branch only when Git can do so without a merge, refuses to overwrite

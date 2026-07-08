@@ -82,23 +82,22 @@ depend on memory.
 
 No change is needed now.
 
-### Fix Stale Snapshot Output
+### Snapshot Output Must Name Every Source
 
 `snapshot.ps1` already reads the shared portable map, so it plans Codex,
 user-skill, and Claude snapshots.
 
-Its review-mode final instruction still says:
+The review-mode final instruction must name all three source homes:
 
 ```text
-run with -Apply to refresh this repo from the live Codex home and user skill home
+run with -Apply to refresh this repo from the live Codex home, user skill home, and Claude home
 ```
 
-That is stale. The command now also includes Claude home. This is small, but it
-matters because script output is a maintainer instruction at the moment of
-action.
+Script output is a maintainer instruction at the moment of action. If it names
+only part of the copy map, it teaches the wrong boundary.
 
-Follow-up PR: update the `snapshot.ps1` review-mode message to name Codex,
-user skill, and Claude homes.
+Follow-up status: the current stack updates the `snapshot.ps1` review-mode
+message to name Codex, user skill, and Claude homes.
 
 ### Track Retired Claude Cleanup Before It Is Needed
 
@@ -127,13 +126,14 @@ No change is needed now.
 - Keep text policy mechanical.
 - Keep `config.review.toml` as a fragment, with targeted live verification for
   agent depth.
-- Fix the stale `snapshot.ps1` review-mode message in a separate focused PR.
+- Keep the `snapshot.ps1` review-mode message aligned with the portable map.
 - Add retired Claude cleanup only when a Claude-installed surface is removed.
 
 ## Next PR Boundary
 
-Make one focused script PR:
+The focused script PR should prove:
 
-- update `scripts/snapshot.ps1` review-mode wording;
-- run `.\scripts\doctor.ps1`;
-- run `.\scripts\snapshot.ps1` and inspect the message.
+- `scripts/snapshot.ps1` review-mode wording names Codex, user skill, and
+  Claude homes;
+- `.\scripts\doctor.ps1` passes;
+- `.\scripts\snapshot.ps1` prints the aligned message.
