@@ -1,6 +1,15 @@
 # Hook Surfaces Audit
 
-This audit covers Compass-owned Codex hooks.
+This audit packet covers Compass-owned Codex hooks.
+
+Packet status:
+
+- Refreshed after hook inventory follow-ups landed.
+- Use current hook definitions, guard modules, hook-local docs, doctor checks,
+  live drift, and open PR stack state before deriving new work from this
+  packet.
+- Treat the hook findings as completed audit context unless current source
+  proves a new gap.
 
 Scope:
 
