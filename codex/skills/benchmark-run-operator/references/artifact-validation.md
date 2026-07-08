@@ -13,10 +13,20 @@ A task result is countable only when:
 - The runner did not crash.
 - There is no stale-runner marker.
 - There is no known infra marker making the row invalid.
+- No ancestor directory, sibling marker, task log, or launcher log marks the row
+  as excluded from strict counts.
+- Related task logs have been checked for missing-tool, wrong-route, timeout,
+  traceback, bad-parameter, connection, auth, or forced-stop evidence.
 - The row belongs to the intended run label and arm.
+- The row is de-duplicated by the intended unit, usually arm plus task id, not by
+  raw file count.
 
 For WebOperator-style result directories, do not count a task until
 `summary_info.json` exists.
+
+A clean zero-reward or max-step terminal row can be a valid task failure. A row
+with infrastructure poison is invalid recovery work even when a terminal
+summary exists.
 
 ## Error Taxonomy
 
@@ -35,8 +45,17 @@ Group by exact strings such as:
 - Max steps.
 - Task timeout.
 - Grader failure.
+- Missing tool or wrong route.
+- Bad parameter.
+- Forced stop after user pause.
+- Launch failure before task execution.
 
 Filter progress-only lines before sampling logs.
+
+Keep invalid categories descriptive until a target report adopts final names.
+The important split is whether the row is a valid task failure, recoverable
+infrastructure failure, failed launch, forced interruption, unscored terminal
+artifact, or protocol-unsafe rerun candidate.
 
 ## Missing-Task Recovery
 
@@ -79,6 +98,9 @@ Before reporting:
 - Separate invalid, unpaired, unscored, rerun, and rescore rows.
 - Rebuild final CSVs and summaries from the current artifacts.
 - Spot-check that top-line numbers match source rows.
+- Name the denominator unit before reporting a headline. Raw file count, copied
+  summary count, task-attempt count, valid task count, and paired arm-task count
+  can all differ.
 
 ## Report Shape
 

@@ -11,6 +11,11 @@ catch drift before config is copied into a live machine.
 
 - [maintenance-learnings.md](maintenance-learnings.md): local principles for
   making useful changes to Compass without bloating the portable setup.
+- [benchmark-thread-019f2412-learnings.md](benchmark-thread-019f2412-learnings.md):
+  repo-local candidate lessons from the A3 9B benchmark control thread.
+- [benchmark-thread-019f2412-references.md](benchmark-thread-019f2412-references.md):
+  reviewed evidence extracts for the same benchmark thread, kept out of installed
+  runtime behavior.
 - [../workflows/addition-intake.md](../workflows/addition-intake.md): promotion
   flow for new repo-maintenance workflows, installed skills and agents,
   repo-side scripts and manifests, and config fragments. Workflows guide repo

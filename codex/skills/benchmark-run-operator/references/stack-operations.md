@@ -41,6 +41,8 @@ Before editing or launching:
 For WebMCP and WebOperator-style runs:
 
 - Mirror an existing proven overlay before inventing a new one.
+- Prefer an active parent command line, launch record, or known-good repair
+  script over assumptions from the current checkout name.
 - Use a dedicated compose file or stack map.
 - Use a dedicated result root and log root.
 - Use unique host ports.
@@ -79,6 +81,10 @@ For OSM-heavy stacked services:
 - Timeout and step cap are equal across arms.
 - Result roots are empty or intentionally resumed.
 - Launcher metadata records run label, arms, task set, timeout, model, and stack.
+- Derived ports are inside the valid range and every proxy or same-origin
+  listener has a live upstream service.
+- Child command lines match the intended launcher, label, task slice, and result
+  root before rows are treated as countable.
 
 ## Monitoring
 
@@ -94,6 +100,9 @@ Report:
 - Dominant exact error strings.
 - Whether a heartbeat, wakeup, or other monitor is attached.
 - Whether rows are still being produced.
+- Observed strict valid-row pace over a named window when deadline pressure
+  matters.
+- Required strict valid-row pace for any user-stated deadline.
 
 Do not infer completion from one scheduler code. Check scheduled task state,
 active workers, child processes, and result-root growth.
@@ -109,6 +118,10 @@ comparable. Stop only the poisoned slice. Keep unrelated arms, sites, workers,
 or recovery labels moving only when their evidence remains comparable and
 attributable.
 
+If a poisoned child keeps refilling from the same parent, stop the child first
+and preserve evidence. Stop the parent only when repeated refills prove the lane
+itself is no longer a clean spend path.
+
 ## Pause And Cleanup
 
 Pause only the owned run unless the user asks for broader cleanup:
@@ -118,6 +131,10 @@ Pause only the owned run unless the user asks for broader cleanup:
 - Confirm unrelated WebOperator, WebMCP, or benchmark stacks remain untouched.
 - Confirm no benchmark Python or browser workers for that run remain.
 - Preserve result roots and logs for triage.
+- Remove only owned, unused stack residue. For Docker networks, verify zero
+  attached containers before removal.
+- Record container, process, and result-root evidence before and after cleanup
+  when cleanup changes benchmark state.
 
 If infra degradation is producing invalid rows, pause the smallest poisoned
 slice before it corrupts provenance or comparability, then diagnose and repair

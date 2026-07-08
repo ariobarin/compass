@@ -12,6 +12,7 @@ completion predicates.
 - Worker Goal Template
 - Monitor Goal Template
 - Blocker Pressure
+- Pause And Stop Authority
 - Subagent Slice Template
 - Child Goal Activation Snippet
 - Delegation Flow
@@ -30,6 +31,7 @@ Out of scope:
 Evidence required:
 If waiting on external state:
 If stuck or failing:
+If paused or stopped:
 Subagents:
 ```
 
@@ -67,6 +69,7 @@ Out of scope:
 Evidence required:
 If waiting:
 If stuck or failing:
+If paused or stopped:
 Subagents:
 ```
 
@@ -90,6 +93,7 @@ Out of scope:
 Evidence required:
 If waiting:
 If stuck or failing:
+If paused or stopped:
 Subagents:
 ```
 
@@ -120,6 +124,9 @@ Evidence required: process table, artifact counts, terminal summaries, exact
 If stuck or failing: keep healthy comparable slices moving when safe, preserve
   evidence, identify the smallest poisoned slice, and ask the controller only
   for a benchmark-validity decision that cannot be made locally.
+If paused or stopped: stop only owned work, preserve logs and artifact roots,
+  neutralize monitors that would restart the run, and return a resume packet
+  without declaring parent completion.
 ```
 
 ## Monitor Goal Template
@@ -135,6 +142,7 @@ Out of scope:
 Evidence required:
 If waiting:
 If stuck or failing:
+If paused or stopped:
 Subagents:
 ```
 
@@ -165,6 +173,27 @@ Strong contracts tell the worker what to do when stuck:
 
 Stuck is not a place to rest. It is pressure to convert uncertainty into the
 next local action, a better owner, or a proven external dependency.
+
+## Pause And Stop Authority
+
+An explicit user pause or stop overrides monitor prompts, heartbeat prompts, and
+older continuation instructions. It does not prove the original objective is
+complete.
+
+When a live goal is paused:
+
+- stop only owned workers, scheduled tasks, and monitors;
+- verify no owned worker remains;
+- preserve logs, result roots, PR state, or other resume evidence;
+- mark interrupted artifacts out of strict result counts when applicable;
+- write a resume packet with stopped process ids, roots, counts, and next safe
+  action;
+- do not call the parent objective complete unless the user accepts the paused
+  state as the endpoint;
+- do not call it blocked solely because execution is paused.
+
+If the tool surface has no paused status, leave the goal contract honest in the
+turn output and prevent automation from restarting the stopped work.
 
 ## Subagent Slice Template
 
