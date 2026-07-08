@@ -21,7 +21,7 @@ runtime behavior, stale history storage, or process-shaped bloat.
 
 Packet status:
 
-- Refreshed after the plan-template follow-up landed.
+- Refreshed after the review-program gate follow-up landed.
 - Use current workflow files, local-doc links, inventory state, and open PR
   stack state before deriving new work from this packet.
 - Treat verification commands as audit history, not current proof.
@@ -37,7 +37,7 @@ Line counts:
 - `agent-failures.md`: 138
 - `claude-config.md`: 73
 - `codex-restart-recovery.md`: 79
-- `compass-review-program.md`: 204
+- `compass-review-program.md`: 219
 - `multi-thread-pr-coordination.md`: 102
 - `plan-template.md`: 56
 - `portable-config.md`: 174
@@ -70,9 +70,14 @@ They mostly route action rather than explain taste. No broad rewrite is needed.
 `compass-review-program.md` is the root workflow for this goal. It is long, but
 the length earns its place: it defines the review stance, inventory pass,
 runtime audit questions, maintainer audit questions, skill-set audit, pruning
-standard, PR rhythm, and stop conditions.
+standard, PR rhythm, review gate, and stop conditions.
 
 No pruning is needed now. It should stay as maintainer context.
+
+The review gate is repo-maintainer workflow guidance, not installed runtime
+behavior. It makes green draft PRs build evidence rather than readiness, then
+routes final readiness through live PR state, stacked-base checks, current-head
+review gates, and `pr-review-loop`.
 
 ### Keep `agent-failures.md`, But Cap Its Job
 
@@ -120,18 +125,19 @@ Decision:
 - Keep the workflow directory as repo-maintainer context.
 - Do not move any workflow into installed runtime guidance.
 - Do not rewrite exact operating workflows now.
+- Keep the Compass review-program gate in repo-local workflow guidance.
 - Keep `agent-failures.md` as a failure-to-guidance journal, not a general log.
 - Keep `plan-template.md` as a narrow written artifact shape.
 
 ## Completed PR Boundary
 
-Completed focused PR for `plan-template.md`:
+Completed focused PRs:
 
-- read its current callers and links;
-- decided to revise instead of retire it;
-- updated `portable-config.md`, `local-docs/README.md`, and the surface
-  inventory if links change;
-- ran `.\scripts\doctor.ps1`.
+- `plan-template.md` was narrowed to a written plan artifact shape after
+  reading its current callers and links.
+- `compass-review-program.md` gained a review gate that keeps green draft PRs
+  separate from readiness and routes final readiness through `pr-review-loop`.
+- `.\scripts\doctor.ps1` passed for both focused changes.
 
 ## Verification
 
