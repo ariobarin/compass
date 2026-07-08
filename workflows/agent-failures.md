@@ -90,10 +90,14 @@ downstream effects: the repository accumulated draft PRs with unclear review
 evidence: audit tracker PRs had to be folded, closed, or rebuilt into focused
   reviewable changes.
 root cause category: workflow mismatch
-fix made: added workflows/multi-thread-pr-coordination.md and ignored root
-  .local scratch tracking while keeping tracked .local files blocked by doctor.
+fix made: added workflows/multi-thread-pr-coordination.md, ignored root .local
+  scratch tracking while keeping tracked .local files blocked by doctor, and
+  added the Compass review-program gate so green draft PRs do not count as
+  readiness without live PR state, stacked-base checks, merge order, and
+  current-head review gates.
 verification: run .\scripts\doctor.ps1 and verify .local scratch files stay
-  ignored while forced-tracked .local files fail.
+  ignored while forced-tracked .local files fail; for review-program changes,
+  run .\scripts\doctor.ps1 and check the PR's current-head status.
 should become durable guidance: yes, as repo-maintainer workflow guidance and
   a local scratch check, not as a global rule for every PR.
 ```
