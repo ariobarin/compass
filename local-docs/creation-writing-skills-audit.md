@@ -140,6 +140,7 @@ Completed runtime PR:
 - changed `codex/skills/write-a-skill/SKILL.md`;
 - changed `claude/skills/write-a-skill/SKILL.md`;
 - added the carried-but-not-global route;
+- made `git diff --check` part of the skill-authoring verification gate;
 - replaced the `origin/main` diff-check assumption with actual-base wording;
 - ran skill validation and `doctor.ps1`.
 
