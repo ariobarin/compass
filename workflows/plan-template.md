@@ -3,9 +3,9 @@
 Use this template only when Compass needs a written plan artifact that will be
 reviewed, handed off, or kept with repo-local evidence.
 
-This is repo-maintainer guidance and is not installed into a live Codex home or
-user skill home.
-Put reusable agent behavior in `codex/agents/` or `codex/skills/` instead.
+This is repo-maintainer guidance and is not installed into a live Codex home,
+user skill home, or Claude home.
+Put reusable agent behavior in installed agents or skills instead.
 
 Do not use this for normal in-chat planning. Prefer Plan mode or `update_plan`
 when the work is interactive. Use `using-codex-goals` when the user asks for a

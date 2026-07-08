@@ -53,4 +53,4 @@ catch drift before config is copied into a live machine.
 
 Local docs may describe practices, tradeoffs, and repo maintenance habits. They
 should not contain secrets, machine-specific runtime paths, generated plugin
-state, or instructions that must apply to every Codex session.
+state, or instructions that must apply to every agent session.

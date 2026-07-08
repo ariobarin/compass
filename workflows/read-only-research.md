@@ -4,10 +4,10 @@ Use this workflow when the next best step is understanding rather than editing:
 large repo orientation, unclear bug ownership, unfamiliar runtime paths, branch
 reviews, API discovery, or workflow tracing.
 
-This is repo-maintainer guidance. It is not installed into a live Codex home or
-user skill home.
-Use installed agents or skills when the behavior should travel with live Codex
-sessions.
+This is repo-maintainer guidance. It is not installed into a live Codex home,
+user skill home, or Claude home.
+Use installed agents or skills when the behavior should travel with future
+agent sessions.
 
 ## When To Use
 
