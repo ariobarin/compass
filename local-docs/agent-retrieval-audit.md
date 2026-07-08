@@ -7,15 +7,15 @@ controller can see before it reads the agent body.
 Packet status:
 
 - Created after reviewing current Codex agent descriptions, Claude agent
-  frontmatter, manifest-listed agents, and #184 review-gate state.
-- Use current agent metadata and `manifests/portable-files.toml` before
-  deriving any routing edit from this packet.
+  frontmatter, install surfaces, and #184 review-gate state.
+- Use current agent metadata, `codex/agents/`, and
+  `manifests/portable-files.toml` before deriving any routing edit from this
+  packet.
 - Treat verification commands as audit history, not current proof.
 
 ## Scope
 
-Codex agents listed under `[claude].agents` and installed under
-`codex/agents/`:
+Codex agents installed from `codex/agents/` through `[codex].dirs`:
 
 - `algorithm-critic`
 - `neutral-critic`
@@ -25,7 +25,8 @@ Codex agents listed under `[claude].agents` and installed under
 - `reviewer`
 - `verifier`
 
-Claude mirrors under `claude/agents/`:
+Claude mirror agents listed under `[claude].agents` and installed under
+`claude/agents/`:
 
 - `algorithm-critic`
 - `neutral-critic`
