@@ -161,6 +161,8 @@ Current state:
 - There is no dedicated carried-but-not-global skill area yet.
 - No skill should be moved there until the route is designed and reviewed.
 
+Design packet: `local-docs/carried-capabilities-design.md`
+
 Route design questions:
 
 - What directory should hold carried skills or agents?

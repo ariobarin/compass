@@ -174,6 +174,7 @@ Recommended PR:
 
 - Add a carried-but-not-global design note covering directory shape, manifest
   category, install behavior, doctor checks, Claude handling, and project opt-in.
+  See `local-docs/carried-capabilities-design.md`.
 
 ## Next PR Boundaries
 

@@ -16,6 +16,9 @@ catch drift before config is copied into a live machine.
   queues for the Compass review program.
 - [compass-orientation-audit.md](compass-orientation-audit.md): first queue
   audit for Compass orientation surfaces before deeper skill and agent reviews.
+- [carried-capabilities-design.md](carried-capabilities-design.md): design for
+  useful Compass capabilities that should travel in the repo but not load into
+  every session.
 - [../workflows/addition-intake.md](../workflows/addition-intake.md): promotion
   flow for new repo-maintenance workflows, installed skills and agents,
   repo-side scripts and manifests, and config fragments. Workflows guide repo
