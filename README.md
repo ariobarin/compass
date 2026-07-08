@@ -46,7 +46,7 @@ files or proposing changes.
   are not installed into a live Codex home or user skill home.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
   Use `workflows/compass-review-program.md` when auditing installed skills,
-  agents, and maintainer guidance for pruning or rerouting.
+  agents, hooks, and maintainer guidance for pruning or rerouting.
   Use `workflows/codex-restart-recovery.md` for restart-only recovery of
   unfinished local Codex sessions.
   Use `workflows/which-llm-plugin.md` for the durable `which-llm` plugin

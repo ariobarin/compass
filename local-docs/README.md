@@ -12,8 +12,8 @@ catch drift before config is copied into a live machine.
 - [maintenance-learnings.md](maintenance-learnings.md): local principles for
   making useful changes to Compass without bloating the portable setup.
 - [compass-surface-inventory.md](compass-surface-inventory.md): current map of
-  installed skills, agents, maintainer surfaces, mechanical checks, and audit
-  queues for the Compass review program.
+  installed skills, agents, hooks, maintainer surfaces, mechanical checks, and
+  audit queues for the Compass review program.
 - [compass-orientation-audit.md](compass-orientation-audit.md): first queue
   audit for Compass orientation surfaces before deeper skill and agent reviews.
 - [loop-governance-skills-audit.md](loop-governance-skills-audit.md): second
@@ -44,8 +44,8 @@ catch drift before config is copied into a live machine.
   repo-side scripts and manifests, and config fragments. Workflows guide repo
   maintenance and are not installed into a live Codex home or user skill home.
 - [../workflows/compass-review-program.md](../workflows/compass-review-program.md):
-  audit method for reviewing installed skills, agents, and maintainer guidance
-  for audience fit, pruning, rerouting, and global-install eligibility.
+  audit method for reviewing installed skills, agents, hooks, and maintainer
+  guidance for audience fit, pruning, rerouting, and global-install eligibility.
 
 ## Boundary
 

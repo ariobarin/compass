@@ -1,6 +1,6 @@
 # Compass Review Program
 
-Use this workflow when auditing Compass itself: installed skills, agents,
+Use this workflow when auditing Compass itself: installed skills, agents, hooks,
 maintainer docs, workflows, manifests, scripts, and reviewed config. The work is
 slow by design. Do not one-shot the repo.
 

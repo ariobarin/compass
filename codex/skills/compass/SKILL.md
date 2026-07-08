@@ -1,6 +1,6 @@
 ---
 name: compass
-description: Maintain Compass durable setup. Use when editing installed skills or agents, repo workflows, manifests, scripts, or install wiring.
+description: Maintain Compass durable setup. Use when editing installed skills, agents, hooks, repo workflows, manifests, scripts, or install wiring.
 ---
 
 # Compass
@@ -31,7 +31,7 @@ guidance for a capability Compass can provide.
 - Read `workflows/addition-intake.md` before adding rules, skills, agents,
   workflows, scripts, manifests, or config fragments.
 - Read `workflows/compass-review-program.md` before auditing or pruning
-  installed skills, agents, or maintainer guidance.
+  installed skills, agents, hooks, or maintainer guidance.
 
 ## Route Changes
 
