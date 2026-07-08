@@ -48,129 +48,94 @@ if (-not $claudeSectionMatch.Success) {
     $problems.Add("missing claude section in portable manifest")
 }
 else {
-    $section = $claudeSectionMatch.Groups[1].Value
-    $claudeSkillsMatch = [regex]::Match($section, "(?ms)^\s*skills\s*=\s*\[(.*?)^\s*\]")
-    $claudeDerivedSkillsMatch = [regex]::Match($section, "(?ms)^\s*derived_skills\s*=\s*\[(.*?)^\s*\]")
-    $claudeAgentsMatch = [regex]::Match($section, "(?ms)^\s*agents\s*=\s*\[(.*?)^\s*\]")
-    $claudeDerivedAgentsMatch = [regex]::Match($section, "(?ms)^\s*derived_agents\s*=\s*\[(.*?)^\s*\]")
+    $manifestClaudeSkills = @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "skills" | Sort-Object -Unique)
+    $manifestClaudeDerivedSkills = @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "derived_skills" | Sort-Object -Unique)
+    $manifestClaudeAgents = @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "agents" | Sort-Object -Unique)
+    $manifestClaudeDerivedAgents = @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "derived_agents" | Sort-Object -Unique)
 
-    if (-not $claudeSkillsMatch.Success) {
+    if ($manifestClaudeSkills.Count -eq 0) {
         $problems.Add("missing claude skills list in portable manifest")
     }
 
-    if (-not $claudeAgentsMatch.Success) {
+    if ($manifestClaudeAgents.Count -eq 0) {
         $problems.Add("missing claude agents list in portable manifest")
     }
 
-    $manifestClaudeSkills = @()
-    if ($claudeSkillsMatch.Success) {
-        $manifestClaudeSkills = @(
-            [regex]::Matches($claudeSkillsMatch.Groups[1].Value, '"([^"]+)"') |
-                ForEach-Object { $_.Groups[1].Value } |
-                Sort-Object -Unique
-        )
+    $diskClaudeSkills = @(
+        Get-ChildItem -Path (Join-Path $claudeRoot "skills") -Directory -ErrorAction SilentlyContinue |
+            ForEach-Object { $_.Name } |
+            Sort-Object -Unique
+    )
 
-        $diskClaudeSkills = @(
-            Get-ChildItem -Path (Join-Path $claudeRoot "skills") -Directory -ErrorAction SilentlyContinue |
-                ForEach-Object { $_.Name } |
-                Sort-Object -Unique
-        )
-
-        foreach ($skill in $manifestClaudeSkills) {
-            if ($diskClaudeSkills -notcontains $skill) {
-                $problems.Add("claude skill in manifest missing from disk: $skill")
-            }
-        }
-
-        foreach ($skill in $diskClaudeSkills) {
-            if ($manifestClaudeSkills -notcontains $skill) {
-                $problems.Add("claude skill on disk missing from manifest: $skill")
-            }
+    foreach ($skill in $manifestClaudeSkills) {
+        if ($diskClaudeSkills -notcontains $skill) {
+            $problems.Add("claude skill in manifest missing from disk: $skill")
         }
     }
 
-    if ($claudeDerivedSkillsMatch.Success) {
-        $manifestClaudeDerivedSkills = @(
-            [regex]::Matches($claudeDerivedSkillsMatch.Groups[1].Value, '"([^"]+)"') |
-                ForEach-Object { $_.Groups[1].Value } |
-                Sort-Object -Unique
-        )
-
-        foreach ($skill in $manifestClaudeDerivedSkills) {
-            if ($manifestClaudeSkills -contains $skill) {
-                $problems.Add("claude skill listed as direct and derived: $skill")
-            }
-
-            $source = Join-Path (Join-Path (Join-Path $repoRoot "codex") "skills") $skill
-            if (-not (Test-Path -LiteralPath (Join-Path $source "SKILL.md"))) {
-                $problems.Add("claude derived skill source missing from codex skills: $skill")
-            }
-
-            $claudeSource = Join-Path (Join-Path (Join-Path $repoRoot "claude") "skills") $skill
-            if (Test-Path -LiteralPath $claudeSource) {
-                $problems.Add("claude derived skill also has source mirror: $skill")
-            }
+    foreach ($skill in $diskClaudeSkills) {
+        if ($manifestClaudeSkills -notcontains $skill) {
+            $problems.Add("claude skill on disk missing from manifest: $skill")
         }
     }
 
-    $manifestClaudeAgents = @()
-    if ($claudeAgentsMatch.Success) {
-        $manifestClaudeAgents = @(
-            [regex]::Matches($claudeAgentsMatch.Groups[1].Value, '"([^"]+)"') |
-                ForEach-Object { $_.Groups[1].Value } |
-                Sort-Object -Unique
-        )
-
-        $diskClaudeAgents = @(
-            Get-ChildItem -Path (Join-Path $claudeRoot "agents") -File -Filter "*.md" -ErrorAction SilentlyContinue |
-                ForEach-Object { [System.IO.Path]::GetFileNameWithoutExtension($_.Name) } |
-                Sort-Object -Unique
-        )
-
-        foreach ($agent in $manifestClaudeAgents) {
-            if ($diskClaudeAgents -notcontains $agent) {
-                $problems.Add("claude agent in manifest missing from disk: $agent")
-            }
+    foreach ($skill in $manifestClaudeDerivedSkills) {
+        if ($manifestClaudeSkills -contains $skill) {
+            $problems.Add("claude skill listed as direct and derived: $skill")
         }
 
-        foreach ($agent in $diskClaudeAgents) {
-            if ($manifestClaudeAgents -notcontains $agent) {
-                $problems.Add("claude agent on disk missing from manifest: $agent")
-            }
+        $source = Join-Path (Join-Path (Join-Path $repoRoot "codex") "skills") $skill
+        if (-not (Test-Path -LiteralPath (Join-Path $source "SKILL.md"))) {
+            $problems.Add("claude derived skill source missing from codex skills: $skill")
+        }
+
+        $claudeSource = Join-Path (Join-Path (Join-Path $repoRoot "claude") "skills") $skill
+        if (Test-Path -LiteralPath $claudeSource) {
+            $problems.Add("claude derived skill also has source mirror: $skill")
         }
     }
 
-    if ($claudeDerivedAgentsMatch.Success) {
-        $manifestClaudeDerivedAgents = @(
-            [regex]::Matches($claudeDerivedAgentsMatch.Groups[1].Value, '"([^"]+)"') |
-                ForEach-Object { $_.Groups[1].Value } |
-                Sort-Object -Unique
-        )
+    $diskClaudeAgents = @(
+        Get-ChildItem -Path (Join-Path $claudeRoot "agents") -File -Filter "*.md" -ErrorAction SilentlyContinue |
+            ForEach-Object { [System.IO.Path]::GetFileNameWithoutExtension($_.Name) } |
+            Sort-Object -Unique
+    )
 
-        foreach ($agent in $manifestClaudeDerivedAgents) {
-            if ($manifestClaudeAgents -contains $agent) {
-                $problems.Add("claude agent listed as direct and derived: $agent")
-            }
+    foreach ($agent in $manifestClaudeAgents) {
+        if ($diskClaudeAgents -notcontains $agent) {
+            $problems.Add("claude agent in manifest missing from disk: $agent")
+        }
+    }
 
-            $source = Join-Path (Join-Path (Join-Path $repoRoot "codex") "agents") "$agent.toml"
-            if (-not (Test-Path -LiteralPath $source)) {
-                $problems.Add("claude derived agent source missing from codex agents: $agent")
-            }
-            else {
-                $tomlValues = Get-TopLevelTomlStringValues -Text (Get-Content -Raw -LiteralPath $source)
-                if (-not $tomlValues["developer_instructions"]) {
-                    $problems.Add("claude derived agent source missing developer_instructions: $agent")
-                }
-            }
+    foreach ($agent in $diskClaudeAgents) {
+        if ($manifestClaudeAgents -notcontains $agent) {
+            $problems.Add("claude agent on disk missing from manifest: $agent")
+        }
+    }
 
-            $claudeSource = Join-Path (Join-Path (Join-Path $repoRoot "claude") "agents") "$agent.md"
-            if (Test-Path -LiteralPath $claudeSource) {
-                $problems.Add("claude derived agent also has source mirror: $agent")
-            }
+    foreach ($agent in $manifestClaudeDerivedAgents) {
+        if ($manifestClaudeAgents -contains $agent) {
+            $problems.Add("claude agent listed as direct and derived: $agent")
+        }
 
-            if (-not $script:ClaudeDerivedAgentFrontmatter.ContainsKey($agent)) {
-                $problems.Add("claude derived agent missing frontmatter entry: $agent")
+        $source = Join-Path (Join-Path (Join-Path $repoRoot "codex") "agents") "$agent.toml"
+        if (-not (Test-Path -LiteralPath $source)) {
+            $problems.Add("claude derived agent source missing from codex agents: $agent")
+        }
+        else {
+            $tomlValues = Get-TopLevelTomlStringValues -Text (Get-Content -Raw -LiteralPath $source)
+            if (-not $tomlValues["developer_instructions"]) {
+                $problems.Add("claude derived agent source missing developer_instructions: $agent")
             }
+        }
+
+        $claudeSource = Join-Path (Join-Path (Join-Path $repoRoot "claude") "agents") "$agent.md"
+        if (Test-Path -LiteralPath $claudeSource) {
+            $problems.Add("claude derived agent also has source mirror: $agent")
+        }
+
+        if (-not $script:ClaudeDerivedAgentFrontmatter.ContainsKey($agent)) {
+            $problems.Add("claude derived agent missing frontmatter entry: $agent")
         }
     }
 }

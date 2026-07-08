@@ -10,11 +10,11 @@ function ConvertTo-GitPath {
 function Get-ManifestRepoPaths {
     $paths = New-Object System.Collections.Generic.List[string]
 
-    foreach ($file in @(Get-ManifestArrayValues -Text $manifestText -Section "repo_only" -Key "files")) {
+    foreach ($file in @(Get-PortableManifestArray -Text $manifestText -Section "repo_only" -Key "files")) {
         $paths.Add((ConvertTo-GitPath -Path $file))
     }
 
-    foreach ($file in @(Get-ManifestArrayValues -Text $manifestText -Section "codex" -Key "files")) {
+    foreach ($file in @(Get-PortableManifestArray -Text $manifestText -Section "codex" -Key "files")) {
         $paths.Add((ConvertTo-GitPath -Path (Join-Path "codex" $file)))
     }
 
@@ -23,11 +23,11 @@ function Get-ManifestRepoPaths {
         $paths.Add((ConvertTo-GitPath -Path (Join-Path "codex" $configReviewFile)))
     }
 
-    foreach ($file in @(Get-ManifestArrayValues -Text $manifestText -Section "claude" -Key "files")) {
+    foreach ($file in @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "files")) {
         $paths.Add((ConvertTo-GitPath -Path (Join-Path "claude" $file)))
     }
 
-    foreach ($agent in @(Get-ManifestArrayValues -Text $manifestText -Section "claude" -Key "agents")) {
+    foreach ($agent in @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "agents")) {
         $paths.Add((ConvertTo-GitPath -Path (Join-Path (Join-Path "claude" "agents") "$agent.md")))
     }
 
@@ -37,23 +37,23 @@ function Get-ManifestRepoPaths {
 function Get-ManifestRepoDirPrefixes {
     $prefixes = New-Object System.Collections.Generic.List[string]
 
-    foreach ($dir in @(Get-ManifestArrayValues -Text $manifestText -Section "repo_only" -Key "dirs")) {
+    foreach ($dir in @(Get-PortableManifestArray -Text $manifestText -Section "repo_only" -Key "dirs")) {
         $prefixes.Add("$(ConvertTo-GitPath -Path $dir)/")
     }
 
-    foreach ($dir in @(Get-ManifestArrayValues -Text $manifestText -Section "codex" -Key "dirs")) {
+    foreach ($dir in @(Get-PortableManifestArray -Text $manifestText -Section "codex" -Key "dirs")) {
         $prefixes.Add("$(ConvertTo-GitPath -Path (Join-Path "codex" $dir))/")
     }
 
-    foreach ($skill in @(Get-ManifestArrayValues -Text $manifestText -Section "agents" -Key "skills")) {
+    foreach ($skill in @(Get-PortableManifestArray -Text $manifestText -Section "agents" -Key "skills")) {
         $prefixes.Add("$(ConvertTo-GitPath -Path (Join-Path (Join-Path "codex" "skills") $skill))/")
     }
 
-    foreach ($dir in @(Get-ManifestArrayValues -Text $manifestText -Section "claude" -Key "dirs")) {
+    foreach ($dir in @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "dirs")) {
         $prefixes.Add("$(ConvertTo-GitPath -Path (Join-Path "claude" $dir))/")
     }
 
-    foreach ($skill in @(Get-ManifestArrayValues -Text $manifestText -Section "claude" -Key "skills")) {
+    foreach ($skill in @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "skills")) {
         $prefixes.Add("$(ConvertTo-GitPath -Path (Join-Path (Join-Path "claude" "skills") $skill))/")
     }
 
@@ -81,7 +81,7 @@ function Get-ManifestStringValue {
     return $keyMatch.Groups[1].Value
 }
 
-$blockedNames = @(Get-ManifestArrayValues -Text $manifestText -Section "local_only" -Key "files")
+$blockedNames = @(Get-PortableManifestArray -Text $manifestText -Section "local_only" -Key "files")
 if ($blockedNames.Count -eq 0) {
     $problems.Add("missing local-only files in portable manifest")
 }
@@ -93,7 +93,7 @@ foreach ($blocked in $blockedNames) {
     }
 }
 
-$blockedPatterns = @(Get-ManifestArrayValues -Text $manifestText -Section "local_only" -Key "patterns")
+$blockedPatterns = @(Get-PortableManifestArray -Text $manifestText -Section "local_only" -Key "patterns")
 if ($blockedPatterns.Count -eq 0) {
     $problems.Add("missing local-only patterns in portable manifest")
 }
@@ -105,7 +105,7 @@ foreach ($blockedPattern in $blockedPatterns) {
     }
 }
 
-$blockedDirs = @(Get-ManifestArrayValues -Text $manifestText -Section "local_only" -Key "dirs")
+$blockedDirs = @(Get-PortableManifestArray -Text $manifestText -Section "local_only" -Key "dirs")
 if ($blockedDirs.Count -eq 0) {
     $problems.Add("missing local-only dirs in portable manifest")
 }
