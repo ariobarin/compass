@@ -95,11 +95,10 @@ For each task:
 - `DONE_WITH_CONCERNS`: read the concerns first. Resolve correctness or scope
   concerns before review.
 - `NEEDS_CONTEXT`: provide the missing context and re-dispatch.
-- `BLOCKED`: step back and break it open. Ask what failed, what was tried, what
-  that proved, what local reversible move remains, and whether a fresh worker
-  should take over. Then decide whether to continue, add context, reroute
-  ownership, pause, or ask the user. Use `orchestration-controller` when
-  oversight itself needs to stay stepped back.
+- `BLOCKED`: diagnose the failed action, evidence, local recovery, remaining
+  reversible move, and owner. Then continue, add context, reroute ownership,
+  pause, or ask the user. Use `orchestration-controller` when oversight itself
+  needs to stay stepped back.
 
 Do not solve the task for the worker. Restore agency, force the next executable
 move into view, then choose the route and send execution back to the owner when
@@ -120,9 +119,8 @@ continuing is the right call.
 - Passive waiting is not neutral. If the parent can still move without corrupting
   the shared checkout, move it.
 - When the job stops being same-session implementation sequencing and becomes
-  mostly routing, monitoring, review fallback, or completion-gate enforcement,
-  create a controller-owned status plan with named owners and evidence gates.
-  Use `orchestration-controller` when oversight needs to stay stepped back.
+  mostly routing, monitoring, review, or completion-gate enforcement, route to
+  `orchestration-controller` with named owners and evidence gates.
 
 ## Review Loop
 
@@ -174,8 +172,8 @@ Never:
 - Pair with `action-items-to-prs` when the plan comes from a report, audit, or
   issue list that should become PR-scoped work.
 - Pair with `orchestration-controller` when the parent task is mostly routing,
-  monitoring, review fallback, or completion-gate enforcement instead of
-  implementation sequencing.
+  monitoring, review, or completion-gate enforcement instead of implementation
+  sequencing.
 
 ## Output
 
