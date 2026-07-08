@@ -36,7 +36,7 @@ if (-not $Apply) {
 }
 
 foreach ($item in $items) {
-    if ($item.Type -eq "derived-skill") {
+    if ($item.Type -in @("derived-skill", "derived-agent")) {
         Write-Host "skipped derived: $($item.LivePath)"
         continue
     }
