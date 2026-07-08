@@ -5,8 +5,10 @@ of `~/.codex`, `$HOME/.agents`, or `$HOME/.claude`.
 
 - `codex/AGENTS.md` is the portable source for the live global
   `~/.codex/AGENTS.md`. Only put session-wide defaults there.
-- Installed agentic guidance belongs under `codex/AGENTS.md`,
+- Codex installed agentic guidance belongs under `codex/AGENTS.md`,
   `codex/agents/`, or `codex/skills/`.
+- Claude installed agentic guidance belongs under `claude/agents/` or
+  `claude/skills/`.
 - Installed Codex hook behavior belongs under `codex/hooks.json` or
   `codex/hooks/`.
 - This repo-root `AGENTS.md` is for Compass maintenance guidance.
@@ -17,8 +19,9 @@ of `~/.codex`, `$HOME/.agents`, or `$HOME/.claude`.
   targets as agent behavior.
 - Keep `codex/AGENTS.md` short and global.
 - Put detailed operating behavior in the narrowest surface: installed agents or
-  skills for reusable agent capability, repo workflows for Compass
-  maintenance, scripts for mechanical checks, and manifests for boundaries.
+  skills for reusable agent capability, hook docs for hook operation, repo
+  workflows for Compass maintenance, scripts for mechanical checks, and
+  manifests for boundaries.
 - Treat `codex/agents` and manifest-listed `codex/skills` as one portable
   bundle. When editing bundled skills or agents, reference bundled capabilities
   directly instead of making them sound optional. Keep conditional wording for

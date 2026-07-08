@@ -31,8 +31,9 @@ reported as unavailable.
 
 ## Install Boundary
 
-Installed agentic documentation changes future Codex behavior. It belongs in
-`codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`, and should describe
+Installed agentic documentation changes future agent behavior. Codex guidance
+belongs in `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`. Claude
+guidance belongs in `claude/agents/` or `claude/skills/`. It should describe
 durable role, stance, judgment, and capability boundaries.
 
 Installed docs should speak to the agent that will use them at runtime. State
@@ -62,8 +63,9 @@ agent behavior.
   repo-root `AGENTS.md`, `workflows/`, or `local-docs/`, not in
   `codex/AGENTS.md`.
 - Put detailed guidance in the narrowest surface: installed skill references for
-  reusable agent capability, workflows or local docs for repo maintenance,
-  scripts for mechanical checks, and manifests for boundaries.
+  reusable agent capability, hook-local docs for hook operation, workflows or
+  local docs for repo maintenance, scripts for mechanical checks, and manifests
+  for boundaries.
 - Add durable guidance only after repeated mistakes or clear workflow friction.
 - Prefer evidence over preference. A new rule should name the failure it
   prevents or the review path it improves.

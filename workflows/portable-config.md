@@ -3,10 +3,11 @@
 Use this workflow when changing Codex setup that should survive a new machine,
 fresh profile, or copied repo checkout.
 
-This is repo-maintainer guidance. It is not installed into a live Codex home or
+This is repo-maintainer guidance. It is not installed into a live Codex home,
 user skill home, or Claude home.
-Installed agentic guidance lives under `codex/AGENTS.md`, `codex/agents/`, and
-`codex/skills/`.
+Codex installed agentic guidance lives under `codex/AGENTS.md`,
+`codex/agents/`, and `codex/skills/`. Claude installed agentic guidance lives
+under `claude/agents/` and `claude/skills/`.
 
 These scripts use `-CodexHome` for Codex-home files, otherwise
 `$env:CODEX_HOME`, otherwise the default `%USERPROFILE%\.codex` home. They use
@@ -81,7 +82,7 @@ reviewed config fragment.
 
 ## Durable Guidance Edits
 
-When the change affects future Codex behavior across sessions or machines:
+When the change affects future installed behavior across sessions or machines:
 
 1. Read the current portable files first.
 2. Draft the exact patch set before editing unless direct edits were explicitly

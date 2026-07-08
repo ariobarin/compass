@@ -5,10 +5,12 @@ Do not add global rules for one-off failures. Record enough detail to identify
 the first upstream failure and decide whether the fix belongs in instructions,
 a skill, a script, a test, or repo documentation.
 
-This is repo-maintainer guidance and is not installed into a live Codex home or
-user skill home.
-When a failure should change future Codex behavior, route the fix into installed
-agentic guidance under `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`.
+This is repo-maintainer guidance and is not installed into a live Codex home,
+user skill home, or Claude home.
+When a failure should change future agent behavior, route the fix into
+installed Codex guidance under `codex/AGENTS.md`, `codex/agents/`, or
+`codex/skills/`, or installed Claude guidance under `claude/agents/` or
+`claude/skills/`.
 
 ## Entry Template
 

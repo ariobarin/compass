@@ -119,7 +119,7 @@ dirs = [
   "scripts",
   "workflows",
 ]
-reason = "These files guide repository maintenance but are not installed into a live Codex home or user skill home."
+reason = "These files guide repository maintenance but are not installed into a live Codex home, user skill home, or Claude home."
 
 [carried]
 # Reviewed source that travels with Compass but is not installed into every
