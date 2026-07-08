@@ -25,6 +25,8 @@ catch drift before config is copied into a live machine.
 - [pr-review-surfaces-audit.md](pr-review-surfaces-audit.md): third queue
   audit for PR loops, branch resolution, action-item grouping, specialist
   review, and reviewer agents.
+- [domain-shaped-skills-audit.md](domain-shaped-skills-audit.md): fourth queue
+  audit for benchmark, WebMCP, and workspace stewardship skills.
 - [carried-capabilities-design.md](carried-capabilities-design.md): design for
   useful Compass capabilities that should travel in the repo but not load into
   every session.
