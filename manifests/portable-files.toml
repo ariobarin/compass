@@ -54,47 +54,40 @@ home = "$HOME\\.claude"
 skills_dir = "$HOME\\.claude\\skills"
 agents_dir = "$HOME\\.claude\\agents"
 
-# Claude skills derive from the reviewed codex/skills source at install time by
-# default. List a skill under `derived_skills` to generate it from
+# All Claude skills derive from the reviewed codex/skills source at install
+# time. List a skill under `derived_skills` to generate it from
 # codex/skills/<name> (SKILL.md plus references/, dropping agents/openai.yaml).
-# Keep a skill under `skills` only when it carries Claude-specific wording that
-# cannot be derived; that claude/skills/<name> source is the override.
-skills = [
-  "action-items-to-prs",
-  "compass",
-  "orchestration-controller",
-  "pr-review-loop",
-  "subagent-driven-development",
-  "write-a-skill",
-]
-
+# There are no hand-maintained claude/skills/ overrides; codex/ is the single
+# source of truth.
 derived_skills = [
+  "action-items-to-prs",
   "benchmark-infra-reviewer",
   "benchmark-run-operator",
+  "compass",
   "git-branch-resolver",
   "grill-me",
   "input-token-economy",
   "monitor-to-completion",
+  "orchestration-controller",
+  "pr-review-loop",
   "specialist-review",
+  "subagent-driven-development",
   "to-prd",
   "workspace-steward",
+  "write-a-skill",
 ]
 
-# Claude agents derive from codex/agents/<name>.toml at install time by default.
-# List an agent under `derived_agents` to generate it; the tools and color come
-# from $ClaudeDerivedAgentFrontmatter in scripts/common.ps1. Keep an agent under
-# `agents` only when it needs a hand-maintained claude/agents/<name>.md override.
+# All Claude agents derive from codex/agents/<name>.toml at install time. The
+# tools and color come from $ClaudeDerivedAgentFrontmatter in
+# scripts/common.ps1. There are no hand-maintained claude/agents/ overrides.
 derived_agents = [
   "algorithm-critic",
   "neutral-critic",
   "repo-explorer",
   "research-critic",
   "reuse-critic",
-  "verifier",
-]
-
-agents = [
   "reviewer",
+  "verifier",
 ]
 
 [config]

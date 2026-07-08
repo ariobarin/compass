@@ -9,13 +9,16 @@ Use this skill to turn a set of actionable items into reviewed PR work. Keep the
 source artifact as the anchor for scope, grouping, verification, and final
 status.
 
-When the user frames the work as a Codex `/goal`, pair this with
-`using-codex-goals` so each PR group has a completion predicate and evidence
-ledger before publishing.
+When the user frames the work as a durable goal contract, give each PR group
+a completion predicate and evidence ledger before publishing.
 
 When the work centers on iterating an existing PR or review thread rather than
 creating fresh PR groups, pair this with `pr-review-loop` so PR identity,
 review gates, and merge authority stay explicit.
+
+When the source items are ambiguous, disputed, or mixed with already-handled
+work, clarify them one by one first so the ledger is confirmed before grouping
+PR work.
 
 ## Start with the source
 

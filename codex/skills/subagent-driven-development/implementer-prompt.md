@@ -2,7 +2,7 @@
 
 Use this template when dispatching an implementer subagent.
 
-Open a fresh Codex session or custom agent for the task and give it a prompt
+Open a fresh subagent or custom agent for the task and give it a prompt
 like this:
 
 ```

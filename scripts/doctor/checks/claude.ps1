@@ -53,13 +53,8 @@ else {
     $manifestClaudeAgents = @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "agents" | Sort-Object -Unique)
     $manifestClaudeDerivedAgents = @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "derived_agents" | Sort-Object -Unique)
 
-    if ($manifestClaudeSkills.Count -eq 0) {
-        $problems.Add("missing claude skills list in portable manifest")
-    }
-
-    if ($manifestClaudeAgents.Count -eq 0) {
-        $problems.Add("missing claude agents list in portable manifest")
-    }
+    # [claude].skills and [claude].agents may be empty: every Claude skill and
+    # agent derives from codex/, so there are no hand-maintained claude/ sources.
 
     $diskClaudeSkills = @(
         Get-ChildItem -Path (Join-Path $claudeRoot "skills") -Directory -ErrorAction SilentlyContinue |

@@ -177,7 +177,7 @@ Review keeps the controller from becoming the worker. Prefer fresh independent
 judgment:
 
 - local `neutral-critic` review;
-- GitHub Codex review when available and appropriate;
+- a second independent reviewer when available and appropriate;
 - CI or local checks;
 - focused reviewer with exact acceptance criteria.
 
