@@ -176,6 +176,11 @@ Recommended PR:
   category, install behavior, doctor checks, Claude handling, and project opt-in.
   See `local-docs/carried-capabilities-design.md`.
 
+Follow-up status:
+
+- Completed by the carried-capability route stack. The route now has a design
+  note, source directory, manifest section, and doctor checks.
+
 ## Next PR Boundaries
 
 Recommended order:
@@ -183,11 +188,15 @@ Recommended order:
 1. Land #105, #106, and #107 or keep future PRs stacked explicitly.
 2. Optional: add a one-line root pointer to the review program if it does not
    bloat `AGENTS.md`.
-3. Design the carried-but-not-global route before moving any skill.
-4. Audit the loop governance skills as the first runtime family:
+3. Audit the loop governance skills as the first runtime family:
    `compass`, `using-codex-goals`, `orchestration-controller`,
    `subagent-driven-development`, `monitor-to-completion`,
    `input-token-economy`, and `root-cause-not-symptom`.
+
+Completed follow-ups:
+
+- The carried-but-not-global route has been designed and wired.
+- The loop governance skill audit has been completed.
 
 ## Verification
 

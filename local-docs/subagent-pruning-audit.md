@@ -155,17 +155,20 @@ Recommended edit:
   `claude/skills/subagent-driven-development`.
 - Preserve the one runtime-specific difference around goal wording.
 
-## Next PR Boundary
+## Completed PR Boundary
 
-Make one runtime pruning PR:
+Follow-up status:
 
-- edit `codex/skills/subagent-driven-development/SKILL.md`;
-- edit `claude/skills/subagent-driven-development/SKILL.md` in step;
-- do not edit prompt templates unless the pruning exposes a concrete contract
-  problem;
-- do not edit `orchestration-controller` unless the subagent edit reveals a
-  missing route;
-- run skill validation for both skill dirs and `.\scripts\doctor.ps1`.
+- Completed by the runtime pruning PR. Codex and Claude
+  `subagent-driven-development` were pruned in step, prompt templates stayed in
+  place, and fallback-shaped routing was replaced with level language.
+
+The completed runtime pruning PR changed these files:
+
+- `codex/skills/subagent-driven-development/SKILL.md`;
+- `claude/skills/subagent-driven-development/SKILL.md`.
+
+It left prompt templates and `orchestration-controller` unchanged.
 
 Expected behavior change:
 

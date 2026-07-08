@@ -98,7 +98,7 @@ its place. A template that exists because planning is generally useful is weak.
 A template that exists because Compass sometimes needs a durable plan artifact
 is stronger.
 
-Follow-up PR: revise or retire `plan-template.md`.
+Completed follow-up: `plan-template.md` was revised rather than retired.
 
 The review question should be:
 
@@ -109,20 +109,24 @@ from interactive Plan mode and durable Codex goals?
 
 If yes, narrow the file to that job. If no, remove it and update workflow links.
 
+- Completed by the plan-template PR. The file stayed, but it is narrowed to a
+  repo-local written plan artifact shape, not a competing planning or goal
+  workflow.
+
 ## Decisions
 
 - Keep the workflow directory as repo-maintainer context.
 - Do not move any workflow into installed runtime guidance.
 - Do not rewrite exact operating workflows now.
 - Keep `agent-failures.md` as a failure-to-guidance journal, not a general log.
-- Treat `plan-template.md` as the next focused workflow review.
+- Keep `plan-template.md` as a narrow written artifact shape.
 
-## Next PR Boundary
+## Completed PR Boundary
 
-Make one focused PR for `plan-template.md`:
+Completed focused PR for `plan-template.md`:
 
 - read its current callers and links;
-- decide whether to revise or retire it;
-- update `portable-config.md`, `local-docs/README.md`, and the surface
+- decided to revise instead of retire it;
+- updated `portable-config.md`, `local-docs/README.md`, and the surface
   inventory if links change;
-- run `.\scripts\doctor.ps1`.
+- ran `.\scripts\doctor.ps1`.

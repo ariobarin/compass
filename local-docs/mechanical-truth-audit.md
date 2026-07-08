@@ -129,9 +129,9 @@ No change is needed now.
 - Keep the `snapshot.ps1` review-mode message aligned with the portable map.
 - Add retired Claude cleanup only when a Claude-installed surface is removed.
 
-## Next PR Boundary
+## Completed PR Boundary
 
-The focused script PR should prove:
+The focused script PR proved:
 
 - `scripts/snapshot.ps1` review-mode wording names Codex, user skill, and
   Claude homes;

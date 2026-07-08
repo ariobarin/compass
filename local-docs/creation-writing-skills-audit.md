@@ -99,12 +99,15 @@ is useful portable capability, but it should not load into every session. If
 `write-a-skill` does not teach that route, future agents will keep forcing
 material into the wrong surface.
 
-Follow-up PR: update Codex and Claude `write-a-skill` so new skill work chooses
-among:
+Completed follow-up: Codex and Claude `write-a-skill` now make new skill work
+choose among:
 
 - globally installed runtime skill;
 - carried but not global capability under `carried/`;
 - target-repo skill.
+
+- Completed by the carried skill-authoring PR. Codex and Claude
+  `write-a-skill` now teach the carried-but-not-global route.
 
 ### Stop Assuming `origin/main` For Stacked Diff Checks
 
@@ -117,9 +120,12 @@ is intentionally stacked on earlier PR branches. Checking against `origin/main`
 can include unrelated upstream stack changes and make the validation target
 muddy.
 
-Follow-up PR: keep whitespace validation, but say to use the actual PR base
-when checking a stacked branch, and use plain `git diff --check` for the working
-tree.
+Completed follow-up: whitespace validation now says to use the actual PR base
+when checking a stacked branch, and to use plain `git diff --check` for the
+working tree.
+
+- Completed by the carried skill-authoring PR. Codex and Claude
+  `write-a-skill` no longer assume `origin/main...HEAD` for stacked branches.
 
 ## Decisions
 
@@ -127,15 +133,15 @@ tree.
 - Keep `grill-me`, `to-prd`, and `write-a-skill` mirrored for Claude.
 - Keep `update-compass` Codex-only.
 - Do not prune `grill-me`, `to-prd`, or `update-compass` now.
-- Update `write-a-skill` in a separate runtime PR for carried-route placement
-  and stacked-branch validation wording.
+- Keep `write-a-skill` global and mirrored. The carried-route placement and
+  stacked-branch validation wording are complete.
 
-## Next PR Boundary
+## Completed PR Boundary
 
-Make one focused runtime PR:
+Completed runtime PR:
 
-- edit `codex/skills/write-a-skill/SKILL.md`;
-- edit `claude/skills/write-a-skill/SKILL.md`;
-- add the carried-but-not-global route;
-- replace the `origin/main` diff-check assumption with actual-base wording;
-- run skill validation and `doctor.ps1`.
+- changed `codex/skills/write-a-skill/SKILL.md`;
+- changed `claude/skills/write-a-skill/SKILL.md`;
+- added the carried-but-not-global route;
+- replaced the `origin/main` diff-check assumption with actual-base wording;
+- ran skill validation and `doctor.ps1`.

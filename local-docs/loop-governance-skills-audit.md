@@ -127,6 +127,11 @@ Recommended PR:
   `workflows/compass-review-program.md` before auditing or pruning installed
   skills, agents, or maintainer guidance.
 
+Follow-up status:
+
+- Completed by the review-program routing PR. The Compass skill points audit
+  and pruning work at `workflows/compass-review-program.md`.
+
 ### L4: `root-cause-not-symptom` should be mirrored or explicitly justified
 
 Evidence:
@@ -145,6 +150,11 @@ Recommended PR:
 
 - Add `root-cause-not-symptom` to `[claude].derived_skills` if install-time
   derivation works cleanly. Otherwise document why it stays Codex-only.
+
+Follow-up status:
+
+- Completed by the Claude derivation PR. `root-cause-not-symptom` is now listed
+  under `[claude].derived_skills`.
 
 ### L5: `using-codex-goals` is correctly Codex-only
 
@@ -189,6 +199,11 @@ Recommended PR:
 - Audit `subagent-driven-development` against `orchestration-controller` for
   duplicated controller prose and risky fallback-shaped wording.
 
+Follow-up status:
+
+- Completed by `local-docs/subagent-pruning-audit.md`; the runtime pruning PR
+  followed that audit.
+
 ### L7: `monitor-to-completion` and `input-token-economy` form a tight pair
 
 Evidence:
@@ -212,13 +227,15 @@ Recommended PR:
 
 Recommended order:
 
-1. Update `compass` and its Claude mirror with a short review-program read
-   route.
-2. Add `root-cause-not-symptom` to Claude derived skills or document why not.
-3. Run a focused pruning audit on `subagent-driven-development` versus
-   `orchestration-controller`.
-4. Leave `using-codex-goals`, `monitor-to-completion`, and
+1. Leave `using-codex-goals`, `monitor-to-completion`, and
    `input-token-economy` unchanged unless future use shows friction.
+
+Completed follow-ups:
+
+- `compass` now routes audit and pruning work to the review program.
+- `root-cause-not-symptom` is Claude-derived.
+- `subagent-driven-development` was audited and pruned against
+  `orchestration-controller`.
 
 ## Verification
 

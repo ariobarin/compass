@@ -194,6 +194,11 @@ Recommended PR:
   `[claude].derived_skills`, remove `claude/skills/workspace-steward/SKILL.md`,
   and verify that `doctor.ps1` accepts the derived source.
 
+Follow-up status:
+
+- Completed by the workspace-steward Claude derivation PR.
+  `workspace-steward` now derives from the Codex source for Claude.
+
 ### D6: No immediate pruning target in Queue 4
 
 Evidence:
@@ -218,11 +223,13 @@ Recommended PR:
 
 Recommended order:
 
-1. Convert `workspace-steward` to a Claude derived skill so the template route
-   and references travel with both runtimes.
-2. Leave benchmark and WebMCP skills unchanged.
-3. Revisit Queue 4 only after usage shows a concrete weak section, stale
+1. Leave benchmark and WebMCP skills unchanged.
+2. Revisit Queue 4 only after usage shows a concrete weak section, stale
    contract, or retrieval-cost problem.
+
+Completed follow-ups:
+
+- `workspace-steward` was converted to a Claude derived skill.
 
 ## Verification
 

@@ -174,10 +174,12 @@ Route design questions:
 - How does `doctor.ps1` prevent accidental global installation?
 - How does the Claude mirror handle carried material?
 
-Recommended PR:
+Status:
 
-- Define the carried-but-not-global route before moving any installed skill out
-  of global availability.
+- The carried-but-not-global route is now defined in
+  `local-docs/carried-capabilities-design.md`, `carried/`,
+  `manifests/portable-files.toml`, and `doctor.ps1`.
+- No skill has been moved there yet.
 
 ## First Audit Queues
 

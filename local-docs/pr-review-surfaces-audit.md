@@ -134,6 +134,11 @@ Recommended PR:
 - Preserve the rule that missing required review remains unsatisfied until the
   alternate route is named and justified.
 
+Follow-up status:
+
+- Completed by the review fallback wording PR. Codex and Claude
+  `pr-review-loop` now use authorized alternate-review-route language.
+
 ### R4: The Claude `reviewer` coordinator is sharper than the Codex source
 
 Evidence:
@@ -157,6 +162,11 @@ Recommended PR:
 - Port the useful Claude `reviewer` selection clarity back into
   `codex/agents/reviewer.toml` while preserving Codex TOML format.
 - Keep Claude and Codex reviewer behavior aligned after the edit.
+
+Follow-up status:
+
+- Completed by the reviewer-selection PR. Codex and Claude `reviewer` now both
+  carry `Specialist Selection` guidance.
 
 ### R5: The critic agents are strong but intentionally sharp
 
@@ -238,14 +248,15 @@ Recommended PR:
 
 Recommended order:
 
-1. Update `pr-review-loop` and its Claude mirror to replace fallback-shaped
-   wording with explicit alternate-review-route language.
-2. Update `codex/agents/reviewer.toml` with the clearer specialist-selection
-   rules already present in `claude/agents/reviewer.md`, then confirm the
-   mirrors still express the same behavior.
-3. Leave `pr-merge-closeout`, `action-items-to-prs`, `git-branch-resolver`,
+1. Leave `pr-merge-closeout`, `action-items-to-prs`, `git-branch-resolver`,
    `specialist-review`, and the critic agents unchanged unless later use shows
    friction.
+
+Completed follow-ups:
+
+- `pr-review-loop` fallback-shaped wording was replaced.
+- Codex `reviewer` gained the specialist-selection clarity already present in
+  the Claude mirror.
 
 ## Verification
 
