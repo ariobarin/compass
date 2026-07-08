@@ -80,14 +80,21 @@ derived_skills = [
   "workspace-steward",
 ]
 
-agents = [
+# Claude agents derive from codex/agents/<name>.toml at install time by default.
+# List an agent under `derived_agents` to generate it; the tools and color come
+# from $ClaudeDerivedAgentFrontmatter in scripts/common.ps1. Keep an agent under
+# `agents` only when it needs a hand-maintained claude/agents/<name>.md override.
+derived_agents = [
   "algorithm-critic",
   "neutral-critic",
   "repo-explorer",
   "research-critic",
   "reuse-critic",
-  "reviewer",
   "verifier",
+]
+
+agents = [
+  "reviewer",
 ]
 
 [config]

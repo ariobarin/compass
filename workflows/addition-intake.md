@@ -40,7 +40,8 @@ of this repo unless the repo intentionally adopts a reviewed portable form.
 - Focused reviewer or researcher persona: add an agent under `codex/agents/`.
 - Claude Code skill or agent: add under `claude/skills/` or `claude/agents/`
   when it needs Claude-specific source, or list a portable Codex skill in
-  `[claude].derived_skills` when install-time derivation is enough.
+  `[claude].derived_skills` or agent in `[claude].derived_agents` when
+  install-time derivation is enough.
 - Mechanical check or sync behavior: add or update a script under `scripts/`.
 - Portability boundary or tool capability: update `manifests/`.
 - Repo-only maintenance lesson: update `local-docs/`.
@@ -82,8 +83,9 @@ Skills and agents need extra review because they shape future agent behavior.
 - Add each portable skill name to `manifests/portable-files.toml`.
 - `scripts/common.ps1` reads portable skill names from that manifest.
 - For Claude skills and agents, add direct skills to `[claude].skills`, derived
-  Codex-sourced skills to `[claude].derived_skills`, and agents to
-  `[claude].agents` in `manifests/portable-files.toml`.
+  Codex-sourced skills to `[claude].derived_skills`, direct agents to
+  `[claude].agents`, and derived agents to `[claude].derived_agents` in
+  `manifests/portable-files.toml`.
 - When removing a previously portable user skill, keep its legacy Codex-home
   retirement entry and add an explicit user-home retirement entry to
   `Get-RetiredPortableFileMap` so `install.ps1 -Apply` actually uninstalls

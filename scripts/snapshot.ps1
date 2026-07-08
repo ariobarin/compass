@@ -23,7 +23,7 @@ if (-not $Apply) {
     Write-Host "review mode: no files will be changed"
     Write-Host "planned snapshots:"
     foreach ($item in $items) {
-        if ($item.Type -eq "derived-skill") {
+        if ($item.Type -in @("derived-skill", "derived-agent")) {
             Write-Host "  skip derived: $($item.LivePath) is generated from $($item.RepoPath)"
             continue
         }
@@ -36,7 +36,7 @@ if (-not $Apply) {
 }
 
 foreach ($item in $items) {
-    if ($item.Type -eq "derived-skill") {
+    if ($item.Type -in @("derived-skill", "derived-agent")) {
         Write-Host "skipped derived: $($item.LivePath)"
         continue
     }

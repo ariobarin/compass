@@ -109,6 +109,87 @@ function Get-PortableClaudeAgentNames {
     return Get-PortableManifestArray -Section "claude" -Key "agents"
 }
 
+function Get-PortableClaudeDerivedAgentNames {
+    return Get-PortableManifestArray -Section "claude" -Key "derived_agents"
+}
+
+# Claude agent frontmatter is install wiring, not runtime guidance, so it lives
+# here next to the derive transform instead of in the manifest. Each derived
+# agent gets these tools and color; model is always inherit.
+$script:ClaudeDerivedAgentFrontmatter = @{
+    "algorithm-critic" = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
+    "neutral-critic"   = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
+    "repo-explorer"    = @{ Tools = "Read, Grep, Glob, Bash"; Color = "blue" }
+    "research-critic"  = @{ Tools = "Read, Grep, Glob, Bash, WebSearch, WebFetch"; Color = "red" }
+    "reuse-critic"     = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
+    "verifier"         = @{ Tools = "Read, Grep, Glob, Bash"; Color = "green" }
+}
+
+# Reads top-level key = "value" and key = """multi-line""" strings from a Codex
+# agent TOML file. Used by the codex agent sandbox check
+# (scripts/doctor/checks/agents.ps1) and the Claude agent derive step. This is a
+# narrow scanner, not a full TOML parser: a value body containing a literal """
+# would be truncated, so keep agent bodies free of that sequence.
+function Get-TopLevelTomlStringValues {
+    param([string]$Text)
+
+    $topLevelValues = @{}
+    $currentKey = $null
+    $currentValue = New-Object System.Text.StringBuilder
+    $inMultilineString = $false
+    $inTable = $false
+
+    foreach ($line in ($Text -split "`r?`n")) {
+        if ($inMultilineString) {
+            $closingIndex = $line.IndexOf('"""')
+            if ($closingIndex -ge 0) {
+                [void]$currentValue.AppendLine($line.Substring(0, $closingIndex))
+                $topLevelValues[$currentKey] = $currentValue.ToString()
+                $currentKey = $null
+                [void]$currentValue.Clear()
+                $inMultilineString = $false
+            }
+            else {
+                [void]$currentValue.AppendLine($line)
+            }
+            continue
+        }
+
+        if ($line -match '^\s*\[') {
+            $inTable = $true
+            continue
+        }
+
+        if ($inTable) {
+            continue
+        }
+
+        $multiline = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"""(.*)$')
+        if ($multiline.Success) {
+            $key = $multiline.Groups[1].Value
+            $remainingText = $multiline.Groups[2].Value
+            $closingIndex = $remainingText.IndexOf('"""')
+            if ($closingIndex -ge 0) {
+                $topLevelValues[$key] = $remainingText.Substring(0, $closingIndex)
+            }
+            else {
+                $currentKey = $key
+                [void]$currentValue.Clear()
+                [void]$currentValue.AppendLine($remainingText)
+                $inMultilineString = $true
+            }
+            continue
+        }
+
+        $assignment = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"([^"]*)"\s*(#.*)?$')
+        if ($assignment.Success) {
+            $topLevelValues[$assignment.Groups[1].Value] = $assignment.Groups[2].Value
+        }
+    }
+
+    return $topLevelValues
+}
+
 function New-DirectoryForFile {
     param([string]$Path)
 
@@ -221,6 +302,16 @@ function Get-PortableFileMap {
         })
     }
 
+    foreach ($agent in Get-PortableClaudeDerivedAgentNames) {
+        $items.Add([pscustomobject]@{
+            Type = "derived-agent"
+            RepoPath = Join-Path (Join-Path (Join-Path $RepoRoot "codex") "agents") "$agent.toml"
+            LivePath = Join-Path $claudeAgentsHome "$agent.md"
+            LiveRoot = $ClaudeHome
+            BackupScope = "claude"
+        })
+    }
+
     return $items
 }
 
@@ -325,6 +416,37 @@ function Copy-PortableItem {
             Copy-Item -LiteralPath $references -Destination (Join-Path $Destination "references") -Recurse -Force
         }
 
+        return
+    }
+
+    if ($Type -eq "derived-agent") {
+        $values = Get-TopLevelTomlStringValues -Text (Get-Content -Raw -LiteralPath $Source)
+        $name = $values["name"]
+        $body = $values["developer_instructions"]
+        # The helper captures the body with host line endings and opens with the
+        # newline that followed the toml `"""` opener. Normalize to LF (matching
+        # the hand-maintained files), drop that leading newline, and collapse any
+        # trailing newlines to a single LF so the derived markdown matches byte
+        # for byte.
+        $body = $body -replace "`r`n", "`n"
+        $body = $body -replace "^\n", ""
+        $body = $body -replace "\n+$", "`n"
+
+        $fm = $script:ClaudeDerivedAgentFrontmatter[$name]
+        $lines = @(
+            "---"
+            "name: $name"
+            "description: $($values["description"])"
+        )
+        if ($fm -and $fm["Tools"]) { $lines += "tools: $($fm["Tools"])" }
+        $lines += "model: inherit"
+        if ($fm -and $fm["Color"]) { $lines += "color: $($fm["Color"])" }
+        $lines += "---"
+
+        $content = ($lines -join "`n") + "`n`n" + $body
+
+        New-DirectoryForFile -Path $Destination
+        [System.IO.File]::WriteAllText($Destination, $content)
         return
     }
 
