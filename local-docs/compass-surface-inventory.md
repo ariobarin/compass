@@ -253,6 +253,24 @@ show-don't-tell standard as the rest of the repo.
 
 Audit packet: `local-docs/creation-writing-skills-audit.md`
 
+Queue 6: Maintainer workflows.
+
+- `workflows/addition-intake.md`
+- `workflows/agent-failures.md`
+- `workflows/claude-config.md`
+- `workflows/codex-restart-recovery.md`
+- `workflows/compass-review-program.md`
+- `workflows/multi-thread-pr-coordination.md`
+- `workflows/plan-template.md`
+- `workflows/portable-config.md`
+- `workflows/read-only-research.md`
+- `workflows/which-llm-plugin.md`
+
+Purpose: ensure repo-local workflows route maintainer action without becoming
+runtime behavior, stale history storage, or process-shaped bloat.
+
+Audit packet: `local-docs/maintainer-workflows-audit.md`
+
 ## Inventory Maintenance
 
 Update this file when:

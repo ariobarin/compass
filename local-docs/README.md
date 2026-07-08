@@ -29,6 +29,9 @@ catch drift before config is copied into a live machine.
   audit for benchmark, WebMCP, and workspace stewardship skills.
 - [creation-writing-skills-audit.md](creation-writing-skills-audit.md): fifth
   queue audit for planning, PRD, Compass update, and skill-authoring skills.
+- [maintainer-workflows-audit.md](maintainer-workflows-audit.md): audit for
+  repo-local workflows that guide Compass maintenance without entering runtime
+  context.
 - [carried-capabilities-design.md](carried-capabilities-design.md): design for
   useful Compass capabilities that should travel in the repo but not load into
   every session.
