@@ -14,6 +14,8 @@ catch drift before config is copied into a live machine.
 - [compass-surface-inventory.md](compass-surface-inventory.md): current map of
   installed skills, agents, maintainer surfaces, mechanical checks, and audit
   queues for the Compass review program.
+- [compass-orientation-audit.md](compass-orientation-audit.md): first queue
+  audit for Compass orientation surfaces before deeper skill and agent reviews.
 - [../workflows/addition-intake.md](../workflows/addition-intake.md): promotion
   flow for new repo-maintenance workflows, installed skills and agents,
   repo-side scripts and manifests, and config fragments. Workflows guide repo
