@@ -122,6 +122,12 @@ else {
             if (-not $tomlValues["developer_instructions"]) {
                 $problems.Add("claude derived agent source missing developer_instructions: $agent")
             }
+            if (-not $tomlValues["name"]) {
+                $problems.Add("claude derived agent source missing name: $agent")
+            }
+            if (-not $tomlValues["description"]) {
+                $problems.Add("claude derived agent source missing description: $agent")
+            }
         }
 
         $claudeSource = Join-Path (Join-Path (Join-Path $repoRoot "claude") "agents") "$agent.md"
