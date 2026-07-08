@@ -202,6 +202,12 @@ base branch, head branch, head SHA, check results, review status, and open
 comments. For stacked PRs, verify every base points at the intended previous
 head and name the merge order.
 
+Inspect inline review comments separately from top-level PR comments and review
+bodies. A clean current-head review comment does not prove every inline finding
+has been checked. On GitHub, include the pull review comments endpoint, for
+example `gh api repos/<owner>/<repo>/pulls/<number>/comments --paginate`, or a
+thread-aware equivalent when resolution state matters.
+
 Use `pr-review-loop` for the final review path. Local checks and GitHub checks
 support readiness, but they do not replace current-head review gates. After any
 material push, re-read the head SHA and make sure required reviewers are looking

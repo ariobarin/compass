@@ -21,7 +21,7 @@ runtime behavior, stale history storage, or process-shaped bloat.
 
 Packet status:
 
-- Refreshed after the reviewer-authority gate follow-up landed.
+- Refreshed after the inline review-comment gate follow-up landed.
 - Use current workflow files, local-doc links, inventory state, and open PR
   stack state before deriving new work from this packet.
 - Treat verification commands as audit history, not current proof.
@@ -37,7 +37,7 @@ Line counts:
 - `agent-failures.md`: 138
 - `claude-config.md`: 73
 - `codex-restart-recovery.md`: 79
-- `compass-review-program.md`: 224
+- `compass-review-program.md`: 230
 - `multi-thread-pr-coordination.md`: 102
 - `plan-template.md`: 56
 - `portable-config.md`: 174
@@ -77,7 +77,8 @@ No pruning is needed now. It should stay as maintainer context.
 The review gate is repo-maintainer workflow guidance, not installed runtime
 behavior. It makes green draft PRs build evidence rather than readiness, then
 routes final readiness through live PR state, stacked-base checks, current-head
-review gates, reviewer-authority checks, and `pr-review-loop`.
+review gates, inline review-comment checks, reviewer-authority checks, and
+`pr-review-loop`.
 
 ### Keep `agent-failures.md`, But Cap Its Job
 
@@ -126,8 +127,8 @@ Decision:
 - Do not move any workflow into installed runtime guidance.
 - Do not rewrite exact operating workflows now.
 - Keep the Compass review-program gate in repo-local workflow guidance,
-  including the rule that missing reviewer authority leaves the gate
-  unsatisfied.
+  including inline review-comment inspection and the rule that missing reviewer
+  authority leaves the gate unsatisfied.
 - Keep `agent-failures.md` as a failure-to-guidance journal, not a general log.
 - Keep `plan-template.md` as a narrow written artifact shape.
 
@@ -142,6 +143,9 @@ Completed focused PRs:
 - `compass-review-program.md` gained a reviewer-authority gate so a required
   reviewer that cannot be invoked is named as unsatisfied instead of replaced by
   self-review or local checks.
+- `compass-review-program.md` gained an inline review-comment gate after current
+  PR evidence showed top-level clean review text can coexist with actionable
+  inline comments.
 - `.\scripts\doctor.ps1` passed for the focused changes.
 
 ## Verification
@@ -151,6 +155,9 @@ Commands used while refreshing this audit:
 ```powershell
 Get-Content -Raw workflows\plan-template.md
 rg -n "plan-template|written plan|Plan mode|using-codex-goals|durable goal|repo-local" workflows local-docs README.md AGENTS.md
+rg -n "inline|review comments|review threads|comments|gh api|pulls/.*/comments|review gate|current-head" workflows local-docs AGENTS.md
+gh api repos/ariobarin/compass/pulls/184/comments --paginate
+gh api repos/ariobarin/compass/pulls/185/comments --paginate
 (Get-Content workflows\addition-intake.md).Count
 (Get-Content workflows\agent-failures.md).Count
 (Get-Content workflows\claude-config.md).Count
