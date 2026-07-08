@@ -137,9 +137,8 @@ editing it from this repo. If the skill mainly exists to serve one repository,
 its home should usually be that repository.
 
 When promoting a live-only or branch-only skill, make the repo copy complete:
-include the real `SKILL.md`, its `agents/openai.yaml` when the skill carries
-Codex agent metadata, and any references, scripts, or assets needed for a
-normal install.
+include the real `SKILL.md`, its skill metadata when the skill carries agent
+metadata, and any references, scripts, or assets needed for a normal install.
 
 ## Verify Before Opening Or Updating A PR
 
