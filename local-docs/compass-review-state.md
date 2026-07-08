@@ -12,8 +12,9 @@ files before deriving new work.
 - The open review-program stack has converted the obvious gaps into focused
   PRs: review routing, hook coverage, carried capability routing, Claude mirror
   handling, mechanical gates, skill-authoring validation, and review readiness
-  gating, including reviewer-authority handling when a required review gate
-  cannot be invoked from the current session.
+  gating, including inline review-comment inspection and reviewer-authority
+  handling when a required review gate cannot be invoked from the current
+  session.
 - The failure journal also records completed runtime hardening for
   refusal-to-collapse controller stance and benchmark result production. Treat
   those as evidence that the pressure language landed, not as open permission
@@ -53,9 +54,10 @@ Use this order:
    hook, one workflow, one manifest boundary, or one mechanical gate.
 7. Do not treat green draft PRs as ready. Use the review gate in
    `workflows/compass-review-program.md`: inspect live PR state, verify stacked
-   bases and merge order, and route final readiness through `pr-review-loop`.
-   If reviewer authority is missing, name the unsatisfied gate instead of
-   self-reviewing or counting local checks as review.
+   bases and merge order, inspect inline review comments, and route final
+   readiness through `pr-review-loop`. If reviewer authority is missing, name
+   the unsatisfied gate instead of self-reviewing or counting local checks as
+   review.
 
 ## State Classes
 
@@ -66,8 +68,9 @@ Use this order:
   agent retrieval descriptions.
 - Waiting for future evidence: first carried demotion, retired Claude cleanup,
   and any retrieval-noise or stale-procedure finding from real use.
-- External current state: draft PRs, check results, review status, branch
-  bases, and current head SHAs. Inspect those through Git and GitHub each time.
+- External current state: draft PRs, check results, review status, inline
+  review comments, branch bases, and current head SHAs. Inspect those through
+  Git and GitHub each time.
 
 ## Maintenance Rule
 
