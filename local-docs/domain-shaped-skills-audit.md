@@ -5,9 +5,12 @@ This audit packet covers the domain-shaped skills listed in
 domain-shaped: benchmark operation, benchmark infrastructure review, WebMCP eval
 and tool work, and workspace stewardship.
 
-No runtime text changes in this audit. The job is to decide what stays global,
-what stays Codex-only, what should be mirrored, and what follow-up PRs should
-be small enough to review.
+Packet status:
+
+- Refreshed after the workspace-steward Claude derivation landed.
+- Use current domain skill sources, manifest state, Claude mirrors, and open PR
+  stack state before deriving new work from this packet.
+- Treat verification commands as audit history, not current proof.
 
 ## Surfaces Reviewed
 
@@ -197,7 +200,7 @@ Follow-up status:
 - Completed by the workspace-steward Claude derivation PR.
   `workspace-steward` now derives from the Codex source for Claude.
 
-### D6: No immediate pruning target in Queue 4
+### D6: No immediate pruning target in this family
 
 Evidence:
 
@@ -222,8 +225,8 @@ Recommended PR:
 Recommended order:
 
 1. Leave benchmark and WebMCP skills unchanged.
-2. Revisit Queue 4 only after usage shows a concrete weak section, stale
-   contract, or retrieval-cost problem.
+2. Revisit this domain-shaped family only after usage shows a concrete weak
+   section, stale contract, or retrieval-cost problem.
 
 Completed follow-ups:
 
