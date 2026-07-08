@@ -6,6 +6,9 @@ map for deciding what to audit next. It is not runtime guidance.
 Source inspected:
 
 - `manifests/portable-files.toml`
+- `AGENTS.md`
+- `README.md`
+- `philosophy.md`
 - `codex/hooks.json`
 - `codex/hooks/`
 - `codex/skills/`
@@ -147,6 +150,8 @@ Key files:
 - `scripts/update-live.ps1`
 - `scripts/diff-live.ps1`
 - `scripts/snapshot.ps1`
+- `scripts/codex-restart-recovery.ps1`
+- `scripts/doctor/checks/*.ps1`
 
 Audit pressure:
 
