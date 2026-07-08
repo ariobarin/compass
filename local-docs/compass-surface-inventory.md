@@ -226,6 +226,8 @@ Queue 3: PR and review surfaces.
 
 Purpose: ensure review produces evidence, not ceremony.
 
+Audit packet: `local-docs/pr-review-surfaces-audit.md`
+
 Queue 4: Domain-shaped skills.
 
 - `benchmark-infra-reviewer`
