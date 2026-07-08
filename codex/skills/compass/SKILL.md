@@ -30,6 +30,8 @@ guidance for a capability Compass can provide.
   drift work.
 - Read `workflows/addition-intake.md` before adding rules, skills, agents,
   workflows, scripts, manifests, or config fragments.
+- Read `workflows/compass-review-program.md` before auditing or pruning
+  installed skills, agents, or maintainer guidance.
 
 ## Route Changes
 
