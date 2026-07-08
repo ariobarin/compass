@@ -66,7 +66,6 @@ skills = [
   "specialist-review",
   "subagent-driven-development",
   "to-prd",
-  "workspace-steward",
   "write-a-skill",
 ]
 
@@ -74,6 +73,7 @@ derived_skills = [
   "input-token-economy",
   "monitor-to-completion",
   "root-cause-not-symptom",
+  "workspace-steward",
 ]
 
 agents = [
