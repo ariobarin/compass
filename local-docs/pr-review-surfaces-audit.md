@@ -108,60 +108,47 @@ Recommended PR:
 
 - None.
 
-### R3: `pr-review-loop` should lose fallback-shaped wording
+### R3: `pr-review-loop` alternate review wording is current
 
 Evidence:
 
-- `codex/skills/pr-review-loop/SKILL.md` says: "If review is silent, use the
-  approved fallback path rather than waiting passively."
-- `codex/skills/pr-review-loop/references/review-loop-playbook.md` says:
-  "if one reviewer is silent and fallback is allowed, use the allowed fallback
-  explicitly and report which gate remains unsatisfied."
-- The Claude mirror carries the same fallback-shaped wording in both files.
+- Codex and Claude `pr-review-loop` now say to use an authorized alternate
+  review route when review is silent.
+- The rule still requires the alternate route to be named and justified.
+- Missing required review remains unsatisfied until the authorized alternate
+  route is explicit.
 
 Decision:
 
-- The behavior is right: passive waiting is wrong when an approved alternate
-  review route exists.
-- The word shape is wrong for Compass-owned review gates. It makes review
-  sound like a degraded backup instead of an explicit alternate gate chosen by
-  repo policy, user instruction, or tool availability.
+- Keep the current authorized alternate-review-route language.
+- Do not restore fallback-shaped wording for Compass-owned review gates.
 
 Recommended PR:
 
-- Replace `fallback` language in Codex and Claude `pr-review-loop` files with
-  `authorized alternate review route` language.
-- Preserve the rule that missing required review remains unsatisfied until the
-  alternate route is named and justified.
+- None now.
 
 Follow-up status:
 
 - Completed by the review fallback wording PR. Codex and Claude
   `pr-review-loop` now use authorized alternate-review-route language.
 
-### R4: The Claude `reviewer` coordinator is sharper than the Codex source
+### R4: The reviewer coordinators are aligned
 
 Evidence:
 
-- The Codex `reviewer` agent describes Standard and Full modes, then gives
-  broad routing in one opening paragraph.
-- The Claude `reviewer` mirror adds a `Specialist Selection` section that says
-  Standard selects only specialists whose risk is real.
-- The Claude mirror adds useful constraints: never run specialists for theater,
-  use `research-critic` only when external current knowledge matters, use
-  `verifier` only when there is a real thing to inspect or prove, include
-  `neutral-critic` only when requested or required, and do not invent findings.
+- Codex and Claude `reviewer` both carry `Specialist Selection` guidance.
+- Both say Standard mode selects only specialists whose risk is real.
+- Both prevent specialist review from becoming theater and tell the coordinator
+  not to invent findings.
 
 Decision:
 
-- Codex should learn the clearer selection rules.
-- This is not maintainer history. It is runtime judgment for the coordinator.
+- Keep the coordinator selection rules aligned across Codex and Claude.
+- Preserve runtime judgment in the installed reviewer surfaces.
 
 Recommended PR:
 
-- Port the useful Claude `reviewer` selection clarity back into
-  `codex/agents/reviewer.toml` while preserving Codex TOML format.
-- Keep Claude and Codex reviewer behavior aligned after the edit.
+- None now.
 
 Follow-up status:
 
@@ -267,8 +254,6 @@ git status --short --branch
 git fetch origin
 gh pr list --state open --json number,title,isDraft,baseRefName,headRefName,url --limit 30
 Get-Content -Raw <reviewed skill, reference, and agent files>
-rg -n -i "fallback|best-effort|if possible|maybe|hopefully|silent|blocked|optional|advisory|theater|evidence|review gate|current-head|merge|coordinated|specialist" codex\skills\pr-review-loop codex\skills\pr-merge-closeout codex\skills\specialist-review codex\skills\action-items-to-prs codex\skills\git-branch-resolver codex\agents claude\skills\pr-review-loop claude\skills\specialist-review claude\skills\action-items-to-prs claude\skills\git-branch-resolver claude\agents
-git diff --no-index -- codex\agents\reviewer.toml claude\agents\reviewer.md
-git diff --no-index -- codex\skills\pr-review-loop\SKILL.md claude\skills\pr-review-loop\SKILL.md
-git diff --no-index -- codex\skills\pr-review-loop\references\review-loop-playbook.md claude\skills\pr-review-loop\references\review-loop-playbook.md
+rg -n -i "fallback|authorized alternate|silent|blocked|optional|advisory|theater|evidence|review gate|current-head|merge|coordinated|specialist" codex\skills\pr-review-loop codex\skills\pr-merge-closeout codex\skills\specialist-review codex\skills\action-items-to-prs codex\skills\git-branch-resolver codex\agents claude\skills\pr-review-loop claude\skills\specialist-review claude\skills\action-items-to-prs claude\skills\git-branch-resolver claude\agents
+rg -n "authorized alternate review route|Specialist Selection|for theater|do not invent findings" codex\skills\pr-review-loop claude\skills\pr-review-loop codex\agents\reviewer.toml claude\agents\reviewer.md
 ```
