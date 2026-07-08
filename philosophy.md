@@ -16,6 +16,104 @@ Every durable Markdown file in this repo should carry that same standard. A
 reader should notice not only what it says, but how it says it. The document
 should behave like the thing it is describing.
 
+## Show, Do Not Tell
+
+Guidance must embody its own standard. If it says be terse, be terse. If it
+says be strong, use strong language. If it asks the agent to push past weak
+answers, the text itself must push first.
+
+Do not explain the desired behavior from outside it. Demonstrate it. Make the
+reader feel the behavior the document demands. A sentence that asks for
+confidence while hedging against itself has already failed.
+
+The same rule applies to products, pages, tools, reports, and skills. Know the
+purpose of the thing being made. Serve that purpose directly. Do not leak the
+prompt, the request, the implementation history, or the author's private
+thinking into the artifact.
+
+A web page with a requested style should not tell the external audience, "here
+is the style you wanted." It should be that style. A skill written for an agent
+should not explain why the skill was invented. It should give the invoking
+agent the exact context needed to act. History belongs in maintainer docs.
+Runtime context is for action.
+
+An example is evidence, not the boundary. If one bad case is pointed out, do
+not patch only that case and stop. Extract the pattern. Find the family. Fix
+the root cause. A visible failure is a symptom. The real work is finding the
+class of failures that produced it.
+
+## Prompt, Context, Loop
+
+Prompt engineering shapes the words that make an agent behave. It is the
+lowest layer, and it still matters. Words are levers. Choose them surgically.
+Do not leak uncertainty, private reasoning, or author history into instruction
+text. The text should produce the behavior, not narrate the attempt.
+
+Context engineering shapes the moment of action. Skills, agents, workflows,
+and references are not archives. They are operating surfaces. Their audience is
+the agent that invokes them while doing work. Give that agent what it needs.
+Keep the rest out.
+
+Loop engineering shapes the life of the work. This is where Compass should
+innovate. Current agents are capable. Bad prompts and bloated context make
+them weaker. Strong foundations let long-running loops become real work
+systems instead of long chat transcripts.
+
+The foundation must be dense with direction, understanding, purpose, and
+philosophy. No bloat. No politeness as filler. No weak language. No soft
+framing that makes the agent comfortable with collapse. Compress the beliefs.
+Purify the wording. Make every skill and agent a golden example of the
+behavior it asks for.
+
+## Goals Are The Loop Foundation
+
+An agent gets things wrong as much as the goal allows it to get things wrong.
+
+"Run the benchmark" is not enough. That goal lets the worker run a script,
+collect errors, and call the job done. The real goal is to get valid benchmark
+results for a specific configuration, with specific metrics and statistics,
+enough to support a decision by the deadline.
+
+Say the achieved state. Say what does not count. Say what evidence proves the
+goal. Say what authority the agent has to repair, rerun, branch, patch, make a
+PR, restart services, preserve artifacts, and keep moving. If that authority is
+not explicit, the agent will invent a conservative boundary and stop inside it.
+
+A blocker report is not the product when the requested product is results.
+Blockers are evidence. They should trigger diagnosis, repair, rerouting,
+replacement, or escalation with options. They are not a resting place.
+
+## Managers Need Meetings
+
+Loop engineering lets us treat agents more like workers in an organization.
+
+The human owns taste and direction. The project manager agent owns delivery
+pressure. It does not need to care about implementation. It needs to know what
+done looks like, what matters, who owns each slice, what evidence is real, and
+when the next meeting happens.
+
+Scheduled meetings are not ceremony. They create pressure before the final
+deadline. They force compression. They force proof. The manager must arrive
+with progress, evidence, risks, decisions needed, and the next move. The worker
+must arrive with its slice advanced or with a concrete reason, evidence, and a
+repair path.
+
+The manager does not micromanage. It stays closer to the details than the
+human, audits worker claims, corrects bad context, replaces polluted workers,
+and keeps the goal alive. A failed worker is usually not a defective model. It
+is usually defective context. Diagnose the context, fix it, and spawn a clean
+instance when needed.
+
+Escalation should be normal, but not lazy. Do not bring every friction point to
+the human. Solve inside authority first. Escalate when direction, taste, risk,
+or irreversible cost exceeds the contract. Bring evidence and options, not a
+helpless status packet.
+
+The long-term shape is an agent organization: top-level orchestrators, project
+managers, team leads, workers, critics, and verifiers, all reporting upward at
+strict cadences. Work should trickle up as compressed evidence. Direction
+should flow down as clarified goals, corrected context, and sharper authority.
+
 ## Guidance Should Shape Judgment
 
 Good guidance does not begin by trapping a capable agent in a flowchart.
