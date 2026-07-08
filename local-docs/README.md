@@ -34,6 +34,8 @@ catch drift before config is copied into a live machine.
   context.
 - [mechanical-truth-audit.md](mechanical-truth-audit.md): audit for manifests,
   scripts, doctor checks, live verification, and reviewed config fragments.
+- [hook-surfaces-audit.md](hook-surfaces-audit.md): audit for installed Codex
+  hook definitions, guard modules, launchers, and hook doctor checks.
 - [carried-capabilities-design.md](carried-capabilities-design.md): design for
   useful Compass capabilities that should travel in the repo but not load into
   every session.

@@ -31,6 +31,8 @@ agent using it while doing work.
 Codex global files:
 
 - `codex/AGENTS.md`
+- `codex/hooks.json`
+- `codex/hooks/`
 - `codex/agents/`
 - `codex/skills/`
 
@@ -290,6 +292,18 @@ Purpose: make sure Compass boundaries are checked by scripts and manifests
 instead of remembered by future agents.
 
 Audit packet: `local-docs/mechanical-truth-audit.md`
+
+Queue 8: Hook surfaces.
+
+- `codex/hooks.json`
+- `codex/hooks/`
+- `scripts/doctor/checks/hooks.ps1`
+- `scripts/doctor/hooks/`
+
+Purpose: keep installed hook behavior narrow, mechanical, reviewed, and tested
+without turning hook code into broad agent prose.
+
+Audit packet: `local-docs/hook-surfaces-audit.md`
 
 ## Inventory Maintenance
 
