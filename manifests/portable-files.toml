@@ -54,25 +54,30 @@ home = "$HOME\\.claude"
 skills_dir = "$HOME\\.claude\\skills"
 agents_dir = "$HOME\\.claude\\agents"
 
+# Claude skills derive from the reviewed codex/skills source at install time by
+# default. List a skill under `derived_skills` to generate it from
+# codex/skills/<name> (SKILL.md plus references/, dropping agents/openai.yaml).
+# Keep a skill under `skills` only when it carries Claude-specific wording that
+# cannot be derived; that claude/skills/<name> source is the override.
 skills = [
   "action-items-to-prs",
-  "benchmark-infra-reviewer",
-  "benchmark-run-operator",
   "compass",
-  "git-branch-resolver",
-  "grill-me",
   "orchestration-controller",
   "pr-review-loop",
-  "specialist-review",
   "subagent-driven-development",
-  "to-prd",
-  "workspace-steward",
   "write-a-skill",
 ]
 
 derived_skills = [
+  "benchmark-infra-reviewer",
+  "benchmark-run-operator",
+  "git-branch-resolver",
+  "grill-me",
   "input-token-economy",
   "monitor-to-completion",
+  "specialist-review",
+  "to-prd",
+  "workspace-steward",
 ]
 
 agents = [
