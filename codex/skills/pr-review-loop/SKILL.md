@@ -53,8 +53,9 @@ stale-rebuild, re-review, and merge-boundary patterns.
   as polish.
 - Local checks do not satisfy review gates. They prove the code path; they do
   not replace reviewer approval.
-- If review is silent, use the approved fallback path rather than waiting
-  passively.
+- If review is silent, use an authorized alternate review route rather than
+  waiting passively. Name the missing gate and why the alternate route is
+  allowed.
 - If the user performs merges, stop at merge boundary with the exact next merge
   action.
 - If a base branch moved, re-check whether downstream PRs still have a real
