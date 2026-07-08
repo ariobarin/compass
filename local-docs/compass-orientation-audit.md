@@ -49,7 +49,7 @@ Evidence:
 - `local-docs/maintenance-learnings.md` separates installed guidance from
   maintainer docs and captures exact capability contracts.
 - `workflows/compass-review-program.md` defines the audit stance, inventory
-  pass, pruning standard, PR rhythm, and stop conditions.
+  pass, pruning standard, PR rhythm, review gate, and stop conditions.
 - `local-docs/compass-surface-inventory.md` maps current surfaces and first
   audit packets.
 - `local-docs/compass-review-state.md` records current handoff state without
@@ -149,7 +149,7 @@ Recommended PR:
 Evidence:
 
 - `workflows/compass-review-program.md` defines classification, audit
-  questions, pruning standards, PR rhythm, and stop conditions.
+  questions, pruning standards, PR rhythm, review gate, and stop conditions.
 - The review stack has now used that workflow across orientation, loop
   governance, review surfaces, domain-shaped skills, writing skills,
   maintainer workflows, mechanical truth, and hook surfaces.
@@ -233,6 +233,7 @@ Completed follow-ups:
 - Root guidance now points Compass audits to
   `workflows/compass-review-program.md`.
 - The review-program state handoff has been added and mapped in the inventory.
+- The review-program gate keeps green draft PRs separate from review readiness.
 
 ## Verification
 
