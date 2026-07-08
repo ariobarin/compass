@@ -112,6 +112,7 @@ Primary maintainer surfaces:
 - `philosophy.md`
 - `local-docs/maintenance-learnings.md`
 - `local-docs/compass-surface-inventory.md`
+- `local-docs/compass-review-state.md`
 - `workflows/addition-intake.md`
 - `workflows/agent-failures.md`
 - `workflows/claude-config.md`
@@ -131,6 +132,9 @@ Audit pressure:
 - `workflows/agent-failures.md` and `local-docs/maintenance-learnings.md` may
   hold history that should stay out of runtime context. Keep them useful, but
   do not let them become storage for every past thought.
+- `local-docs/compass-review-state.md` is handoff state for continuing this
+  program. Keep it current when state classes change, but do not turn it into a
+  work log.
 - Workflows should route action. If they mainly explain background, move that
   background to local docs or cut it.
 
@@ -335,6 +339,7 @@ Update this file when:
 - a carried-but-not-global route is added;
 - a skill moves between global and carried status;
 - an audit queue is completed or reordered;
+- review-program state classes change;
 - a workflow becomes stale or moves.
 
 Do not update this file for every small wording cleanup. It is the map, not the
