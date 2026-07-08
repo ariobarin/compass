@@ -1,9 +1,9 @@
 # Addition Intake Workflow
 
-Use this workflow when deciding whether a new Codex rule, workflow, skill,
-agent, script, manifest entry, or config fragment belongs in Compass.
+Use this workflow when deciding whether a new Compass rule, workflow, skill,
+agent, hook, script, manifest entry, or config fragment belongs in Compass.
 This is maintainer guidance for promoting durable artifacts, not a runtime rule
-for every Codex turn.
+for every agent session.
 
 ## Intake Standard
 
@@ -54,7 +54,7 @@ the repeated problem.
 ## Runtime Vs Maintainer Guidance
 
 Decide whether the artifact is meant to be installed into a live Codex home,
-user skill home, or only used to maintain this repo.
+user skill home, Claude home, or only used to maintain this repo.
 
 Installed agentic guidance changes how future agent sessions behave. Put Codex
 guidance in `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`. Put Claude
@@ -67,7 +67,7 @@ Repo-maintainer guidance helps humans and agents edit this repository. Put that
 in this root `AGENTS.md`, `workflows/`, `local-docs/`, `manifests/`, or
 `scripts/`. It can explain promotion rules, local checks, stale-guidance sweeps,
 and why a portable file belongs here. It should not pretend to be a runtime rule
-for every Codex session.
+for every agent session.
 
 ## Skill And Agent Additions
 
@@ -112,7 +112,7 @@ When reviewing a memory-only skill:
 - Retire it as stale local history when it no longer maps to current Codex,
   Compass, or repo workflows.
 - Prefer a maintainer workflow note, local doc, or `*-learnings.md` entry in `local-docs/` when
-  the material explains how to maintain Compass rather than how future Codex
+  the material explains how to maintain Compass rather than how future agent
   sessions should act.
 
 Do not create a new installed global skill from memory-only material unless the
