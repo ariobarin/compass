@@ -2,10 +2,11 @@
 
 Reviewed source for my human-owned Codex setup.
 
-This repo is intentionally an allowlist, not a backup of the whole Codex home or
-user skill home. The live Codex directory contains auth, logs, sessions, caches,
-databases, generated plugin state, browser state, and machine-specific runtime
-paths. Those are not portable and should not be committed.
+This repo is intentionally an allowlist, not a backup of the whole Codex home,
+user skill home, or Claude home. The live Codex directory contains auth, logs,
+sessions, caches, databases, generated plugin state, browser state, and
+machine-specific runtime paths. Those are not portable and should not be
+committed.
 
 Hosted Codex web settings, cloud task history, repository connections, and
 workspace connector installs such as Slack or Linear are also out of scope for
@@ -43,7 +44,7 @@ files or proposing changes.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
 - `workflows/`: repo-side operating notes for recurring maintenance work. These
-  are not installed into a live Codex home or user skill home.
+  are not installed into a live Codex home, user skill home, or Claude home.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
   Use `workflows/compass-review-program.md` when auditing installed skills,
   agents, hooks, and maintainer guidance for pruning or rerouting.
@@ -52,7 +53,7 @@ files or proposing changes.
   Use `workflows/which-llm-plugin.md` for the durable `which-llm` plugin
   install and update route.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
-  live Codex home or user skill home.
+  live Codex home, user skill home, or Claude home.
 - `carried/`: reviewed optional capability source that travels with Compass but
   is not installed into every Codex or Claude session.
 - `manifests/portable-files.toml`: the install allowlist, repo-only list, and
@@ -81,14 +82,15 @@ Preview local Codex sessions that would be resumed after a restart:
 .\scripts\codex-restart-recovery.ps1 -DryRun
 ```
 
-Check whether live Codex and user skill files match the portable allowlist and
-ask Codex to report active instruction sources:
+Check whether live Codex, user skill, and Claude files match the portable
+allowlist and ask Codex to report active instruction sources:
 
 ```powershell
 .\scripts\verify-live.ps1
 ```
 
-Install reviewed portable files into the live Codex home and user skill home:
+Install reviewed portable files into the live Codex home, user skill home, and
+Claude home:
 
 ```powershell
 .\scripts\install.ps1 -Apply
