@@ -89,6 +89,25 @@ Cut provenance, dated observations, packaging explanation, stale caveats, owner
 intent, and maintainer reasoning from runtime context. Keep the role, stance,
 non-negotiables, boundaries, evidence standard, and fragile procedure.
 
+## Hook Surface Audit
+
+Hooks are installed runtime behavior, not agent prose. Audit them as mechanical
+guards.
+
+Ask:
+
+- What event invokes this hook?
+- What does the hook add, deny, or block?
+- Does it fail open or fail closed, and is that correct for the event?
+- What exact guard module handles the behavior?
+- What doctor test proves the portable copy works?
+- Does hook-local documentation explain trust review and disablement?
+- Is this better as a hook than a skill, agent, script, or local workflow?
+
+Keep hook behavior narrow. Put broad judgment in skills, agents, or workflows.
+Hook PRs should include the hook definition, guard module, hook-local docs, and
+doctor tests.
+
 ## Maintainer Surface Audit
 
 Maintainer docs should make Compass easier to change without bloating runtime
