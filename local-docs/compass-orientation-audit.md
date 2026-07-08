@@ -58,24 +58,25 @@ Recommended PR:
 
 - None for structure. Continue the review program from this spine.
 
-### O2: `philosophy.md` is missing the newest doctrine on this stack
+### O2: `philosophy.md` now carries the loop doctrine
 
 Evidence:
 
+- PR #105, `Document loop engineering philosophy`, is merged.
 - Current `philosophy.md` has strong sections on judgment, roles, authority,
-  evidence, human-owned power, and writing that embodies the system.
-- PR #105 adds the prompt, context, and loop engineering doctrine from the
-  recent discussion, but this stack does not include that branch.
+  evidence, human-owned power, writing that embodies the system, and durable
+  guidance that shapes agent behavior.
 
 Decision:
 
-- Do not duplicate PR #105 here.
-- Treat #105 as the active philosophy update for loop-engineering doctrine.
+- Treat `philosophy.md` as the current doctrine source for orientation-level
+  loop-engineering language.
+- Do not duplicate that doctrine into root guidance, README, or runtime skills
+  without a narrower audience need.
 
 Recommended PR:
 
-- Merge or restack #105 before using `philosophy.md` as the complete source for
-  loop-engineering language.
+- None.
 
 ### O3: `AGENTS.md` is already dense enough for root guidance
 
@@ -187,17 +188,13 @@ Follow-up status:
 
 Recommended order:
 
-1. Land #105, #106, and #107 or keep future PRs stacked explicitly.
-2. Optional: add a one-line root pointer to the review program if it does not
-   bloat `AGENTS.md`.
-3. Audit the loop governance skills as the first runtime family:
-   `compass`, `using-codex-goals`, `orchestration-controller`,
-   `subagent-driven-development`, `monitor-to-completion`,
-   `input-token-economy`, and `root-cause-not-symptom`.
+1. Keep future PRs stacked explicitly until the surface-inventory branch or its
+   successor lands.
 
 Completed follow-ups:
 
 - The carried-but-not-global route has been designed and wired.
+- PR #105 has landed, so `philosophy.md` is the current doctrine source.
 - The loop governance skill audit has been completed.
 - Hook surfaces have been added to the inventory and review-program route.
 - Root guidance now points Compass audits to
