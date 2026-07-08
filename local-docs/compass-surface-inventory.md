@@ -158,8 +158,8 @@ Compass but should not be installed for every session.
 Current state:
 
 - The manifest has global install surfaces and repo-only surfaces.
-- There is no dedicated carried-but-not-global skill area yet.
-- No skill should be moved there until the route is designed and reviewed.
+- `carried/` is the dedicated carried-but-not-global source root.
+- No skill has been moved there yet.
 
 Design packet: `local-docs/carried-capabilities-design.md`
 

@@ -81,6 +81,86 @@ function Get-ManifestStringValue {
     return $keyMatch.Groups[1].Value
 }
 
+function Test-ManifestArrayKeyExists {
+    param(
+        [string]$Section,
+        [string]$Key
+    )
+
+    $sectionPattern = "(?ms)^\[$([regex]::Escape($Section))\]\s*(.*?)(?=^\[|\z)"
+    $sectionMatch = [regex]::Match($manifestText, $sectionPattern)
+    if (-not $sectionMatch.Success) {
+        return $false
+    }
+
+    $keyPattern = "(?ms)^\s*$([regex]::Escape($Key))\s*=\s*\["
+    return [regex]::Match($sectionMatch.Groups[1].Value, $keyPattern).Success
+}
+
+$repoOnlyDirs = @(Get-ManifestArrayValues -Text $manifestText -Section "repo_only" -Key "dirs")
+if ($repoOnlyDirs -notcontains "carried") {
+    $problems.Add("carried capability root must be listed in repo_only dirs")
+}
+
+foreach ($key in @("codex_skills", "codex_agents", "claude_skills", "claude_agents")) {
+    if (-not (Test-ManifestArrayKeyExists -Section "carried" -Key $key)) {
+        $problems.Add("missing carried manifest list: $key")
+    }
+}
+
+$carriedCodexSkills = @(Get-ManifestArrayValues -Text $manifestText -Section "carried" -Key "codex_skills")
+$installedCodexSkills = @(Get-ManifestArrayValues -Text $manifestText -Section "agents" -Key "skills")
+foreach ($skill in $carriedCodexSkills) {
+    if ($installedCodexSkills -contains $skill) {
+        $problems.Add("carried codex skill is also installed globally: $skill")
+    }
+
+    $path = Join-Path (Join-Path (Join-Path $repoRoot "carried") "codex\skills") $skill
+    if (-not (Test-Path -LiteralPath $path)) {
+        $problems.Add("carried codex skill missing from repo: carried/codex/skills/$skill")
+    }
+}
+
+$carriedCodexAgents = @(Get-ManifestArrayValues -Text $manifestText -Section "carried" -Key "codex_agents")
+foreach ($agent in $carriedCodexAgents) {
+    $installedPath = Join-Path (Join-Path (Join-Path $repoRoot "codex") "agents") "$agent.toml"
+    if (Test-Path -LiteralPath $installedPath) {
+        $problems.Add("carried codex agent is also installed globally: $agent")
+    }
+
+    $path = Join-Path (Join-Path (Join-Path $repoRoot "carried") "codex\agents") "$agent.toml"
+    if (-not (Test-Path -LiteralPath $path)) {
+        $problems.Add("carried codex agent missing from repo: carried/codex/agents/$agent.toml")
+    }
+}
+
+$carriedClaudeSkills = @(Get-ManifestArrayValues -Text $manifestText -Section "carried" -Key "claude_skills")
+$installedClaudeSkills = @(Get-ManifestArrayValues -Text $manifestText -Section "claude" -Key "skills")
+$derivedClaudeSkills = @(Get-ManifestArrayValues -Text $manifestText -Section "claude" -Key "derived_skills")
+foreach ($skill in $carriedClaudeSkills) {
+    if (($installedClaudeSkills -contains $skill) -or ($derivedClaudeSkills -contains $skill)) {
+        $problems.Add("carried claude skill is also installed globally: $skill")
+    }
+
+    $path = Join-Path (Join-Path (Join-Path $repoRoot "carried") "claude\skills") $skill
+    if (-not (Test-Path -LiteralPath $path)) {
+        $problems.Add("carried claude skill missing from repo: carried/claude/skills/$skill")
+    }
+}
+
+$carriedClaudeAgents = @(Get-ManifestArrayValues -Text $manifestText -Section "carried" -Key "claude_agents")
+$installedClaudeAgents = @(Get-ManifestArrayValues -Text $manifestText -Section "claude" -Key "agents")
+foreach ($agent in $carriedClaudeAgents) {
+    if ($installedClaudeAgents -contains $agent) {
+        $problems.Add("carried claude agent is also installed globally: $agent")
+    }
+
+    $path = Join-Path (Join-Path (Join-Path $repoRoot "carried") "claude\agents") "$agent.md"
+    if (-not (Test-Path -LiteralPath $path)) {
+        $problems.Add("carried claude agent missing from repo: carried/claude/agents/$agent.md")
+    }
+}
+
 $blockedNames = @(Get-ManifestArrayValues -Text $manifestText -Section "local_only" -Key "files")
 if ($blockedNames.Count -eq 0) {
     $problems.Add("missing local-only files in portable manifest")

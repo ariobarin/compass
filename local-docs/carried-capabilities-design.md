@@ -41,8 +41,8 @@ is bloat, necessary procedure, or the wrong audience.
 
 ## Proposed Source Shape
 
-When the first carried capability is approved, add a top-level `carried/`
-directory and list it as repo-only in `manifests/portable-files.toml`.
+Carried material lives under the top-level `carried/` directory. The directory
+is listed as repo-only in `manifests/portable-files.toml`.
 
 Use runtime-shaped subdirectories without making them installed roots:
 
@@ -68,10 +68,10 @@ of global runtime.
 
 The manifest should make carried status visible without installing it.
 
-When `carried/` is introduced:
+The manifest contract:
 
-- add `carried` to `[repo_only].dirs`;
-- add a `[carried]` section that lists carried Codex skills, Codex agents,
+- `carried` is listed in `[repo_only].dirs`;
+- `[carried]` lists carried Codex skills, Codex agents,
   Claude skills, and Claude agents;
 - keep install functions reading only installed sections;
 - keep carried entries out of live copy maps;
@@ -145,7 +145,7 @@ Do not add carried material to `[claude].skills`, `[claude].derived_skills`, or
 
 ## Doctor Checks
 
-The first implementation PR should add checks only for mechanical boundaries:
+Doctor checks cover mechanical boundaries:
 
 - `carried/` is listed as repo-only;
 - carried entries are not installed entries;
