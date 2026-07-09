@@ -1,6 +1,6 @@
 # Compass Review Program
 
-Use this workflow when auditing Compass itself: installed skills, agents,
+Use this workflow when auditing Compass itself: installed skills, agents, hooks,
 maintainer docs, workflows, manifests, scripts, and reviewed config. The work is
 slow by design. Do not one-shot the repo.
 
@@ -38,7 +38,9 @@ the installed set, the manifest, the Claude mirror, and the retirement path.
 ## Inventory Pass
 
 Before editing a family of files, create a compact inventory. Use current files
-as authority.
+as authority. Start from `local-docs/compass-surface-inventory.md` when it is
+present, and read `local-docs/compass-review-state.md` when continuing the
+existing review program. Update the inventory only when the map changes.
 
 Classify each item as one of:
 
@@ -87,6 +89,25 @@ Ask:
 Cut provenance, dated observations, packaging explanation, stale caveats, owner
 intent, and maintainer reasoning from runtime context. Keep the role, stance,
 non-negotiables, boundaries, evidence standard, and fragile procedure.
+
+## Hook Surface Audit
+
+Hooks are installed runtime behavior, not agent prose. Audit them as mechanical
+guards.
+
+Ask:
+
+- What event invokes this hook?
+- What does the hook add, deny, or block?
+- Does it fail open or fail closed, and is that correct for the event?
+- What exact guard module handles the behavior?
+- What doctor test proves the portable copy works?
+- Does hook-local documentation explain trust review and disablement?
+- Is this better as a hook than a skill, agent, script, or local workflow?
+
+Keep hook behavior narrow. Put broad judgment in skills, agents, or workflows.
+Hook PRs should include the hook definition, guard module, hook-local docs, and
+doctor tests.
 
 ## Maintainer Surface Audit
 
@@ -156,7 +177,7 @@ Good PR boundaries:
 - add a check that prevents a repeated drift;
 - update maintainer docs after a runtime cleanup.
 
-Each PR should say:
+The review artifact should say:
 
 - what surface was reviewed;
 - what audience it serves;
@@ -164,9 +185,38 @@ Each PR should say:
 - what behavior should change;
 - what commands or source inspection verified the change.
 
+Keep the PR body consistent with repo convention: short, motivation-first, and
+without headers or checklists. Put detailed evidence in the audit packet, local
+doc, final report, or review comment that travels with the PR.
+
 Run `.\scripts\doctor.ps1` before committing. Run skill validation for skill
 edits when available. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when
 live drift matters.
+
+## Review Gate
+
+Green draft PRs are build evidence. They are not readiness.
+
+Before calling a Compass review-program PR ready, inspect the live PR state:
+base branch, head branch, head SHA, check results, review status, and open
+comments. For stacked PRs, verify every base points at the intended previous
+head and name the merge order.
+
+Inspect inline review comments separately from top-level PR comments and review
+bodies. A clean current-head review comment does not prove every inline finding
+has been checked. On GitHub, include the pull review comments endpoint, for
+example `gh api repos/<owner>/<repo>/pulls/<number>/comments --paginate`, or a
+thread-aware equivalent when resolution state matters.
+
+Use `pr-review-loop` for the final review path. Local checks and GitHub checks
+support readiness, but they do not replace current-head review gates. After any
+material push, re-read the head SHA and make sure required reviewers are looking
+at that SHA before marking the PR ready.
+
+If the current session lacks authority to invoke a required reviewer, stop at
+that gate and name it as unsatisfied. Do not self-review, count a local check as
+review, or keep stacking PRs as if review happened. Ask for the authority or an
+explicit approved reviewer route.
 
 ## Stop Conditions
 

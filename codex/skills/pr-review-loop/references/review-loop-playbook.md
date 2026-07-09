@@ -17,8 +17,10 @@ support the case for readiness, but it never replaces reviewer approval.
 
 When the user names a specific PR or branch:
 
-1. Inspect the live PR first with `gh pr view` or equivalent.
-2. Record base branch, head branch, head SHA, review state, and checks.
+1. Inspect the live PR first with `gh pr view` or equivalent, and inspect inline
+   review comments separately.
+2. Record base branch, head branch, head SHA, review state, inline findings,
+   and checks.
 3. Keep the exact PR identity unless the user explicitly asks for a rebuild,
    retarget, or replacement branch.
 4. Re-run the same live checks after each material push.
@@ -31,6 +33,7 @@ Useful fields:
 - `reviewDecision`
 - `mergeStateStatus`
 - `statusCheckRollup`
+- inline review comments, such as GitHub pull review comments
 
 ## Current-Head Discipline
 
@@ -61,8 +64,8 @@ When both a second reviewer and `neutral-critic` apply:
 - treat both as blocking gates;
 - route actionable findings back through the implementation path;
 - after fixes, re-run the narrow checks and re-request review on the new head;
-- if one reviewer is silent and fallback is allowed, use the allowed fallback
-  explicitly and report which gate remains unsatisfied.
+- if one reviewer is silent and an alternate route is authorized, use that
+  route explicitly and report which gate remains unsatisfied.
 
 ## Merge Boundary
 

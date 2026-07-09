@@ -3,10 +3,11 @@
 Use this workflow when changing Codex setup that should survive a new machine,
 fresh profile, or copied repo checkout.
 
-This is repo-maintainer guidance. It is not installed into a live Codex home or
-user skill home.
-Installed agentic guidance lives under `codex/AGENTS.md`, `codex/agents/`, and
-`codex/skills/`.
+This is repo-maintainer guidance. It is not installed into a live Codex home,
+user skill home, or Claude home.
+Codex installed agentic guidance lives under `codex/AGENTS.md`,
+`codex/agents/`, and `codex/skills/`. Claude installed agentic guidance lives
+under `claude/agents/` and `claude/skills/`.
 
 These scripts use `-CodexHome` for Codex-home files, otherwise
 `$env:CODEX_HOME`, otherwise the default `%USERPROFILE%\.codex` home. They use
@@ -33,8 +34,8 @@ under `claude/skills/`.
 
 ## Latest-to-live flow
 
-Use `.\scripts\update-live.ps1` when the live Codex home and user skill home
-should track the latest reviewed portable setup from `origin/main`.
+Use `.\scripts\update-live.ps1` when the live Codex home, user skill home, and
+Claude home should track the latest reviewed portable setup from `origin/main`.
 
 The script refuses dirty checkouts, fetches the remote branch, fast-forwards the
 local branch only when Git can do so without a merge, refuses to overwrite
@@ -81,7 +82,7 @@ reviewed config fragment.
 
 ## Durable Guidance Edits
 
-When the change affects future Codex behavior across sessions or machines:
+When the change affects future installed behavior across sessions or machines:
 
 1. Read the current portable files first.
 2. Draft the exact patch set before editing unless direct edits were explicitly
@@ -158,13 +159,13 @@ skill install paths again:
 - [addition-intake.md](addition-intake.md): promoting new portable artifacts and
   checking related stale guidance.
 - [compass-review-program.md](compass-review-program.md): auditing installed
-  skills, agents, and maintainer guidance for audience fit, pruning,
+  skills, agents, hooks, and maintainer guidance for audience fit, pruning,
   rerouting, and global-install eligibility.
 - [codex-restart-recovery.md](codex-restart-recovery.md): installing a
   restart-only local recovery task for unfinished Codex sessions.
 - [which-llm-plugin.md](which-llm-plugin.md): installing and refreshing the
   separately owned `which-llm` plugin without tracking generated cache state.
-- [plan-template.md](plan-template.md): planning large or risky work.
+- [plan-template.md](plan-template.md): durable written plan artifacts.
 - [multi-thread-pr-coordination.md](multi-thread-pr-coordination.md): keeping
   parallel audit threads out of public PR sprawl.
 - [read-only-research.md](read-only-research.md): mapping code paths before

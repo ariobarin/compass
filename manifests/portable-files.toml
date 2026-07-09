@@ -73,7 +73,6 @@ derived_skills = [
   "specialist-review",
   "subagent-driven-development",
   "to-prd",
-  "workspace-steward",
   "write-a-skill",
 ]
 
@@ -114,12 +113,21 @@ files = [
 
 dirs = [
   ".github",
+  "carried",
   "local-docs",
   "manifests",
   "scripts",
   "workflows",
 ]
-reason = "These files guide repository maintenance but are not installed into a live Codex home or user skill home."
+reason = "These files guide repository maintenance but are not installed into a live Codex home, user skill home, or Claude home."
+
+[carried]
+# Reviewed source that travels with Compass but is not installed into every
+# Codex or Claude session.
+codex_skills = []
+codex_agents = []
+claude_skills = []
+claude_agents = []
 
 [local_only]
 files = [

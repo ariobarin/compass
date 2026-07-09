@@ -29,7 +29,7 @@ stale-rebuild, re-review, and merge-boundary patterns.
 ## Loop
 
 1. Inspect the live PR state first: repo, base, head branch, head SHA, checks,
-   review status, and open comments.
+   review status, top-level comments, and inline review comments.
 2. Decide the posture before editing: preserve the named PR, rebuild from stale
    source material on current main, or stay read-only.
 3. Patch only the scope needed for the current PR claim or the approved rebuild.
@@ -55,8 +55,11 @@ stale-rebuild, re-review, and merge-boundary patterns.
   treated as polish.
 - Local checks do not satisfy review gates. They prove the code path; they do
   not replace reviewer approval.
-- If review is silent, use the approved fallback path rather than waiting
-  passively.
+- Top-level review text does not clear inline findings. Inspect inline review
+  comments separately before claiming readiness or merge safety.
+- If review is silent, use an authorized alternate review route rather than
+  waiting passively. Name the missing gate and why the alternate route is
+  allowed.
 - If the user performs merges, stop at merge boundary with the exact next merge
   action.
 - If a base branch moved, re-check whether downstream PRs still have a real
