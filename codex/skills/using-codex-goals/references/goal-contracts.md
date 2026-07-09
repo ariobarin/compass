@@ -8,9 +8,7 @@ completion predicates.
 
 - Goal Brief Template
 - Goal State Boundary
-- Controller Goal Template
-- Worker Goal Template
-- Monitor Goal Template
+- Role-Specific Contracts
 - Blocker Pressure
 - Pause And Stop Authority
 - Subagent Slice Template
@@ -45,62 +43,26 @@ belong above history and evidence appendices.
 
 ## Goal State Boundary
 
-Goal state is local to the context that activates it:
+Delegated `/goal` text is plain text until the child applies it with
+`create_goal` in its own context. The controller keeps parent completion
+authority, child completion is evidence for the parent, and nested fan-out stays
+controller-owned.
 
-- delegated `/goal` text to another thread or spawned subagent is plain text
-  until the child applies it;
-- a child that needs active goal state applies it by calling `create_goal` for
-  itself;
-- the parent controller keeps completion authority for the parent goal;
-- child completion is evidence for the parent goal, not completion of the
-  parent goal;
-- nested fan-out stays controller-owned.
+## Role-Specific Contracts
 
-## Controller Goal Template
+Start every role with the [Goal Brief Template](#goal-brief-template). Only the
+objective and ownership change:
 
-Use this when the parent thread owns orchestration, verification, or routing.
-
-```text
-/goal <parent objective>
-
-Done means:
-Scope:
-Out of scope:
-Evidence required:
-If waiting:
-If stuck or failing:
-If paused or stopped:
-Subagents:
-```
-
-Good controller scopes often include:
-
-- keep parent completion authority;
-- verify child evidence before accepting status claims;
-- route blockers into concrete next actions;
-- keep live docs or handoffs current only when they reflect real state.
-
-## Worker Ownership Contract
-
-Use this when a child thread or subagent owns one executable slice.
-
-```text
-/goal <slice objective>
-
-Done means:
-Scope:
-Out of scope:
-Evidence required:
-If waiting:
-If stuck or failing:
-If paused or stopped:
-Subagents:
-```
-
-Worker scopes must make ownership felt. Keep one owner, one slice, one done
-condition, and one evidence set. The worker owns local inspection, repair,
-validation, and evidence preservation until the slice is done, rerouted, or a
-specific outside decision has been proven.
+- Controller: `/goal <parent objective>`. Keep parent completion authority,
+  verify child evidence, route blockers into next actions, and update live
+  handoffs only when they reflect real state.
+- Worker: `/goal <slice objective>`. Keep one owner, slice, done condition, and
+  evidence set. Own local inspection, repair, validation, and evidence
+  preservation until the slice is done, rerouted, or needs a proven outside
+  decision.
+- Monitor: `/goal Monitor <target thread, run, or PR> until <condition>`. Name
+  intervention triggers, drift, and cadence without taking implementation
+  ownership.
 
 For long-running benchmark or process work, prefer a runner thread over letting
 the controller become the runner. The runner owns the shell process, logs,
@@ -125,29 +87,9 @@ If stuck or failing: keep healthy comparable slices moving when safe, preserve
   evidence, identify the smallest poisoned slice, and ask the controller only
   for a benchmark-validity decision that cannot be made locally.
 If paused or stopped: stop only owned work, preserve logs and artifact roots,
-  neutralize monitors that would restart the run, and return a resume packet
-  without declaring parent completion.
+neutralize monitors that would restart the run, and return a resume packet
+without declaring parent completion.
 ```
-
-## Monitor Goal Template
-
-Use this when the job is oversight, not implementation.
-
-```text
-/goal Monitor <target thread, run, or PR> until <time or completion condition>.
-
-Done means:
-Scope:
-Out of scope:
-Evidence required:
-If waiting:
-If stuck or failing:
-If paused or stopped:
-Subagents:
-```
-
-Good monitor scopes say when to intervene, what drift counts as off-task, and
-what cadence to use between checks.
 
 ## Blocker Pressure
 
