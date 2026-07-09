@@ -11,14 +11,11 @@ Expected shape:
 
 ```text
 carried/
-  codex/
-    skills/<name>/
-    agents/<name>.toml
-  claude/
-    skills/<name>/
-    agents/<name>.md
+  skills/<name>/
+  agents/<name>.toml
 ```
 
 Do not put global runtime behavior here. Do not put carried material under
-`codex/skills`, `codex/agents`, `claude/skills`, or `claude/agents` unless the
-same PR intentionally promotes it into installed context.
+`codex/skills` or `codex/agents` unless the same PR intentionally promotes it
+into installed context. Claude install surfaces derive from promoted Codex
+source rather than a hand-maintained carried mirror.

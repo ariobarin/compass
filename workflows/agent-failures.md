@@ -68,12 +68,11 @@ evidence: `gh api repos/ariobarin/compass/pulls/184/comments --paginate` and
   the top-level review path had already looked clean.
 root cause category: missing context, weak verification
 fix made: added inline review-comment inspection to the Compass review-program
-  gate, review-program state, Codex and Claude `pr-review-loop` runtime
-  guidance, both PR-loop playbooks, and the PR-review surfaces audit packet.
-verification: skill validation for Codex and Claude `pr-review-loop`,
-  `git diff --check`, `.\scripts\doctor.ps1`, GitHub `portable`, current-head
-  Codex review, and explicit pull review comment API checks passed on the
-  affected PRs.
+  gate and the reviewed `pr-review-loop` source and playbook. The Claude install
+  surface derives from that Codex source.
+verification: source skill validation, `git diff --check`,
+  `.\scripts\doctor.ps1`, GitHub `portable`, current-head review, and explicit
+  pull review comment API checks passed on the affected PRs.
 should become durable guidance: yes, as repo-maintainer failure learning plus
   focused PR-loop runtime guidance, not as another global session rule.
 ```
