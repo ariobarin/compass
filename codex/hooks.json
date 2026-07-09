@@ -12,6 +12,20 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "^(Bash|apply_patch)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CODEX_HOME:-$HOME/.codex}/hooks/portable_guard.sh\" dash_guard",
+            "commandWindows": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE '.codex' }; $script = Join-Path $codexHome 'hooks\\portable_guard.ps1'; if (Test-Path -LiteralPath $script) { [Console]::In.ReadToEnd() | & $script dash_guard }\"",
+            "timeout": 30,
+            "statusMessage": "Checking public artifact text"
+          }
+        ]
+      }
     ]
   }
 }
