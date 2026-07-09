@@ -57,8 +57,6 @@ files or proposing changes.
   install and update route.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
   live Codex home, user skill home, or Claude home.
-- `carried/`: reviewed optional capability source that travels with Compass but
-  is not installed into every Codex or Claude session.
 - `manifests/portable-files.toml`: the install allowlist, repo-only list, and
   local-only denylist.
 - `manifests/tool-surfaces.md`: repo-side review notes for tools that can touch
