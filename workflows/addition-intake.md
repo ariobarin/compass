@@ -12,6 +12,20 @@ and can be reviewed, reinstalled, and verified without carrying generated state.
 Promote additions when they are human-owned, portable, and useful outside one
 transient task.
 
+## Reduction Case
+
+Before treating an addition as durable, name its reduction case:
+
+- the recurring context, state, duplication, drift, or maintenance cost it
+  removes or prevents;
+- the existing artifact, manual step, duplicate source, or decision branch it
+  replaces, merges, narrows, derives, or mechanizes;
+- why the remaining surface is the narrowest one that preserves the behavior.
+
+An addition can be justified when it creates distinct new behavior. In that
+case, state why its continuing cost is worth carrying instead of presenting it
+as free improvement.
+
 Keep generated state, plugin cache output, auth state, sessions, logs, browser
 profiles, local runtime paths, and one-machine trust settings in live or ignored
 local storage.
@@ -20,8 +34,10 @@ The default path is staged:
 
 1. For installed agentic guidance, use or test the addition in the live target
    home first when that is the lowest risk way to validate behavior.
-2. Capture the problem it solves and the evidence that it worked.
-3. Decide the smallest durable artifact type.
+2. Capture the problem it solves, the evidence that it worked, and its
+   reduction case.
+3. Decide the smallest durable artifact type and what existing surface it can
+   replace, narrow, or intentionally leave unchanged.
 4. Copy only reviewed portable files into this repo.
 5. Wire the addition into the route-specific allowlist, install map, docs, and
    checks that apply to that artifact type.

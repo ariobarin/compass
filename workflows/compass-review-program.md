@@ -22,9 +22,13 @@ it, what they need at that moment, and what can be cut or moved without behavior
 loss. If pruning preserves behavior or improves behavior, the removed text was
 probably for the wrong audience or carried weak signal.
 
+The central theme is reduction: remove recurring context, duplication, state,
+and maintenance cost while preserving the behavior that makes the system useful
+and trustworthy.
+
 ## Review Stance
 
-Understand first. Cut second.
+Understand first. Cut second. Reduce cost, not capability.
 
 Do not begin by rewriting. Read the target surface, name its runtime or
 maintainer audience, and state the job it must perform. Then decide what
@@ -59,6 +63,9 @@ Path:
 Audience:
 Purpose:
 Must preserve:
+Recurring cost:
+Reduction move or net-new justification:
+What becomes obsolete, if anything:
 Possible cuts:
 Move candidates:
 Global-install justification:
@@ -180,6 +187,7 @@ The review artifact should say:
 - what surface was reviewed;
 - what audience it serves;
 - what was cut, moved, or preserved;
+- what recurring cost was reduced, or why a net-new surface earns its cost;
 - what behavior should change;
 - what commands or source inspection verified the change.
 
