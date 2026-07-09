@@ -114,12 +114,13 @@ files = [
 
 dirs = [
   ".github",
+  "carried",
   "local-docs",
   "manifests",
   "scripts",
   "workflows",
 ]
-reason = "These files guide repository maintenance but are not installed into a live Codex home or user skill home."
+reason = "These files guide repository maintenance but are not installed into a live Codex home, user skill home, or Claude home."
 
 [local_only]
 files = [

@@ -1,12 +1,14 @@
 # Repository Guidance
 
 Compass is the reviewed source for portable Codex setup. It is not a raw backup
-of `~/.codex` or `$HOME/.agents`.
+of `~/.codex`, `$HOME/.agents`, or `$HOME/.claude`.
 
 - `codex/AGENTS.md` is the portable source for the live global
   `~/.codex/AGENTS.md`. Only put session-wide defaults there.
-- Installed agentic guidance belongs under `codex/AGENTS.md`,
+- Installed agentic guidance source belongs under `codex/AGENTS.md`,
   `codex/agents/`, or `codex/skills/`.
+- Installed Codex hook behavior belongs under `codex/hooks.json` or
+  `codex/hooks/`.
 - This repo-root `AGENTS.md` is for Compass maintenance guidance.
 - If a rule only makes sense while editing Compass, put it here or in
   `workflows/` or `local-docs/`, not in installed agentic docs.
@@ -15,8 +17,9 @@ of `~/.codex` or `$HOME/.agents`.
   targets as agent behavior.
 - Keep `codex/AGENTS.md` short and global.
 - Put detailed operating behavior in the narrowest surface: installed agents or
-  skills for reusable agent capability, repo workflows for Compass
-  maintenance, scripts for mechanical checks, and manifests for boundaries.
+  skills for reusable agent capability, hook docs for hook operation, repo
+  workflows for Compass maintenance, scripts for mechanical checks, and
+  manifests for boundaries.
 - Treat `codex/agents` and manifest-listed `codex/skills` as one portable
   bundle. When editing bundled skills or agents, reference bundled capabilities
   directly instead of making them sound optional. Keep conditional wording for
@@ -31,6 +34,8 @@ of `~/.codex` or `$HOME/.agents`.
   source files. See `workflows/claude-config.md`.
 - For nontrivial changes to this repo, read
   `local-docs/maintenance-learnings.md` before editing.
+- For Compass audits, use `workflows/compass-review-program.md` before pruning
+  installed skills, agents, hooks, or maintainer guidance.
 - Do not commit auth, sessions, logs, caches, browser state, SQLite files, or
   generated plugin caches.
 - Run `.\scripts\doctor.ps1` before committing.
@@ -45,6 +50,8 @@ of `~/.codex` or `$HOME/.agents`.
   or other local-only Codex data.
 - Flag changes that hardcode `~/.codex`, `%USERPROFILE%\\.codex`, or
   `$HOME/.agents` when the path should respect `CODEX_HOME` or `-AgentsHome`.
+- Flag changes that hardcode `$HOME/.claude` when the path should respect
+  `-ClaudeHome`.
 - Flag config changes that introduce undocumented keys, stale settings, or
   stronger default authority without a current-doc justification.
 - Flag guidance that routes project-specific behavior into Compass

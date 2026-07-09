@@ -2,10 +2,11 @@
 
 Reviewed source for my human-owned Codex setup.
 
-This repo is intentionally an allowlist, not a backup of the whole Codex home or
-user skill home. The live Codex directory contains auth, logs, sessions, caches,
-databases, generated plugin state, browser state, and machine-specific runtime
-paths. Those are not portable and should not be committed.
+This repo is intentionally an allowlist, not a backup of the whole Codex home,
+user skill home, or Claude home. The live Codex directory contains auth, logs,
+sessions, caches, databases, generated plugin state, browser state, and
+machine-specific runtime paths. Those are not portable and should not be
+committed.
 
 Hosted Codex web settings, cloud task history, repository connections, and
 workspace connector installs such as Slack or Linear are also out of scope for
@@ -35,24 +36,26 @@ files or proposing changes.
   `$HOME/.agents/skills`, excluding system and plugin cache skills.
   Project-specific `.agents/skills` belong in the target repo. Broader sharing
   should usually happen through a plugin.
-- `claude/skills/` and `claude/agents/`: Claude Code skills and agents installed
-  into `$HOME/.claude`. They all derive from `codex/` at install time (listed in
-  `[claude].derived_skills` and `[claude].derived_agents`); there are no
+- Claude Code skills and agents are installed into `$HOME/.claude` from the
+  reviewed `codex/` source at install time (listed in
+  `[claude].derived_skills` and `[claude].derived_agents`). There are no
   hand-maintained `claude/` source files in the repo. See
   `workflows/claude-config.md`.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new
   machine. This is not installed automatically.
 - `workflows/`: repo-side operating notes for recurring maintenance work. These
-  are not installed into a live Codex home or user skill home.
+  are not installed into a live Codex home, user skill home, or Claude home.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
   Use `workflows/compass-review-program.md` when auditing installed skills,
-  agents, and maintainer guidance for pruning or rerouting.
+  agents, hooks, and maintainer guidance for pruning or rerouting.
   Use `workflows/codex-restart-recovery.md` for restart-only recovery of
   unfinished local Codex sessions.
   Use `workflows/which-llm-plugin.md` for the durable `which-llm` plugin
   install and update route.
 - `local-docs/`: repo-local maintenance learnings that are not installed into a
-  live Codex home or user skill home.
+  live Codex home, user skill home, or Claude home.
+- `carried/`: reviewed optional capability source that travels with Compass but
+  is not installed into every Codex or Claude session.
 - `manifests/portable-files.toml`: the install allowlist, repo-only list, and
   local-only denylist.
 - `manifests/tool-surfaces.md`: repo-side review notes for tools that can touch
@@ -79,14 +82,15 @@ Preview local Codex sessions that would be resumed after a restart:
 .\scripts\codex-restart-recovery.ps1 -DryRun
 ```
 
-Check whether live Codex and user skill files match the portable allowlist and
-ask Codex to report active instruction sources:
+Check whether live Codex, user skill, and Claude files match the portable
+allowlist and ask Codex to report active instruction sources:
 
 ```powershell
 .\scripts\verify-live.ps1
 ```
 
-Install reviewed portable files into the live Codex home and user skill home:
+Install reviewed portable files into the live Codex home, user skill home, and
+Claude home:
 
 ```powershell
 .\scripts\install.ps1 -Apply
