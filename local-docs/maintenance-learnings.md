@@ -6,14 +6,14 @@ material, not live installed configuration.
 ## What Good Looks Like
 
 Good changes make the portable setup easier to review, reinstall, and verify
-without making every future Codex turn carry more context. Prefer small durable
-artifacts: a workflow for a recurring process, a skill for a specialized task, a
-script for a mechanical check, and a manifest for capability or portability
-boundaries.
+without making every future agent session carry more context. Prefer small
+durable artifacts: a workflow for a recurring process, a skill for a specialized
+task, a script for a mechanical check, and a manifest for capability or
+portability boundaries.
 
-The best default is boring and explicit. Keep ordinary files in ordinary Codex
-and user skill locations, keep generated state out of git, and make promotion
-from repo to live install targets a deliberate copy step with a diff.
+The best default is boring and explicit. Keep ordinary files in ordinary live
+install target locations, keep generated state out of git, and make promotion
+from repo to those targets a deliberate copy step with a diff.
 
 ## Exact Capability Contracts
 
@@ -31,8 +31,9 @@ reported as unavailable.
 
 ## Install Boundary
 
-Installed agentic documentation changes future Codex behavior. It belongs in
-`codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`, and should describe
+Installed agentic documentation changes future agent behavior. Codex guidance
+belongs in `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`. Claude
+guidance belongs in `claude/agents/` or `claude/skills/`. It should describe
 durable role, stance, judgment, and capability boundaries.
 
 Installed docs should speak to the agent that will use them at runtime. State
@@ -49,8 +50,8 @@ skill.
 Repo-maintainer documentation helps humans and agents maintain this repository.
 It belongs in the root `AGENTS.md`, `workflows/`, `local-docs/`, `manifests/`,
 or `scripts/`, and should explain promotion rules, checks, local review habits,
-and portability boundaries. These surfaces are not copied into live Codex as
-agent behavior.
+and portability boundaries. These surfaces are not copied into live install
+targets as agent behavior.
 
 ## Context Discipline
 
@@ -62,8 +63,9 @@ agent behavior.
   repo-root `AGENTS.md`, `workflows/`, or `local-docs/`, not in
   `codex/AGENTS.md`.
 - Put detailed guidance in the narrowest surface: installed skill references for
-  reusable agent capability, workflows or local docs for repo maintenance,
-  scripts for mechanical checks, and manifests for boundaries.
+  reusable agent capability, hook-local docs for hook operation, workflows or
+  local docs for repo maintenance, scripts for mechanical checks, and manifests
+  for boundaries.
 - Add durable guidance only after repeated mistakes or clear workflow friction.
 - Prefer evidence over preference. A new rule should name the failure it
   prevents or the review path it improves.
@@ -84,14 +86,18 @@ portable repo.
   Compass.
 - A reusable custom agent that should be installed belongs in `codex/agents/`.
 - A project-specific custom agent belongs in the target repo.
+- A Claude-specific skill or agent belongs in `claude/skills/` or
+  `claude/agents/`.
+- Shared behavior can use a derived Claude skill when install-time derivation is
+  enough.
+- A reviewed Codex hook belongs in `codex/hooks.json` and `codex/hooks/`.
 - A shareable bundle of skills, hooks, apps, or MCP config belongs in a plugin
   repo or repo-scoped plugin folder, not in the live plugin cache.
 - A mechanical or reproducible repo check belongs in `scripts/`.
 - A repo-side capability boundary or portability decision belongs in
   `manifests/`.
 - A repo-side maintenance lesson belongs in `local-docs/`.
-- A live preference that should affect every Codex session belongs in
-  `codex/AGENTS.md` only after review.
+- A Codex-wide live preference belongs in `codex/AGENTS.md` only after review.
 
 ## Research First
 
