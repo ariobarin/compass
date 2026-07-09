@@ -2,6 +2,9 @@
 
 Reviewed source for my human-owned Codex setup.
 
+Its central theme is reduction: preserve capability while reducing the context,
+duplication, state, and maintenance overhead required to use it well.
+
 This repo is intentionally an allowlist, not a backup of the whole Codex home,
 user skill home, or Claude home. The live Codex directory contains auth, logs,
 sessions, caches, databases, generated plugin state, browser state, and
@@ -120,6 +123,8 @@ otherwise `$HOME\.claude`.
 ## Rules
 
 - Keep this repo small and boring.
+- Every durable addition should delete, merge, move, derive, or mechanize
+  something, or explicitly justify its recurring cost.
 - Copy ordinary files into normal Codex locations. Avoid symlink-based setup.
 - Treat `codex/config.review.toml` as a draft for manual review, not a direct
   replacement for the live generated `config.toml`.
