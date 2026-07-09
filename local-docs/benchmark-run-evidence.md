@@ -1,8 +1,9 @@
-# Benchmark Thread 019f2412 Evidence Extracts
+# Benchmark Run Evidence Extracts
 
 Status: repo-local reviewed extraction for future Compass changes.
 
-Source thread: `019f2412-2c4e-7230-ba78-99386a0e546d`.
+Source: reviewed benchmark operations evidence. Raw session state remains local
+and is not part of this portable repository.
 
 Do not commit raw session logs, run artifacts, shell transcripts, auth state,
 local benchmark roots, or generated session state into Compass. Use this file as

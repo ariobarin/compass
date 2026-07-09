@@ -1,9 +1,10 @@
-# Benchmark Thread 019f2412 Learnings
+# Benchmark Run Learnings
 
 Status: repo-local candidate notes. Do not install this file as runtime
 agent behavior without a separate promotion pass.
 
-Source thread: `019f2412-2c4e-7230-ba78-99386a0e546d`.
+Source: reviewed benchmark operations evidence summarized in this document and
+the companion evidence extract.
 
 Scope: lessons from the A3 Qwen3.5 9B five-arm WebArena benchmark thread.
 The thread started as launch preparation, then became a multi-day live
