@@ -64,8 +64,8 @@ downstream effects: actionable findings on #184 and #185 were nearly skipped
 evidence: `gh api repos/ariobarin/compass/pulls/184/comments --paginate` and
   `gh api repos/ariobarin/compass/pulls/185/comments --paginate` exposed inline
   comments that `gh pr view ... comments,reviews` did not make obvious; #187
-  later received an inline P3 on `local-docs/pr-review-surfaces-audit.md` even
-  though the top-level review path had already looked clean.
+  later received an inline P3 on the review-surfaces audit packet even though
+  the top-level review path had already looked clean.
 root cause category: missing context, weak verification
 fix made: added inline review-comment inspection to the Compass review-program
   gate, review-program state, Codex and Claude `pr-review-loop` runtime
