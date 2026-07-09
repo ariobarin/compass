@@ -73,6 +73,7 @@ derived_skills = [
   "specialist-review",
   "subagent-driven-development",
   "to-prd",
+  "workspace-steward",
   "write-a-skill",
 ]
 

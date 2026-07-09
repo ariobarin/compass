@@ -36,9 +36,9 @@ files or proposing changes.
   `$HOME/.agents/skills`, excluding system and plugin cache skills.
   Project-specific `.agents/skills` belong in the target repo. Broader sharing
   should usually happen through a plugin.
-- `claude/skills/` and `claude/agents/`: Claude Code skills and agents installed
-  into `$HOME/.claude`. They all derive from `codex/` at install time (listed in
-  `[claude].derived_skills` and `[claude].derived_agents`); there are no
+- Claude Code skills and agents are installed into `$HOME/.claude` from the
+  reviewed `codex/` source at install time (listed in
+  `[claude].derived_skills` and `[claude].derived_agents`). There are no
   hand-maintained `claude/` source files in the repo. See
   `workflows/claude-config.md`.
 - `codex/config.review.toml`: reviewed config fragments that are useful on a new

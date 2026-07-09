@@ -7,10 +7,9 @@ a skill, a script, a test, or repo documentation.
 
 This is repo-maintainer guidance and is not installed into a live Codex home,
 user skill home, or Claude home.
-When a failure should change future agent behavior, route the fix into
-installed Codex guidance under `codex/AGENTS.md`, `codex/agents/`, or
-`codex/skills/`, or installed Claude guidance under `claude/agents/` or
-`claude/skills/`.
+When a failure should change future agent behavior, route the fix into the
+reviewed source under `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`.
+The Claude surface derives from those sources at install time.
 
 ## Entry Template
 

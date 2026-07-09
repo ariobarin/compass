@@ -5,9 +5,9 @@ fresh profile, or copied repo checkout.
 
 This is repo-maintainer guidance. It is not installed into a live Codex home,
 user skill home, or Claude home.
-Codex installed agentic guidance lives under `codex/AGENTS.md`,
-`codex/agents/`, and `codex/skills/`. Claude installed agentic guidance lives
-under `claude/agents/` and `claude/skills/`.
+Installed agentic guidance source lives under `codex/AGENTS.md`,
+`codex/agents/`, and `codex/skills/`. Claude guidance derives from those
+sources at install time.
 
 These scripts use `-CodexHome` for Codex-home files, otherwise
 `$env:CODEX_HOME`, otherwise the default `%USERPROFILE%\.codex` home. They use

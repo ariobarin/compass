@@ -5,10 +5,8 @@ of `~/.codex`, `$HOME/.agents`, or `$HOME/.claude`.
 
 - `codex/AGENTS.md` is the portable source for the live global
   `~/.codex/AGENTS.md`. Only put session-wide defaults there.
-- Codex installed agentic guidance belongs under `codex/AGENTS.md`,
+- Installed agentic guidance source belongs under `codex/AGENTS.md`,
   `codex/agents/`, or `codex/skills/`.
-- Claude installed agentic guidance belongs under `claude/agents/` or
-  `claude/skills/`.
 - Installed Codex hook behavior belongs under `codex/hooks.json` or
   `codex/hooks/`.
 - This repo-root `AGENTS.md` is for Compass maintenance guidance.

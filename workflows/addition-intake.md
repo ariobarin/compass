@@ -38,8 +38,8 @@ of this repo unless the repo intentionally adopts a reviewed portable form.
 - Repeated human process: add a focused file in `workflows/`.
 - Specialized agent behavior: add a skill under `codex/skills/`.
 - Focused reviewer or researcher persona: add an agent under `codex/agents/`.
-- Claude Code skill or agent: add the codex skill under `codex/skills/` or the
-  agent under `codex/agents/`, then list it in `[claude].derived_skills` or
+- Claude Code skill or agent: add the reviewed source under `codex/skills/` or
+  `codex/agents/`, then list it in `[claude].derived_skills` or
   `[claude].derived_agents` so it derives at install time.
 - Mechanical check or sync behavior: add or update a script under `scripts/`.
 - Portability boundary or tool capability: update `manifests/`.
@@ -56,12 +56,12 @@ the repeated problem.
 Decide whether the artifact is meant to be installed into a live Codex home,
 user skill home, Claude home, or only used to maintain this repo.
 
-Installed agentic guidance changes how future agent sessions behave. Put Codex
-guidance in `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`. Put Claude
-guidance in `claude/agents/` or `claude/skills/`. Keep it focused on durable
-role, stance, judgment, and capability boundaries. Do not include Compass
-maintenance process, PR hygiene, install-map details, or one-repo review habits
-in installed agentic docs.
+Installed agentic guidance changes how future agent sessions behave. Put its
+reviewed source in `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`; the
+Claude surface derives from that source at install time. Keep it focused on
+durable role, stance, judgment, and capability boundaries. Do not include
+Compass maintenance process, PR hygiene, install-map details, or one-repo
+review habits in installed agentic docs.
 
 Repo-maintainer guidance helps humans and agents edit this repository. Put that
 in this root `AGENTS.md`, `workflows/`, `local-docs/`, `manifests/`, or
