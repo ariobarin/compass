@@ -40,6 +40,13 @@ stale, or because one row or worker became invalid. Keep the goal open and drive
 the next result-producing move unless the user explicitly accepts an incomplete
 endpoint.
 
+An explicit user pause or stop is a control decision, not evidence that the
+goal objective was achieved. Stop only owned work, preserve evidence, neutralize
+monitors or heartbeats that would restart the work, and write a resume packet.
+Do not mark complete unless the user explicitly accepts the paused state as the
+endpoint. Do not mark blocked only because execution is paused; blocked still
+requires the repeated-blocker standard.
+
 ## Goal State Boundary
 
 Goal state is local to the context that activates it. Delegated `/goal` text
@@ -86,7 +93,10 @@ For ready-to-copy controller, worker, monitor, and subagent templates, read
 6. Before marking complete, audit every explicit requirement against current
    evidence. Weak, partial, indirect, stale, or missing evidence means keep
    working.
-7. If goal tools are unavailable in the current context, keep using the same
+7. If the user pauses or stops a live goal, stop owned execution, disable or
+   delete restart automation when available, preserve resume state, and report
+   exact live evidence before ending the turn.
+8. If goal tools are unavailable in the current context, keep using the same
    goal-shaped contract in plain text and describe it as a contract rather than
    active goal state.
 

@@ -14,6 +14,13 @@ Validity rules keep reports honest and guide whether the next route should be
 continue, pause, repair, rerun, rescore, reroute, or ask for authority. A status
 packet is not a substitute for that route decision.
 
+Treat the run ledger as a control surface. Before touching processes, stacks,
+counts, or reports, read the latest authoritative status file or handoff and
+compare it against live evidence. After acting, update the ledger with the
+current strict counts, owned workers, poisoned slices, artifact roots, and next
+action. If old sections can be mistaken for current state, fix the latest-state
+shape before launching more work.
+
 Front-load the operating doctrine. Any benchmark handoff, runner prompt,
 monitor prompt, or status packet must put the non-negotiables in the first
 screen: desired result, runner owner, strict contract, active stop conditions,
@@ -39,6 +46,19 @@ reversible move, and any external decision that truly prevents progress.
 Continue unaffected slices, isolate the failing slice, rerun affected task ids,
 rescore terminal artifacts, switch to a clearly linked recovery label, or write
 a provenance map only after that route is safe and attributable.
+
+Treat launch-hold packets as hard no-launch states. If the user asks for a
+`READY_TO_LAUNCH_*_HOLD` packet or names an equivalent hold state, stop at the
+packet. Do not launch full arms, canaries, Docker stack changes, or injectors
+unless the user reopens launch authority. The packet should name the gate
+checklist, stop conditions, monitor cadence, status-path pattern, owned roots,
+and exact action that would release the hold.
+
+Report pace truthfully. When the user names a deadline or asks whether the run
+is on track, compute strict valid-row pace over a named window and the required
+pace to meet the target. Do not call a run healthy just because rows are still
+arriving. If the rate math is impossible, say so and keep driving the next
+valid local action.
 
 For long runs, split controller and runner ownership. The parent orchestrator
 should create or route to a runner thread or worker that owns the shell process,
@@ -70,34 +90,36 @@ Read the references that match the task:
 
 1. Read the protocol and nearest prior launcher before changing or launching
    anything.
-2. If this is a new agent family or fresh integration, read the upstream repo,
+2. Read the latest run ledger or handoff and verify it against live processes,
+   stack state, result roots, and terminal artifacts before changing anything.
+3. If this is a new agent family or fresh integration, read the upstream repo,
    local setup docs, and current benchmark notes before deciding where the
    benchmark glue should live.
-3. Declare run ownership: label, arms, ports, result roots, workers, task set,
+4. Declare run ownership: label, arms, ports, result roots, workers, task set,
    model settings, timeout, cleanup boundary, and whether the stack is isolated
    or shared.
-4. For any long or expensive run, assign a runner owner before launch. Use a
+5. For any long or expensive run, assign a runner owner before launch. Use a
    separate durable thread when the run may outlive the current turn, needs its
    own heartbeat, or benefits from user-visible continuity. Use a subagent only
    for bounded same-session slices. The controller keeps parent completion
    authority.
-5. Prefer a sibling checkout or dedicated worktree for a new agent stack, and
+6. Prefer a sibling checkout or dedicated worktree for a new agent stack, and
    do not mix new experiments into existing agent worktrees unless the user
    explicitly asked for a shared setup.
-6. Run content-aware health checks and a smoke task before spending a long run.
+7. Run content-aware health checks and a smoke task before spending a long run.
    Prefer a cheap smoke or reduced-task pass before an expensive full launch
    unless the user explicitly wants the direct long run.
-7. Monitor worker state, result-root growth, exact error clusters, and scheduler
+8. Monitor worker state, result-root growth, exact error clusters, and scheduler
    state while it runs.
-8. If invalid rows are accumulating, pause only the poisoned label, slice, site,
+9. If invalid rows are accumulating, pause only the poisoned label, slice, site,
    or stack, then debug why the rows are invalid. Continue healthy comparable
    work only when provenance remains clean.
-9. Treat missing, invalid, or unscored rows as a recovery queue until they are
+10. Treat missing, invalid, or unscored rows as a recovery queue until they are
    classified as countable, recoverable, or protocol-unsafe to retry.
-10. Count results only after terminal artifacts exist and final aggregation has
+11. Count results only after terminal artifacts exist and final aggregation has
    been rebuilt. Until then, keep producing artifacts rather than polishing
    explanations for why the run stopped.
-11. If the user needs a refreshed report or comparison CSVs, rebuild them from
+12. If the user needs a refreshed report or comparison CSVs, rebuild them from
    the canonical final artifacts instead of mixing raw rerun directories and
    ad hoc counts.
 
