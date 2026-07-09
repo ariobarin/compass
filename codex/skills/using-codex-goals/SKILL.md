@@ -102,20 +102,13 @@ For ready-to-copy controller, worker, monitor, and subagent templates, read
 
 ## Subagent Handoffs
 
-Pass a narrowed goal-shaped contract instead of the whole parent goal. Delegated
-messages to other threads and spawned subagents treat `/goal` text as plain
-text until the child applies it. If the child needs active goal state, ask that
-child to apply the goal to itself by calling `create_goal` for its own slice.
+Pass each child a narrowed goal-shaped contract with its own done condition and
+evidence. The child must apply active goal state itself; the controller retains
+parent completion authority, integrates evidence, and decides the next route.
+Use fresh subagents for independent slices.
 
-Use fresh subagents for independent slices. The controller keeps ownership of
-the parent goal, integrates outputs, verifies final evidence, and decides when
-the parent can be completed.
-
-Before dispatching a subagent, write the slice as a mini goal with its own done
-condition and evidence requirement. Keep parent completion authority with the
-controller. The subagent should return status and evidence; the controller
-should decide whether to continue, re-dispatch, review, or complete the parent
-goal.
+For copyable slice, activation, and fan-out templates, read
+[goal-contracts.md](references/goal-contracts.md).
 
 ## Related Skills
 
