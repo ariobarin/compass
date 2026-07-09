@@ -72,26 +72,9 @@ agent behavior.
 
 ## Change Routing
 
-Use `workflows/addition-intake.md` when promoting a new durable artifact into the
-portable repo.
-
-- A repeated Compass maintenance process belongs in `workflows/`.
-- A reusable personal skill that should be installed into this setup's active
-  personal skill store belongs in `codex/skills/`.
-- `codex/skills/` is the reviewed source tree for user skills that install to
-  `$HOME/.agents/skills`.
-- Project `.agents/skills` discovery belongs in the target repo, not in
-  Compass.
-- A reusable custom agent that should be installed belongs in `codex/agents/`.
-- A project-specific custom agent belongs in the target repo.
-- A shareable bundle of skills, hooks, apps, or MCP config belongs in a plugin
-  repo or repo-scoped plugin folder, not in the live plugin cache.
-- A mechanical or reproducible repo check belongs in `scripts/`.
-- A repo-side capability boundary or portability decision belongs in
-  `manifests/`.
-- A repo-side maintenance lesson belongs in `local-docs/`.
-- A live preference that should affect every Codex session belongs in
-  `codex/AGENTS.md` only after review.
+Use [addition-intake.md](../workflows/addition-intake.md) for the routing table.
+It is the single source of truth for selecting a durable surface. Keep this
+file for the rationale and maintenance lessons that make that route clear.
 
 ## Research First
 
