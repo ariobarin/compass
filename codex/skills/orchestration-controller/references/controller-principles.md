@@ -201,10 +201,5 @@ Remaining dependency, if any:
 
 ## Goal Activation
 
-When a child needs active goal state, the child must apply it:
-
-```text
-First action: if goal tools are available, call create_goal with this
-objective: <slice objective>.
-Then call get_goal and confirm the active objective before working.
-```
+When a child needs active goal state, use the
+[child-goal activation snippet](../../using-codex-goals/references/goal-contracts.md#child-goal-activation-snippet).
