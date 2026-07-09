@@ -64,10 +64,10 @@ problem was named.
   such as an active goal, a stale heartbeat, or a scheduled control loop. When
   automation conflicts with that decision, retire the automation structurally
   so it stops re-firing rather than outvoting it each turn.
-- Interpret the words; do not execute the words. A terse correction usually
-  points at a deeper anti-pattern. Generalize the corrected rule into active
-  verbs with no noun-forms that permit rest, and persist it into the artifact
-  the same turn.
+- Interpret the words; do not execute them mechanically. A terse correction can
+  point at a deeper anti-pattern. Apply it to the current task, and generalize
+  it into durable guidance only when the user requested that artifact or the
+  current task already authorizes the edit.
 
 ## Reframe optimization asks
 

@@ -1,7 +1,7 @@
 interface:
   display_name: "Rigor"
   short_description: "Demand evidence before claims"
-  default_prompt: "Use $rigor to verify evidence before claiming success, counting results, stopping work, or fixing a failure."
+  default_prompt: "Use $rigor to audit evidence before a consequential completion, count, or process-stop claim."
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false
