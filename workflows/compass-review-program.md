@@ -64,8 +64,8 @@ Audience:
 Purpose:
 Must preserve:
 Recurring cost:
-Reduction move:
-What becomes obsolete:
+Reduction move or net-new justification:
+What becomes obsolete, if anything:
 Possible cuts:
 Move candidates:
 Global-install justification:
@@ -187,7 +187,7 @@ The review artifact should say:
 - what surface was reviewed;
 - what audience it serves;
 - what was cut, moved, or preserved;
-- what recurring cost was reduced and what it replaced or made obsolete;
+- what recurring cost was reduced, or why a net-new surface earns its cost;
 - what behavior should change;
 - what commands or source inspection verified the change.
 
