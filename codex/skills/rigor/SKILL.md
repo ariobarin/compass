@@ -94,7 +94,8 @@ For the fuller catalog of moves with worked examples, read
 
 - `benchmark-run-operator` carries the benchmark-specific validity, count, and
   repair doctrine. This skill is the general posture underneath it.
-- `using-codex-goals` carries completion, blocked, and pause semantics.
+- In Codex goal work, `using-codex-goals` carries completion, blocked, and
+  pause semantics. Claude has no matching goal runtime.
 - The `verifier` agent independently checks a done claim against evidence.
 - `root-cause-not-symptom` carries the cause-first diagnostic discipline for bugs
   and failing tests; defer to it for root-causing.

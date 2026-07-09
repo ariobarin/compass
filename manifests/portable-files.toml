@@ -72,6 +72,7 @@ derived_skills = [
   "orchestration-controller",
   "pr-review-loop",
   "rigor",
+  "root-cause-not-symptom",
   "specialist-review",
   "subagent-driven-development",
   "to-prd",
