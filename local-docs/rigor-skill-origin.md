@@ -1,11 +1,9 @@
 # Origin of the rigor skill
 
-`codex/skills/rigor` distills the general cognitive posture observed in
-benchmark thread `019f2412` (the A3 9B five-arm WebArena run). The full
-analysis lives outside this repo, under the session analysis path in
-`.codex/sessions/_analysis/`. This note records why the skill is portable and
-where the evidence is, so a reviewer can see the promotion reasoning without
-reading the whole thread.
+`codex/skills/rigor` distills the general cognitive posture observed across a
+reviewed multi-arm benchmark run. Raw session analysis remains local and is not
+part of this repository. This note records why the skill is portable so a
+reviewer can inspect the promotion reasoning without importing session state.
 
 ## Why it is portable
 
@@ -15,11 +13,11 @@ stay with the run's evidence, not with installed agent behavior.
 
 ## What it is not
 
-The benchmark-specific procedural layer from the same thread (strict count
+The benchmark-specific procedural layer from the same evidence (strict count
 gates, ledger control, launcher and port provenance, Docker hygiene, pause
-semantics) is promoted through `benchmark-run-operator` and `using-codex-goals`
-on the `ario-benchmark-thread-docs` branch, not through this skill. This skill
-is the general epistemic posture underneath those applications.
+semantics) belongs in `benchmark-run-operator` and `using-codex-goals`, not in
+this skill. This skill is the general epistemic posture underneath those
+applications.
 
 ## Promotion reasoning
 
