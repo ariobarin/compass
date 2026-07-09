@@ -65,6 +65,37 @@ framing that makes the agent comfortable with collapse. Compress the beliefs.
 Purify the wording. Make every skill and agent a golden example of the
 behavior it asks for.
 
+## Reduction Is The Central Theme
+
+Compass exists to reduce the context, duplication, state, and judgment overhead
+required for an agent to act well. The target is not a smaller agent. It is a
+more capable one that carries only what its current job needs.
+
+Reduction is not line count. A shorter document that loses a safety boundary is
+worse than a longer one that makes the right decision unavoidable. Preserve
+capability while shrinking the cost to express, retrieve, install, verify, and
+maintain it.
+
+Every durable artifact pays recurring cost: runtime context, retrieval
+competition, install and derivation complexity, drift risk, review burden, and
+extra choices for the next agent. It must repay that cost with distinct useful
+behavior. If it does not, remove it, merge it, move it to a narrower surface,
+derive it from one reviewed source, or replace its repeated prose with a
+mechanical check.
+
+Use this order when simplifying:
+
+1. Delete material that does not change behavior.
+2. Merge material that teaches the same judgment.
+3. Move material to the audience that actually needs it.
+4. Derive copies instead of maintaining parallel sources.
+5. Mechanize properties that should not drift.
+6. Keep the remaining surface dense, legible, and easy to audit.
+
+Reduction does not mean collapsing distinct roles, removing evidence, or
+weakening authority boundaries. It removes recurring cost without amputating
+the behavior that makes the system trustworthy.
+
 ## Goals Are The Loop Foundation
 
 An agent gets things wrong as much as the goal allows it to get things wrong.
