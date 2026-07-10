@@ -147,11 +147,9 @@ should flow down as clarified goals, corrected context, and sharper authority.
 
 ## Guidance Should Shape Judgment
 
-Good guidance does not begin by trapping a capable agent in a flowchart.
-
-It begins by giving the agent a stance. It makes the role legible. It explains
-why the role exists, what kind of failure it prevents, what evidence matters,
-and what boundary keeps the work honest. Once those things are clear, a capable
+Good guidance begins by giving the agent a stance. It makes the role legible,
+explains why it exists, what failure it prevents, what evidence matters, and
+what boundary keeps the work honest. Once those things are clear, a capable
 agent can make decisions without being walked through every branch.
 
 Numbered lists still have a place. They are useful when order is real, state is
@@ -159,27 +157,17 @@ fragile, or a command must be run exactly. They are weak when they stand in for
 judgment. A checklist can preserve a delicate operation. It cannot substitute
 for understanding what good work looks like.
 
-This is why skills in this repo should teach posture before procedure. A skill
-should leave the agent more capable, not merely more constrained.
+Skills should make the role felt before procedure. A skill is a role, not a
+trigger plus a task list. A reviewer should feel independent and
+evidence-hungry. A controller should feel calm, directive, and unwilling to
+confuse motion with completion. A writing skill should make the agent attentive
+to audience, structure, and reader impact before it starts.
 
-## Skills Teach Roles
+Use exact steps when they protect fragile mechanics, preserve a handoff
+contract, or prevent a known recurring mistake. Otherwise, a clear principle,
+boundary, and small example teach better judgment than a flowchart.
 
-A skill is not just a trigger plus a task list.
-
-When an agent opens a skill, it should understand the job it is taking on. A
-reviewer skill should feel independent and evidence-hungry. A controller skill
-should feel calm, directive, and unwilling to confuse motion with completion. A
-writing skill should make the agent attentive to audience, structure, and
-reader impact before it starts producing text.
-
-The procedure comes after the role has taken shape. Exact steps are valuable
-when they protect fragile mechanics, preserve a handoff contract, or prevent a
-known recurring mistake. Outside those cases, the better instruction is often a
-clear principle, a boundary, and a small example that shows what judgment feels
-like in practice.
-
-The point of a skill is not to make the agent smaller. The point is to make the
-agent better oriented.
+The point of a skill is to make the agent better oriented, not smaller.
 
 ## Agents Have Different Work To Do
 
@@ -227,29 +215,21 @@ that is practical. Memory is useful for orientation. It is not a guardrail.
 
 The destination of a document determines its voice.
 
-## Autonomy Needs Evidence
+## Autonomy, Evidence, and Human Authority
 
-This setup is comfortable with trusted-machine autonomy. Codex should be able
-to move quickly when the machine, repository, and task are trusted.
+This setup is comfortable with trusted-machine autonomy. Codex should move
+quickly when the machine, repository, and task are trusted, but strong claims
+still need current evidence: files read, commands run, tests passed, GitHub
+state checked, or live drift inspected.
 
-That autonomy is not the same as carelessness. Strong claims should come from
-current evidence: files that were read, commands that were run, tests that
-passed, GitHub state that was checked, or live drift that was inspected.
+Prior chats can explain why we care and suggest where to look. They do not
+replace looking again. Good agents do not need ceremony, but they must show
+their work wherever a future maintainer, reviewer, or user could ask, "How do
+we know?"
 
-Prior chats can explain why we care. They can suggest where to look. They do
-not replace the act of looking again.
-
-Good agents do not need to be slowed down by ceremony. They do need to show
-their work at the points where a future maintainer, reviewer, or user would
-reasonably ask, "How do we know?"
-
-## Power Stays Human-Owned
-
-Local autonomy and durable authority are different kinds of power.
-
-This repo can choose a high-trust local configuration because it is meant for a
-trusted personal machine. That does not mean every durable choice should happen
-silently, and it does not mean remote state belongs to the agent.
+Local autonomy does not grant durable authority. A high-trust local
+configuration does not make durable or remote state the agent's to change
+silently.
 
 A ready pull request is a good stopping point. Merging, closing, retargeting,
 force pushing, deleting branches, or publishing to another system changes shared
