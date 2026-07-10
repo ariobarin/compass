@@ -1,6 +1,6 @@
 ---
 name: pr-review-loop
-description: Iterate on a named PR through review, fixes, re-review, and merge gates. Use when the user names a PR, asks to address review comments, or wants dual review.
+description: Iterate a named PR through review, fixes, re-review, merge gates, and explicit closeout. Use for named PRs, review feedback, dual review, or merge closeout.
 ---
 
 # PR Review Loop
@@ -34,12 +34,16 @@ stale-rebuild, re-review, and merge-boundary patterns.
    source material on current main, or stay read-only.
 3. Patch only the scope needed for the current PR claim or the approved rebuild.
 4. Run the narrowest checks that cover the changed behavior.
-5. Run `neutral-critic` for every PR loop, and request a second independent
-   reviewer for every `ariobarin/*` PR. Add any repo-specific gates on top of
-   these.
-6. After any material push, re-read the head SHA and re-request review on that
+5. Run `neutral-critic` for every PR loop. Resolve its findings and get a green
+   current-head result before requesting the second reviewer for an
+   `ariobarin/*` PR, unless the user explicitly requires parallel reviews.
+6. Request the second independent review. If the request receives an `eyes`
+   reaction, wait one bounded five-minute interval before checking once.
+7. After any material push, re-read the head SHA and re-request review on that
    new head before calling the PR ready or merging.
-7. Merge only when the user or repo workflow explicitly authorized it.
+8. Merge only when the user or repo workflow explicitly authorized it.
+9. For an explicit closeout request, archive the task after a confirmed merge.
+   If the PR cannot merge, leave it open and comment with the blocking evidence.
 
 ## Rules
 
@@ -53,6 +57,9 @@ stale-rebuild, re-review, and merge-boundary patterns.
 - In any `ariobarin/*` repo, a second independent reviewer is required in
   addition to `neutral-critic`. Do not leave that gate conditional, vague, or
   treated as polish.
+- Do not spend the second review on a head that has not cleared
+  `neutral-critic`. After an `eyes` acknowledgement, let one bounded five-minute
+  wait own the clock instead of repeatedly polling GitHub.
 - Local checks do not satisfy review gates. They prove the code path; they do
   not replace reviewer approval.
 - Top-level review text does not clear inline findings. Inspect inline review
@@ -62,6 +69,9 @@ stale-rebuild, re-review, and merge-boundary patterns.
   allowed.
 - If the user performs merges, stop at merge boundary with the exact next merge
   action.
+- If the user requested closeout and authorized merging, archive the task only
+  after GitHub confirms the merge. Otherwise, leave the PR open and comment
+  with the unsatisfied gate or actionable finding.
 - If a base branch moved, re-check whether downstream PRs still have a real
   delta before keeping them alive.
 

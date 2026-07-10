@@ -62,6 +62,12 @@ Preserve exact PR identity only when the user asked to keep iterating that PR.
 When both a second reviewer and `neutral-critic` apply:
 
 - treat both as blocking gates;
+- finish `neutral-critic`, resolve its findings, and get a green current-head
+  result before requesting the second review, unless the user explicitly
+  requires parallel reviews;
+- when the second-review request receives an `eyes` reaction, treat it as
+  acknowledged, wait one bounded five-minute interval, then refresh reviews
+  and comments once instead of polling during the interval;
 - route actionable findings back through the implementation path;
 - after fixes, re-run the narrow checks and re-request review on the new head;
 - if one reviewer is silent and an alternate route is authorized, use that
@@ -72,6 +78,9 @@ When both a second reviewer and `neutral-critic` apply:
 - If the user merges, stop at review-ready state and say exactly what remains:
   PR number, head SHA, check state, and review state.
 - Merge only when the user or repo workflow explicitly authorized it.
+- For an explicit merge-closeout request, archive the task only after GitHub
+  confirms the merge. If a required gate fails or remains pending, leave the PR
+  open and comment with the blocking evidence or actionable finding.
 - If a stack is involved, name the merge order instead of assuming a reviewer
   can infer it.
 
