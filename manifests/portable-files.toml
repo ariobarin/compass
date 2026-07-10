@@ -100,6 +100,7 @@ reason = "Live config.toml includes generated runtime paths, marketplaces, proje
 # from the repo's codex/ directory into the live Codex home. The [agents]
 # section maps repo skills into the user skill home.
 files = [
+  ".agents/plugins/marketplace.json",
   ".gitattributes",
   ".gitignore",
   "AGENTS.md",
@@ -109,6 +110,7 @@ files = [
   "README.md",
   "SECURITY.md",
   "SUPPORT.md",
+  "codex/.codex-plugin/plugin.json",
   "philosophy.md",
 ]
 
