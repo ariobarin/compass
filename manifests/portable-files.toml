@@ -115,6 +115,7 @@ files = [
 
 dirs = [
   ".github",
+  "apps",
   "local-docs",
   "manifests",
   "scripts",
