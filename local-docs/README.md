@@ -11,11 +11,9 @@ catch drift before config is copied into a live machine.
 
 - [maintenance-learnings.md](maintenance-learnings.md): local principles for
   making useful changes to Compass without bloating the portable setup.
-- [benchmark-run-learnings.md](benchmark-run-learnings.md):
-  repo-local candidate lessons from the A3 9B benchmark control thread.
 - [benchmark-run-evidence.md](benchmark-run-evidence.md):
-  reviewed evidence extracts for the same benchmark thread, kept out of installed
-  runtime behavior.
+  compact evidence behind the promoted benchmark and goal guidance, kept out of
+  installed runtime behavior.
 - [../workflows/addition-intake.md](../workflows/addition-intake.md): promotion
   flow for new repo-maintenance workflows, installed skills and agents,
   repo-side scripts and manifests, and config fragments. Workflows guide repo
