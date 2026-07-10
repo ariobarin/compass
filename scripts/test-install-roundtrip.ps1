@@ -59,6 +59,14 @@ try {
     [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
     [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
 
+    $secondInstall = @(Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
+    if (@($secondInstall | Where-Object { $_ -like "installed:*" }).Count -gt 0) {
+        throw "unchanged second install copied portable items"
+    }
+    if ($secondInstall -notcontains "backups: none") {
+        throw "unchanged second install created a backup root"
+    }
+
     Assert-PathPresent -Path (Join-Path $codexHome "AGENTS.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $agentsHome "skills") "compass") "SKILL.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $claudeHome "skills") "compass") "SKILL.md")
