@@ -16,6 +16,9 @@ behavior just because it happened to be useful once.
 - Run `.\scripts\doctor.ps1`.
 - If the change affects live install behavior, also run
   `.\scripts\verify-live.ps1 -SkipCodexCommand`.
+- Use `.\scripts\committer.ps1 <subject> <paths>` to preview an exact-scope
+  commit, then rerun it with `-Apply` before the subject after reviewing the
+  selected paths.
 - Leave auth, sessions, logs, caches, browser state, SQLite files, generated
   plugin caches, and local override files out of the PR.
 
