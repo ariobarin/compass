@@ -28,7 +28,8 @@ function Invoke-TestScript {
     $exitCode = $LASTEXITCODE
     if ($exitCode -ne $ExpectedExitCode) {
         $output | ForEach-Object { Write-Host $_ }
-        throw "expected exit code $ExpectedExitCode from $Path, got $exitCode"
+        $detail = $output -join "`n"
+        throw "expected exit code $ExpectedExitCode from $Path, got $exitCode`n$detail"
     }
     return $output
 }
@@ -95,6 +96,16 @@ try {
     [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
 
     Write-Host "install round trip: ok"
+}
+catch {
+    $diagnosticPath = Join-Path $repoRoot "compass-roundtrip-error.txt"
+    $diagnostic = @(
+        $_ | Format-List * -Force | Out-String
+        "script stack:"
+        $_.ScriptStackTrace
+    ) -join "`n"
+    [System.IO.File]::WriteAllText($diagnosticPath, $diagnostic)
+    throw
 }
 finally {
     if (Test-Path -LiteralPath $testRoot) {
