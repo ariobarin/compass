@@ -62,6 +62,12 @@ Preserve exact PR identity only when the user asked to keep iterating that PR.
 When both a second reviewer and `neutral-critic` apply:
 
 - treat both as blocking gates;
+- finish `neutral-critic`, resolve its findings, and get a green current-head
+  result before requesting the second review, unless the user explicitly
+  requires parallel reviews;
+- when the second-review request receives an `eyes` reaction, treat it as
+  acknowledged, wait one bounded five-minute interval, then refresh reviews
+  and comments once instead of polling during the interval;
 - route actionable findings back through the implementation path;
 - after fixes, re-run the narrow checks and re-request review on the new head;
 - if one reviewer is silent and an alternate route is authorized, use that
