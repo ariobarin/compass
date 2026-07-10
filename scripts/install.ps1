@@ -35,7 +35,7 @@ function Get-RelativeFileMap {
                 $selected.Add($file)
             }
         }
-        @($selected)
+        $selected.ToArray()
     }
     else {
         @(Get-ChildItem -LiteralPath $Root -Recurse -File -Force)
