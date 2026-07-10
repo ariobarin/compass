@@ -113,3 +113,27 @@ jobs:
       - name: Run install round trip
         shell: pwsh
         run: ./scripts/test-install-roundtrip.ps1
+
+  compass-mcp:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Install MCP dependencies
+        working-directory: apps/compass-mcp
+        run: npm install
+
+      - name: Build MCP app
+        working-directory: apps/compass-mcp
+        run: npm run build
+
+      - name: Smoke test MCP app
+        working-directory: apps/compass-mcp
+        run: npm run smoke
