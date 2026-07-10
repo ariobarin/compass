@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "contracts": [
+    {
+      "id": "pr-current-head-and-authority",
+      "path": "codex/skills/pr-review-loop/SKILL.md",
+      "required": [
+        "After any material push, re-read the head SHA and re-request review on that new head before calling the PR ready or merging.",
+        "Merge only when the user or repo workflow explicitly authorized it."
+      ]
+    },
+    {
+      "id": "controller-does-not-absorb-worker-work",
+      "path": "codex/skills/orchestration-controller/SKILL.md",
+      "required": [
+        "Do not write worker-owned code, config, docs, benchmark output, product output, or task artifacts. That work belongs to the worker or a fresh worker.",
+        "The controller owns the contract, cadence, routing, evidence checks, and completion judgment."
+      ]
+    },
+    {
+      "id": "goal-completion-authority",
+      "path": "codex/skills/using-codex-goals/SKILL.md",
+      "required": [
+        "Parent completion authority stays with the controller. A child completion is evidence for the parent goal, not completion of the parent goal."
+      ]
+    },
+    {
+      "id": "hook-failure-boundary",
+      "path": "codex/hooks/README.md",
+      "required": [
+        "The launchers fail open if the guard script or Python runner is missing. The portable repo checks catch that state before hook definitions are treated as accepted."
+      ]
+    }
+  ]
+}
