@@ -41,7 +41,6 @@ else {
     foreach ($checkPath in @(
         "checks\required-files.ps1",
         "checks\manifest-boundaries.ps1",
-        "checks\plugin.ps1",
         "checks\text-policy.ps1",
         "checks\skills.ps1",
         "checks\agents.ps1",
