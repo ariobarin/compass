@@ -7,7 +7,8 @@ on:
       - main
 
 jobs:
-  portable:
+  portable_matrix:
+    name: portable (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
@@ -90,6 +91,17 @@ jobs:
             $bad | ForEach-Object { Write-Host "trailing whitespace: $_" }
             exit 1
           }
+
+  portable:
+    name: portable
+    needs: portable_matrix
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Require portable matrix
+        shell: bash
+        run: test "${{ needs.portable_matrix.result }}" = "success"
 
   install-roundtrip:
     runs-on: windows-2025
