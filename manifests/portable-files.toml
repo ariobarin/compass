@@ -101,7 +101,6 @@ reason = "Live config.toml includes generated runtime paths, marketplaces, proje
 # section maps repo skills into the user skill home.
 files = [
   ".agents/plugins/marketplace.json",
-  ".codex-plugin/plugin.json",
   ".gitattributes",
   ".gitignore",
   "AGENTS.md",
@@ -111,6 +110,7 @@ files = [
   "README.md",
   "SECURITY.md",
   "SUPPORT.md",
+  "codex/.codex-plugin/plugin.json",
   "philosophy.md",
 ]
 
