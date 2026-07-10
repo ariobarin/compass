@@ -6,4 +6,40 @@
 #
 # This reviewed fragment intentionally reflects the user's trusted-machine
 # default for local work. Use bounded workflows or runtime flags for lower-trust
-# tasks instead
+# tasks instead of mixing several config models into one portable fragment.
+#
+# Keep this fragment on one permissions model at a time. It currently stays on
+# the older sandbox keys and should not mix in `default_permissions` or
+# `[permissions]` entries without a deliberate migration.
+#
+# Keep app-local desktop state and undocumented UI helper blocks out of this
+# reviewed fragment. Durable cross-session instruction preferences belong in
+# `codex/AGENTS.md`.
+
+model = "gpt-5.6-sol"
+model_reasoning_effort = "high"
+model_auto_compact_token_limit = 233000
+model_auto_compact_token_limit_scope = "total"
+tool_output_token_limit = 10000
+personality = "pragmatic"
+service_tier = "default"
+sandbox_mode = "danger-full-access"
+approval_policy = "never"
+
+[agents]
+# The root session is depth 0. The specialist-review skill launches reviewer at
+# depth 1, and reviewer launches specialists at depth 2, so max_depth = 2 permits
+# exactly root -> reviewer -> specialist
+# (config reference: https://developers.openai.com/codex/config-reference).
+max_depth = 2
+
+[windows]
+sandbox = "elevated"
+
+[notice]
+hide_full_access_warning = true
+
+[features]
+memories = true
+goals = true
+prevent_idle_sleep = true
