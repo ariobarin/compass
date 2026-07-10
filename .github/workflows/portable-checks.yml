@@ -7,23 +7,77 @@ on:
       - main
 
 jobs:
-  portable:
-    runs-on: windows-2025
+  portable_matrix:
+    name: portable (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2025
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
       - name: Run doctor
+        if: runner.os == 'Windows'
         shell: pwsh
-        run: ./scripts/doctor.ps1
+        run: |
+          $codexHome = Join-Path $env:RUNNER_TEMP "codex-home"
+          $agentsHome = Join-Path $env:RUNNER_TEMP "agents-home"
+          $claudeHome = Join-Path $env:RUNNER_TEMP "claude-home"
+          New-Item -ItemType Directory -Force $codexHome, $agentsHome, $claudeHome | Out-Null
+          ./scripts/doctor.ps1 -CodexHome $codexHome -AgentsHome $agentsHome -ClaudeHome $claudeHome
+
+      - name: Compile Python sources
+        shell: pwsh
+        run: |
+          $files = @(
+            Get-ChildItem codex/hooks -Recurse -File -Filter *.py
+            Get-ChildItem scripts -File -Filter *.py
+          )
+          foreach ($file in $files) {
+            python -m py_compile $file.FullName
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
+      - name: Check shell launcher syntax
+        if: runner.os == 'Linux'
+        shell: bash
+        run: bash -n codex/hooks/portable_guard.sh
+
+      - name: Check shell line endings
+        shell: pwsh
+        run: |
+          $bad = @()
+          foreach ($file in Get-ChildItem -Recurse -File -Filter *.sh) {
+            $bytes = [System.IO.File]::ReadAllBytes($file.FullName)
+            for ($index = 0; $index -lt $bytes.Length - 1; $index += 1) {
+              if ($bytes[$index] -eq 13 -and $bytes[$index + 1] -eq 10) {
+                $bad += $file.FullName
+                break
+              }
+            }
+          }
+          if ($bad.Count -gt 0) {
+            $bad | ForEach-Object { Write-Host "CRLF shell file: $_" }
+            exit 1
+          }
 
       - name: Check tracked text whitespace
         shell: pwsh
         run: |
           $bad = @()
           $files = git ls-files |
-            Where-Object { $_ -match "\.(md|ps1|toml|json|ya?ml|txt)$" }
+            Where-Object { $_ -match "\.(md|ps1|py|sh|toml|json|ya?ml|txt)$" }
           foreach ($file in $files) {
             $lineNumber = 0
             foreach ($line in Get-Content -LiteralPath $file) {
@@ -37,3 +91,25 @@ jobs:
             $bad | ForEach-Object { Write-Host "trailing whitespace: $_" }
             exit 1
           }
+
+  portable:
+    name: portable
+    needs: portable_matrix
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Require portable matrix
+        shell: bash
+        run: test "${{ needs.portable_matrix.result }}" = "success"
+
+  install-roundtrip:
+    runs-on: windows-2025
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run install round trip
+        shell: pwsh
+        run: ./scripts/test-install-roundtrip.ps1
