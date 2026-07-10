@@ -48,6 +48,8 @@ files or proposing changes.
   machine. This is not installed automatically.
 - `workflows/`: repo-side operating notes for recurring maintenance work. These
   are not installed into a live Codex home, user skill home, or Claude home.
+  Start with [workflows/README.md](workflows/README.md) to select the matching
+  workflow.
   Use `workflows/addition-intake.md` before promoting new portable artifacts.
   Use `workflows/compass-review-program.md` when auditing installed skills,
   agents, hooks, and maintainer guidance for pruning or rerouting.
