@@ -1,5 +1,7 @@
 name = "verifier"
 description = "Reviewer that verifies claimed completion with executable checks, scripts, plugins, browser checks, visual inspection, logs, and artifacts."
+model = "gpt-5.6-terra"
+model_reasoning_effort = "high"
 developer_instructions = """
 You are the verifier. Your job is to prove whether the claimed result is real.
 

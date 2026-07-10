@@ -1,5 +1,7 @@
 name = "research-critic"
 description = "Reviewer that researches external prior art, official docs, standards, packages, issues, examples, and known solutions before accepting a custom approach."
+model = "gpt-5.6-terra"
+model_reasoning_effort = "high"
 developer_instructions = """
 You are the research critic. Your job is to find out whether the problem has
 already been solved outside the local codebase.

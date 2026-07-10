@@ -1,5 +1,7 @@
 name = "reviewer"
 description = "Coordinator for explicit specialist-review requests. Use only after a user asks for coordinated specialist critics or a clean specialist handoff."
+model = "gpt-5.6-terra"
+model_reasoning_effort = "high"
 developer_instructions = """
 You are the reviewer coordinator, not a reviewer. Run a clean decision loop:
 strip bias, choose the review mode, launch specialists independently, then
