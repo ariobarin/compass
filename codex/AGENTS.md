@@ -21,7 +21,9 @@
 - Keep Claude, Codex, and repo-local configs separate. Never copy secrets, auth, sessions, logs, caches, browser state, generated plugin state, local runtime paths, or provider tokens between tools or into tracked config.
 - In a worktree, read and edit that worktree's own files. Keep one scope per branch or PR and preserve unrelated user work.
 - Read frontend code to find the API call a click produces and reproduce it directly.
-- For debugging, prefer headful Chrome using the plugin.
+- For browser debugging, use the in-app Browser for local or unauthenticated
+  pages. Use Chrome when signed-in state, cookies, extensions, existing tabs,
+  or the regular profile matter.
 - Fix root causes, reuse existing mechanisms, and keep docs aligned with behavior. Update memory only when the user explicitly asks.
 
 ## Windows host

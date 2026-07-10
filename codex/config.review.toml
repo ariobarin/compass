@@ -16,8 +16,10 @@
 # reviewed fragment. Durable cross-session instruction preferences belong in
 # `codex/AGENTS.md`.
 
-model = "gpt-5.5"
+model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
+model_auto_compact_token_limit = 233000
+model_auto_compact_token_limit_scope = "total"
 personality = "pragmatic"
 service_tier = "default"
 sandbox_mode = "danger-full-access"
