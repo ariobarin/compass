@@ -2,6 +2,8 @@
 /.local/
 /backups/
 /local.toml
+/apps/compass-mcp/dist/
+/apps/compass-mcp/node_modules/
 *.local.toml
 *.bak
 *.tmp
