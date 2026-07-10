@@ -4,9 +4,9 @@ Use this workflow when packaging or testing the reviewed Compass skill bundle as
 
 ## Boundary
 
-- `.codex-plugin/plugin.json` is the plugin manifest.
-- The manifest points directly at `codex/skills/`, which remains the reviewed source of truth.
-- `.agents/plugins/marketplace.json` is authored marketplace metadata for local and branch testing.
+- `codex/.codex-plugin/plugin.json` is the plugin manifest inside the `codex/` plugin package root.
+- The manifest points at `./skills/`, which is the existing reviewed `codex/skills/` source of truth.
+- `.agents/plugins/marketplace.json` points the Compass marketplace entry at `./codex` for local and branch testing.
 - Installed plugin cache, generated marketplace snapshots, auth, sessions, logs, and runtime state stay local.
 - The plugin currently packages skills only. Global Codex config, hooks, custom agent TOML files, and machine-specific state are not included.
 
