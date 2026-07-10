@@ -137,7 +137,8 @@ if ($normalizedPaths.Count -eq 0) {
     throw "provide at least one explicit path"
 }
 
-$status = @(Invoke-RepoGit -RepoRoot $repoRoot -Arguments (@("status", "--short", "--") + @($normalizedPaths)))
+$literalPathspecs = @($normalizedPaths | ForEach-Object { ":(literal)$_" })
+$status = @(Invoke-RepoGit -RepoRoot $repoRoot -Arguments (@("status", "--short", "--") + $literalPathspecs))
 if ($status.Count -eq 0) {
     throw "no changes found in the requested paths"
 }
@@ -179,7 +180,7 @@ if (-not $SkipDoctor) {
 }
 
 [void](Invoke-RepoGit -RepoRoot $repoRoot -Arguments @("reset", "--quiet"))
-[void](Invoke-RepoGit -RepoRoot $repoRoot -Arguments (@("add", "-A", "--") + @($normalizedPaths)))
+[void](Invoke-RepoGit -RepoRoot $repoRoot -Arguments (@("add", "-A", "--") + $literalPathspecs))
 
 $stagedAfter = @(Invoke-RepoGit -RepoRoot $repoRoot -Arguments @("diff", "--cached", "--name-only", "--"))
 if ($stagedAfter.Count -eq 0) {
