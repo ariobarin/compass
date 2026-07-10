@@ -9,6 +9,7 @@ can still be called directly.
 .\scripts\compass.ps1 status -Json
 .\scripts\compass.ps1 skills
 .\scripts\compass.ps1 skills -ProjectPath . -Json
+.\scripts\compass.ps1 skills -AdditionalSkillRoot @("path-one", "path-two")
 .\scripts\compass.ps1 doctor
 .\scripts\compass.ps1 diff
 .\scripts\compass.ps1 install
@@ -26,8 +27,8 @@ process so drift can be reported without terminating the dispatcher. Use
 
 `skills` reports each Compass-owned skill, its canonical source, and its Codex
 and Claude install targets. Add `-ProjectPath` to scan project-owned `.agents`
-and `.claude` skill roots, or repeat `-AdditionalSkillRoot` for plugin or
-neighboring-repository roots. Same-name canonical sources are reported as
+and `.claude` skill roots, or pass an array to `-AdditionalSkillRoot` for plugin
+or neighboring-repository roots. Same-name canonical sources are reported as
 collisions rather than silently assigned precedence.
 
 All commands accept `-CodexHome`, `-AgentsHome`, and `-ClaudeHome`. The `update`
