@@ -22,7 +22,8 @@ recovery judgment from a benchmark operator, runner, or orchestration owner.
   exists.
 - Carry a timeout and a failure exit so the command cannot hang indefinitely.
 - Prefer native waits such as `Wait-Process`, `Wait-Event`, `docker wait`,
-  `kubectl wait`, bounded `curl --retry`, or `tail -f` with a terminating match.
+  `kubectl wait`, bounded `curl --fail --retry 30 --retry-all-errors`, or `tail -f`
+  with a terminating match.
 - Print one compact result: condition, success or failure, elapsed time, and the
   value the user needed. Keep repeated checks and long logs out of the context.
 
