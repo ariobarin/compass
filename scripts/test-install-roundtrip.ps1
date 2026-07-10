@@ -57,8 +57,21 @@ try {
     $installPath = Join-Path $PSScriptRoot "install.ps1"
     $verifyPath = Join-Path $PSScriptRoot "verify-live.ps1"
 
-    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
+    $foreignPath = Join-Path (Join-Path (Join-Path $agentsHome "skills") "compass") "SKILL.md"
+    New-Item -ItemType Directory -Force (Split-Path -Parent $foreignPath) | Out-Null
+    Set-Content -LiteralPath $foreignPath -Encoding utf8NoBOM -Value "foreign skill"
+    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments) -ExpectedExitCode 1)
+    if ((Get-Content -Raw -LiteralPath $foreignPath).Trim() -ne "foreign skill") {
+        throw "foreign target changed without explicit adoption"
+    }
+
+    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-Adopt") + $homeArguments))
     [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
+
+    $receiptRoot = Join-Path $codexHome "portable-receipts"
+    $currentReceipt = Join-Path $receiptRoot "current.json"
+    Assert-PathPresent -Path $currentReceipt
+    $receiptCountBefore = @(Get-ChildItem -LiteralPath $receiptRoot -File -Filter "install-*.json").Count
 
     $secondInstall = @(Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
     if (@($secondInstall | Where-Object { $_ -like "installed:*" }).Count -gt 0) {
@@ -66,6 +79,13 @@ try {
     }
     if ($secondInstall -notcontains "backups: none") {
         throw "unchanged second install created a backup root"
+    }
+    if ($secondInstall -notcontains "receipt: unchanged") {
+        throw "unchanged second install rewrote installation provenance"
+    }
+    $receiptCountAfter = @(Get-ChildItem -LiteralPath $receiptRoot -File -Filter "install-*.json").Count
+    if ($receiptCountAfter -ne $receiptCountBefore) {
+        throw "unchanged second install created another receipt"
     }
 
     Assert-PathPresent -Path (Join-Path $codexHome "AGENTS.md")
