@@ -6,10 +6,10 @@ the first upstream failure and decide whether the fix belongs in instructions,
 a skill, a script, a test, or repo documentation.
 
 This is repo-maintainer guidance and is not installed into a live Codex home,
-user skill home, or Claude home.
-When a failure should change future agent behavior, route the fix into the
-reviewed source under `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`.
-The Claude surface derives from those sources at install time.
+user skill home, or Claude home. When a failure should change future agent
+behavior, route the fix into the reviewed source under `codex/AGENTS.md`,
+`codex/agents/`, or `codex/skills/`. The Claude surface derives from those
+sources at install time.
 
 ## Entry Template
 
@@ -49,119 +49,47 @@ should become durable guidance:
 4. Prefer a script or focused workflow over a broad global rule.
 5. Remove stale guidance when the underlying failure no longer appears.
 
-## Entries
+## Recorded Failures
 
-```text
-date: 2026-07-08
-repo or workflow: Compass PR review-program stack
-task: inspect review-program PRs after Codex review and keep the stack moving
-first failure: the PR loop treated top-level PR comments, review bodies, and
-  check status as enough review evidence, so inline review comments were missed
-  until a later manual API check.
-downstream effects: actionable findings on #184 and #185 were nearly skipped
-  after clean-looking top-level review state, and #187 briefly kept a stale
-  "Recommended PR" item after the runtime guidance had already added it.
-evidence: `gh api repos/ariobarin/compass/pulls/184/comments --paginate` and
-  `gh api repos/ariobarin/compass/pulls/185/comments --paginate` exposed inline
-  comments that `gh pr view ... comments,reviews` did not make obvious; #187
-  later received an inline P3 on the review-surfaces audit packet even though
-  the top-level review path had already looked clean.
-root cause category: missing context, weak verification
-fix made: added inline review-comment inspection to the Compass review-program
-  gate and the reviewed `pr-review-loop` source and playbook. The Claude install
-  surface derives from that Codex source.
-verification: source skill validation, `git diff --check`,
-  `.\scripts\doctor.ps1`, GitHub `portable`, current-head review, and explicit
-  pull review comment API checks passed on the affected PRs.
-should become durable guidance: yes, as repo-maintainer failure learning plus
-  focused PR-loop runtime guidance, not as another global session rule.
-```
+These records preserve the first upstream failure and durable correction. Keep
+detailed evidence with the reviewable change that adopted it, not repeated here.
 
-```text
-date: 2026-07-02
-repo or workflow: specialist-review coordination
-task: run coordinated specialist review against Compass
-first failure: the parent skill searched tool discovery with a narrow phrase,
-  found no subagent tools, then shell-launched `codex exec` runs instead of
-  using Codex subagents for specialist review.
-downstream effects: the CLI child runs re-triggered routing behavior, polluted
-  specialist boundaries, and risked reporting non-specialist output as a
-  completed specialist review.
-evidence: thread 019f23f1-fc61-7a80-bcfa-25eb143304e2 logged zero
-  `multi_agent_v1.spawn_agent` calls, repeated `codex exec` launches, and a
-  later correction that the CLI output was not coordinated specialist review.
-root cause category: workflow mismatch, tool-surface risk
-fix made: strengthened the installed `specialist-review` skill to launch the
-  `reviewer` coordinator, made `reviewer` require direct specialist subagents,
-  made missing delegation fail coordinated specialist review instead of using
-  CLI or shell runs, made any clean specialist prompts only a labeled manual
-  fallback outside coordinated review, and kept exact tool namespaces as
-  session evidence rather than portable runtime law.
-verification: `py -3 "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" codex\skills\specialist-review`
-  and `.\scripts\doctor.ps1` passed before PR
-should become durable guidance: yes, as focused installed runtime guidance for
-  the specialist-review route.
-```
+### 2026-07-08: Inline review visibility
 
-```text
-date: 2026-06-12
-repo or workflow: multi-thread audit coordination
-task: launch several audit threads with their own worktrees and PR workflow
-first failure: workers were given both local tracking work and public PR
-  authority, so public branches started to carry tracker notes, partial
-  findings, and mixed coordination content.
-downstream effects: the repository accumulated draft PRs with unclear review
-  order, overlapping fixes, and scratch content that was not useful upstream.
-evidence: audit tracker PRs had to be folded, closed, or rebuilt into focused
-  reviewable changes.
-root cause category: workflow mismatch
-fix made: added workflows/multi-thread-pr-coordination.md, ignored root .local
-  scratch tracking while keeping tracked .local files blocked by doctor, and
-  added the Compass review-program gate so green draft PRs do not count as
-  readiness without live PR state, stacked-base checks, merge order, and
-  current-head review gates.
-verification: run .\scripts\doctor.ps1 and verify .local scratch files stay
-  ignored while forced-tracked .local files fail; for review-program changes,
-  run .\scripts\doctor.ps1 and check the PR's current-head status.
-should become durable guidance: yes, as repo-maintainer workflow guidance and
-  a local scratch check, not as a global rule for every PR.
-```
+- Failure: top-level PR comments, reviews, and checks hid actionable inline
+  comments.
+- Cause: missing context, weak verification.
+- Durable response: `compass-review-program` and `pr-review-loop` require
+  current-head inline-comment inspection alongside top-level review state.
 
-```text
-date: 2026-06-18
-repo or workflow: WebMCP overnight benchmark orchestration
-task: coordinate worker threads for benchmark runs, dictionary PR review, agent modification audit, and ablation planning
-first failure: the controller accepted worker blocker and done claims as terminal state instead of auditing them as evidence claims and converting actionable blockers into PRs, review paths, smokes, or owner handoffs
-downstream effects: work stopped at blocker classification, no countable full A/B/C results were produced, review wait was treated too passively, and the controller later overcorrected by directly implementing worker-owned changes
-evidence: live objective docs contained no full-result evidence but had completion-shaped blocker checkboxes; worker and monitor threads reported no intervention needed while no full benchmark runner was active
-root cause category: workflow mismatch, weak verification
-fix made: added a role-forming orchestration-controller skill for control-plane oversight, question-led unblock, thrash detection, slow monitor cadence, independent review, parent-goal evidence, and strict no worker-owned edits; added it to the portable skill allowlist
-verification: `py -3 "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" codex\skills\orchestration-controller`, `.\scripts\doctor.ps1`, and `git diff --check` passed before PR
-should become durable guidance: yes, as a focused skill rather than a broad global rule
-```
+### 2026-07-02: Specialist review delegation
 
-```text
-date: 2026-06-22
-repo or workflow: WebMCP weekend benchmark controller
-task: oversee a benchmark worker through hosted and DGX A3/CUGA/WebOperator runs, recovery, reporting, and pause
-first failure: controller guidance was structurally correct but emotionally weak, so worker blocker and waiting claims still felt like acceptable resting states until the controller adopted a stronger refusal-to-collapse posture
-downstream effects: benchmark work repeatedly drifted toward tidy blocker packets, idle waiting, partial-run acceptance, and controller uncertainty before stronger steering converted those states into concrete repair, rerun, pause, or evidence-preservation actions
-evidence: stronger controller language produced better behavior: the controller challenged weak blockers, directed partitioning and recovery, stopped active runs cleanly when the user paused, and preserved artifacts instead of accepting "blocked" as the final state
-root cause category: workflow mismatch, weak verification
-fix made: strengthened installed controller, goal, subagent, PR-ledger, and benchmark-run guidance so `BLOCKED` and passive waiting are treated as pressure claims rather than endpoints
-verification: skill validation, `git diff --check`, and targeted source review before PR
-should become durable guidance: yes, in runtime skills that shape controller and worker stance
-```
+- Failure: a parent shell-launched CLI children after missing the subagent route,
+  then risked reporting that output as coordinated specialist review.
+- Cause: workflow mismatch, tool-surface risk.
+- Durable response: `specialist-review` and `reviewer` require direct specialist
+  subagents; a manual prompt is explicitly outside coordinated review.
 
-```text
-date: 2026-06-23
-repo or workflow: WebOperator qwen3.6 Flash Verified Hard benchmark operation
-task: continue a strict two-arm WebOperator qwen3.6 Flash A/B run and recover partial or invalid rows into usable results
-first failure: benchmark guidance made invalid rows and documented blockers feel like acceptable stop points, and key priorities were not front-loaded strongly enough, so a timeout row and provider rejection were treated as a run-ending blocker instead of as result artifacts, recovery candidates, or a reason to keep unaffected slices moving
-downstream effects: the orchestrator absorbed the runner role instead of creating a separate runner thread, the active runner was stopped after task 29 timed out, task 31 was killed mid-run, the heartbeat was paused, critical context was too easy to miss behind evidence and caveats, and no naive-arm rows or paired results were produced before the user corrected the priority
-evidence: q36r3 monitor showed only 5 valid no-arm rows, 2 invalid no-arm rows, 251 no-arm missing rows, 258 naive missing rows, and no paired-valid results while safe work was still available
-root cause category: workflow mismatch, weak verification
-fix made: strengthened benchmark-run, artifact-validation, stack-operations, eval-triage, goal, and controller guidance so result production is the sacred priority, invalid rows are a recovery queue, alleged blockers are suspect, healthy comparable slices keep moving, monitor errors are alarms rather than verdicts, long benchmark execution gets a named runner owner while the orchestrator stays in the control plane, and critical context is front-loaded before background
-verification: skill validation, doctor check, and diff review before PR
-should become durable guidance: yes, in installed runtime skills and the maintenance failure journal
-```
+### 2026-06-12: Multi-thread public-branch sprawl
+
+- Failure: workers combined local tracking with public PR authority, producing
+  overlapping drafts and scratch content.
+- Cause: workflow mismatch.
+- Durable response: `multi-thread-pr-coordination.md` separates local tracking
+  from focused PR branches, with current-head review gates for publication.
+
+### 2026-06-18 and 2026-06-22: Controller recovery posture
+
+- Failure: controllers accepted blocker or waiting claims as endpoints, then
+  overcorrected by taking worker-owned execution.
+- Cause: workflow mismatch, weak verification.
+- Durable response: controller, goal, subagent, and benchmark guidance treat
+  those claims as evidence to diagnose, route to a named owner, and keep moving.
+
+### 2026-06-23: Invalid benchmark rows as terminal blockers
+
+- Failure: timeout and provider-failure rows stopped healthy comparable work and
+  pulled the controller into the runner role.
+- Cause: workflow mismatch, weak verification.
+- Durable response: benchmark and goal guidance treat invalid rows as recovery
+  work, preserve a named runner owner, and continue unaffected safe slices.
