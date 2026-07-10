@@ -14,10 +14,6 @@ catch drift before config is copied into a live machine.
 - [benchmark-run-evidence.md](benchmark-run-evidence.md):
   compact evidence behind the promoted benchmark and goal guidance, kept out of
   installed runtime behavior.
-- [codex-context-compaction-setups.md](codex-context-compaction-setups.md):
-  dated evidence and tradeoffs for reviewing Codex context-window, automatic
-  compaction, and tool-output limits without promoting them directly into live
-  config.
 - [../workflows/addition-intake.md](../workflows/addition-intake.md): promotion
   flow for new repo-maintenance workflows, installed skills and agents,
   repo-side scripts and manifests, and config fragments. Workflows guide repo
