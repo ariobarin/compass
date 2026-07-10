@@ -6,6 +6,9 @@ Runs Compass maintenance commands through one stable entry point.
 ./scripts/compass.ps1 status
 
 .EXAMPLE
+./scripts/compass.ps1 skills -ProjectPath . -Json
+
+.EXAMPLE
 ./scripts/compass.ps1 install -Apply
 
 .EXAMPLE
@@ -14,7 +17,7 @@ Runs Compass maintenance commands through one stable entry point.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [ValidateSet("status", "doctor", "diff", "install", "snapshot", "verify", "update")]
+    [ValidateSet("status", "skills", "doctor", "diff", "install", "snapshot", "verify", "update")]
     [string]$Command,
 
     [switch]$Apply,
@@ -25,6 +28,8 @@ param(
     [string]$CodexHome,
     [string]$AgentsHome,
     [string]$ClaudeHome,
+    [string]$ProjectPath,
+    [string[]]$AdditionalSkillRoot,
     [string]$Remote = "origin",
     [string]$Branch = "main"
 )
@@ -127,8 +132,8 @@ function Get-LiveStatus {
     }
 }
 
-if (($Json -or $Plain) -and $Command -ne "status") {
-    throw "-Json and -Plain are supported only by the status command"
+if (($Json -or $Plain) -and $Command -notin @("status", "skills")) {
+    throw "-Json and -Plain are supported only by status and skills"
 }
 if ($Json -and $Plain) {
     throw "choose either -Json or -Plain"
@@ -138,6 +143,9 @@ if ($Apply -and $Command -notin @("install", "snapshot")) {
 }
 if (($RequireInSync -or $SkipCodexCommand) -and $Command -notin @("status", "verify")) {
     throw "-RequireInSync and -SkipCodexCommand are supported only by status and verify"
+}
+if (($ProjectPath -or $AdditionalSkillRoot) -and $Command -ne "skills") {
+    throw "-ProjectPath and -AdditionalSkillRoot are supported only by skills"
 }
 
 $homeArguments = Get-HomeArguments
@@ -176,6 +184,23 @@ switch ($Command) {
             exit $status.verify_exit_code
         }
         exit 0
+    }
+    "skills" {
+        $arguments = @{} + $homeArguments
+        [void]$arguments.Remove("CodexHome")
+        if ($ProjectPath) {
+            $arguments["ProjectPath"] = $ProjectPath
+        }
+        if ($AdditionalSkillRoot) {
+            $arguments["AdditionalSkillRoot"] = $AdditionalSkillRoot
+        }
+        if ($Json) {
+            $arguments["Json"] = $true
+        }
+        if ($Plain) {
+            $arguments["Plain"] = $true
+        }
+        Invoke-CompassScript -Name "skills-status.ps1" -Arguments $arguments
     }
     "doctor" {
         Invoke-CompassScript -Name "doctor.ps1" -Arguments $homeArguments
