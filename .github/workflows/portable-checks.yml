@@ -27,6 +27,7 @@ jobs:
           python-version: "3.12"
 
       - name: Run doctor
+        if: runner.os == 'Windows'
         shell: pwsh
         run: |
           $codexHome = Join-Path $env:RUNNER_TEMP "codex-home"
