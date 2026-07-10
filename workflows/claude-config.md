@@ -8,8 +8,10 @@ and latest-to-live flow. There are no hand-maintained `claude/` source files.
 
 - Edit `codex/skills/<name>/` or `codex/agents/<name>.toml`, then list shared
   capabilities in the relevant Claude-derived manifest array.
-- Derived skills install to `$HOME\.claude\skills\<name>` and agents to
-  `$HOME\.claude\agents\<name>.md`. No `CLAUDE.md` is installed automatically.
+- With `-ClaudeHome`, derived skills install to
+  `<ClaudeHome>\skills\<name>` and agents to `<ClaudeHome>\agents\<name>.md`;
+  otherwise their root is `$HOME\.claude`. No `CLAUDE.md` is installed
+  automatically.
 - Keep shared guidance runtime-neutral: preserve dual-review intent without
   requiring `@codex`; describe a capability instead of a Codex-only command or
   skill; use generic authoring and validation terms; and name the live config
