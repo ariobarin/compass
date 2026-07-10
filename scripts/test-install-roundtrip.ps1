@@ -28,7 +28,8 @@ function Invoke-TestScript {
     $exitCode = $LASTEXITCODE
     if ($exitCode -ne $ExpectedExitCode) {
         $output | ForEach-Object { Write-Host $_ }
-        throw "expected exit code $ExpectedExitCode from $Path, got $exitCode"
+        $detail = $output -join "`n"
+        throw "expected exit code $ExpectedExitCode from $Path, got $exitCode`n$detail"
     }
     return $output
 }
@@ -59,6 +60,14 @@ try {
     [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
     [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
 
+    $secondInstall = @(Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
+    if (@($secondInstall | Where-Object { $_ -like "installed:*" }).Count -gt 0) {
+        throw "unchanged second install copied portable items"
+    }
+    if ($secondInstall -notcontains "backups: none") {
+        throw "unchanged second install created a backup root"
+    }
+
     Assert-PathPresent -Path (Join-Path $codexHome "AGENTS.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $agentsHome "skills") "compass") "SKILL.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $claudeHome "skills") "compass") "SKILL.md")
@@ -87,6 +96,16 @@ try {
     [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
 
     Write-Host "install round trip: ok"
+}
+catch {
+    $diagnosticPath = Join-Path $repoRoot "compass-roundtrip-error.txt"
+    $diagnostic = @(
+        $_ | Format-List * -Force | Out-String
+        "script stack:"
+        $_.ScriptStackTrace
+    ) -join "`n"
+    [System.IO.File]::WriteAllText($diagnosticPath, $diagnostic)
+    throw
 }
 finally {
     if (Test-Path -LiteralPath $testRoot) {
