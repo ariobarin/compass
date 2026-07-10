@@ -72,6 +72,9 @@ When both a second reviewer and `neutral-critic` apply:
 - If the user merges, stop at review-ready state and say exactly what remains:
   PR number, head SHA, check state, and review state.
 - Merge only when the user or repo workflow explicitly authorized it.
+- For an explicit merge-closeout request, archive the task only after GitHub
+  confirms the merge. If a required gate fails or remains pending, leave the PR
+  open and comment with the blocking evidence or actionable finding.
 - If a stack is involved, name the merge order instead of assuming a reviewer
   can infer it.
 

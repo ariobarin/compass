@@ -332,7 +332,7 @@ function Get-RetiredPortableFileMap {
 
     $items = New-Object System.Collections.Generic.List[object]
 
-    foreach ($skill in @(@(Get-PortableSkillNames) + @("codex-portable", "proper-flowcharts", "ui-ux-pro-max"))) {
+    foreach ($skill in @(@(Get-PortableSkillNames) + @("codex-portable", "pr-merge-closeout", "proper-flowcharts", "ui-ux-pro-max"))) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $CodexHome "skills") $skill
@@ -343,7 +343,7 @@ function Get-RetiredPortableFileMap {
 
     # Keep retired user-skill removals explicit so install does not delete
     # unrelated personal skills that Compass does not own.
-    foreach ($skill in @("ui-ux-pro-max")) {
+    foreach ($skill in @("pr-merge-closeout", "ui-ux-pro-max")) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $AgentsHome "skills") $skill

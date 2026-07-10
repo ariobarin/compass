@@ -1,6 +1,6 @@
 ---
 name: pr-review-loop
-description: Iterate on a named PR through review, fixes, re-review, and merge gates. Use when the user names a PR, asks to address review comments, or wants dual review.
+description: Iterate a named PR through review, fixes, re-review, merge gates, and explicit closeout. Use for named PRs, review feedback, dual review, or merge closeout.
 ---
 
 # PR Review Loop
@@ -40,6 +40,8 @@ stale-rebuild, re-review, and merge-boundary patterns.
 6. After any material push, re-read the head SHA and re-request review on that
    new head before calling the PR ready or merging.
 7. Merge only when the user or repo workflow explicitly authorized it.
+8. For an explicit closeout request, archive the task after a confirmed merge.
+   If the PR cannot merge, leave it open and comment with the blocking evidence.
 
 ## Rules
 
@@ -62,6 +64,9 @@ stale-rebuild, re-review, and merge-boundary patterns.
   allowed.
 - If the user performs merges, stop at merge boundary with the exact next merge
   action.
+- If the user requested closeout and authorized merging, archive the task only
+  after GitHub confirms the merge. Otherwise, leave the PR open and comment
+  with the unsatisfied gate or actionable finding.
 - If a base branch moved, re-check whether downstream PRs still have a real
   delta before keeping them alive.
 
