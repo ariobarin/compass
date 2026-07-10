@@ -22,7 +22,7 @@ Create or expand a skill only when the repeated work is specialized agent
 behavior. Choose a narrower Compass surface when it fits better:
 
 - repeated global agent capability: `codex/skills/`;
-- carried but not global capability: `carried/`;
+- carried but not global capability: create `carried/` with the first item;
 - repo-local human process: `workflows/`;
 - mechanical check: `scripts/`;
 - portability boundary: `manifests/`;
@@ -129,10 +129,10 @@ only when the install-map logic itself needs to change.
 If the skill is intentionally repo-only, keep it out of the install manifest
 and explain the boundary in the relevant repo docs instead.
 
-If the skill is carried but not global, keep it under `carried/`, leave it out
-of installed manifest lists, and document the opt-in route. Carried source may
-use normal `SKILL.md` shape, but its path is what keeps it out of live runtime
-context.
+If the skill is carried but not global, create its `carried/` path in the same
+PR, leave it out of installed manifest lists, and document the opt-in route.
+Do not retain an empty carried scaffold. A carried path keeps the source out of
+live runtime context.
 
 When a skill belongs in the target repo rather than in the portable global
 setup, do not wire it into `manifests/portable-files.toml` or

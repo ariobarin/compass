@@ -114,7 +114,6 @@ files = [
 
 dirs = [
   ".github",
-  "carried",
   "local-docs",
   "manifests",
   "scripts",
