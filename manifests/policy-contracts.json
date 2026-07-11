@@ -25,6 +25,14 @@
       ]
     },
     {
+      "id": "orchestration-ledger-does-not-grant-authority",
+      "path": "workflows/orchestration-ledger.md",
+      "required": [
+        "An open ledger gate is not permission.",
+        "Actual push, PR mutation, merge, release, deployment, or publication authority still comes from the user and repository workflow at the moment of action."
+      ]
+    },
+    {
       "id": "hook-failure-boundary",
       "path": "codex/hooks/README.md",
       "required": [
