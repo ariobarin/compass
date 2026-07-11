@@ -1,0 +1,7 @@
+interface:
+  display_name: "Behavior Validator"
+  short_description: "Validate observable behavior without reading source"
+  default_prompt: "Use $behavior-validator to write or read a behavior contract, stay source-blind, exercise the real user surface, and report clause-level evidence."
+
+policy:
+  allow_implicit_invocation: true
