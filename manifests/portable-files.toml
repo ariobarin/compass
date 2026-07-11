@@ -24,6 +24,7 @@ skills_dir = "$HOME\\.agents\\skills"
 
 skills = [
   "action-items-to-prs",
+  "behavior-validator",
   "benchmark-infra-reviewer",
   "benchmark-run-operator",
   "compass",
@@ -60,6 +61,7 @@ agents_dir = "$HOME\\.claude\\agents"
 # source of truth.
 derived_skills = [
   "action-items-to-prs",
+  "behavior-validator",
   "benchmark-infra-reviewer",
   "benchmark-run-operator",
   "compass",
