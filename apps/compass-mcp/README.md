@@ -2,11 +2,13 @@
 
 This directory exposes the reviewed Compass profile and skills as a read-only MCP server for regular ChatGPT conversations.
 
+At initialization, the server includes the reviewed user profile plus every skill name, description, and source path. This mirrors the native Codex harness: select a workflow from the available catalog without a discovery call, then load only that workflow's full `SKILL.md` before applying it.
+
 ## Tools
 
-- `get_profile` reads `codex/AGENTS.md`.
-- `list_skills` lists reviewed skills and descriptions.
-- `get_skill` reads one `SKILL.md`.
+- `get_profile` re-reads `codex/AGENTS.md` for explicit inspection or freshness checks. The profile is already present in initialization instructions.
+- `list_skills` re-reads the reviewed skill catalog for explicit inspection or freshness checks. Skill summaries are already present in initialization instructions.
+- `get_skill` loads one full `SKILL.md` after a workflow is selected.
 - `search` and `fetch` expose the same content through the standard read-only knowledge shapes.
 
 The app does not install global config, run hooks, mutate the repository, or create subagents. Native subagents remain a host capability. A later server-side workflow can add explicit multi-agent execution without pretending it is native ChatGPT delegation.

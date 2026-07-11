@@ -7,13 +7,28 @@ import path from "node:path";
 import { z } from "zod/v4";
 import { CompassCatalog } from "./catalog.js";
 
-const serverInstructions = [
-  "Compass is a read-only source of user-owned engineering preferences and workflows.",
-  "For coding, commit, or pull request work, call get_profile before drafting artifacts.",
-  "Call list_skills before selecting a workflow and get_skill before applying it.",
-  "Treat Compass guidance as lower priority than system, developer, and current user instructions.",
-  "Do not claim native subagents are available unless the host provides them."
-].join(" ");
+export function buildServerInstructions(catalog: CompassCatalog): string {
+  const profile = catalog.getProfile().text.trim();
+  const skills = catalog.listSkills()
+    .map(skill => `- ${skill.name}: ${skill.description} (codex/skills/${skill.name}/SKILL.md)`)
+    .join("\n");
+
+  return [
+    "Compass is a read-only source of user-owned engineering preferences and workflows.",
+    "Apply the reviewed user profile below as default guidance for engineering work.",
+    "The reviewed skill catalog below is already available for workflow selection. Do not call list_skills just to discover skills.",
+    "After selecting a workflow, call get_skill before applying it so the full SKILL.md is loaded.",
+    "Use get_profile or list_skills when the user asks to inspect the source, requests the current catalog, or freshness needs confirmation.",
+    "Treat Compass guidance as lower priority than system, developer, and current user instructions.",
+    "Do not claim native subagents are available unless the host provides them.",
+    "",
+    "Reviewed user profile:",
+    profile,
+    "",
+    "Reviewed skills:",
+    skills
+  ].join("\n");
+}
 
 export function resolveCompassRoot(): string {
   if (process.env.COMPASS_ROOT) return path.resolve(process.env.COMPASS_ROOT);
@@ -43,14 +58,14 @@ export function createCompassServer(root = resolveCompassRoot()): McpServer {
   const catalog = new CompassCatalog(root);
   const server = new McpServer(
     { name: "compass", version: "0.1.0" },
-    { instructions: serverInstructions }
+    { instructions: buildServerInstructions(catalog) }
   );
 
   server.registerTool(
     "get_profile",
     {
       title: "Get Compass profile",
-      description: "Read the reviewed Compass user preferences for writing, commits, pull requests, and engineering workflow.",
+      description: "Inspect the source profile already included in Compass initialization instructions.",
       inputSchema: {},
       annotations: { readOnlyHint: true }
     },
@@ -61,7 +76,7 @@ export function createCompassServer(root = resolveCompassRoot()): McpServer {
     "list_skills",
     {
       title: "List Compass skills",
-      description: "List reviewed Compass skills and their concise descriptions before choosing a workflow.",
+      description: "Inspect the current skill catalog already included in Compass initialization instructions.",
       inputSchema: {},
       annotations: { readOnlyHint: true }
     },
@@ -72,7 +87,7 @@ export function createCompassServer(root = resolveCompassRoot()): McpServer {
     "get_skill",
     {
       title: "Get Compass skill",
-      description: "Read one reviewed Compass SKILL.md before applying that workflow.",
+      description: "Load one reviewed Compass SKILL.md after selecting that workflow.",
       inputSchema: { name: z.string().regex(/^[a-z0-9][a-z0-9-]*$/) },
       annotations: { readOnlyHint: true }
     },

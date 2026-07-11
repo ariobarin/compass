@@ -38,10 +38,20 @@ try {
   assert.equal(await getHealthStatus("compass.example.test"), 200);
 
   await client.connect(transport);
+  const instructions = client.getInstructions() ?? "";
+  assert.match(instructions, /# User preferences/);
+  assert.match(instructions, /- input-token-economy:/);
+  assert.match(instructions, /Do not call list_skills just to discover skills/);
+  assert.doesNotMatch(instructions, /Call list_skills before selecting a workflow/);
+
   const tools = await client.listTools();
   assert.deepEqual(
     tools.tools.map(tool => tool.name).sort(),
     ["fetch", "get_profile", "get_skill", "list_skills", "search"]
+  );
+  assert.match(
+    tools.tools.find(tool => tool.name === "list_skills")?.description ?? "",
+    /already included/
   );
 
   const profile = await client.callTool({ name: "get_profile", arguments: {} });
