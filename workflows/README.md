@@ -14,6 +14,7 @@ linked workflow before changing its covered surface.
 | Recovering unfinished local sessions after a Codex restart | [codex-restart-recovery.md](codex-restart-recovery.md) |
 | Auditing or pruning installed skills, agents, hooks, or maintainer guidance | [compass-review-program.md](compass-review-program.md) |
 | Coordinating several audit or PR threads without expanding public PR scope | [multi-thread-pr-coordination.md](multi-thread-pr-coordination.md) |
+| Recording compact local controller state across workers or repository lanes | [orchestration-ledger.md](orchestration-ledger.md) |
 | Creating a durable written implementation plan | [plan-template.md](plan-template.md) |
 | Installing, copying, diffing, or updating the portable Codex and Claude setup | [portable-config.md](portable-config.md) |
 | Mapping a repository or external source before deciding whether to edit | [read-only-research.md](read-only-research.md) |
