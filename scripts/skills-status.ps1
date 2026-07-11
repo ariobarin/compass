@@ -46,6 +46,29 @@ function Add-DiscoveredRoot {
     })
 }
 
+function Get-SkillSourceRecords {
+    param([string]$RepoRoot)
+
+    $manifestPath = Join-Path $RepoRoot "manifests\skill-sources.json"
+    if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+        throw "missing skill source manifest: $manifestPath"
+    }
+
+    $manifest = Get-Content -Raw -LiteralPath $manifestPath | ConvertFrom-Json
+    if ($manifest.schema_version -ne 1 -or -not $manifest.skills) {
+        throw "skill source manifest requires schema_version 1 and a non-empty skills array"
+    }
+
+    $records = @{}
+    foreach ($record in @($manifest.skills)) {
+        if (-not $record.name -or $records.ContainsKey($record.name)) {
+            throw "skill source manifest contains a missing or duplicate name"
+        }
+        $records[$record.name] = $record
+    }
+    return $records
+}
+
 if ($Json -and $Plain) {
     throw "choose either -Json or -Plain"
 }
@@ -55,8 +78,7 @@ $agentsHomePath = Get-AgentsHome -AgentsHome $AgentsHome
 $claudeHomePath = Get-ClaudeHome -ClaudeHome $ClaudeHome
 $projectRoot = Resolve-OptionalPath -Path $ProjectPath
 $portableNames = @(Get-PortableSkillNames | Sort-Object -Unique)
-$directClaudeNames = @(Get-PortableClaudeSkillNames | Sort-Object -Unique)
-$derivedClaudeNames = @(Get-PortableClaudeDerivedSkillNames | Sort-Object -Unique)
+$sourceRecords = Get-SkillSourceRecords -RepoRoot $repoRoot
 
 $roots = New-Object System.Collections.Generic.List[object]
 if ($projectRoot) {
@@ -69,11 +91,16 @@ foreach ($root in @($AdditionalSkillRoot)) {
 
 $canonicalSources = @{}
 foreach ($name in $portableNames) {
+    if (-not $sourceRecords.ContainsKey($name)) {
+        throw "portable skill lacks a source record: $name"
+    }
+    $sourceRecord = $sourceRecords[$name]
+    $sourcePath = Join-Path $repoRoot $sourceRecord.source
     $canonicalSources[$name] = New-Object System.Collections.Generic.List[object]
     $canonicalSources[$name].Add([pscustomobject]@{
-        owner = "compass"
+        owner = $sourceRecord.owner
         runtime = "codex-source"
-        path = Join-Path (Join-Path (Join-Path $repoRoot "codex") "skills") $name
+        path = $sourcePath
     })
 }
 
@@ -100,32 +127,35 @@ foreach ($root in $roots) {
 
 $skills = @(
     foreach ($name in $portableNames) {
-        $claudeMode = "none"
-        if ($derivedClaudeNames -contains $name) {
-            $claudeMode = "derived"
-        }
-        elseif ($directClaudeNames -contains $name) {
-            $claudeMode = "direct"
-        }
-
+        $sourceRecord = $sourceRecords[$name]
         $targets = New-Object System.Collections.Generic.List[object]
-        $targets.Add([pscustomobject]@{
-            runtime = "codex"
-            mode = "copy"
-            path = Join-Path (Join-Path $agentsHomePath "skills") $name
-        })
-        if ($claudeMode -ne "none") {
+        if ($sourceRecord.targets.codex -eq "copy") {
+            $targets.Add([pscustomobject]@{
+                runtime = "codex"
+                mode = "copy"
+                path = Join-Path (Join-Path $agentsHomePath "skills") $name
+            })
+        }
+        if ($sourceRecord.targets.claude -ne "none") {
             $targets.Add([pscustomobject]@{
                 runtime = "claude"
-                mode = $claudeMode
+                mode = $sourceRecord.targets.claude
                 path = Join-Path (Join-Path $claudeHomePath "skills") $name
             })
         }
 
+        $upstream = $null
+        if ($sourceRecord.PSObject.Properties.Name -contains "upstream") {
+            $upstream = $sourceRecord.upstream
+        }
+
         [pscustomobject]@{
             name = $name
-            owner = "compass"
-            source = Join-Path (Join-Path (Join-Path $repoRoot "codex") "skills") $name
+            owner = $sourceRecord.owner
+            source = Join-Path $repoRoot $sourceRecord.source
+            source_relative = $sourceRecord.source
+            profile = $sourceRecord.profile
+            upstream = $upstream
             targets = @($targets.ToArray())
         }
     }
@@ -147,6 +177,7 @@ $collisions = @(
 $result = [ordered]@{
     schema_version = 1
     repo = $repoRoot
+    source_manifest = Join-Path $repoRoot "manifests\skill-sources.json"
     agents_home = $agentsHomePath
     claude_home = $claudeHomePath
     project = $projectRoot
@@ -157,13 +188,16 @@ $result = [ordered]@{
 }
 
 if ($Json) {
-    $result | ConvertTo-Json -Depth 8
+    $result | ConvertTo-Json -Depth 10
     exit 0
 }
 
 if ($Plain) {
     foreach ($skill in $skills) {
-        Write-Output "skill=$($skill.name) owner=$($skill.owner) source=$($skill.source)"
+        Write-Output "skill=$($skill.name) owner=$($skill.owner) profile=$($skill.profile) source=$($skill.source)"
+        if ($skill.upstream) {
+            Write-Output "upstream=$($skill.name) repository=$($skill.upstream.repository) ref=$($skill.upstream.reviewed_ref) sha256=$($skill.upstream.source_sha256)"
+        }
         foreach ($target in $skill.targets) {
             Write-Output "target=$($skill.name) runtime=$($target.runtime) mode=$($target.mode) path=$($target.path)"
         }
@@ -179,7 +213,10 @@ Write-Host "external skills: $($externalSkills.Count)"
 Write-Host "collisions: $($collisions.Count)"
 Write-Host ""
 foreach ($skill in $skills) {
-    Write-Host "$($skill.name): $($skill.source)"
+    Write-Host "$($skill.name) [$($skill.owner), $($skill.profile)]: $($skill.source)"
+    if ($skill.upstream) {
+        Write-Host "  upstream: $($skill.upstream.repository)@$($skill.upstream.reviewed_ref)"
+    }
     foreach ($target in $skill.targets) {
         Write-Host "  $($target.runtime) [$($target.mode)]: $($target.path)"
     }
