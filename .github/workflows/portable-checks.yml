@@ -49,6 +49,10 @@ jobs:
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
 
+      - name: Test skill source provenance
+        shell: pwsh
+        run: python scripts/test-validate-skill-sources.py
+
       - name: Check shell launcher syntax
         if: runner.os == 'Linux'
         shell: bash
