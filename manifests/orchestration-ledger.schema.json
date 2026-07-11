@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ariobarin.github.io/compass/orchestration-ledger.schema.json",
+  "title": "Compass local orchestration ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "updated_at", "items"],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    }
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "goal",
+        "execution_owner",
+        "worker_id",
+        "state",
+        "completion_evidence",
+        "evidence",
+        "public_mutation_gate",
+        "decision_needed",
+        "created_at",
+        "updated_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "repository": {
+          "type": ["string", "null"],
+          "maxLength": 300
+        },
+        "execution_owner": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "worker_id": {
+          "type": ["string", "null"],
+          "maxLength": 300
+        },
+        "state": {
+          "enum": ["planned", "active", "waiting", "blocked", "review", "complete", "cancelled"]
+        },
+        "next_action": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["summary", "check_at"],
+              "properties": {
+                "summary": {"type": "string", "minLength": 1, "maxLength": 1000},
+                "check_at": {"type": ["string", "null"], "format": "date-time"}
+              }
+            }
+          ]
+        },
+        "completion_evidence": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1, "maxLength": 500},
+          "maxItems": 50
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["recorded_at", "kind", "summary", "locator"],
+            "properties": {
+              "recorded_at": {"type": "string", "format": "date-time"},
+              "kind": {"enum": ["command", "check", "review", "artifact", "status", "decision"]},
+              "summary": {"type": "string", "minLength": 1, "maxLength": 1000},
+              "locator": {"type": ["string", "null"], "maxLength": 1000}
+            }
+          }
+        },
+        "public_mutation_gate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "reason", "updated_at"],
+          "properties": {
+            "state": {"enum": ["closed", "open", "blocked"]},
+            "reason": {"type": ["string", "null"], "maxLength": 1000},
+            "updated_at": {"type": "string", "format": "date-time"}
+          }
+        },
+        "decision_needed": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["question", "options", "evidence", "requested_at"],
+              "properties": {
+                "question": {"type": "string", "minLength": 1, "maxLength": 1000},
+                "options": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 10,
+                  "uniqueItems": true,
+                  "items": {"type": "string", "minLength": 1, "maxLength": 500}
+                },
+                "evidence": {"type": ["string", "null"], "maxLength": 2000},
+                "requested_at": {"type": "string", "format": "date-time"}
+              }
+            }
+          ]
+        },
+        "created_at": {"type": "string", "format": "date-time"},
+        "updated_at": {"type": "string", "format": "date-time"}
+      }
+    }
+  }
+}
