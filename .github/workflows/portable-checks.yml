@@ -49,6 +49,10 @@ jobs:
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
 
+      - name: Test skill audit
+        shell: pwsh
+        run: python scripts/test-skills-audit.py
+
       - name: Check shell launcher syntax
         if: runner.os == 'Linux'
         shell: bash
@@ -82,7 +86,7 @@ jobs:
             $lineNumber = 0
             foreach ($line in Get-Content -LiteralPath $file) {
               $lineNumber += 1
-              if ($line -match "[ \t]$") {
+              if ($line -match "[ \t]$" ) {
                 $bad += "${file}:$lineNumber"
               }
             }
