@@ -10,6 +10,14 @@
       ]
     },
     {
+      "id": "behavior-validator-source-blind",
+      "path": "codex/skills/behavior-validator/SKILL.md",
+      "required": [
+        "Do not inspect source files, diffs, tests, git history, implementation notes, or review bundles.",
+        "If implementation material becomes visible, mark the run contaminated and restart with a fresh validator."
+      ]
+    },
+    {
       "id": "controller-does-not-absorb-worker-work",
       "path": "codex/skills/orchestration-controller/SKILL.md",
       "required": [
