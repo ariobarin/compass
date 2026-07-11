@@ -4,7 +4,8 @@ import { request } from "node:http";
 import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import { startServer } from "../src/index.js";
+import { CompassCatalog } from "../src/catalog.js";
+import { buildServerInstructions, resolveCompassRoot, startServer } from "../src/index.js";
 
 process.env.COMPASS_ROOT = process.env.COMPASS_ROOT ?? fileURLToPath(new URL("../../..", import.meta.url));
 process.env.HOST = "127.0.0.1";
@@ -28,6 +29,13 @@ function getHealthStatus(host: string): Promise<number | undefined> {
   });
 }
 
+const catalog = new CompassCatalog(resolveCompassRoot());
+const instructions = buildServerInstructions(catalog);
+assert.match(instructions, /# User preferences/);
+assert.match(instructions, /- input-token-economy:/);
+assert.match(instructions, /Do not call list_skills just to discover skills/);
+assert.doesNotMatch(instructions, /Call list_skills before selecting a workflow/);
+
 const httpServer = startServer();
 if (!httpServer.listening) await once(httpServer, "listening");
 
@@ -42,6 +50,10 @@ try {
   assert.deepEqual(
     tools.tools.map(tool => tool.name).sort(),
     ["fetch", "get_profile", "get_skill", "list_skills", "search"]
+  );
+  assert.match(
+    tools.tools.find(tool => tool.name === "list_skills")?.description ?? "",
+    /already included/
   );
 
   const profile = await client.callTool({ name: "get_profile", arguments: {} });
