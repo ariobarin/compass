@@ -13,6 +13,9 @@ can still be called directly.
 .\scripts\compass.ps1 skills-audit
 .\scripts\compass.ps1 skills-audit -ProjectPath . -NoLive -Json
 .\scripts\compass.ps1 skills-audit -Check
+.\scripts\compass.ps1 orchestration
+.\scripts\compass.ps1 orchestration -Plain
+.\scripts\compass.ps1 orchestration -ItemId compass-audit -Json
 .\scripts\compass.ps1 doctor
 .\scripts\compass.ps1 diff
 .\scripts\compass.ps1 install
@@ -42,6 +45,13 @@ Use `-NoLive` for deterministic repository-only output and `-Check` when
 structural findings or an exceeded budget should fail the command. Run
 `scripts/skills-audit.ps1` directly for usage-log, context-window, and threshold
 options. Usage scanning is opt-in and never emits raw log content.
+
+`orchestration` reads compact local controller state from
+`.local/orchestration-ledger.json` by default. Use `-ItemId` for one lane and
+`-LedgerPath` for an explicit local file. Mutations go through
+`scripts/orchestration-ledger.ps1`, which records owners, next actions, evidence,
+mutation-gate state, and prepared decisions with guarded transitions, exclusive
+locking, and atomic writes. The live ledger remains local and ignored.
 
 All commands accept `-CodexHome`, `-AgentsHome`, and `-ClaudeHome`. The `update`
 command also accepts `-Remote` and `-Branch`.
