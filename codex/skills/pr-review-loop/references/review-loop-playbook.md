@@ -1,7 +1,8 @@
 # PR Review Loop Playbook
 
 Use this reference when PR work needs explicit branch identity, review gates,
-current-head re-review, or stale-PR rebuild handling.
+current-head re-review, source-aware bundle isolation, source-blind behavior
+proof, or stale-PR rebuild handling.
 
 ## Standing Review Gates
 
@@ -12,6 +13,11 @@ readiness gates, not nice-to-have checks.
 Do not mark a PR ready or merge it while a required review gate is missing,
 stale, failed, or still waiting on actionable findings. A local test run can
 support the case for readiness, but it never replaces reviewer approval.
+
+When a PR changes observable behavior, add a separate `behavior-validator` gate.
+A source-aware reviewer judges the implementation and patch. A source-blind
+validator judges the running product, command, API, or artifact against a
+written behavior contract. Neither gate substitutes for the other.
 
 ## Named PR Loop
 
@@ -43,6 +49,52 @@ Review conclusions are tied to a head SHA, not just a PR number.
 - Re-request the second reviewer or other required review on the new head when
   the old review may be stale.
 - Do not call a PR ready based on feedback that clearly targeted an older head.
+- Behavior evidence must identify the tested build, ref, or artifact. A passing
+  result for an older build does not clear the current head.
+
+## Confined Source-Aware Review
+
+Use the bundled `references/build-review-bundle.py` when a fresh reviewer should
+see the complete selected patch without inheriting the current conversation or
+arbitrary checkout files.
+
+The bundle contains:
+
+- the complete binary-capable Git patch for the selected base and head;
+- base and head SHAs plus changed paths and hashes in `manifest.json`;
+- an optional repo-relative task file;
+- only explicitly selected repo-relative datasets.
+
+The helper deliberately refuses:
+
+- dirty worktrees, because uncommitted material would be omitted;
+- empty or oversized patches;
+- known secret and credential paths or secret-like content;
+- symlinked, absolute, or escaping context paths;
+- existing output directories that could contain stale evidence.
+
+Treat a bundle failure as an evidence-boundary failure. Redact or divide the
+change and build complete bundles for the resulting claims. Do not paste a
+truncated diff and call it equivalent.
+
+## Source-Blind Behavior Validation
+
+Capture the behavior contract before implementation detail can redefine success.
+Give the validator only:
+
+- the behavior contract;
+- exact target identity and launch or connection instructions;
+- allowed fixtures and credentials through approved secret handling;
+- user-visible or operator-visible evidence.
+
+Do not provide source, diffs, tests, Git history, review summaries, or a review
+bundle. If those become visible, the run is contaminated and a fresh validator
+must rerun it. Require clause-level pass, fail, blocked, or out-of-scope status,
+plus anti-cheat probes that distinguish real behavior from static success text.
+
+Skip this gate only when the PR makes no user-visible or operator-visible
+behavior claim, such as a prose-only maintainer note or an internal refactor
+whose observable contract is intentionally unchanged.
 
 ## Stale PR Rebuild
 
@@ -76,7 +128,7 @@ When both a second reviewer and `neutral-critic` apply:
 ## Merge Boundary
 
 - If the user merges, stop at review-ready state and say exactly what remains:
-  PR number, head SHA, check state, and review state.
+  PR number, head SHA, check state, review state, and behavior gate state.
 - Merge only when the user or repo workflow explicitly authorized it.
 - For an explicit merge-closeout request, archive the task only after GitHub
   confirms the merge. If a required gate fails or remains pending, leave the PR
@@ -92,6 +144,7 @@ Report:
 - base branch, head branch, and current head SHA;
 - whether PR identity was preserved or rebuilt;
 - checks run and their result;
-- review gates requested, satisfied, or still pending;
+- source-aware review gates requested, satisfied, or still pending;
+- behavior contract and clause totals when observable behavior changed;
 - whether the task stopped at merge boundary or completed with an authorized
   merge.
