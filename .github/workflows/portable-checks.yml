@@ -53,6 +53,10 @@ jobs:
         shell: pwsh
         run: python scripts/test-skills-audit.py
 
+      - name: Test orchestration ledger
+        shell: pwsh
+        run: python scripts/test-orchestration-ledger.py
+
       - name: Check shell launcher syntax
         if: runner.os == 'Linux'
         shell: bash
@@ -86,7 +90,7 @@ jobs:
             $lineNumber = 0
             foreach ($line in Get-Content -LiteralPath $file) {
               $lineNumber += 1
-              if ($line -match "[ \t]$" ) {
+              if ($line -match "[ \t]$") {
                 $bad += "${file}:$lineNumber"
               }
             }
