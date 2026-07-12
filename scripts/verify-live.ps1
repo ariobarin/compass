@@ -201,10 +201,13 @@ if (-not $SkipPlugins) {
             }
             else {
                 $pluginState = $pluginOutput | Out-String | ConvertFrom-Json
-                $installedIds = @($pluginState.installed | ForEach-Object { $_.pluginId })
                 foreach ($pluginId in @($pluginManifest.plugins)) {
-                    if ($installedIds -notcontains $pluginId) {
+                    $installed = @($pluginState.installed | Where-Object { $_.pluginId -eq $pluginId })
+                    if ($installed.Count -eq 0) {
                         $pluginProblems.Add("declared plugin is not installed: $pluginId")
+                    }
+                    elseif (-not [bool]$installed[0].enabled) {
+                        $pluginProblems.Add("declared plugin is disabled: $pluginId")
                     }
                 }
             }

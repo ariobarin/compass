@@ -64,26 +64,33 @@ try {
     }
 
     $pluginState = Invoke-CodexJson -Arguments @("plugin", "list", "--json")
-    $installedIds = @($pluginState.installed | ForEach-Object { $_.pluginId })
     foreach ($pluginId in @($manifest.plugins)) {
-        $installed = $installedIds -contains $pluginId
-        if ($installed -and -not ($Apply -and $Refresh)) {
+        $installedEntries = @($pluginState.installed | Where-Object { $_.pluginId -eq $pluginId })
+        $installed = $installedEntries.Count -gt 0
+        $enabled = $installed -and [bool]$installedEntries[0].enabled
+        if ($installed -and $enabled -and -not ($Apply -and $Refresh)) {
             Write-Host "plugin present: $pluginId"
             continue
         }
 
-        if ($installed) {
-            & codex plugin remove $pluginId
-            if ($LASTEXITCODE -ne 0) {
-                throw "codex failed: codex plugin remove $pluginId"
-            }
-            Write-Host "plugin removed for refresh: $pluginId"
+        if (-not $installed) {
+            Write-Host "plugin missing: $pluginId"
+        }
+        elseif (-not $enabled) {
+            Write-Host "plugin disabled: $pluginId"
         }
         else {
-            Write-Host "plugin missing: $pluginId"
+            Write-Host "plugin refresh needed: $pluginId"
         }
 
         if ($Apply) {
+            if ($installed) {
+                & codex plugin remove $pluginId
+                if ($LASTEXITCODE -ne 0) {
+                    throw "codex failed: codex plugin remove $pluginId"
+                }
+                Write-Host "plugin removed before install: $pluginId"
+            }
             Invoke-CodexJson -Arguments @("plugin", "add", $pluginId, "--json") | Out-Null
             Write-Host "plugin installed: $pluginId"
         }
