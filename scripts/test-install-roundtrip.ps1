@@ -57,8 +57,44 @@ try {
     $installPath = Join-Path $PSScriptRoot "install.ps1"
     $verifyPath = Join-Path $PSScriptRoot "verify-live.ps1"
 
-    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments))
+    $preflightSentinel = Join-Path $codexHome "AGENTS.md"
+    Set-Content -LiteralPath $preflightSentinel -Encoding utf8NoBOM -Value "preflight sentinel"
+    [void](Invoke-TestScript -Path $installPath -Arguments (@(
+        "-Apply",
+        "-SkipPlugins",
+        "-Adopt",
+        "-SourceCommit", "not-the-current-head"
+    ) + $homeArguments) -ExpectedExitCode 1)
+    if ((Get-Content -Raw -LiteralPath $preflightSentinel).Trim() -ne "preflight sentinel") {
+        throw "invalid source commit mutated a live target"
+    }
+    foreach ($unexpectedPath in @(
+        (Join-Path $codexHome "portable-backups"),
+        (Join-Path $agentsHome "portable-backups"),
+        (Join-Path $claudeHome "portable-backups"),
+        (Join-Path $codexHome "portable-receipts")
+    )) {
+        if (Test-Path -LiteralPath $unexpectedPath) {
+            throw "invalid source commit created install state: $unexpectedPath"
+        }
+    }
+    Remove-Item -LiteralPath $preflightSentinel -Force
+
+    $foreignPath = Join-Path (Join-Path (Join-Path $agentsHome "skills") "compass") "SKILL.md"
+    New-Item -ItemType Directory -Force (Split-Path -Parent $foreignPath) | Out-Null
+    Set-Content -LiteralPath $foreignPath -Encoding utf8NoBOM -Value "foreign skill"
+    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments) -ExpectedExitCode 1)
+    if ((Get-Content -Raw -LiteralPath $foreignPath).Trim() -ne "foreign skill") {
+        throw "foreign target changed without explicit adoption"
+    }
+
+    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins", "-Adopt") + $homeArguments))
     [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPlugins", "-RequireInSync") + $homeArguments))
+
+    $receiptRoot = Join-Path $codexHome "portable-receipts"
+    $currentReceipt = Join-Path $receiptRoot "current.json"
+    Assert-PathPresent -Path $currentReceipt
+    $receiptCountBefore = @(Get-ChildItem -LiteralPath $receiptRoot -File -Filter "install-*.json").Count
 
     $secondInstall = @(Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments))
     if (@($secondInstall | Where-Object { $_ -like "installed:*" }).Count -gt 0) {
@@ -66,6 +102,13 @@ try {
     }
     if ($secondInstall -notcontains "backups: none") {
         throw "unchanged second install created a backup root"
+    }
+    if ($secondInstall -notcontains "receipt: unchanged") {
+        throw "unchanged second install rewrote installation provenance"
+    }
+    $receiptCountAfter = @(Get-ChildItem -LiteralPath $receiptRoot -File -Filter "install-*.json").Count
+    if ($receiptCountAfter -ne $receiptCountBefore) {
+        throw "unchanged second install created another receipt"
     }
 
     Assert-PathPresent -Path (Join-Path $codexHome "AGENTS.md")
