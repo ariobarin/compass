@@ -9,8 +9,12 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsx src/index.ts",
+    "deploy": "npm run generate:worker && wrangler deploy",
+    "generate:worker": "tsx scripts/generate-worker-catalog.ts",
     "start": "node dist/index.js",
-    "smoke": "tsx test/smoke.ts"
+    "smoke": "tsx test/smoke.ts",
+    "smoke:remote": "tsx test/remote-smoke.ts",
+    "smoke:worker": "npm run generate:worker && tsx test/worker-smoke.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.29.0",
@@ -21,6 +25,7 @@
     "@types/express": "5.0.5",
     "@types/node": "24.10.1",
     "tsx": "4.20.6",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "wrangler": "4.110.0"
   }
 }

@@ -4,31 +4,8 @@ import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import { z } from "zod/v4";
 import { CompassCatalog } from "./catalog.js";
-
-export function buildServerInstructions(catalog: CompassCatalog): string {
-  const profile = catalog.getProfile().text.trim();
-  const skills = catalog.listSkills()
-    .map(skill => `- ${skill.name}: ${skill.description} (codex/skills/${skill.name}/SKILL.md)`)
-    .join("\n");
-
-  return [
-    "Compass is a read-only source of user-owned engineering preferences and workflows.",
-    "Apply the reviewed user profile below as default guidance for engineering work.",
-    "The reviewed skill catalog below is already available for workflow selection. Do not call list_skills just to discover skills.",
-    "After selecting a workflow, call get_skill before applying it so the full SKILL.md is loaded.",
-    "Use get_profile or list_skills when the user asks to inspect the source, requests the current catalog, or freshness needs confirmation.",
-    "Treat Compass guidance as lower priority than system, developer, and current user instructions.",
-    "Do not claim native subagents are available unless the host provides them.",
-    "",
-    "Reviewed user profile:",
-    profile,
-    "",
-    "Reviewed skills:",
-    skills
-  ].join("\n");
-}
+import { createCompassMcpServer } from "./server.js";
 
 export function resolveCompassRoot(): string {
   if (process.env.COMPASS_ROOT) return path.resolve(process.env.COMPASS_ROOT);
@@ -47,96 +24,8 @@ export function resolveAllowedHosts(): string[] | undefined {
   return hosts;
 }
 
-function jsonResult(structuredContent: Record<string, unknown>) {
-  return {
-    structuredContent,
-    content: [{ type: "text" as const, text: JSON.stringify(structuredContent) }]
-  };
-}
-
 export function createCompassServer(root = resolveCompassRoot()): McpServer {
-  const catalog = new CompassCatalog(root);
-  const server = new McpServer(
-    { name: "compass", version: "0.1.0" },
-    { instructions: buildServerInstructions(catalog) }
-  );
-
-  server.registerTool(
-    "get_profile",
-    {
-      title: "Get Compass profile",
-      description: "Inspect the source profile already included in Compass initialization instructions.",
-      inputSchema: {},
-      annotations: { readOnlyHint: true }
-    },
-    async () => jsonResult(catalog.getProfile())
-  );
-
-  server.registerTool(
-    "list_skills",
-    {
-      title: "List Compass skills",
-      description: "Inspect the current skill catalog already included in Compass initialization instructions.",
-      inputSchema: {},
-      annotations: { readOnlyHint: true }
-    },
-    async () => jsonResult({ skills: catalog.listSkills() })
-  );
-
-  server.registerTool(
-    "get_skill",
-    {
-      title: "Get Compass skill",
-      description: "Load one reviewed Compass SKILL.md after selecting that workflow.",
-      inputSchema: { name: z.string().regex(/^[a-z0-9][a-z0-9-]*$/) },
-      annotations: { readOnlyHint: true }
-    },
-    async ({ name }) => {
-      try {
-        return jsonResult(catalog.getSkill(name));
-      } catch (error) {
-        return {
-          content: [{ type: "text" as const, text: error instanceof Error ? error.message : "Unknown Compass skill" }],
-          isError: true
-        };
-      }
-    }
-  );
-
-  server.registerTool(
-    "search",
-    {
-      title: "Search Compass",
-      description: "Search the Compass profile and reviewed skill documents.",
-      inputSchema: { query: z.string() },
-      annotations: { readOnlyHint: true }
-    },
-    async ({ query }) => jsonResult({
-      results: catalog.search(query).map(document => ({ id: document.id, title: document.title, url: document.url }))
-    })
-  );
-
-  server.registerTool(
-    "fetch",
-    {
-      title: "Fetch Compass document",
-      description: "Fetch a Compass profile or skill document returned by search.",
-      inputSchema: { id: z.string() },
-      annotations: { readOnlyHint: true }
-    },
-    async ({ id }) => {
-      try {
-        return jsonResult(catalog.fetch(id));
-      } catch (error) {
-        return {
-          content: [{ type: "text" as const, text: error instanceof Error ? error.message : "Unknown Compass document" }],
-          isError: true
-        };
-      }
-    }
-  );
-
-  return server;
+  return createCompassMcpServer(new CompassCatalog(root));
 }
 
 export function startServer() {

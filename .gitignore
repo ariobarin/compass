@@ -4,6 +4,8 @@
 /local.toml
 /apps/compass-mcp/dist/
 /apps/compass-mcp/node_modules/
+/apps/compass-mcp/.wrangler/
+/apps/compass-mcp/worker/generated-catalog.ts
 *.local.toml
 *.bak
 *.tmp
