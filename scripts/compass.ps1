@@ -9,6 +9,9 @@ Runs Compass maintenance commands through one stable entry point.
 ./scripts/compass.ps1 skills -ProjectPath . -Json
 
 .EXAMPLE
+./scripts/compass.ps1 skills-audit -ProjectPath . -NoLive -Json
+
+.EXAMPLE
 ./scripts/compass.ps1 install -Apply
 
 .EXAMPLE
@@ -20,12 +23,14 @@ Runs Compass maintenance commands through one stable entry point.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [ValidateSet("status", "skills", "doctor", "diff", "install", "snapshot", "verify", "update")]
+    [ValidateSet("status", "skills", "skills-audit", "doctor", "diff", "install", "snapshot", "verify", "update")]
     [string]$Command,
 
     [switch]$Apply,
     [switch]$Json,
     [switch]$Plain,
+    [switch]$Check,
+    [switch]$NoLive,
     [switch]$RequireInSync,
     [switch]$SkipCodexCommand,
     [string]$CodexHome,
@@ -136,8 +141,8 @@ function Get-LiveStatus {
     }
 }
 
-if (($Json -or $Plain) -and $Command -notin @("status", "skills")) {
-    throw "-Json and -Plain are supported only by status and skills"
+if (($Json -or $Plain) -and $Command -notin @("status", "skills", "skills-audit")) {
+    throw "-Json and -Plain are supported only by status, skills, and skills-audit"
 }
 if ($Json -and $Plain) {
     throw "choose either -Json or -Plain"
@@ -145,11 +150,14 @@ if ($Json -and $Plain) {
 if ($Apply -and $Command -notin @("install", "snapshot")) {
     throw "-Apply is supported only by install and snapshot"
 }
+if (($Check -or $NoLive) -and $Command -ne "skills-audit") {
+    throw "-Check and -NoLive are supported only by skills-audit"
+}
 if (($RequireInSync -or $SkipCodexCommand) -and $Command -notin @("status", "verify")) {
     throw "-RequireInSync and -SkipCodexCommand are supported only by status and verify"
 }
-if (($ProjectPath -or $AdditionalSkillRoot) -and $Command -ne "skills") {
-    throw "-ProjectPath and -AdditionalSkillRoot are supported only by skills"
+if (($ProjectPath -or $AdditionalSkillRoot) -and $Command -notin @("skills", "skills-audit")) {
+    throw "-ProjectPath and -AdditionalSkillRoot are supported only by skills and skills-audit"
 }
 
 $homeArguments = Get-HomeArguments
@@ -205,6 +213,36 @@ switch ($Command) {
             $arguments["Plain"] = $true
         }
         Invoke-CompassScript -Name "skills-status.ps1" -Arguments $arguments
+    }
+    "skills-audit" {
+        $arguments = @{}
+        $skillRoots = New-Object System.Collections.Generic.List[string]
+        if ($ProjectPath) {
+            $projectRoot = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ProjectPath)
+            $skillRoots.Add("project-codex=$(Join-Path $projectRoot '.agents\skills')")
+            $skillRoots.Add("project-claude=$(Join-Path $projectRoot '.claude\skills')")
+        }
+        foreach ($root in @($AdditionalSkillRoot)) {
+            if ($root) {
+                $skillRoots.Add($root)
+            }
+        }
+        if ($skillRoots.Count -gt 0) {
+            $arguments["SkillRoot"] = @($skillRoots.ToArray())
+        }
+        if ($Json) {
+            $arguments["Json"] = $true
+        }
+        if ($Plain) {
+            $arguments["Plain"] = $true
+        }
+        if ($Check) {
+            $arguments["Check"] = $true
+        }
+        if ($NoLive) {
+            $arguments["NoLive"] = $true
+        }
+        Invoke-CompassScript -Name "skills-audit.ps1" -Arguments $arguments
     }
     "doctor" {
         Invoke-CompassScript -Name "doctor.ps1" -Arguments $homeArguments

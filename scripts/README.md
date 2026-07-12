@@ -10,6 +10,9 @@ can still be called directly.
 .\scripts\compass.ps1 skills
 .\scripts\compass.ps1 skills -ProjectPath . -Json
 .\scripts\compass.ps1 skills -AdditionalSkillRoot @("path-one", "path-two")
+.\scripts\compass.ps1 skills-audit
+.\scripts\compass.ps1 skills-audit -ProjectPath . -NoLive -Json
+.\scripts\compass.ps1 skills-audit -Check
 .\scripts\compass.ps1 doctor
 .\scripts\compass.ps1 diff
 .\scripts\compass.ps1 install
@@ -32,6 +35,15 @@ and Claude install targets. Add `-ProjectPath` to scan project-owned `.agents`
 and `.claude` skill roots, or pass an array to `-AdditionalSkillRoot` for plugin
 or neighboring-repository roots. Same-name canonical sources are reported as
 collisions rather than silently assigned precedence.
+
+`skills-audit` measures the model-visible skill routing surface. It reports the
+estimated prompt budget, long descriptions, same-name collisions, near duplicate
+skills, manifest drift, and optional aggregate usage evidence. It asks Codex for
+the exact live inventory when available and otherwise uses the portable manifest.
+Use `-NoLive` for deterministic repository-only output and `-Check` when
+structural findings or an exceeded budget should fail the command. Run
+`scripts/skills-audit.ps1` directly for usage-log, context-window, and threshold
+options. Usage scanning is opt-in and never emits raw log content.
 
 `update` accepts a branch, tag, commit SHA, or other resolvable Git commit with
 `-Ref`; `-Branch` remains an alias for compatibility. Branch refs keep the
