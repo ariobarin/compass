@@ -12,7 +12,7 @@
 ## Runtime routing
 
 - Choose subagent role, model, effort, service tier, and context mode deliberately. Portable role files must omit `service_tier`; do not rely on inherited routing when effective settings cannot be verified.
-- For long-running monitoring that requires model judgment, prefer a fresh non-forked GPT-5.6 Luna worker at xhigh over GPT-5.6 Sol at high. Use `monitor-to-completion` for pure waits.
+- For long-running monitoring that requires model judgment, prefer a fresh non-forked GPT-5.6 Luna or GPT-5.6 Terra worker at xhigh over GPT-5.6 Sol. Use `monitor-to-completion` for pure waits.
 - Set `fork_turns="none"` unless a child needs parent context.
 
 ## Repository and state boundaries
