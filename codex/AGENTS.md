@@ -17,7 +17,6 @@
 
 ## Repository and state boundaries
 
-- Keep Claude, Codex, and repo-local configs separate. Never copy secrets, auth, sessions, logs, caches, browser state, generated plugin state, local runtime paths, or provider tokens between tools or into tracked config.
 - In a worktree, read and edit only that worktree. Keep one scope per branch or pull request, and preserve unrelated user work.
 
 ## Windows
