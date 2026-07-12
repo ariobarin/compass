@@ -171,7 +171,7 @@ if (-not $SkipPlugins) {
         $pluginProblems.Add("missing plugin manifest: $pluginManifestPath")
     }
     elseif (-not (Get-Command codex -ErrorAction SilentlyContinue)) {
-        Write-Host "plugin check skipped: codex command not found"
+        $pluginProblems.Add("codex command not found; use -SkipPlugins only when plugin verification is intentionally out of scope")
     }
     else {
         $previousCodexHome = $env:CODEX_HOME
@@ -184,10 +184,13 @@ if (-not $SkipPlugins) {
             }
             else {
                 $marketplaceState = $marketplaceOutput | Out-String | ConvertFrom-Json
-                $marketplaceNames = @($marketplaceState.marketplaces | ForEach-Object { $_.name })
                 foreach ($marketplace in @($pluginManifest.marketplaces)) {
-                    if ($marketplaceNames -notcontains $marketplace.name) {
+                    $configured = @($marketplaceState.marketplaces | Where-Object { $_.name -eq $marketplace.name })
+                    if ($configured.Count -eq 0) {
                         $pluginProblems.Add("declared marketplace is not configured: $($marketplace.name)")
+                    }
+                    elseif ((Get-NormalizedMarketplaceSource -Source $configured[0].marketplaceSource.source) -ne (Get-NormalizedMarketplaceSource -Source $marketplace.source)) {
+                        $pluginProblems.Add("declared marketplace source mismatch for $($marketplace.name): $($configured[0].marketplaceSource.source)")
                     }
                 }
             }

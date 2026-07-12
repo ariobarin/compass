@@ -31,16 +31,6 @@ function Invoke-CodexJson {
     return ($output | Out-String | ConvertFrom-Json)
 }
 
-function Get-NormalizedMarketplaceSource {
-    param([string]$Source)
-
-    $normalized = $Source.Trim().TrimEnd("/")
-    if ($normalized -match "^[^/]+/[^/]+$") {
-        $normalized = "https://github.com/$normalized"
-    }
-    return ($normalized -replace "\.git$", "").ToLowerInvariant()
-}
-
 try {
     $marketplaceState = Invoke-CodexJson -Arguments @("plugin", "marketplace", "list", "--json")
     $marketplaces = @($marketplaceState.marketplaces)
