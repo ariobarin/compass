@@ -17,6 +17,9 @@
 ## Workflow
 - Keep moving on work already in scope. Return for a decision, completion, or a material question, not routine steps.
 - Plan non-trivial changes briefly, then verify the changed behavior with real output, logs, or a live browser check when applicable.
+- Use subagents only when they save tokens or improve the result.
+- For simple tasks, prefer non-forked subagents with lower reasoning effort when delegation is still useful.
+- Set `fork_turns="none"` unless a subagent must inherit the parent context.
 - Prefer a script, CLI, or API path over handing routine manual steps back to the user.
 - Keep Claude, Codex, and repo-local configs separate. Never copy secrets, auth, sessions, logs, caches, browser state, generated plugin state, local runtime paths, or provider tokens between tools or into tracked config.
 - In a worktree, read and edit that worktree's own files. Keep one scope per branch or PR and preserve unrelated user work.
