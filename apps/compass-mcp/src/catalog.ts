@@ -1,19 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
-
-export type CompassDocument = {
-  id: string;
-  title: string;
-  text: string;
-  url: string;
-  metadata: Record<string, string>;
-};
-
-export type SkillSummary = {
-  name: string;
-  description: string;
-  url: string;
-};
+import type { CompassCatalogReader, CompassDocument, SkillSummary } from "./types.js";
 
 const REPOSITORY_URL = "https://github.com/ariobarin/compass";
 
@@ -36,7 +23,7 @@ function frontmatterValue(text: string, key: string): string | undefined {
   return match ? unquote(match[1]) : undefined;
 }
 
-export class CompassCatalog {
+export class CompassCatalog implements CompassCatalogReader {
   readonly root: string;
   readonly profilePath: string;
   readonly skillsPath: string;
