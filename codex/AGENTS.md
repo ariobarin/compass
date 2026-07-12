@@ -11,8 +11,7 @@
 
 ## Runtime routing
 
-- Portable subagent role files must omit `service_tier` and inherit the active parent tier when supported.
-- If a child does not receive the intended role, model, or effort, treat role routing as unavailable and use a fresh direct run with explicit settings.
+- Choose subagent role, model, effort, service tier, and context mode deliberately. Portable role files must omit `service_tier`; do not rely on inherited routing when effective settings cannot be verified.
 - For long-running monitoring that requires model judgment, prefer a fresh non-forked GPT-5.6 Luna worker at xhigh over GPT-5.6 Sol at high. Use `monitor-to-completion` for pure waits.
 - Set `fork_turns="none"` unless a child needs parent context.
 
@@ -21,10 +20,6 @@
 - Keep Claude, Codex, and repo-local configs separate. Never copy secrets, auth, sessions, logs, caches, browser state, generated plugin state, local runtime paths, or provider tokens between tools or into tracked config.
 - In a worktree, read and edit only that worktree. Keep one scope per branch or pull request, and preserve unrelated user work.
 - Update memory only when the user explicitly asks.
-
-## Browser routing
-
-- Use the in-app Browser for local or unauthenticated pages. Use Chrome when signed-in state, cookies, extensions, existing tabs, or the regular profile matter.
 
 ## Windows
 
