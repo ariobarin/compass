@@ -17,12 +17,13 @@
 # `codex/AGENTS.md`.
 
 model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 model_context_window = 272000
 model_auto_compact_token_limit = 233000
 model_auto_compact_token_limit_scope = "total"
 personality = "pragmatic"
-service_tier = "default"
+# Deliberately omit service_tier. Portable config must not force Fast or Flex,
+# and child roles should inherit the active parent choice when supported.
 sandbox_mode = "danger-full-access"
 approval_policy = "never"
 
@@ -45,5 +46,6 @@ goals = true
 prevent_idle_sleep = true
 
 [features.multi_agent_v2]
+# Sol-selected V2 can otherwise hide role, model, effort, and tier routing.
 hide_spawn_agent_metadata = false
 tool_namespace = "agents"

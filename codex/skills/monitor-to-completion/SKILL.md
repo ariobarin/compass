@@ -33,5 +33,11 @@ Use an orchestration heartbeat only when each wake performs real judgment, such
 as inspecting new evidence, rerouting ownership, requesting review, or choosing
 a recovery action. Put the time between those decisions inside one bounded wait.
 
+When repeated wakes still require judgment, use a fresh non-forked worker with a
+narrow handoff. Prefer GPT-5.6 Luna at xhigh over GPT-5.6 Sol at high for
+long-running monitoring unless evidence shows the lower model tier misses the
+required decisions. Keep `service_tier` omitted so the active parent choice can
+carry through when the runtime supports it.
+
 If the same condition must be checked over a long span without model judgment,
 use a watcher process or scheduled automation. Do not use the model as a timer.
