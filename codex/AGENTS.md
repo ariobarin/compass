@@ -11,7 +11,6 @@
 
 ## Runtime routing
 
-- Default new local sessions to GPT-5.6 Sol at medium reasoning. Use high or xhigh only when risk, ambiguity, or verification needs justify the cost.
 - Portable subagent role files must omit `service_tier` and inherit the active parent tier when supported.
 - If a child does not receive the intended role, model, or effort, treat role routing as unavailable and use a fresh direct run with explicit settings.
 - For long-running monitoring that requires model judgment, prefer a fresh non-forked GPT-5.6 Luna worker at xhigh over GPT-5.6 Sol at high. Use `monitor-to-completion` for pure waits.
