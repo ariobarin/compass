@@ -1,5 +1,6 @@
 param(
     [switch]$Apply,
+    [switch]$SkipPlugins,
     [string]$CodexHome,
     [string]$AgentsHome,
     [string]$ClaudeHome
@@ -163,6 +164,13 @@ if (-not $Apply) {
     Write-Host "changed: $($changedStates.Count)"
     Write-Host "unchanged: $($unchangedStates.Count)"
     Write-Host "retired: $($existingRetiredItems.Count)"
+    if (-not $SkipPlugins) {
+        Write-Host ""
+        & (Join-Path $PSScriptRoot "sync-plugins.ps1") -CodexHome $liveHome
+        if ($LASTEXITCODE -ne 0) {
+            throw "plugin sync review failed"
+        }
+    }
     Write-Host "run with -Apply to copy changed files into the live Codex home, user skill home, and Claude home"
     exit 0
 }
@@ -210,5 +218,11 @@ if ($backupRoots.Count -gt 0) {
 }
 else {
     Write-Host "backups: none"
+}
+if (-not $SkipPlugins) {
+    & (Join-Path $PSScriptRoot "sync-plugins.ps1") -Apply -CodexHome $liveHome
+    if ($LASTEXITCODE -ne 0) {
+        throw "plugin sync failed"
+    }
 }
 Write-Host "config.review.toml was not installed automatically"

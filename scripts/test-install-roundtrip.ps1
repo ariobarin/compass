@@ -57,10 +57,10 @@ try {
     $installPath = Join-Path $PSScriptRoot "install.ps1"
     $verifyPath = Join-Path $PSScriptRoot "verify-live.ps1"
 
-    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
-    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
+    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments))
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPlugins", "-RequireInSync") + $homeArguments))
 
-    $secondInstall = @(Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
+    $secondInstall = @(Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments))
     if (@($secondInstall | Where-Object { $_ -like "installed:*" }).Count -gt 0) {
         throw "unchanged second install copied portable items"
     }
@@ -75,10 +75,10 @@ try {
 
     $driftPath = Join-Path (Join-Path (Join-Path $agentsHome "skills") "compass") "SKILL.md"
     Add-Content -LiteralPath $driftPath -Value "roundtrip drift"
-    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPlugins", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
 
-    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
-    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
+    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments))
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPlugins", "-RequireInSync") + $homeArguments))
 
     $retiredCodexSkill = Join-Path (Join-Path $codexHome "skills") "proper-flowcharts"
     $retiredUserSkill = Join-Path (Join-Path $agentsHome "skills") "ui-ux-pro-max"
@@ -86,14 +86,14 @@ try {
     Set-Content -LiteralPath (Join-Path $retiredCodexSkill "legacy.txt") -Value "legacy"
     Set-Content -LiteralPath (Join-Path $retiredUserSkill "legacy.txt") -Value "legacy"
 
-    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
+    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments))
     if (Test-Path -LiteralPath $retiredCodexSkill) {
         throw "retired Codex skill was not removed: $retiredCodexSkill"
     }
     if (Test-Path -LiteralPath $retiredUserSkill) {
         throw "retired user skill was not removed: $retiredUserSkill"
     }
-    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPlugins", "-RequireInSync") + $homeArguments))
 
     Write-Host "install round trip: ok"
 }

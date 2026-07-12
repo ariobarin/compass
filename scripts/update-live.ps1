@@ -112,6 +112,7 @@ if ($ClaudeHome) {
 
 $installArgs = @{} + $homeArgs
 $installArgs["Apply"] = $true
+$installArgs["SkipPlugins"] = $true
 
 $verifyArgs = @{} + $homeArgs
 $verifyArgs["SkipCodexCommand"] = $true
@@ -119,6 +120,7 @@ $verifyArgs["RequireInSync"] = $true
 
 Invoke-RepoScript -Path (Join-Path $PSScriptRoot "doctor.ps1") -Arguments $homeArgs
 Invoke-RepoScript -Path (Join-Path $PSScriptRoot "install.ps1") -Arguments $installArgs
+Invoke-RepoScript -Path (Join-Path $PSScriptRoot "sync-plugins.ps1") -Arguments (@{ Apply = $true; Refresh = $true; CodexHome = $liveHome })
 Invoke-RepoScript -Path (Join-Path $PSScriptRoot "verify-live.ps1") -Arguments $verifyArgs
 
 Write-Host ""
