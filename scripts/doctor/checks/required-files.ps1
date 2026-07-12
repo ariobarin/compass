@@ -42,6 +42,7 @@ foreach ($path in @(
     "scripts\codex-restart-recovery.ps1",
     "scripts\orchestration-ledger.py",
     "scripts\orchestration-ledger.ps1",
+    "scripts\portable-data.py",
     "scripts\skills-audit.py",
     "scripts\skills-audit.ps1",
     "scripts\test-orchestration-ledger-lock.py",

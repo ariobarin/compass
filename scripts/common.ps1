@@ -52,29 +52,113 @@ function Get-NormalizedMarketplaceSource {
     return ($normalized -replace "\.git$", "").ToLowerInvariant()
 }
 
-function Get-PortableSkillNames {
-    $manifestPath = Join-Path (Get-RepoRoot) "manifests\portable-files.toml"
-    if (-not (Test-Path -LiteralPath $manifestPath)) {
-        throw "missing portable manifest: $manifestPath"
+$script:PortablePythonRunner = $null
+$script:PortableGeneratedData = $null
+
+function Get-PortablePythonRunner {
+    if ($script:PortablePythonRunner) {
+        return $script:PortablePythonRunner
     }
 
-    $manifestText = Get-Content -Raw -LiteralPath $manifestPath
-    $sectionPattern = "(?ms)^\[agents\]\s*(.*?)(?=^\[|\z)"
-    $sectionMatch = [regex]::Match($manifestText, $sectionPattern)
-    if (-not $sectionMatch.Success) {
-        throw "missing agents section in portable manifest"
-    }
-
-    $skillsPattern = "(?ms)^\s*skills\s*=\s*\[(.*?)^\s*\]"
-    $skillsMatch = [regex]::Match($sectionMatch.Groups[1].Value, $skillsPattern)
-    if (-not $skillsMatch.Success) {
-        throw "missing portable skill list in manifest"
-    }
-
-    return @(
-        [regex]::Matches($skillsMatch.Groups[1].Value, '"([^"]+)"') |
-            ForEach-Object { $_.Groups[1].Value }
+    $candidates = @(
+        [pscustomobject]@{ Command = "py"; Prefix = @("-3") }
+        [pscustomobject]@{ Command = "python"; Prefix = @() }
+        [pscustomobject]@{ Command = "python3"; Prefix = @() }
     )
+
+    foreach ($candidate in $candidates) {
+        if (-not (Get-Command $candidate.Command -ErrorAction SilentlyContinue)) {
+            continue
+        }
+
+        & $candidate.Command @($candidate.Prefix) -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" *> $null
+        if ($LASTEXITCODE -eq 0) {
+            $script:PortablePythonRunner = $candidate
+            return $candidate
+        }
+    }
+
+    throw "Python 3.11 or newer is required to parse portable TOML"
+}
+
+function Invoke-PortableTomlParser {
+    param(
+        [string[]]$Arguments,
+        [AllowNull()]
+        [string]$InputText
+    )
+
+    $parserPath = Join-Path (Get-RepoRoot) "scripts\portable-data.py"
+    if (-not (Test-Path -LiteralPath $parserPath)) {
+        throw "missing portable TOML parser: $parserPath"
+    }
+
+    $runner = Get-PortablePythonRunner
+    $commandArguments = @($runner.Prefix) + @($parserPath) + @($Arguments)
+    $previousPythonIoEncoding = $env:PYTHONIOENCODING
+    $previousOutputEncoding = [Console]::OutputEncoding
+
+    try {
+        $env:PYTHONIOENCODING = "utf-8"
+        [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+        if ($PSBoundParameters.ContainsKey("InputText")) {
+            $output = @($InputText | & $runner.Command @commandArguments 2>&1)
+        }
+        else {
+            $output = @(& $runner.Command @commandArguments 2>&1)
+        }
+        $exitCode = $LASTEXITCODE
+    }
+    finally {
+        $env:PYTHONIOENCODING = $previousPythonIoEncoding
+        [Console]::OutputEncoding = $previousOutputEncoding
+    }
+
+    if ($exitCode -ne 0) {
+        $message = @($output | ForEach-Object { $_.ToString() }) -join "`n"
+        throw "portable TOML parser failed: $message"
+    }
+
+    return [string](@($output | ForEach-Object { $_.ToString() }) -join "`n")
+}
+
+function Get-PortableGeneratedData {
+    if ($script:PortableGeneratedData) {
+        return $script:PortableGeneratedData
+    }
+
+    $json = Invoke-PortableTomlParser -Arguments @("--root", (Get-RepoRoot))
+    try {
+        $script:PortableGeneratedData = $json | ConvertFrom-Json
+    }
+    catch {
+        throw "portable TOML parser returned invalid JSON: $($_.Exception.Message)"
+    }
+
+    if ($script:PortableGeneratedData.schema_version -ne 1) {
+        throw "unsupported portable data schema version"
+    }
+    return $script:PortableGeneratedData
+}
+
+function Get-PortableJsonProperty {
+    param(
+        [object]$Object,
+        [string]$Name
+    )
+
+    if ($null -eq $Object) {
+        return $null
+    }
+    $property = $Object.PSObject.Properties[$Name]
+    if ($null -eq $property) {
+        return $null
+    }
+    return $property.Value
+}
+
+function Get-PortableSkillNames {
+    return Get-PortableManifestArray -Section "agents" -Key "skills"
 }
 
 function Get-PortableManifestArray {
@@ -84,34 +168,20 @@ function Get-PortableManifestArray {
         [string]$Text
     )
 
-    if ($Text) {
-        $manifestText = $Text
+    if ($PSBoundParameters.ContainsKey("Text")) {
+        $json = Invoke-PortableTomlParser -Arguments @("--stdin") -InputText $Text
+        $manifest = $json | ConvertFrom-Json
     }
     else {
-        $manifestPath = Join-Path (Get-RepoRoot) "manifests\portable-files.toml"
-        if (-not (Test-Path -LiteralPath $manifestPath)) {
-            throw "missing portable manifest: $manifestPath"
-        }
-
-        $manifestText = Get-Content -Raw -LiteralPath $manifestPath
+        $manifest = (Get-PortableGeneratedData).manifest
     }
 
-    $sectionPattern = "(?ms)^\[$([regex]::Escape($Section))\]\s*(.*?)(?=^\[|\z)"
-    $sectionMatch = [regex]::Match($manifestText, $sectionPattern)
-    if (-not $sectionMatch.Success) {
+    $sectionValue = Get-PortableJsonProperty -Object $manifest -Name $Section
+    $keyValue = Get-PortableJsonProperty -Object $sectionValue -Name $Key
+    if ($null -eq $keyValue) {
         return @()
     }
-
-    $arrayPattern = "(?ms)^\s*$([regex]::Escape($Key))\s*=\s*\[(.*?)^\s*\]"
-    $arrayMatch = [regex]::Match($sectionMatch.Groups[1].Value, $arrayPattern)
-    if (-not $arrayMatch.Success) {
-        return @()
-    }
-
-    return @(
-        [regex]::Matches($arrayMatch.Groups[1].Value, '"([^"]+)"') |
-            ForEach-Object { $_.Groups[1].Value }
-    )
+    return @($keyValue)
 }
 
 function Get-PortableClaudeSkillNames {
@@ -144,69 +214,18 @@ $script:ClaudeDerivedAgentFrontmatter = @{
     "verifier"         = @{ Tools = "Read, Grep, Glob, Bash"; Color = "green" }
 }
 
-# Reads top-level key = "value" and key = """multi-line""" strings from a Codex
-# agent TOML file. Used by the codex agent sandbox check
-# (scripts/doctor/checks/agents.ps1) and the Claude agent derive step. This is a
-# narrow scanner, not a full TOML parser: a value body containing a literal """
-# would be truncated, so keep agent bodies free of that sequence.
 function Get-TopLevelTomlStringValues {
     param([string]$Text)
 
-    $topLevelValues = @{}
-    $currentKey = $null
-    $currentValue = New-Object System.Text.StringBuilder
-    $inMultilineString = $false
-    $inTable = $false
-
-    foreach ($line in ($Text -split "`r?`n")) {
-        if ($inMultilineString) {
-            $closingIndex = $line.IndexOf('"""')
-            if ($closingIndex -ge 0) {
-                [void]$currentValue.AppendLine($line.Substring(0, $closingIndex))
-                $topLevelValues[$currentKey] = $currentValue.ToString()
-                $currentKey = $null
-                [void]$currentValue.Clear()
-                $inMultilineString = $false
-            }
-            else {
-                [void]$currentValue.AppendLine($line)
-            }
-            continue
-        }
-
-        if ($line -match '^\s*\[') {
-            $inTable = $true
-            continue
-        }
-
-        if ($inTable) {
-            continue
-        }
-
-        $multiline = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"""(.*)$')
-        if ($multiline.Success) {
-            $key = $multiline.Groups[1].Value
-            $remainingText = $multiline.Groups[2].Value
-            $closingIndex = $remainingText.IndexOf('"""')
-            if ($closingIndex -ge 0) {
-                $topLevelValues[$key] = $remainingText.Substring(0, $closingIndex)
-            }
-            else {
-                $currentKey = $key
-                [void]$currentValue.Clear()
-                [void]$currentValue.AppendLine($remainingText)
-                $inMultilineString = $true
-            }
-            continue
-        }
-
-        $assignment = [regex]::Match($line, '^\s*([A-Za-z0-9_-]+)\s*=\s*"([^"]*)"\s*(#.*)?$')
-        if ($assignment.Success) {
-            $topLevelValues[$assignment.Groups[1].Value] = $assignment.Groups[2].Value
+    $json = Invoke-PortableTomlParser -Arguments @("--stdin") -InputText $Text
+    $parsed = $json | ConvertFrom-Json
+    $values = @{}
+    foreach ($property in $parsed.PSObject.Properties) {
+        if ($property.Value -is [string]) {
+            $values[$property.Name] = $property.Value
         }
     }
-
-    return $topLevelValues
+    return $values
 }
 
 function New-DirectoryForFile {
@@ -442,11 +461,6 @@ function Copy-PortableItem {
         $values = Get-TopLevelTomlStringValues -Text (Get-Content -Raw -LiteralPath $Source)
         $name = $values["name"]
         $body = $values["developer_instructions"]
-        # The helper captures the body with host line endings and opens with the
-        # newline that followed the toml `"""` opener. Normalize to LF (matching
-        # the hand-maintained files), drop that leading newline, and collapse any
-        # trailing newlines to a single LF so the derived markdown matches byte
-        # for byte.
         $body = $body -replace "`r`n", "`n"
         $body = $body -replace "^\n", ""
         $body = $body -replace "\n+$", "`n"
