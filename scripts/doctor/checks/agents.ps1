@@ -7,4 +7,7 @@ foreach ($agentFile in $agentFiles) {
     if ($topLevelText -match "(?i)\bread-only\b" -and ($topLevelValues["sandbox_mode"] -ne "read-only")) {
         $problems.Add("read-only agent missing sandbox_mode: $($agentFile.FullName)")
     }
+    if ($null -ne $topLevelValues["service_tier"]) {
+        $problems.Add("portable agent must omit service_tier and inherit the active parent choice: $($agentFile.FullName)")
+    }
 }

@@ -18,7 +18,11 @@
 - Keep moving on work already in scope. Return for a decision, completion, or a material question, not routine steps.
 - Plan non-trivial changes briefly, then verify the changed behavior with real output, logs, or a live browser check when applicable.
 - Use subagents only when they save tokens or improve the result.
+- Default new local sessions to GPT-5.6 Sol at medium reasoning. Escalate to high or xhigh only when material risk, ambiguity, or verification evidence justifies the added cost.
 - For simple tasks, prefer non-forked subagents with lower reasoning effort when delegation is still useful.
+- Portable subagent role files must omit `service_tier`. Do not force Fast or Flex. Inherit the active parent tier when the runtime supports it.
+- Confirm a spawned child actually received the intended role, model, and reasoning effort. If MultiAgent V2 hides routing controls or the child inherits the parent Sol settings, treat role routing as unavailable and use a fresh direct run with explicit settings.
+- For long-running monitoring that still requires model judgment, prefer a lower model tier at higher effort, currently GPT-5.6 Luna at xhigh, over GPT-5.6 Sol at high. Keep the worker fresh and non-forked. Pure waits belong in `monitor-to-completion`.
 - Set `fork_turns="none"` unless a subagent must inherit the parent context.
 - Prefer a script, CLI, or API path over handing routine manual steps back to the user.
 - Keep Claude, Codex, and repo-local configs separate. Never copy secrets, auth, sessions, logs, caches, browser state, generated plugin state, local runtime paths, or provider tokens between tools or into tracked config.
