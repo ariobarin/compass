@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "skills": [
+    {
+      "name": "action-items-to-prs",
+      "owner": "compass",
+      "source": "codex/skills/action-items-to-prs",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "benchmark-infra-reviewer",
+      "owner": "compass",
+      "source": "codex/skills/benchmark-infra-reviewer",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "benchmark-run-operator",
+      "owner": "compass",
+      "source": "codex/skills/benchmark-run-operator",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "compass",
+      "owner": "compass",
+      "source": "codex/skills/compass",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "git-branch-resolver",
+      "owner": "compass",
+      "source": "codex/skills/git-branch-resolver",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "grill-me",
+      "owner": "compass",
+      "source": "codex/skills/grill-me",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "input-token-economy",
+      "owner": "compass",
+      "source": "codex/skills/input-token-economy",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "monitor-to-completion",
+      "owner": "compass",
+      "source": "codex/skills/monitor-to-completion",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "orchestration-controller",
+      "owner": "compass",
+      "source": "codex/skills/orchestration-controller",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "pr-review-loop",
+      "owner": "compass",
+      "source": "codex/skills/pr-review-loop",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "root-cause-not-symptom",
+      "owner": "compass",
+      "source": "codex/skills/root-cause-not-symptom",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "none"
+      }
+    },
+    {
+      "name": "specialist-review",
+      "owner": "compass",
+      "source": "codex/skills/specialist-review",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "subagent-driven-development",
+      "owner": "compass",
+      "source": "codex/skills/subagent-driven-development",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "to-prd",
+      "owner": "compass",
+      "source": "codex/skills/to-prd",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "update-compass",
+      "owner": "compass",
+      "source": "codex/skills/update-compass",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "none"
+      }
+    },
+    {
+      "name": "using-codex-goals",
+      "owner": "compass",
+      "source": "codex/skills/using-codex-goals",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "none"
+      }
+    },
+    {
+      "name": "webmcp-eval-triage",
+      "owner": "compass",
+      "source": "codex/skills/webmcp-eval-triage",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "none"
+      }
+    },
+    {
+      "name": "webmcp-tool-authoring",
+      "owner": "compass",
+      "source": "codex/skills/webmcp-tool-authoring",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "none"
+      }
+    },
+    {
+      "name": "webmcp-verify-tool",
+      "owner": "compass",
+      "source": "codex/skills/webmcp-verify-tool",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "none"
+      }
+    },
+    {
+      "name": "workspace-steward",
+      "owner": "compass",
+      "source": "codex/skills/workspace-steward",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "write-a-skill",
+      "owner": "compass",
+      "source": "codex/skills/write-a-skill",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    }
+  ]
+}

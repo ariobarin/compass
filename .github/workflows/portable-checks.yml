@@ -53,6 +53,10 @@ jobs:
         shell: pwsh
         run: python scripts/test-skills-audit.py
 
+      - name: Test skill source provenance
+        shell: pwsh
+        run: python scripts/test-validate-skill-sources.py
+
       - name: Check shell launcher syntax
         if: runner.os == 'Linux'
         shell: bash

@@ -33,11 +33,13 @@ when `-Apply` is present. `status` runs the live verifier in a child PowerShell
 process so drift can be reported without terminating the dispatcher. Use
 `-RequireInSync` when drift should produce a failing exit code.
 
-`skills` reports each Compass-owned skill, its canonical source, and its Codex
-and Claude install targets. Add `-ProjectPath` to scan project-owned `.agents`
-and `.claude` skill roots, or pass an array to `-AdditionalSkillRoot` for plugin
-or neighboring-repository roots. Same-name canonical sources are reported as
-collisions rather than silently assigned precedence.
+`skills` reports each portable skill, its canonical owner and source, activation
+profile, Codex and Claude install targets, optional reviewed upstream provenance,
+and same-name collisions. Ownership records live in
+`manifests/skill-sources.json`; `doctor` verifies that they match the portable
+install manifest and the source tree. Add `-ProjectPath` to scan project-owned
+`.agents` and `.claude` skill roots, or pass an array to `-AdditionalSkillRoot`
+for plugin or neighboring-repository roots.
 
 `skills-audit` measures the model-visible skill routing surface. It reports the
 estimated prompt budget, long descriptions, same-name collisions, near duplicate
