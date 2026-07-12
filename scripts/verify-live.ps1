@@ -3,6 +3,7 @@ param(
     [string]$AgentsHome,
     [string]$ClaudeHome,
     [switch]$SkipCodexCommand,
+    [switch]$SkipPlugins,
     [switch]$RequireInSync,
     [int]$TimeoutSeconds = 180
 )
@@ -19,6 +20,7 @@ $drift = New-Object System.Collections.Generic.List[string]
 $missing = New-Object System.Collections.Generic.List[string]
 $retired = New-Object System.Collections.Generic.List[string]
 $configProblems = New-Object System.Collections.Generic.List[string]
+$pluginProblems = New-Object System.Collections.Generic.List[string]
 $expectedAgentDepth = $null
 
 function Get-RelativeFileMap {
@@ -163,6 +165,59 @@ if ($null -ne $expectedAgentDepth) {
     }
 }
 
+$pluginManifestPath = Join-Path $repoRoot "manifests\plugins.json"
+if (-not $SkipPlugins) {
+    if (-not (Test-Path -LiteralPath $pluginManifestPath -PathType Leaf)) {
+        $pluginProblems.Add("missing plugin manifest: $pluginManifestPath")
+    }
+    elseif (-not (Get-Command codex -ErrorAction SilentlyContinue)) {
+        $pluginProblems.Add("codex command not found; use -SkipPlugins only when plugin verification is intentionally out of scope")
+    }
+    else {
+        $previousCodexHome = $env:CODEX_HOME
+        $env:CODEX_HOME = $liveHome
+        try {
+            $pluginManifest = Get-Content -Raw -LiteralPath $pluginManifestPath | ConvertFrom-Json
+            $marketplaceOutput = & codex plugin marketplace list --json
+            if ($LASTEXITCODE -ne 0) {
+                $pluginProblems.Add("codex plugin marketplace list failed")
+            }
+            else {
+                $marketplaceState = $marketplaceOutput | Out-String | ConvertFrom-Json
+                foreach ($marketplace in @($pluginManifest.marketplaces)) {
+                    $configured = @($marketplaceState.marketplaces | Where-Object { $_.name -eq $marketplace.name })
+                    if ($configured.Count -eq 0) {
+                        $pluginProblems.Add("declared marketplace is not configured: $($marketplace.name)")
+                    }
+                    elseif ((Get-NormalizedMarketplaceSource -Source $configured[0].marketplaceSource.source) -ne (Get-NormalizedMarketplaceSource -Source $marketplace.source)) {
+                        $pluginProblems.Add("declared marketplace source mismatch for $($marketplace.name): $($configured[0].marketplaceSource.source)")
+                    }
+                }
+            }
+
+            $pluginOutput = & codex plugin list --json
+            if ($LASTEXITCODE -ne 0) {
+                $pluginProblems.Add("codex plugin list failed")
+            }
+            else {
+                $pluginState = $pluginOutput | Out-String | ConvertFrom-Json
+                foreach ($pluginId in @($pluginManifest.plugins)) {
+                    $installed = @($pluginState.installed | Where-Object { $_.pluginId -eq $pluginId })
+                    if ($installed.Count -eq 0) {
+                        $pluginProblems.Add("declared plugin is not installed: $pluginId")
+                    }
+                    elseif (-not [bool]$installed[0].enabled) {
+                        $pluginProblems.Add("declared plugin is disabled: $pluginId")
+                    }
+                }
+            }
+        }
+        finally {
+            $env:CODEX_HOME = $previousCodexHome
+        }
+    }
+}
+
 Write-Host "repo: $repoRoot"
 Write-Host "codex: $liveHome"
 Write-Host "agents: $agentsHome"
@@ -197,11 +252,18 @@ if ($configProblems.Count -gt 0) {
         Write-Host "  $problem"
     }
 }
-elseif ($missing.Count -eq 0 -and $drift.Count -eq 0 -and $retired.Count -eq 0) {
+if ($pluginProblems.Count -gt 0) {
+    Write-Host ""
+    Write-Host "plugin problems:"
+    foreach ($problem in $pluginProblems) {
+        Write-Host "  $problem"
+    }
+}
+if ($missing.Count -eq 0 -and $drift.Count -eq 0 -and $retired.Count -eq 0 -and $configProblems.Count -eq 0 -and $pluginProblems.Count -eq 0) {
     Write-Host "portable files match live allowlist"
 }
 
-if ($RequireInSync -and ($missing.Count -gt 0 -or $drift.Count -gt 0 -or $retired.Count -gt 0 -or $configProblems.Count -gt 0)) {
+if ($RequireInSync -and ($missing.Count -gt 0 -or $drift.Count -gt 0 -or $retired.Count -gt 0 -or $configProblems.Count -gt 0 -or $pluginProblems.Count -gt 0)) {
     exit 1
 }
 

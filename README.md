@@ -61,6 +61,8 @@ files or proposing changes.
   live Codex home, user skill home, or Claude home.
 - `manifests/portable-files.toml`: the install allowlist, repo-only list, and
   local-only denylist.
+- `manifests/plugins.json`: external plugin marketplaces and plugins that the
+  reviewed install keeps present without tracking generated plugin state.
 - `manifests/tool-surfaces.md`: repo-side review notes for tools that can touch
   local or external state.
 - `scripts/`: repo-side snapshot, diff, install, and health check helpers.

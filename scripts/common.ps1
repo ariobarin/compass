@@ -42,6 +42,16 @@ function Get-ClaudeHome {
     return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($default)
 }
 
+function Get-NormalizedMarketplaceSource {
+    param([string]$Source)
+
+    $normalized = $Source.Trim().TrimEnd("/")
+    if ($normalized -match "^[^/]+/[^/]+$") {
+        $normalized = "https://github.com/$normalized"
+    }
+    return ($normalized -replace "\.git$", "").ToLowerInvariant()
+}
+
 function Get-PortableSkillNames {
     $manifestPath = Join-Path (Get-RepoRoot) "manifests\portable-files.toml"
     if (-not (Test-Path -LiteralPath $manifestPath)) {

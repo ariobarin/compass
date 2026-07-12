@@ -18,32 +18,31 @@ plugin without making Compass own the plugin source or generated cache state.
 
 ## Install
 
-Install through the Codex plugin marketplace wrapper:
+Compass declares the marketplace and plugin in `manifests/plugins.json`.
+Preview or apply the declared plugin state with:
 
 ```powershell
-codex plugin marketplace add ariobarin/which-llm --sparse .agents/plugins --sparse plugins/which-llm
-codex plugin add which-llm@which-llm
+.\scripts\sync-plugins.ps1
+.\scripts\sync-plugins.ps1 -Apply
 ```
 
-The first sparse path includes the marketplace catalog. The second includes
-the plugin payload referenced by that catalog.
+The regular `install.ps1 -Apply` path also installs missing declared plugins.
+Generated marketplace and plugin state remains local.
 
 Start a new Codex session after installing so the plugin skill is discovered.
 
 ## Update
 
 After `ariobarin/which-llm` merges a change that should be active locally,
-refresh the marketplace and installed plugin through the Codex plugin CLI:
+refresh the marketplace and installed plugin through the reviewed script:
 
 ```powershell
-codex plugin marketplace upgrade which-llm
-codex plugin remove which-llm@which-llm
-codex plugin add which-llm@which-llm
+.\scripts\sync-plugins.ps1 -Apply -Refresh
 ```
 
-The marketplace upgrade refreshes the configured Git marketplace. The remove
-and add steps refresh the active installed plugin cache from that marketplace.
-Use the CLI sequence instead of copying files into the cache by hand.
+The update-live workflow uses this refresh path after updating Compass. It
+refreshes the active installed plugin cache without copying cache files by
+hand.
 
 ## Verify
 
@@ -66,7 +65,7 @@ skill directory.
 
 ## Compass Changes
 
-Change Compass only when the durable route changes: install commands, local
-review boundaries, or tool-surface notes. Changes to model data, atomic
+Change Compass only when the durable declaration, install route, local review
+boundaries, or tool-surface notes change. Changes to model data, atomic
 commands, plugin packaging, or generated artifacts belong in
 `ariobarin/which-llm`.
