@@ -21,11 +21,11 @@ and latest-to-live flow. There are no hand-maintained `claude/` source files.
 
 ## Derivation
 
-The installer copies `SKILL.md` and `references/` from each listed Codex skill,
-excluding `agents/openai.yaml`. For each listed agent, it creates Claude YAML
-frontmatter from the TOML and `scripts/common.ps1`, preserves
-`developer_instructions`, and drops Codex-only fields such as `sandbox_mode`
-and `model_reasoning_effort`.
+The installer copies `SKILL.md`, `references/`, `scripts/`, and `assets/` from
+each listed Codex skill, excluding `agents/openai.yaml`. For each listed agent,
+it creates Claude YAML frontmatter from the TOML and `scripts/common.ps1`,
+preserves `developer_instructions`, and drops Codex-only fields such as
+`sandbox_mode` and `model_reasoning_effort`.
 
 The manifest and `scripts/common.ps1` are the mechanical source of truth for
 the exact mapping. Use [addition-intake.md](addition-intake.md) when promoting

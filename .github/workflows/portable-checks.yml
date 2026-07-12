@@ -42,6 +42,7 @@ jobs:
         run: |
           $files = @(
             Get-ChildItem codex/hooks -Recurse -File -Filter *.py
+            Get-ChildItem codex/skills -Recurse -File -Filter *.py
             Get-ChildItem scripts -File -Filter *.py
           )
           foreach ($file in $files) {
@@ -56,6 +57,10 @@ jobs:
       - name: Test skill source provenance
         shell: pwsh
         run: python scripts/test-validate-skill-sources.py
+
+      - name: Test review bundle isolation
+        shell: pwsh
+        run: python scripts/test-review-bundle.py
 
       - name: Check shell launcher syntax
         if: runner.os == 'Linux'

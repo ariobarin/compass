@@ -51,11 +51,13 @@ function Get-DerivedSkillFileMap {
         $map["SKILL.md"] = (Get-FileHash -Algorithm SHA256 -LiteralPath $skillFile).Hash
     }
 
-    $references = Join-Path $Root "references"
-    if (Test-Path -LiteralPath $references) {
-        foreach ($file in Get-ChildItem -LiteralPath $references -Recurse -File -Force) {
-            $relative = $file.FullName.Substring((Resolve-Path $Root).Path.Length).TrimStart("\")
-            $map[$relative] = (Get-FileHash -Algorithm SHA256 -LiteralPath $file.FullName).Hash
+    foreach ($resourceDirectory in @("references", "scripts", "assets")) {
+        $resourceRoot = Join-Path $Root $resourceDirectory
+        if (Test-Path -LiteralPath $resourceRoot) {
+            foreach ($file in Get-ChildItem -LiteralPath $resourceRoot -Recurse -File -Force) {
+                $relative = $file.FullName.Substring((Resolve-Path $Root).Path.Length).TrimStart("\")
+                $map[$relative] = (Get-FileHash -Algorithm SHA256 -LiteralPath $file.FullName).Hash
+            }
         }
     }
 

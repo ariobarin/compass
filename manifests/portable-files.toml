@@ -24,6 +24,7 @@ skills_dir = "$HOME\\.agents\\skills"
 
 skills = [
   "action-items-to-prs",
+  "behavior-validator",
   "benchmark-infra-reviewer",
   "benchmark-run-operator",
   "compass",
@@ -55,11 +56,12 @@ agents_dir = "$HOME\\.claude\\agents"
 
 # All Claude skills derive from the reviewed codex/skills source at install
 # time. List a skill under `derived_skills` to generate it from
-# codex/skills/<name> (SKILL.md plus references/, dropping agents/openai.yaml).
+# codex/skills/<name> (SKILL.md plus references/, scripts/, and assets/, dropping agents/openai.yaml).
 # There are no hand-maintained claude/skills/ overrides; codex/ is the single
 # source of truth.
 derived_skills = [
   "action-items-to-prs",
+  "behavior-validator",
   "benchmark-infra-reviewer",
   "benchmark-run-operator",
   "compass",

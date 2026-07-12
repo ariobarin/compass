@@ -35,10 +35,12 @@ function Get-RelativeFileMap {
         if (Test-Path -LiteralPath $skillFile -PathType Leaf) {
             $selected.Add((Get-Item -LiteralPath $skillFile))
         }
-        $references = Join-Path $Root "references"
-        if (Test-Path -LiteralPath $references -PathType Container) {
-            foreach ($file in Get-ChildItem -LiteralPath $references -Recurse -File -Force) {
-                $selected.Add($file)
+        foreach ($resourceDirectory in @("references", "scripts", "assets")) {
+            $resourceRoot = Join-Path $Root $resourceDirectory
+            if (Test-Path -LiteralPath $resourceRoot -PathType Container) {
+                foreach ($file in Get-ChildItem -LiteralPath $resourceRoot -Recurse -File -Force) {
+                    $selected.Add($file)
+                }
             }
         }
         $selected.ToArray()

@@ -12,6 +12,16 @@
       }
     },
     {
+      "name": "behavior-validator",
+      "owner": "compass",
+      "source": "codex/skills/behavior-validator",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
       "name": "benchmark-infra-reviewer",
       "owner": "compass",
       "source": "codex/skills/benchmark-infra-reviewer",
