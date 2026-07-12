@@ -1,6 +1,7 @@
 param(
     [string]$Remote = "origin",
-    [string]$Branch = "main",
+    [Alias("Branch")]
+    [string]$Ref = "main",
     [string]$CodexHome,
     [string]$AgentsHome,
     [string]$ClaudeHome
@@ -36,9 +37,9 @@ function Get-RepoGitOutput {
 }
 
 function Test-RepoGitRef {
-    param([string]$Ref)
+    param([string]$GitRef)
 
-    & git -C $repoRoot rev-parse --verify --quiet $Ref *> $null
+    & git -C $repoRoot rev-parse --verify --quiet $GitRef *> $null
     return $LASTEXITCODE -eq 0
 }
 
@@ -68,36 +69,72 @@ function Assert-CleanWorktree {
     throw "refusing automated live update from a dirty checkout"
 }
 
+if ([string]::IsNullOrWhiteSpace($Ref)) {
+    throw "update ref must be non-empty"
+}
+
 Write-Host "repo: $repoRoot"
 Write-Host "remote: $Remote"
-Write-Host "branch: $Branch"
+Write-Host "ref: $Ref"
 Write-Host "codex: $liveHome"
 Write-Host "agents: $agentsHomePath"
 Write-Host "claude: $claudeHomePath"
 Write-Host ""
 
-$remoteRef = "refs/remotes/$Remote/$Branch"
-
 Assert-CleanWorktree
-Invoke-RepoGit -Arguments @("fetch", $Remote, "+refs/heads/${Branch}:$remoteRef")
+Invoke-RepoGit -Arguments @("fetch", "--prune", "--tags", "--prune-tags", $Remote)
 
-$currentBranch = (Get-RepoGitOutput -Arguments @("branch", "--show-current") | Select-Object -First 1)
-if ($currentBranch -ne $Branch) {
-    if (Test-RepoGitRef -Ref "refs/heads/$Branch") {
-        Invoke-RepoGit -Arguments @("switch", "--no-overwrite-ignore", $Branch)
+$remoteBranchRef = "refs/remotes/$Remote/$Ref"
+$tagRef = "refs/tags/$Ref"
+$targetRef = $null
+$branchUpdate = $false
+
+if (Test-RepoGitRef -GitRef "${remoteBranchRef}^{commit}") {
+    $targetRef = $remoteBranchRef
+    $branchUpdate = $true
+}
+elseif (Test-RepoGitRef -GitRef "${tagRef}^{commit}") {
+    $targetRef = $tagRef
+}
+elseif (Test-RepoGitRef -GitRef "${Ref}^{commit}") {
+    $targetRef = $Ref
+}
+else {
+    Invoke-RepoGit -Arguments @("fetch", $Remote, $Ref)
+    if (-not (Test-RepoGitRef -GitRef "FETCH_HEAD^{commit}")) {
+        throw "could not resolve update ref from $Remote: $Ref"
     }
-    else {
-        Invoke-RepoGit -Arguments @("switch", "--no-overwrite-ignore", "--track", "-c", $Branch, $remoteRef)
-    }
+    $targetRef = "FETCH_HEAD"
 }
 
-Invoke-RepoGit -Arguments @("merge", "--ff-only", "--no-overwrite-ignore", $remoteRef)
+$resolvedCommit = (Get-RepoGitOutput -Arguments @("rev-parse", "${targetRef}^{commit}") | Select-Object -First 1)
+if (-not $resolvedCommit) {
+    throw "could not resolve update commit for $Ref"
+}
+
+if ($branchUpdate) {
+    $currentBranch = (Get-RepoGitOutput -Arguments @("branch", "--show-current") | Select-Object -First 1)
+    if ($currentBranch -ne $Ref) {
+        if (Test-RepoGitRef -GitRef "refs/heads/$Ref") {
+            Invoke-RepoGit -Arguments @("switch", "--no-overwrite-ignore", $Ref)
+        }
+        else {
+            Invoke-RepoGit -Arguments @("switch", "--no-overwrite-ignore", "--track", "-c", $Ref, $remoteBranchRef)
+        }
+    }
+    Invoke-RepoGit -Arguments @("merge", "--ff-only", "--no-overwrite-ignore", $remoteBranchRef)
+}
+else {
+    Invoke-RepoGit -Arguments @("switch", "--detach", $resolvedCommit)
+}
 
 $head = (Get-RepoGitOutput -Arguments @("rev-parse", "HEAD") | Select-Object -First 1)
-$remoteHead = (Get-RepoGitOutput -Arguments @("rev-parse", $remoteRef) | Select-Object -First 1)
-if ($head -ne $remoteHead) {
-    throw "refusing to install because HEAD does not match $remoteRef"
+if ($head -ne $resolvedCommit) {
+    throw "refusing to install because HEAD does not match resolved ref $Ref"
 }
+
+Write-Host "resolved commit: $resolvedCommit"
+Write-Host ""
 
 $homeArgs = @{}
 if ($CodexHome) {
@@ -122,4 +159,6 @@ Invoke-RepoScript -Path (Join-Path $PSScriptRoot "install.ps1") -Arguments $inst
 Invoke-RepoScript -Path (Join-Path $PSScriptRoot "verify-live.ps1") -Arguments $verifyArgs
 
 Write-Host ""
+Write-Host "source ref: $Ref"
+Write-Host "source commit: $resolvedCommit"
 Write-Host "live portable config is up to date"
