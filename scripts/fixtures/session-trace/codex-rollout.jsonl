@@ -1,0 +1,11 @@
+{"timestamp":"2026-07-01T12:00:00Z","type":"session_meta","payload":{"id":"synthetic-session-alpha","cwd":"C:\\synthetic\\private-repo","originator":"synthetic-user"}}
+{"timestamp":"2026-07-01T12:00:01Z","type":"turn_context","payload":{"model":"gpt-5.6-codex","effort":"high","cwd":"C:\\synthetic\\private-repo"}}
+{"timestamp":"2026-07-01T12:00:02Z","type":"event_msg","payload":{"type":"task_started"}}
+{"timestamp":"2026-07-01T12:00:03Z","type":"response_item","payload":{"type":"message","role":"user","content":"SYNTHETIC_PROMPT_NOT_FOR_OUTPUT"}}
+{"timestamp":"2026-07-01T12:00:04Z","type":"response_item","payload":{"type":"function_call_output","output":"SYNTHETIC_TOOL_TEXT_NOT_FOR_OUTPUT","tool_output_tokens":12}}
+{"timestamp":"2026-07-01T12:00:05Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":12000,"cached_input_tokens":9000,"output_tokens":500,"reasoning_output_tokens":200},"last_token_usage":{"input_tokens":12000,"cached_input_tokens":9000,"output_tokens":500,"reasoning_output_tokens":200}}}}
+{"timestamp":"2026-07-01T12:00:06Z","type":"event_msg","payload":{"type":"collab_agent_spawn_end","new_thread_id":"synthetic-child-beta","prompt":"SYNTHETIC_CHILD_PROMPT_NOT_FOR_OUTPUT","model":"gpt-5.6-codex-mini","reasoning_effort":"medium","forked_context_tokens":8000}}
+{"timestamp":"2026-07-01T12:00:07Z","type":"event_msg","payload":{"type":"collab_close_end","receiver_thread_id":"synthetic-child-beta"}}
+{"timestamp":"2026-07-01T12:00:08Z","type":"compacted","payload":{"message":"SYNTHETIC_COMPACTION_TEXT_NOT_FOR_OUTPUT","pre_compaction_tokens":90000,"post_compaction_tokens":18000}}
+{"timestamp":"2026-07-01T12:00:09Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":18000,"cached_input_tokens":14000,"output_tokens":800,"reasoning_output_tokens":320},"last_token_usage":{"input_tokens":6000,"cached_input_tokens":5000,"output_tokens":300,"reasoning_output_tokens":120}}}}
+{"timestamp":"2026-07-01T12:00:10Z","type":"event_msg","payload":{"type":"task_complete"}}

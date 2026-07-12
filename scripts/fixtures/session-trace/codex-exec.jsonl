@@ -1,0 +1,5 @@
+{"type":"thread.started","thread_id":"synthetic-exec-thread"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"synthetic-item","type":"command_execution","command":"synthetic command","aggregated_output":"SYNTHETIC_EXEC_OUTPUT_NOT_FOR_OUTPUT","tool_output_tokens":4}}
+{"type":"item.completed","item":{"id":"synthetic-message","type":"agent_message","text":"SYNTHETIC_ASSISTANT_TEXT_NOT_FOR_OUTPUT"}}
+{"type":"turn.completed","usage":{"input_tokens":24763,"cached_input_tokens":24448,"output_tokens":122,"reasoning_output_tokens":0}}
