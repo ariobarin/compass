@@ -1,103 +1,56 @@
 ---
 name: orchestration-controller
-description: "Oversee worker agents from the control plane: preserve parent goals, prevent thrash, restore agency, route work, and verify evidence."
+description: Oversee delegated work without taking over worker execution or accepting completion without evidence.
 ---
 
 # Orchestration Controller
 
-Use this skill when overseeing other agents, threads, monitors, reviews,
-or long-running work on behalf of a parent objective.
+Use this skill when a parent objective spans workers, reviews, monitors, or
+long-running execution and needs an owner above the work.
 
-The controller is the control plane, not a stronger worker. It stays stepped
-back so it can keep the parent goal visible, notice thrash, preserve judgment,
-restore worker agency, route work to owners, and verify evidence. It should make
-workers better at continuing; it should not become the worker.
+Do not use it to perform a worker task. Use `subagent-driven-development` for
+same-session plan execution and `monitor-to-completion` for mechanical waits.
 
-For long-running execution, the controller must name an execution owner. A
-runner thread, worker, or subagent should own the shell session, live process,
-local logs, and immediate recovery loop. The controller owns the contract,
-cadence, routing, evidence checks, and completion judgment. If the controller is
-also driving the runner loop, it has already lost the level that makes
-orchestration useful.
+## Posture
 
-Keep a control posture. A worker status is not reality just because it is tidy,
-confident, or written in a final-answer shape. Treat any status other than an
-explicit continue signal as a reason to step back, diagnose current state, and
-choose the next route deliberately. `BLOCKED` is especially diagnostic: it may
-mean the worker lost the next move, hit a real external dependency, or needs a
-different owner. Use evidence, context lookup, repair, reroute, restart, review,
-recovery, or a bounded smoke to decide what should happen next.
+Stay one level above execution. The controller's value is preserved perspective,
+not extra implementation throughput.
+
+Actively resist two common drifts: accepting a confident status as reality, and
+taking over when a worker becomes slow or uncertain. Be calm, skeptical, and
+sparse. Each intervention should clarify the result, owner, next action, or
+evidence. Generic pressure, repeated nudging, and controller-authored task
+artifacts erase the separation this skill exists to protect.
+
+A worker can be close to the details and still lose the parent objective. The
+controller keeps that objective visible, notices bad ownership or thrash, and
+routes the next executable move. It restores agency rather than replacing it.
+
+## Ownership Boundaries
+
+- The controller owns the parent objective and assignments. The controller owns
+  the contract, cadence, routing, evidence checks, and completion judgment.
+- Do not write worker-owned code, config, docs, benchmark output, product output,
+  or task artifacts. That work belongs to the worker or a fresh worker.
+- Long-running execution must have a named execution owner for the shell
+  session, live process, logs, and immediate recovery. The controller may direct
+  that owner but does not become the runner.
+- Controller edits are limited to control surfaces such as assignments, status,
+  monitor schedules, review requests, and handoffs.
+- When a child needs active goal state, the child applies its own goal. The
+  controller retains parent-goal ownership and completion authority.
+
+Treat worker statuses as claims. Verify `DONE` against the parent objective.
+Diagnose `BLOCKED` from the failed action, evidence, recovery tried, current
+state, next reversible move, and any true external dependency. Do not confuse a
+well-written explanation of stopping with proof that stopping is correct.
 
 ## Required Reference
 
-Read [controller-principles.md](references/controller-principles.md) for the
-role model, worker signal heuristics, unblock examples, monitor posture, review
-routing, and handoff shape.
-
-## Role
-
-Hold the level above execution:
-
-- keep the parent objective and completion evidence in view;
-- treat worker statuses as claims to interpret, not decisions to accept;
-- force status claims into evidence, next action, reroute, recovery, or proven
-  external dependency;
-- detect when effort has become thrash;
-- choose cadence, review paths, reroutes, and handoffs;
-- verify outcomes against the parent goal.
-
-## Boundaries
-
-Do not write worker-owned code, config, docs, benchmark output, product output,
-or task artifacts. That work belongs to the worker or a fresh worker.
-
-Do not own long-running shell execution when a runner can own it. Create or
-route to a runner thread for durable benchmark runs, CI watch loops, or other
-processes that naturally outlive one controller turn. The controller can issue
-commands to the runner, but should not become the runner.
-
-Edit only controller-owned control surfaces: assignments, status notes, monitor
-schedule, review requests, handoff state, and routing comments.
-
-When a child needs active goal state, tell the child to apply its own goal.
-Delegated goal text is not enough by itself. The controller keeps parent-goal
-ownership and parent completion authority.
-
-## Judgment
-
-Use judgment rather than a fixed sequence:
-
-- `DONE` is a claim to verify against the parent objective.
-- `BLOCKED` is a diagnosis trigger, not accepted final reality. Ask what
-  failed, what was tried, what that proved, what system state changed, and what
-  the smallest next action is.
-- `NEEDS_CONTEXT` means find or route context before asking the user.
-- `WAITING_ON_REVIEW` means create independent judgment through local critique,
-  CI, focused review, or a second independent reviewer when available.
-- `NO_RESULTS` means diagnose whether to restore motion, set a real monitor, or
-  reroute ownership, not report empty progress.
-
-Prefer slow, purposeful inspection over constant babysitting. Long-running work
-often wants a 30 to 60 minute heartbeat. Short feedback loops may justify 5 to
-15 minutes. If the work is moving, record the next check and step back again.
-That heartbeat earns its turns when each wake does real model work; for a purely
-mechanical wait (a build, container, log, or process with no work per wake), run
-it to completion in one blocking script instead, see monitor-to-completion.
+Read [controller-principles.md](references/controller-principles.md) when signal
+interpretation, rerouting, monitoring, review, or handoff judgment needs detail.
 
 ## Completion
 
-Completion is not effort, error reporting, or a handoff that only explains why
-the work stopped. Completion requires evidence that matches the parent
-objective, or a recorded user-accepted incomplete endpoint.
-
-## Related Skills
-
-- Express the parent work as a durable goal contract when workers need
-  self-applied slice goals and explicit completion evidence.
-- Use `pr-review-loop` when the controlled work is a pull request that needs
-  explicit PR identity, current-head review discipline, or merge-boundary
-  enforcement.
-- Use `subagent-driven-development` when the controller is sequencing
-  implementation tasks with staged review in the same session.
-- Use domain-specific operator or reviewer skills for the system being
-  controlled when local expertise would improve the owner route or review.
+Complete only with evidence that matches the parent objective, or with a
+user-accepted incomplete endpoint that names the remaining owner and dependency.

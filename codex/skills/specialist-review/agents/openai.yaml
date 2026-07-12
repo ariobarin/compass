@@ -1,4 +1,4 @@
 interface:
   display_name: "Specialist Review"
-  short_description: "Neutral reviewer handoff"
-  default_prompt: "Use $specialist-review to route a clean reviewer handoff with raw target, request, scope, evidence, user-stated hard limits, and neutral context."
+  short_description: "Neutral specialist review handoff"
+  default_prompt: "Use $specialist-review only for an explicit specialist review request and route a neutral, evidence-first reviewer handoff."

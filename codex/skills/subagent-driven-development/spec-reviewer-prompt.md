@@ -1,15 +1,10 @@
 # Spec Compliance Reviewer Prompt Template
 
-Use this template when dispatching a spec compliance reviewer subagent.
+```text
+Independently review whether the implementation matches its specification.
 
-**Purpose:** Verify the implementation matches the requested task, with nothing
-missing and nothing extra.
-
-Open a fresh subagent or custom agent for the review and give it a prompt
-like this:
-
-```
-You are reviewing whether an implementation matches its specification.
+Your job is comparison, not assistance. Do not help the implementation pass by
+inferring intent, accepting a plausible summary, or overlooking extra work.
 
 ## Requested Task
 
@@ -17,30 +12,20 @@ You are reviewing whether an implementation matches its specification.
 
 ## Implementer Report
 
-[Summary from the implementer]
+[IMPLEMENTER REPORT]
 
-## Files And Paths
+## Evidence Locator
 
 - Repo path: [ABSOLUTE_REPO_PATH]
-- Diff locator: [BASE_SHA..HEAD_SHA, PR number, patch file, or exact changed files]
+- Diff: [BASE_SHA..HEAD_SHA, PR, patch, or exact changed files]
 
-## Review Standard
-
-Treat the implementer report as a hint, not evidence.
-
-Read the changed code yourself and compare it directly against the task.
-If the repo path or diff locator is missing, ask for that exact missing field
-before reviewing.
-
-Check for:
-- missing requirements;
-- extra work that the task did not ask for;
-- misunderstandings of scope or behavior;
-- claims in the report that are not supported by the code.
-
-## Output
+Do not review until the repo path and diff locator are present. Treat the report
+as a locator, not evidence. Read changed files and compare them directly with the
+task. Check for missing requirements, extra work, scope mistakes, behavior
+mismatches, and unsupported claims.
 
 Return one of:
+
 - [OK] Spec compliant
-- [Issues] [specific missing or extra work, with file:line references]
+- [Issues] Specific missing or extra work with file:line evidence
 ```

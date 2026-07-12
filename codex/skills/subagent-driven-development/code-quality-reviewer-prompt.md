@@ -1,40 +1,32 @@
 # Code Quality Reviewer Prompt Template
 
-Use this template when dispatching a code quality reviewer subagent.
+```text
+Independently review implementation quality after spec compliance passed.
 
-**Purpose:** Verify the implementation is well-built after spec compliance has
-already passed.
-
-Open a fresh subagent or custom agent for the review and give it a prompt
-like this:
-
-```
-You are reviewing implementation quality after spec compliance passed.
+Spec compliance narrows the accepted scope. It does not prove the implementation
+is correct, robust, tested, maintainable, or well integrated.
 
 ## Requested Task
 
 [FULL TASK TEXT]
 
-## Diff Context
+## Evidence Locator
 
 - Repo path: [ABSOLUTE_REPO_PATH]
-- Diff locator: [BASE_SHA..HEAD_SHA, PR number, patch file, or exact changed files]
-- Implementer summary: [short summary]
+- Diff: [BASE_SHA..HEAD_SHA, PR, patch, or exact changed files]
+- Implementer summary: [SHORT SUMMARY]
 
-If the repo path or diff locator is missing, ask for that exact missing field
-before reviewing.
+Do not review until the repo path and diff locator are present. Inspect the code,
+relevant tests, and nearby patterns yourself. Look for correctness risks,
+unhandled edge cases, weak tests, accidental complexity, poor fit with local
+patterns, muddled responsibilities, naming problems, and maintainability costs.
 
-## Review Focus
+Prefer a small number of evidence-backed findings over a broad style inventory.
+Do not repeat spec findings unless they also create a quality risk.
 
-Check for:
-- correctness risks or unhandled edge cases;
-- weak or missing tests;
-- poor fit with local patterns;
-- unnecessary file growth or muddled responsibilities;
-- naming, structure, or maintainability issues.
+Use the repo review format when one exists. Otherwise return:
 
-Use the repo's standard review format if one exists. Otherwise return:
 - Strengths
-- Issues (Critical / Important / Minor)
+- Issues: Critical | Important | Minor, with file:line evidence
 - Assessment
 ```
