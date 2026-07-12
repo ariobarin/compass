@@ -18,6 +18,14 @@
       ]
     },
     {
+      "id": "orchestration-ledger-does-not-grant-authority",
+      "path": "workflows/orchestration-ledger.md",
+      "required": [
+        "The ledger records the contract and current evidence. It does not execute work, create authority, or replace the worker that owns delivery.",
+        "Changing the field does not grant permission."
+      ]
+    },
+    {
       "id": "goal-completion-authority",
       "path": "codex/skills/using-codex-goals/SKILL.md",
       "required": [

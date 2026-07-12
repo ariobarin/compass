@@ -13,6 +13,9 @@ can still be called directly.
 .\scripts\compass.ps1 skills-audit
 .\scripts\compass.ps1 skills-audit -ProjectPath . -NoLive -Json
 .\scripts\compass.ps1 skills-audit -Check
+.\scripts\compass.ps1 orchestration
+.\scripts\compass.ps1 orchestration -Plain
+.\scripts\compass.ps1 orchestration -GoalId release-42 -Json
 .\scripts\compass.ps1 doctor
 .\scripts\compass.ps1 diff
 .\scripts\compass.ps1 install
@@ -44,6 +47,13 @@ Use `-NoLive` for deterministic repository-only output and `-Check` when
 structural findings or an exceeded budget should fail the command. Run
 `scripts/skills-audit.ps1` directly for usage-log, context-window, and threshold
 options. Usage scanning is opt-in and never emits raw log content.
+
+`orchestration` reads compact local controller state from
+`.local/orchestration-ledger.json` by default. Use `-GoalId` for one goal and
+`-Ledger` for an explicit path under `.local/`. Mutations go through
+`scripts/orchestration-ledger.ps1`, which records owners, next actions, evidence,
+public-mutation gates, and prepared decisions with exclusive locking, guarded
+validation, and atomic writes. The live ledger remains local and ignored.
 
 `update` accepts a branch, tag, commit SHA, or other resolvable Git commit with
 `-Ref`; `-Branch` remains an alias for compatibility. Branch refs keep the

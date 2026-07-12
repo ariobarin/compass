@@ -1,0 +1,90 @@
+name: orchestration ledger checks
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/orchestration-ledger-checks.yml"
+      - "manifests/orchestration-ledger.schema.json"
+      - "scripts/README.md"
+      - "scripts/compass.ps1"
+      - "scripts/orchestration-ledger.py"
+      - "scripts/orchestration-ledger.ps1"
+      - "scripts/test-orchestration-ledger-lock.py"
+      - "scripts/test-orchestration-ledger.py"
+      - "workflows/orchestration-ledger.md"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/orchestration-ledger-checks.yml"
+      - "manifests/orchestration-ledger.schema.json"
+      - "scripts/README.md"
+      - "scripts/compass.ps1"
+      - "scripts/orchestration-ledger.py"
+      - "scripts/orchestration-ledger.ps1"
+      - "scripts/test-orchestration-ledger-lock.py"
+      - "scripts/test-orchestration-ledger.py"
+      - "workflows/orchestration-ledger.md"
+
+jobs:
+  ledger:
+    name: ledger (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2025
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run ledger tests
+        id: ledger
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $output = New-Object System.Collections.Generic.List[string]
+          $exitCode = 0
+          foreach ($test in @(
+            "scripts/test-orchestration-ledger.py",
+            "scripts/test-orchestration-ledger-lock.py"
+          )) {
+            $output.Add("== $test ==")
+            $testOutput = @(python $test 2>&1 | ForEach-Object { $_.ToString() })
+            $testExitCode = $LASTEXITCODE
+            foreach ($line in $testOutput) {
+              $output.Add($line)
+            }
+            if ($testExitCode -ne 0) {
+              $exitCode = $testExitCode
+            }
+          }
+          $output | Set-Content -LiteralPath orchestration-ledger-test.txt -Encoding utf8NoBOM
+          $output | ForEach-Object { Write-Host $_ }
+          exit $exitCode
+
+      - name: Smoke test orchestration dispatcher
+        shell: pwsh
+        run: ./scripts/compass.ps1 orchestration -Plain
+
+      - name: Upload ledger diagnostics
+        if: steps.ledger.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: orchestration-ledger-diagnostics-${{ runner.os }}
+          path: orchestration-ledger-test.txt
+          if-no-files-found: error
+
+      - name: Fail failed ledger tests
+        if: steps.ledger.outcome == 'failure'
+        shell: pwsh
+        run: exit 1
