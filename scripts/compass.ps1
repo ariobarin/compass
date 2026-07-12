@@ -12,6 +12,9 @@ Runs Compass maintenance commands through one stable entry point.
 ./scripts/compass.ps1 skills-audit -ProjectPath . -NoLive -Json
 
 .EXAMPLE
+./scripts/compass.ps1 orchestration -Plain
+
+.EXAMPLE
 ./scripts/compass.ps1 install -Apply
 
 .EXAMPLE
@@ -23,7 +26,7 @@ Runs Compass maintenance commands through one stable entry point.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [ValidateSet("status", "skills", "skills-audit", "doctor", "diff", "install", "snapshot", "verify", "update")]
+    [ValidateSet("status", "skills", "skills-audit", "orchestration", "doctor", "diff", "install", "snapshot", "verify", "update")]
     [string]$Command,
 
     [switch]$Apply,
@@ -38,6 +41,8 @@ param(
     [string]$ClaudeHome,
     [string]$ProjectPath,
     [string[]]$AdditionalSkillRoot,
+    [string]$Ledger,
+    [string]$GoalId,
     [string]$Remote = "origin",
     [Alias("Branch")]
     [string]$Ref = "main"
@@ -141,8 +146,8 @@ function Get-LiveStatus {
     }
 }
 
-if (($Json -or $Plain) -and $Command -notin @("status", "skills", "skills-audit")) {
-    throw "-Json and -Plain are supported only by status, skills, and skills-audit"
+if (($Json -or $Plain) -and $Command -notin @("status", "skills", "skills-audit", "orchestration")) {
+    throw "-Json and -Plain are supported only by status, skills, skills-audit, and orchestration"
 }
 if ($Json -and $Plain) {
     throw "choose either -Json or -Plain"
@@ -158,6 +163,9 @@ if (($RequireInSync -or $SkipCodexCommand) -and $Command -notin @("status", "ver
 }
 if (($ProjectPath -or $AdditionalSkillRoot) -and $Command -notin @("skills", "skills-audit")) {
     throw "-ProjectPath and -AdditionalSkillRoot are supported only by skills and skills-audit"
+}
+if (($Ledger -or $GoalId) -and $Command -ne "orchestration") {
+    throw "-Ledger and -GoalId are supported only by orchestration"
 }
 
 $homeArguments = Get-HomeArguments
@@ -243,6 +251,22 @@ switch ($Command) {
             $arguments["NoLive"] = $true
         }
         Invoke-CompassScript -Name "skills-audit.ps1" -Arguments $arguments
+    }
+    "orchestration" {
+        $arguments = @{ Action = "status" }
+        if ($Ledger) {
+            $arguments["Ledger"] = $Ledger
+        }
+        if ($GoalId) {
+            $arguments["GoalId"] = $GoalId
+        }
+        if ($Json) {
+            $arguments["Json"] = $true
+        }
+        if ($Plain) {
+            $arguments["Plain"] = $true
+        }
+        Invoke-CompassScript -Name "orchestration-ledger.ps1" -Arguments $arguments
     }
     "doctor" {
         Invoke-CompassScript -Name "doctor.ps1" -Arguments $homeArguments

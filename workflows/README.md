@@ -13,6 +13,7 @@ linked workflow before changing its covered surface.
 | Changing the derived Claude skills or agents | [claude-config.md](claude-config.md) |
 | Recovering unfinished local sessions after a Codex restart | [codex-restart-recovery.md](codex-restart-recovery.md) |
 | Auditing or pruning installed skills, agents, hooks, or maintainer guidance | [compass-review-program.md](compass-review-program.md) |
+| Preserving controller-owned goals, owners, evidence, cadence, gates, and decisions across sessions | [orchestration-ledger.md](orchestration-ledger.md) |
 | Coordinating several audit or PR threads without expanding public PR scope | [multi-thread-pr-coordination.md](multi-thread-pr-coordination.md) |
 | Creating a durable written implementation plan | [plan-template.md](plan-template.md) |
 | Installing, copying, diffing, or updating the portable Codex and Claude setup | [portable-config.md](portable-config.md) |
