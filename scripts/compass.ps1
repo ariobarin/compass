@@ -12,6 +12,9 @@ Runs Compass maintenance commands through one stable entry point.
 ./scripts/compass.ps1 install -Apply
 
 .EXAMPLE
+./scripts/compass.ps1 update -Ref v2026.07.10
+
+.EXAMPLE
 ./scripts/compass.ps1 verify -SkipCodexCommand -RequireInSync
 #>
 [CmdletBinding()]
@@ -31,7 +34,8 @@ param(
     [string]$ProjectPath,
     [string[]]$AdditionalSkillRoot,
     [string]$Remote = "origin",
-    [string]$Branch = "main"
+    [Alias("Branch")]
+    [string]$Ref = "main"
 )
 
 Set-StrictMode -Version Latest
@@ -235,7 +239,7 @@ switch ($Command) {
     "update" {
         $arguments = @{} + $homeArguments
         $arguments["Remote"] = $Remote
-        $arguments["Branch"] = $Branch
+        $arguments["Ref"] = $Ref
         Invoke-CompassScript -Name "update-live.ps1" -Arguments $arguments
     }
 }
