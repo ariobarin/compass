@@ -18,6 +18,7 @@
 
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
+model_context_window = 272000
 model_auto_compact_token_limit = 233000
 model_auto_compact_token_limit_scope = "total"
 personality = "pragmatic"
@@ -42,3 +43,7 @@ hide_full_access_warning = true
 memories = true
 goals = true
 prevent_idle_sleep = true
+
+[features.multi_agent_v2]
+hide_spawn_agent_metadata = false
+tool_namespace = "agents"
