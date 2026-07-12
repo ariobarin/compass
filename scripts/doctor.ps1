@@ -43,6 +43,7 @@ else {
         "checks\manifest-boundaries.ps1",
         "checks\text-policy.ps1",
         "checks\skills.ps1",
+        "checks\skill-sources.ps1",
         "checks\agents.ps1",
         "checks\policy-contracts.ps1",
         "checks\restart-recovery.ps1",
