@@ -36,7 +36,9 @@ collisions rather than silently assigned precedence.
 `update` accepts a branch, tag, commit SHA, or other resolvable Git commit with
 `-Ref`; `-Branch` remains an alias for compatibility. Branch refs keep the
 fast-forward-only behavior. Tags and commit SHAs are checked out detached so
-`HEAD` exactly matches the requested commit before installation.
+`HEAD` exactly matches the requested commit before installation. Remote tags are
+fetched with pruning so a tag deleted upstream cannot be selected from stale
+local state.
 
 All commands accept `-CodexHome`, `-AgentsHome`, and `-ClaudeHome`. The `update`
 command also accepts `-Remote` and `-Ref`.
