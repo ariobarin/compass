@@ -113,7 +113,10 @@ try {
 
     Assert-PathPresent -Path (Join-Path $codexHome "AGENTS.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $agentsHome "skills") "compass") "SKILL.md")
+    Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $agentsHome "skills") "behavior-validator") "SKILL.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $claudeHome "skills") "compass") "SKILL.md")
+    Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $claudeHome "skills") "behavior-validator") "SKILL.md")
+    Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path (Join-Path $claudeHome "skills") "pr-review-loop") "scripts") "build-review-bundle.py")
     Assert-PathPresent -Path (Join-Path (Join-Path $claudeHome "agents") "reviewer.md")
 
     $driftPath = Join-Path (Join-Path (Join-Path $agentsHome "skills") "compass") "SKILL.md"

@@ -449,9 +449,11 @@ function Copy-PortableItem {
         New-Item -ItemType Directory -Force $Destination | Out-Null
         Copy-Item -LiteralPath (Join-Path $Source "SKILL.md") -Destination (Join-Path $Destination "SKILL.md") -Force
 
-        $references = Join-Path $Source "references"
-        if (Test-Path -LiteralPath $references) {
-            Copy-Item -LiteralPath $references -Destination (Join-Path $Destination "references") -Recurse -Force
+        foreach ($resourceDirectory in @("references", "scripts", "assets")) {
+            $resourceSource = Join-Path $Source $resourceDirectory
+            if (Test-Path -LiteralPath $resourceSource) {
+                Copy-Item -LiteralPath $resourceSource -Destination (Join-Path $Destination $resourceDirectory) -Recurse -Force
+            }
         }
 
         return
