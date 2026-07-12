@@ -1,7 +1,7 @@
 interface:
   display_name: "Orchestration Controller"
   short_description: "Oversee workers without taking over"
-  default_prompt: "Use $orchestration-controller to oversee delegated work from the control plane, prevent thrash, and keep workers moving with evidence."
+  default_prompt: "Use $orchestration-controller to preserve ownership boundaries and verify delegated work against the parent objective."
 
 policy:
   allow_implicit_invocation: true

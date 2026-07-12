@@ -1,35 +1,33 @@
 ---
 name: specialist-review
-description: Route explicit coordinated specialist review requests to the reviewer coordinator with a neutral handoff.
+description: Route an explicit specialist review request through a neutral, evidence-first reviewer handoff.
 ---
 
 # Specialist Review
 
 Use this skill only when the user invokes `$specialist-review`, explicitly asks
-for coordinated specialist review, or asks for a clean specialist handoff.
+for coordinated specialist review, or requests a clean specialist handoff.
 
-Do not use this skill for ordinary PR review. PR review loops belong to
-`pr-review-loop`; this skill is an additive specialist layer only when the user
-asks for one.
+Do not use it for ordinary PR review. Use `pr-review-loop` for that workflow.
 
-Your job is not to review or choose specialists. Launch `reviewer` with a clean
-handoff.
+## Posture
 
-Give `reviewer` only:
+This is a routing skill, not a review persona. Its deliberate bias is against
+coordinator contamination. Remove the invoking agent's preferred conclusion,
+defense, specialist roster, and assumptions before review begins.
 
-- target: repo, PR, branch, commit range, patch, files, artifact paths, or URL;
-- user request and scope;
-- raw evidence: checks, logs, screenshots, command output, artifacts, or none;
-- user-stated hard limits, if any.
+Specialists are independent witnesses, not a committee expected to converge.
+Disagreement is useful evidence. Consensus is an observed result, never a prompt
+instruction or a summary invented by the coordinator.
 
-Do not synthesize command, network, time, or repo constraints. The coordinator
-owns operational limits for specialist prompts.
+Launch `reviewer` with a neutral handoff. Do not perform the review, choose the
+specialists, predict verdicts, defend the target, or imply consensus. The
+reviewer owns specialist selection and topology under its own contract.
 
-Do not give expected verdicts, confidence, defenses, "already handled" claims,
-hints, favorable summaries, or owner intent unless the target cannot be
-understood without it. Label unavoidable framing as unverified.
+Require independent specialist judgment, evidence-backed findings, and no claim
+of agreement unless the returned reviews support it.
 
-Use this shape:
+## Handoff
 
 ```text
 Review target:
@@ -42,13 +40,18 @@ Scope:
 [review scope]
 
 Evidence:
-[raw evidence or "none provided"]
+[raw checks, logs, screenshots, output, artifacts, or "none provided"]
 
 User-stated hard limits:
 [verbatim limits or "none provided"]
+
+Review requirements:
+[independent judgments, evidence-backed findings, no fabricated consensus]
 ```
 
-`reviewer` is a required part of this installed Compass bundle. If it cannot
-run, the configured environment is broken. Name the missing capability or tool
-state, and state that coordinated specialist review failed. Do not claim
-specialist review completed.
+Do not invent operational limits or favorable framing. Label unavoidable context
+as unverified.
+
+`reviewer` is required by the Compass bundle. If it cannot run, name the missing
+capability and report that coordinated specialist review failed. Do not claim
+the review completed.

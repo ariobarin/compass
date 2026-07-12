@@ -1,7 +1,7 @@
 interface:
   display_name: "Subagent-Driven Development"
-  short_description: "Execute independent plan tasks in session"
-  default_prompt: "Use $subagent-driven-development to execute this plan with one subagent per task and review gates after each task."
+  short_description: "Execute independent plan slices safely"
+  default_prompt: "Use $subagent-driven-development to execute this implementation plan with worker-owned slices, shared-checkout safety, and required review gates."
 
 policy:
   allow_implicit_invocation: true
