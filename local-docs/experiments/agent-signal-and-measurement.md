@@ -121,8 +121,13 @@ signal was preserved.
 Run:
 
 ```powershell
-python scripts/session-trace.py ~/.codex/sessions --output traces.jsonl
-python scripts/session-trace.py ~/.codex/sessions --summary
+$codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME ".codex" }
+$sessions = Join-Path $codexHome "sessions"
+$traceDir = Join-Path ".local" "agent-signal-measurement"
+$traceFile = Join-Path $traceDir "traces.jsonl"
+New-Item -ItemType Directory -Force -Path $traceDir | Out-Null
+python scripts/session-trace.py $sessions --output $traceFile
+python scripts/session-trace.py $sessions --summary
 ```
 
 Schema version 2 emits export-scoped structural metadata. Every invocation uses
@@ -220,8 +225,9 @@ A candidate is eligible only when:
 Run:
 
 ```powershell
-python scripts/compaction-accounting.py traces.jsonl
-python scripts/compaction-accounting.py traces.jsonl --thresholds 64000,96000,128000 --json
+$traceFile = Join-Path (Join-Path ".local" "agent-signal-measurement") "traces.jsonl"
+python scripts/compaction-accounting.py $traceFile
+python scripts/compaction-accounting.py $traceFile --thresholds 64000,96000,128000 --json
 ```
 
 The accounting model reports, for each threshold:

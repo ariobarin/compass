@@ -56,7 +56,7 @@ try {
 
   const profile = await client.callTool({ name: "get_profile", arguments: {} });
   assert.equal(profile.isError, undefined);
-  assert.match(JSON.stringify(profile), /Pull requests/);
+  assert.match(JSON.stringify(profile), /Prefer a pull request as the unit for repository changes/);
 
   const skills = await client.callTool({ name: "list_skills", arguments: {} });
   assert.equal(skills.isError, undefined);

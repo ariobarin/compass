@@ -36,6 +36,10 @@ class DerivedSession:
     context_observations: int
     output_observations: int
     cache_observations: int
+    trailing_tool_output: int
+    trailing_forked_context: int
+    non_turn_tool_observations: int
+    non_turn_fork_observations: int
 
 
 @dataclass(frozen=True)
@@ -88,6 +92,10 @@ def derive_session(document: dict[str, Any]) -> DerivedSession:
     context_observations = 0
     output_observations = 0
     cache_observations = 0
+    pending_tool_output = 0
+    pending_forked_context = 0
+    non_turn_tool_observations = 0
+    non_turn_fork_observations = 0
 
     for item in ordered_events(document):
         kind = item.get("kind")
@@ -107,6 +115,14 @@ def derive_session(document: dict[str, Any]) -> DerivedSession:
             continue
 
         if kind != "turn":
+            tool_output = event_value(item, "tool_output_tokens")
+            if tool_output is not None:
+                pending_tool_output += tool_output
+                non_turn_tool_observations += 1
+            forked_context = event_value(item, "forked_context_tokens")
+            if forked_context is not None:
+                pending_forked_context += forked_context
+                non_turn_fork_observations += 1
             continue
 
         observed_pre = event_value(item, "active_context_tokens")
@@ -116,13 +132,20 @@ def derive_session(document: dict[str, Any]) -> DerivedSession:
             context_observations += 1
 
         ordinary_output = event_value(item, "output_tokens") or 0
-        tool_output = event_value(item, "tool_output_tokens") or 0
+        turn_tool_output = event_value(item, "tool_output_tokens")
+        turn_forked_context = event_value(item, "forked_context_tokens")
+        # Exporters may report tool and child-context tokens on their native
+        # non-turn events, on the enclosing turn, or on both. Fold native events
+        # into the next turn and use the larger aggregate to avoid dropping or
+        # double-counting the same signal.
+        tool_output = max(turn_tool_output or 0, pending_tool_output)
+        forked_context = max(turn_forked_context or 0, pending_forked_context)
         reasoning_output = event_value(item, "reasoning_tokens") or 0
-        forked_context = event_value(item, "forked_context_tokens") or 0
         retained_output = ordinary_output + tool_output
         if (
             event_value(item, "output_tokens") is not None
-            or event_value(item, "tool_output_tokens") is not None
+            or turn_tool_output is not None
+            or pending_tool_output > 0
         ):
             output_observations += 1
 
@@ -176,6 +199,8 @@ def derive_session(document: dict[str, Any]) -> DerivedSession:
                 observed_pre_context=observed_pre,
             )
         )
+        pending_tool_output = 0
+        pending_forked_context = 0
 
     return DerivedSession(
         turns=tuple(turns),
@@ -184,6 +209,10 @@ def derive_session(document: dict[str, Any]) -> DerivedSession:
         context_observations=context_observations,
         output_observations=output_observations,
         cache_observations=cache_observations,
+        trailing_tool_output=pending_tool_output,
+        trailing_forked_context=pending_forked_context,
+        non_turn_tool_observations=non_turn_tool_observations,
+        non_turn_fork_observations=non_turn_fork_observations,
     )
 
 
@@ -274,6 +303,13 @@ def replay_session(
         # not assumed root-context additions. Ordinary assistant output and tool
         # output are the retained additions in this first-order model.
         sim_context = pre_turn_context + turn.retained_output
+
+    # A trace can end after a native tool or agent event without a closing turn
+    # usage record. Preserve those accounting signals even though there is no
+    # later prompt on which to simulate another compaction decision.
+    result["tool_output"] += session.trailing_tool_output
+    result["retained_output"] += session.trailing_tool_output
+    result["forked_context"] += session.trailing_forked_context
 
     if session.turns:
         compaction_intervals.append(turns_since_compaction)
@@ -390,6 +426,12 @@ def build_report(
             ),
             "turns_with_observed_cache_signal": sum(
                 session.cache_observations for session in sessions
+            ),
+            "non_turn_events_with_tool_output": sum(
+                session.non_turn_tool_observations for session in sessions
+            ),
+            "non_turn_events_with_forked_context": sum(
+                session.non_turn_fork_observations for session in sessions
             ),
             "warnings": dict(sorted(warnings.items())),
         },

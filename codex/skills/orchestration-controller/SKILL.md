@@ -26,8 +26,9 @@ worker agency rather than replacing it.
 
 ## Ownership Boundaries
 
-- The controller owns the parent objective, assignments, contract, cadence,
-  routing, evidence checks, and completion judgment.
+- The controller owns the parent objective and assignments.
+- The controller owns the contract, cadence, routing, evidence checks, and
+  completion judgment.
 - Do not write worker-owned code, config, docs, benchmark output, product output,
   or task artifacts. That work belongs to the worker or a fresh worker.
 - Long-running execution must have a named execution owner for the shell

@@ -124,6 +124,114 @@ class CompactionAccountingTests(unittest.TestCase):
         self.assertEqual(output["retained_root_context_additions"], 250)
         self.assertEqual(output["child_inherited_context"], 1000)
 
+    def test_non_turn_token_events_feed_replay_and_accounting(self) -> None:
+        source = document(
+            [
+                {
+                    "seq": 1,
+                    "kind": "turn",
+                    "active_context_tokens": 1000,
+                    "input_tokens": 1000,
+                    "output_tokens": 100,
+                },
+                {
+                    "seq": 2,
+                    "kind": "tool",
+                    "tool_output_tokens": 400,
+                },
+                {
+                    "seq": 3,
+                    "kind": "agent_spawn",
+                    "forked_context_tokens": 600,
+                },
+                {
+                    "seq": 4,
+                    "kind": "turn",
+                    "active_context_tokens": 1200,
+                    "input_tokens": 1200,
+                    "output_tokens": 0,
+                },
+                {
+                    "seq": 5,
+                    "kind": "turn",
+                    "active_context_tokens": 1700,
+                    "input_tokens": 1700,
+                    "output_tokens": 0,
+                },
+            ]
+        )
+        report = compaction_accounting.build_report(
+            [source], [1500], 10000, 1024, "fixed", 100, 0.2
+        )
+        threshold = report["thresholds"][0]
+        self.assertEqual(threshold["compactions"], 1)
+        self.assertEqual(threshold["output_accounting"]["tool_output"], 400)
+        self.assertEqual(
+            threshold["output_accounting"]["retained_root_context_additions"],
+            500,
+        )
+        self.assertEqual(
+            threshold["output_accounting"]["child_inherited_context"], 600
+        )
+        self.assertEqual(report["coverage"]["non_turn_events_with_tool_output"], 1)
+        self.assertEqual(
+            report["coverage"]["non_turn_events_with_forked_context"], 1
+        )
+
+    def test_trailing_native_events_remain_in_output_accounting(self) -> None:
+        source = document(
+            [
+                {
+                    "seq": 1,
+                    "kind": "turn",
+                    "active_context_tokens": 1000,
+                    "input_tokens": 1000,
+                    "output_tokens": 100,
+                },
+                {"seq": 2, "kind": "tool", "tool_output_tokens": 250},
+                {
+                    "seq": 3,
+                    "kind": "agent_spawn",
+                    "forked_context_tokens": 700,
+                },
+            ]
+        )
+        report = compaction_accounting.build_report(
+            [source], [5000], 10000, 1024, "fixed", 100, 0.2
+        )
+        output = report["thresholds"][0]["output_accounting"]
+        self.assertEqual(output["tool_output"], 250)
+        self.assertEqual(output["retained_root_context_additions"], 350)
+        self.assertEqual(output["child_inherited_context"], 700)
+
+    def test_turn_aggregate_deduplicates_native_event_signal(self) -> None:
+        source = document(
+            [
+                {"seq": 1, "kind": "tool", "tool_output_tokens": 400},
+                {
+                    "seq": 2,
+                    "kind": "agent_spawn",
+                    "forked_context_tokens": 600,
+                },
+                {
+                    "seq": 3,
+                    "kind": "turn",
+                    "active_context_tokens": 1000,
+                    "input_tokens": 1000,
+                    "output_tokens": 100,
+                    "tool_output_tokens": 400,
+                    "forked_context_tokens": 600,
+                },
+            ]
+        )
+        report = compaction_accounting.build_report(
+            [source], [5000], 10000, 1024, "fixed", 100, 0.2
+        )
+        output = report["thresholds"][0]["output_accounting"]
+        self.assertEqual(output["tool_output"], 400)
+        self.assertEqual(output["retained_root_context_additions"], 500)
+        self.assertEqual(output["child_inherited_context"], 600)
+
     def test_empirical_mode_uses_observed_pairs(self) -> None:
         source = document(
             [
