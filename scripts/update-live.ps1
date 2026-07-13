@@ -102,7 +102,7 @@ elseif (Test-RepoGitRef -GitRef "${Ref}^{commit}") {
 else {
     Invoke-RepoGit -Arguments @("fetch", $Remote, $Ref)
     if (-not (Test-RepoGitRef -GitRef "FETCH_HEAD^{commit}")) {
-        throw "could not resolve update ref from $Remote: $Ref"
+        throw "could not resolve update ref from ${Remote}: $Ref"
     }
     $targetRef = "FETCH_HEAD"
 }
