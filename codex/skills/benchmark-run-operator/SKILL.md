@@ -21,6 +21,14 @@ current strict counts, owned workers, poisoned slices, artifact roots, and next
 action. If old sections can be mistaken for current state, fix the latest-state
 shape before launching more work.
 
+Account for authorized production capacity at every controller checkpoint.
+Classify each stack or lane as counted work, immediate staging, deliberate
+reserve, blocked with named evidence and owner, or justified idle. Unexplained
+safe idle capacity is a controller defect. Fill conflict-free capacity with
+attributable work, including independent single-site tasks or disjoint repair
+slices, without crossing a user hold, provenance, isolation, comparability,
+ownership, or spend boundary.
+
 Front-load the operating doctrine. Any benchmark handoff, runner prompt,
 monitor prompt, or status packet must put the non-negotiables in the first
 screen: desired result, runner owner, strict contract, active stop conditions,
