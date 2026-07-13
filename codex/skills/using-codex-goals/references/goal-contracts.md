@@ -26,6 +26,11 @@ completion predicates.
 Done means:
 Scope:
 Out of scope:
+Authoritative inputs, in order:
+Mutable current-state surface:
+Control surfaces and writers:
+Delegated edit authority:
+Re-anchor after interruption, compaction, or handoff:
 Evidence required:
 If waiting on external state:
 If stuck or failing:
@@ -36,10 +41,18 @@ Subagents:
 Use this form to turn broad intent into a durable contract. Keep every field
 concrete enough that another agent can verify it from named evidence.
 
+`Delegated edit authority` names exact surfaces and edits, or says `none`.
+Read access and a request to propose changes do not grant write access.
+
 Context ordering is part of the contract. Put the completion predicate, stop
 conditions, owner split, and next action before background. Assume the reader
 may skim, truncate, or inspect only the head of the file. Critical constraints
 belong above history and evidence appendices.
+
+For stateful work, list sources in precedence order and identify the one short
+surface that owns changing state. Re-open those sources after compaction or
+handoff. Do not make chat history, a long append-only ledger, or a stale status
+marker compete silently with the current control surface.
 
 ## Goal State Boundary
 
@@ -59,10 +72,12 @@ objective and ownership change:
 - Worker: `/goal <slice objective>`. Keep one owner, slice, done condition, and
   evidence set. Own local inspection, repair, validation, and evidence
   preservation until the slice is done, rerouted, or needs a proven outside
-  decision.
+  decision. Treat controller-owned control surfaces as read-only unless the
+  contract grants an exact edit.
 - Monitor: `/goal Monitor <target thread, run, or PR> until <condition>`. Name
   intervention triggers, drift, and cadence without taking implementation
-  ownership.
+  ownership. Report proposed control changes to the controller instead of
+  editing its state.
 
 For long-running benchmark or process work, prefer a runner thread over letting
 the controller become the runner. The runner owns the shell process, logs,
@@ -79,7 +94,8 @@ Done means:
 Scope: own the live shell process, local logs, artifact roots, immediate retry or
   recovery within the stated contract, and status packets.
 Out of scope: changing the parent benchmark contract, widening arms or variants,
-  declaring parent completion, or accepting a blocker without controller review.
+  editing controller-owned control state, declaring parent completion, or
+  accepting a blocker without controller review.
 Evidence required: process table, artifact counts, terminal summaries, exact
   error clusters, paths to logs, and next recovery action when rows are missing
   or invalid.
@@ -152,6 +168,8 @@ Slice:
 Allowed files or systems:
 Out of scope:
 Inputs to inspect:
+Control surfaces and writer:
+Delegated edit authority, or none:
 Expected output:
 Evidence required:
 Done condition for this slice:

@@ -54,8 +54,18 @@ options. Usage scanning is opt-in and never emits raw log content.
 `.local/orchestration-ledger.json` by default. Use `-GoalId` for one goal and
 `-Ledger` for an explicit path under `.local/`. Mutations go through
 `scripts/orchestration-ledger.ps1`, which records owners, next actions, evidence,
-public-mutation gates, and prepared decisions with exclusive locking, guarded
-validation, and atomic writes. The live ledger remains local and ignored.
+public-mutation gates, prepared decisions, control writers, optimistic control
+revisions, delegated edit grants, and recovery circuits with exclusive locking,
+guarded validation, and atomic writes. Existing schema version 1 ledgers are
+read with migration defaults and become version 2 on the next successful write.
+Mutating an existing goal requires `-Actor` and `-ExpectedRevision`; delegated
+actors must have a grant for the exact action. The live ledger remains local and
+ignored. Run `orchestration-ledger.ps1 check-recovery -GoalId <id>
+-SliceLabel <slice>` for read-only observation. Use
+`claim-successor` as the atomic prelaunch gate, then record a successor
+failure or success. Only the control writer can run `reset-recovery`, which
+requires root-cause evidence. A claimed slice records `claimed_by`, and only
+that actor can record its outcome.
 
 `update` accepts a branch, tag, commit SHA, or other resolvable Git commit with
 `-Ref`; `-Branch` remains an alias for compatibility. Branch refs keep the

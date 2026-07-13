@@ -22,7 +22,9 @@
       "path": "codex/skills/orchestration-controller/SKILL.md",
       "required": [
         "Do not write worker-owned code, config, docs, benchmark output, product output, or task artifacts. That work belongs to the worker or a fresh worker.",
-        "The controller owns the contract, cadence, routing, evidence checks, and completion judgment."
+        "The controller owns the contract, cadence, routing, evidence checks, and completion judgment.",
+        "Name one writer for each mutable control surface.",
+        "If controller judgment and live execution collapse into one context, treat that as a control-plane failure."
       ]
     },
     {
@@ -37,7 +39,16 @@
       "id": "goal-completion-authority",
       "path": "codex/skills/using-codex-goals/SKILL.md",
       "required": [
-        "Parent completion authority stays with the controller. A child completion is evidence for the parent goal, not completion of the parent goal."
+        "Parent completion authority stays with the controller. A child completion is evidence for the parent goal, not completion of the parent goal.",
+        "For long or stateful work, name authoritative inputs in precedence order and say how to re-anchor after interruption, compaction, or handoff."
+      ]
+    },
+    {
+      "id": "benchmark-recovery-circuit-breaker",
+      "path": "codex/skills/benchmark-run-operator/SKILL.md",
+      "required": [
+        "After two consecutive successors fail on the same slice, do not launch a third symptom-level successor.",
+        "Name one writer for benchmark policy and queue ownership."
       ]
     },
     {

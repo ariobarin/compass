@@ -54,6 +54,21 @@ should become durable guidance:
 These records preserve the first upstream failure and durable correction. Keep
 detailed evidence with the reviewable change that adopted it, not repeated here.
 
+### 2026-07-13: Goal lost its operational map
+
+- Failure: a prep-only benchmark child amended and reconstructed a
+  controller-owned Markdown control file without edit authority. Later, the
+  long-running goal kept driving output after controller, worker, monitor, and
+  repair roles collapsed together and required control files became large,
+  contradictory, and partly historical.
+- Cause: missing context, incorrect context, noisy context, workflow mismatch.
+- Durable response: mutable control surfaces have one named writer and delegated
+  roles need exact edit authority; goal contracts name authoritative inputs in
+  precedence order, one short mutable-state surface, and a compaction or handoff
+  re-anchor; orchestration restores separate controller and execution owners
+  before new dispatches; benchmark recovery stops after two failed successors
+  until the complete child runtime path receives fresh root-cause review.
+
 ### 2026-07-08: Inline review visibility
 
 - Failure: top-level PR comments, reviews, and checks hid actionable inline

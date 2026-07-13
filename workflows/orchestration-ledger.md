@@ -35,6 +35,19 @@ Each goal records:
 - compact completion evidence;
 - public-mutation gate and the exact named action it covers;
 - one prepared human decision, when needed.
+- one control writer and a positive control revision;
+- explicit delegated control-edit grants by actor and mutation name;
+- recovery circuits as a per-slice array, each with a slice label, consecutive
+  successor failure count, closed, claimed, or open state, claim owner, and
+  reset evidence.
+
+Schema version 2 adds these control fields. The runtime still reads schema
+version 1 ledgers, infers the execution owner as the control writer, starts the
+control revision at 1, and supplies an empty grant list and recovery circuits
+array. Legacy circuits receive null reset evidence fields. The next successful
+write stores the migrated version 2 shape. A legacy claimed circuit without a
+claim owner is normalized to open so it cannot be completed by an unknown
+actor.
 
 The public-mutation gate records authority that already exists:
 
@@ -62,6 +75,7 @@ Initialize a goal and name its execution owner:
   -GoalId release-42 `
   -Goal "Ship the reviewed release" `
   -ExecutionOwner release-worker `
+  -ControlWriter controller `
   -WorkerId thread-123 `
   -State active
 ```
@@ -71,15 +85,89 @@ Reroute execution ownership without recreating the goal:
 ```powershell
 .\scripts\orchestration-ledger.ps1 set-owner `
   -GoalId release-42 `
+  -Actor controller `
+  -ExpectedRevision 1 `
   -ExecutionOwner recovery-worker `
   -WorkerId thread-456
 ```
+
+Every mutation of an existing goal must declare the actor and expected control
+revision. The control writer may edit any mutation. Another actor needs a
+grant that names the exact mutation, and a successful mutation increments the
+revision. A stale expected revision or missing grant fails before any write.
+
+Grant a worker a narrow set of control edits:
+
+```powershell
+.\scripts\orchestration-ledger.ps1 set-grant `
+  -GoalId release-42 `
+  -Actor controller `
+  -ExpectedRevision 2 `
+  -GrantActor recovery-worker `
+  -Mutation claim-successor `
+  -Mutation record-successor-failure `
+  -Mutation record-successor-success
+```
+
+Claim a slice as the atomic prelaunch gate, then record the outcome. A first
+failure closes the slice for another claim, and a second consecutive failure
+opens it:
+
+```powershell
+.\scripts\orchestration-ledger.ps1 claim-successor `
+  -GoalId release-42 `
+  -Actor recovery-worker `
+  -ExpectedRevision 3 `
+  -SliceLabel magento-checkout
+
+.\scripts\orchestration-ledger.ps1 record-successor-failure `
+  -GoalId release-42 `
+  -Actor recovery-worker `
+  -ExpectedRevision 4 `
+  -SliceLabel magento-checkout
+
+.\scripts\orchestration-ledger.ps1 check-recovery `
+  -GoalId release-42 `
+  -SliceLabel magento-checkout
+
+.\scripts\orchestration-ledger.ps1 claim-successor `
+  -GoalId release-42 `
+  -Actor recovery-worker `
+  -ExpectedRevision 5 `
+  -SliceLabel magento-checkout
+
+.\scripts\orchestration-ledger.ps1 record-successor-success `
+  -GoalId release-42 `
+  -Actor recovery-worker `
+  -ExpectedRevision 6 `
+  -SliceLabel magento-checkout
+```
+
+Reset is control-writer-only and requires a nonempty root-cause evidence
+locator:
+
+```powershell
+.\scripts\orchestration-ledger.ps1 reset-recovery `
+  -GoalId release-42 `
+  -Actor controller `
+  -ExpectedRevision 7 `
+  -SliceLabel magento-checkout `
+  -RootCauseEvidence review:runtime-child-path
+```
+
+`check-recovery` is read-only observation. It succeeds for an absent, closed,
+or claimed slice and fails for an open slice, but it does not authorize a
+launch. Use `claim-successor` as the atomic prelaunch gate. Only the actor recorded in
+`claimed_by` may record that claim's success or failure; those outcomes clear
+the claim owner.
 
 Record the next action and the time when fresh judgment is useful:
 
 ```powershell
 .\scripts\orchestration-ledger.ps1 set-next `
   -GoalId release-42 `
+  -Actor controller `
+  -ExpectedRevision 8 `
   -NextAction "Inspect hosted checks and current-head review" `
   -NextCheckAt "2026-07-12T12:00:00Z"
 ```
@@ -89,6 +177,8 @@ Record an already-authorized public action before it starts:
 ```powershell
 .\scripts\orchestration-ledger.ps1 set-gate `
   -GoalId release-42 `
+  -Actor controller `
+  -ExpectedRevision 9 `
   -Gate authorized `
   -GateAction "merge PR 42"
 ```
@@ -98,6 +188,8 @@ Append compact evidence:
 ```powershell
 .\scripts\orchestration-ledger.ps1 add-evidence `
   -GoalId release-42 `
+  -Actor controller `
+  -ExpectedRevision 10 `
   -EvidenceKind test `
   -EvidenceSummary "Portable checks passed on the current head" `
   -EvidenceLocator "run:835"
@@ -108,6 +200,8 @@ Prepare the exact decision that exceeds controller authority:
 ```powershell
 .\scripts\orchestration-ledger.ps1 set-decision `
   -GoalId release-42 `
+  -Actor controller `
+  -ExpectedRevision 11 `
   -DecisionQuestion "Which release channel should receive this build?" `
   -DecisionOption @("stable", "beta")
 ```
@@ -139,4 +233,6 @@ Validate the stored shape:
 `scripts/orchestration-ledger.py` performs the runtime validation without an
 external JSON Schema dependency, writes atomically, and restricts paths to the
 repo's `.local/` directory. `scripts/test-orchestration-ledger.py` covers the
-control lifecycle, invalid state, path escape, symlink, and validation cases.
+control lifecycle, actor authorization, optimistic revisions, delegated grants,
+recovery circuit behavior, invalid state, path escape, symlink, and validation
+cases.

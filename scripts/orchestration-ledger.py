@@ -15,11 +15,34 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator, Sequence
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
+LEGACY_SCHEMA_VERSION = 1
+SUCCESSOR_FAILURE_THRESHOLD = 2
 STATES = {"planned", "active", "waiting", "blocked", "complete", "cancelled"}
 GATES = {"closed", "authorized", "in_flight", "complete"}
 EVIDENCE_KINDS = {"test", "artifact", "review", "runtime", "decision", "other"}
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,63}$")
+MUTATION_COMMANDS = {
+    "set-owner",
+    "set-state",
+    "set-next",
+    "add-evidence",
+    "set-gate",
+    "set-decision",
+    "clear-decision",
+    "set-grant",
+    "clear-grant",
+    "claim-successor",
+    "record-successor-failure",
+    "record-successor-success",
+    "reset-recovery",
+}
+GRANTABLE_MUTATION_COMMANDS = MUTATION_COMMANDS - {
+    "set-grant",
+    "clear-grant",
+    "reset-recovery",
+}
+CONTROL_ONLY_MUTATIONS = {"set-grant", "clear-grant", "reset-recovery"}
 
 
 class LedgerError(ValueError):
@@ -102,7 +125,98 @@ def validate_decision(value: object, label: str) -> dict[str, Any] | None:
     }
 
 
-def validate_goal(value: object, index: int) -> dict[str, Any]:
+def validate_control_grant(value: object, label: str, *, legacy: bool = False) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise LedgerError(f"{label} must be an object")
+    check_unknown(value, {"actor", "mutations"}, label)
+    mutations = value.get("mutations")
+    if not isinstance(mutations, list) or not mutations:
+        raise LedgerError(f"{label}.mutations must contain at least one command")
+    cleaned_mutations = [nonempty_string(item, f"{label}.mutations") for item in mutations]
+    assert all(item is not None for item in cleaned_mutations)
+    allowed_mutations = MUTATION_COMMANDS if legacy else GRANTABLE_MUTATION_COMMANDS
+    unsupported = sorted(set(cleaned_mutations) - allowed_mutations)
+    if unsupported:
+        raise LedgerError(
+            f"{label}.mutations contains unsupported commands: {', '.join(unsupported)}"
+        )
+    if len(set(cleaned_mutations)) != len(cleaned_mutations):
+        raise LedgerError(f"{label}.mutations must be unique")
+    return {
+        "actor": nonempty_string(value.get("actor"), f"{label}.actor"),
+        "mutations": cleaned_mutations,
+    }
+
+
+def validate_recovery_circuit(value: object, label: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise LedgerError(f"{label} must be an object")
+    check_unknown(
+        value,
+        {
+            "slice_label",
+            "consecutive_successor_failures",
+            "state",
+            "last_reset_evidence",
+            "last_reset_at",
+            "claimed_by",
+        },
+        label,
+    )
+    failures = value.get("consecutive_successor_failures")
+    if isinstance(failures, bool) or not isinstance(failures, int) or failures < 0:
+        raise LedgerError(f"{label}.consecutive_successor_failures must be a non-negative integer")
+    state = nonempty_string(value.get("state"), f"{label}.state")
+    assert state is not None
+    if state not in {"open", "claimed", "closed"}:
+        raise LedgerError(f"{label}.state must be closed, claimed, or open")
+    claimed_by_present = "claimed_by" in value
+    claimed_by = nonempty_string(value.get("claimed_by"), f"{label}.claimed_by", nullable=True)
+    if not claimed_by_present and state == "claimed":
+        state = "open"
+        claimed_by = None
+    if state == "claimed" and claimed_by is None:
+        raise LedgerError(f"{label}.claimed requires a non-empty claimed_by")
+    if state in {"closed", "open"} and claimed_by is not None:
+        raise LedgerError(f"{label}.claimed_by must be null when state is {state}")
+    if failures >= SUCCESSOR_FAILURE_THRESHOLD and state != "open":
+        raise LedgerError(
+            f"{label}.state must be open after {SUCCESSOR_FAILURE_THRESHOLD} consecutive successor failures"
+        )
+    if state == "claimed" and failures >= SUCCESSOR_FAILURE_THRESHOLD:
+        raise LedgerError(f"{label}.claimed cannot have two or more consecutive failures")
+    last_reset_evidence = nonempty_string(
+        value.get("last_reset_evidence"), f"{label}.last_reset_evidence", nullable=True
+    )
+    last_reset_at = parse_timestamp(
+        value.get("last_reset_at"), f"{label}.last_reset_at", nullable=True
+    )
+    if (last_reset_evidence is None) != (last_reset_at is None):
+        raise LedgerError(f"{label}.last_reset_evidence and last_reset_at must both be set or null")
+    return {
+        "slice_label": nonempty_string(value.get("slice_label"), f"{label}.slice_label"),
+        "consecutive_successor_failures": failures,
+        "state": state,
+        "last_reset_evidence": last_reset_evidence,
+        "last_reset_at": last_reset_at,
+        "claimed_by": claimed_by,
+    }
+
+
+def validate_recovery_circuits(value: object, label: str) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        raise LedgerError(f"{label} must be an array")
+    circuits = [
+        validate_recovery_circuit(item, f"{label}[{index}]")
+        for index, item in enumerate(value)
+    ]
+    labels = [circuit["slice_label"] for circuit in circuits]
+    if len(set(labels)) != len(labels):
+        raise LedgerError(f"{label} slice_label values must be unique")
+    return circuits
+
+
+def validate_goal(value: object, index: int, *, legacy: bool = False) -> dict[str, Any]:
     label = f"goals[{index}]"
     if not isinstance(value, dict):
         raise LedgerError(f"{label} must be an object")
@@ -118,10 +232,27 @@ def validate_goal(value: object, index: int) -> dict[str, Any]:
         "public_mutation_gate",
         "public_mutation_action",
         "decision_needed",
+        "control_writer",
+        "control_revision",
+        "control_edit_grants",
+        "recovery_circuits",
         "created_at",
         "updated_at",
     }
     check_unknown(value, allowed, label)
+    if not legacy:
+        missing = sorted(
+            field
+            for field in (
+                "control_writer",
+                "control_revision",
+                "control_edit_grants",
+                "recovery_circuits",
+            )
+            if field not in value
+        )
+        if missing:
+            raise LedgerError(f"{label} is missing required control fields: {', '.join(missing)}")
     state = nonempty_string(value.get("state"), f"{label}.state")
     assert state is not None
     if state not in STATES:
@@ -151,6 +282,30 @@ def validate_goal(value: object, index: int) -> dict[str, Any]:
             raise LedgerError(f"{label}.state complete requires decision_needed null")
     if gate == "complete" and not evidence:
         raise LedgerError(f"{label}.public_mutation_gate complete requires completion evidence")
+    execution_owner = nonempty_string(value.get("execution_owner"), f"{label}.execution_owner")
+    control_writer = nonempty_string(
+        value.get("control_writer", execution_owner), f"{label}.control_writer"
+    )
+    control_revision = value.get("control_revision", 1)
+    if isinstance(control_revision, bool) or not isinstance(control_revision, int) or control_revision < 1:
+        raise LedgerError(f"{label}.control_revision must be a positive integer")
+    raw_grants = value.get("control_edit_grants", [])
+    if not isinstance(raw_grants, list):
+        raise LedgerError(f"{label}.control_edit_grants must be an array")
+    grants = [
+        validate_control_grant(
+            item,
+            f"{label}.control_edit_grants[{grant_index}]",
+            legacy=legacy,
+        )
+        for grant_index, item in enumerate(raw_grants)
+    ]
+    grant_actors = [grant["actor"] for grant in grants]
+    if len(set(grant_actors)) != len(grant_actors):
+        raise LedgerError(f"{label}.control_edit_grants actors must be unique")
+    recovery_circuits = validate_recovery_circuits(
+        value.get("recovery_circuits", []), f"{label}.recovery_circuits"
+    )
     created = parse_timestamp(value.get("created_at"), f"{label}.created_at")
     updated = parse_timestamp(value.get("updated_at"), f"{label}.updated_at")
     assert created and updated
@@ -161,9 +316,7 @@ def validate_goal(value: object, index: int) -> dict[str, Any]:
     return {
         "id": validate_id(value.get("id"), f"{label}.id"),
         "goal": nonempty_string(value.get("goal"), f"{label}.goal"),
-        "execution_owner": nonempty_string(
-            value.get("execution_owner"), f"{label}.execution_owner"
-        ),
+        "execution_owner": execution_owner,
         "worker_id": nonempty_string(value.get("worker_id"), f"{label}.worker_id", nullable=True),
         "state": state,
         "next_action": nonempty_string(
@@ -179,6 +332,10 @@ def validate_goal(value: object, index: int) -> dict[str, Any]:
         "public_mutation_gate": gate,
         "public_mutation_action": gate_action,
         "decision_needed": validate_decision(value.get("decision_needed"), f"{label}.decision_needed"),
+        "control_writer": control_writer,
+        "control_revision": control_revision,
+        "control_edit_grants": grants,
+        "recovery_circuits": recovery_circuits,
         "created_at": created,
         "updated_at": updated,
     }
@@ -188,12 +345,26 @@ def validate_ledger(value: object) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise LedgerError("ledger must be a JSON object")
     check_unknown(value, {"schema_version", "updated_at", "goals"}, "ledger")
-    if value.get("schema_version") != SCHEMA_VERSION:
-        raise LedgerError(f"ledger requires schema_version {SCHEMA_VERSION}")
+    schema_version = value.get("schema_version")
+    if schema_version not in {LEGACY_SCHEMA_VERSION, SCHEMA_VERSION}:
+        raise LedgerError(
+            f"ledger requires schema_version {SCHEMA_VERSION} (legacy {LEGACY_SCHEMA_VERSION} is migrated on load)"
+        )
     goals = value.get("goals")
     if not isinstance(goals, list):
         raise LedgerError("ledger.goals must be an array")
-    validated = [validate_goal(goal, index) for index, goal in enumerate(goals)]
+    normalized_goals: list[object] = []
+    for goal in goals:
+        if isinstance(goal, dict) and "recovery_circuit" in goal and "recovery_circuits" not in goal:
+            migrated_goal = dict(goal)
+            migrated_goal["recovery_circuits"] = [migrated_goal.pop("recovery_circuit")]
+            normalized_goals.append(migrated_goal)
+        else:
+            normalized_goals.append(goal)
+    validated = [
+        validate_goal(goal, index, legacy=schema_version == LEGACY_SCHEMA_VERSION)
+        for index, goal in enumerate(normalized_goals)
+    ]
     ids = [goal["id"] for goal in validated]
     if len(set(ids)) != len(ids):
         raise LedgerError("ledger goal ids must be unique")
@@ -226,7 +397,7 @@ def resolve_ledger_path(root: Path, raw: Path | None) -> tuple[Path, Path]:
 
 def load_ledger(path: Path, *, allow_missing: bool = False) -> dict[str, Any] | None:
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        raw = json.loads(path.read_text(encoding="utf-8-sig"))
     except FileNotFoundError:
         if allow_missing:
             return None
@@ -298,9 +469,34 @@ def goal_by_id(ledger: dict[str, Any], goal_id: str) -> dict[str, Any]:
     raise LedgerError(f"unknown goal id: {goal_id}")
 
 
+def authorize_mutation(args: argparse.Namespace, goal: dict[str, Any]) -> None:
+    actor = nonempty_string(getattr(args, "actor", None), "actor")
+    expected_revision = getattr(args, "expected_revision", None)
+    if isinstance(expected_revision, bool) or not isinstance(expected_revision, int):
+        raise LedgerError("expected revision must be a positive integer")
+    if expected_revision < 1:
+        raise LedgerError("expected revision must be a positive integer")
+    if expected_revision != goal["control_revision"]:
+        raise LedgerError(
+            f"stale control revision for {goal['id']}: expected {expected_revision}, current {goal['control_revision']}"
+        )
+    command = getattr(args, "command", None)
+    if command in CONTROL_ONLY_MUTATIONS:
+        if actor != goal["control_writer"]:
+            raise LedgerError(f"only control writer may mutate {goal['id']} with {command}")
+        return
+    if actor == goal["control_writer"]:
+        return
+    for grant in goal["control_edit_grants"]:
+        if grant["actor"] == actor and command in grant["mutations"]:
+            return
+    raise LedgerError(f"actor {actor} is not authorized to mutate {goal['id']} with {command}")
+
+
 def touch(ledger: dict[str, Any], goal: dict[str, Any]) -> None:
     now = utc_now()
     goal["updated_at"] = now
+    goal["control_revision"] += 1
     ledger["updated_at"] = now
 
 
@@ -324,6 +520,25 @@ def status_payload(path: Path, ledger: dict[str, Any] | None, goal_id: str | Non
     }
 
 
+def check_recovery(ledger: dict[str, Any], goal_id: str, slice_label: str) -> dict[str, Any]:
+    goal = goal_by_id(ledger, validate_id(goal_id))
+    label = nonempty_string(slice_label, "slice label")
+    assert label is not None
+    circuit = next(
+        (circuit for circuit in goal["recovery_circuits"] if circuit["slice_label"] == label),
+        None,
+    )
+    if circuit is not None and circuit["state"] == "open":
+        raise LedgerError(
+            f"recovery circuit is open for {goal['id']} slice {label}; observation reports no safe successor"
+        )
+    return circuit or {
+        "slice_label": label,
+        "consecutive_successor_failures": 0,
+        "state": "closed",
+    }
+
+
 def render_status(payload: dict[str, Any], plain: bool) -> str:
     if not payload["present"]:
         return f"ledger={payload['ledger']} present=false" if plain else f"orchestration ledger absent: {payload['ledger']}"
@@ -341,6 +556,8 @@ def render_status(payload: dict[str, Any], plain: bool) -> str:
                         f"goal={goal['id']}",
                         f"state={goal['state']}",
                         f"owner={goal['execution_owner']}",
+                        f"writer={goal['control_writer']}",
+                        f"revision={goal['control_revision']}",
                         f"worker={goal['worker_id'] or 'none'}",
                         f"gate={goal['public_mutation_gate']}",
                         f"evidence={len(goal['completion_evidence'])}",
@@ -349,7 +566,11 @@ def render_status(payload: dict[str, Any], plain: bool) -> str:
                 )
             )
         else:
-            lines.append(f"{goal['id']}: {goal['state']} | owner {goal['execution_owner']} | gate {goal['public_mutation_gate']}")
+            lines.append(
+                f"{goal['id']}: {goal['state']} | owner {goal['execution_owner']} | "
+                f"writer {goal['control_writer']} rev {goal['control_revision']} | "
+                f"gate {goal['public_mutation_gate']}"
+            )
             lines.append(f"  goal: {goal['goal']}")
             if goal["worker_id"]:
                 lines.append(f"  worker: {goal['worker_id']}")
@@ -359,6 +580,13 @@ def render_status(payload: dict[str, Any], plain: bool) -> str:
                 suffix = f" at {goal['next_check_at']}" if goal["next_check_at"] else ""
                 lines.append(f"  next: {goal['next_action']}{suffix}")
             lines.append(f"  evidence: {len(goal['completion_evidence'])}")
+            for circuit in goal["recovery_circuits"]:
+                lines.append(
+                    f"  recovery: {circuit['slice_label']} | "
+                    f"successor failures {circuit['consecutive_successor_failures']} | {circuit['state']}"
+                )
+                if circuit["claimed_by"]:
+                    lines.append(f"    claimed by: {circuit['claimed_by']}")
             if decision:
                 lines.append(f"  decision: {decision['question']}")
                 for option in decision["options"]:
@@ -369,6 +597,18 @@ def render_status(payload: dict[str, Any], plain: bool) -> str:
 def add_common_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--ledger", type=Path)
+
+
+def add_mutation_auth_options(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--actor", "--control-actor", required=True)
+    parser.add_argument(
+        "--expected-revision",
+        "--expected-control-revision",
+        "--revision",
+        dest="expected_revision",
+        required=True,
+        type=int,
+    )
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
@@ -388,10 +628,13 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     init.add_argument("--goal-id", required=True)
     init.add_argument("--goal", required=True)
     init.add_argument("--execution-owner", required=True)
+    init.add_argument("--control-writer", "--writer")
+    init.add_argument("--control-revision", type=int, default=1)
     init.add_argument("--worker-id")
     init.add_argument("--state", choices=sorted(STATES), default="planned")
 
     owner = subparsers.add_parser("set-owner")
+    add_mutation_auth_options(owner)
     owner.add_argument("--goal-id", required=True)
     owner.add_argument("--execution-owner", required=True)
     worker_group = owner.add_mutually_exclusive_group()
@@ -399,10 +642,12 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     worker_group.add_argument("--clear-worker", action="store_true")
 
     state = subparsers.add_parser("set-state")
+    add_mutation_auth_options(state)
     state.add_argument("--goal-id", required=True)
     state.add_argument("--state", choices=sorted(STATES), required=True)
 
     next_parser = subparsers.add_parser("set-next")
+    add_mutation_auth_options(next_parser)
     next_parser.add_argument("--goal-id", required=True)
     next_group = next_parser.add_mutually_exclusive_group(required=True)
     next_group.add_argument("--action")
@@ -410,27 +655,87 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     next_parser.add_argument("--check-at")
 
     evidence = subparsers.add_parser("add-evidence")
+    add_mutation_auth_options(evidence)
     evidence.add_argument("--goal-id", required=True)
     evidence.add_argument("--kind", choices=sorted(EVIDENCE_KINDS), required=True)
     evidence.add_argument("--summary", required=True)
     evidence.add_argument("--locator")
 
     gate = subparsers.add_parser("set-gate")
+    add_mutation_auth_options(gate)
     gate.add_argument("--goal-id", required=True)
     gate.add_argument("--gate", choices=sorted(GATES), required=True)
     gate.add_argument("--action")
 
     decision = subparsers.add_parser("set-decision")
+    add_mutation_auth_options(decision)
     decision.add_argument("--goal-id", required=True)
     decision.add_argument("--question", required=True)
     decision.add_argument("--option", action="append", required=True)
 
     clear_decision = subparsers.add_parser("clear-decision")
+    add_mutation_auth_options(clear_decision)
     clear_decision.add_argument("--goal-id", required=True)
 
+    grant = subparsers.add_parser("set-grant", aliases=["set-control-grant"])
+    add_mutation_auth_options(grant)
+    grant.add_argument("--goal-id", required=True)
+    grant.add_argument("--grant-actor", "--granted-actor", required=True)
+    grant.add_argument(
+        "--mutation",
+        "--command",
+        "--edit",
+        "--grant-mutation",
+        dest="mutations",
+        action="append",
+        required=True,
+    )
+
+    clear_grant = subparsers.add_parser("clear-grant", aliases=["clear-control-grant"])
+    add_mutation_auth_options(clear_grant)
+    clear_grant.add_argument("--goal-id", required=True)
+    clear_grant.add_argument("--grant-actor", "--granted-actor", required=True)
+
+    claim = subparsers.add_parser("claim-successor")
+    add_mutation_auth_options(claim)
+    claim.add_argument("--goal-id", required=True)
+    claim.add_argument("--slice-label", required=True)
+
+    failure = subparsers.add_parser("record-successor-failure")
+    add_mutation_auth_options(failure)
+    failure.add_argument("--goal-id", required=True)
+    failure.add_argument("--slice-label", required=True)
+
+    success = subparsers.add_parser("record-successor-success")
+    add_mutation_auth_options(success)
+    success.add_argument("--goal-id", required=True)
+    success.add_argument("--slice-label", required=True)
+
+    reset = subparsers.add_parser("reset-recovery")
+    add_mutation_auth_options(reset)
+    reset.add_argument("--goal-id", required=True)
+    reset.add_argument("--slice-label", required=True)
+    reset.add_argument(
+        "--root-cause-evidence",
+        "--root-cause-evidence-locator",
+        "--evidence-locator",
+        required=True,
+    )
+
+    check_recovery = subparsers.add_parser("check-recovery")
+    check_recovery.add_argument("--goal-id", required=True)
+    check_recovery.add_argument("--slice-label", required=True)
+    check_recovery.add_argument("--json", action="store_true")
+
     args = parser.parse_args(argv)
+    args.command = {
+        "set-control-grant": "set-grant",
+        "clear-control-grant": "clear-grant",
+    }.get(args.command, args.command)
     if getattr(args, "json", False) and getattr(args, "plain", False):
         parser.error("choose either --json or --plain")
+    if args.command == "init" and (args.control_revision is None or args.control_revision < 1):
+        parser.error("--control-revision must be a positive integer")
     return args
 
 
@@ -442,6 +747,10 @@ def mutate(args: argparse.Namespace, path: Path) -> tuple[dict[str, Any], str]:
         if any(goal["id"] == goal_id for goal in ledger["goals"]):
             raise LedgerError(f"goal already exists: {goal_id}")
         now = utc_now()
+        control_writer = nonempty_string(
+            args.control_writer if args.control_writer is not None else args.execution_owner,
+            "control writer",
+        )
         ledger["goals"].append(
             {
                 "id": goal_id,
@@ -455,6 +764,10 @@ def mutate(args: argparse.Namespace, path: Path) -> tuple[dict[str, Any], str]:
                 "public_mutation_gate": "closed",
                 "public_mutation_action": None,
                 "decision_needed": None,
+                "control_writer": control_writer,
+                "control_revision": args.control_revision,
+                "control_edit_grants": [],
+                "recovery_circuits": [],
                 "created_at": now,
                 "updated_at": now,
             }
@@ -466,6 +779,7 @@ def mutate(args: argparse.Namespace, path: Path) -> tuple[dict[str, Any], str]:
         raise LedgerError(f"orchestration ledger is missing: {path}")
     ledger = existing
     goal = goal_by_id(ledger, validate_id(args.goal_id))
+    authorize_mutation(args, goal)
 
     if args.command == "set-owner":
         goal["execution_owner"] = nonempty_string(args.execution_owner, "execution owner")
@@ -520,6 +834,113 @@ def mutate(args: argparse.Namespace, path: Path) -> tuple[dict[str, Any], str]:
     elif args.command == "clear-decision":
         goal["decision_needed"] = None
         message = f"cleared decision for {goal['id']}"
+    elif args.command == "set-grant":
+        grant_actor = nonempty_string(args.grant_actor, "grant actor")
+        mutations = [nonempty_string(item, "grant mutation") for item in args.mutations]
+        assert all(item is not None for item in mutations)
+        unsupported = sorted(set(mutations) - GRANTABLE_MUTATION_COMMANDS)
+        if unsupported:
+            raise LedgerError(
+                f"grant mutations contain unsupported commands: {', '.join(unsupported)}"
+            )
+        if len(set(mutations)) != len(mutations):
+            raise LedgerError("grant mutations must be unique")
+        goal["control_edit_grants"] = [
+            grant for grant in goal["control_edit_grants"] if grant["actor"] != grant_actor
+        ]
+        goal["control_edit_grants"].append({"actor": grant_actor, "mutations": mutations})
+        message = f"set control edit grant for {grant_actor} on {goal['id']}"
+    elif args.command == "clear-grant":
+        grant_actor = nonempty_string(args.grant_actor, "grant actor")
+        before = len(goal["control_edit_grants"])
+        goal["control_edit_grants"] = [
+            grant for grant in goal["control_edit_grants"] if grant["actor"] != grant_actor
+        ]
+        if len(goal["control_edit_grants"]) == before:
+            raise LedgerError(f"no control edit grant for actor {grant_actor}")
+        message = f"cleared control edit grant for {grant_actor} on {goal['id']}"
+    elif args.command in {
+        "claim-successor",
+        "record-successor-failure",
+        "record-successor-success",
+        "reset-recovery",
+    }:
+        circuits = goal["recovery_circuits"]
+        slice_label = nonempty_string(args.slice_label, "slice label")
+        assert slice_label is not None
+        current_index = next(
+            (
+                index
+                for index, circuit in enumerate(circuits)
+                if circuit["slice_label"] == slice_label
+            ),
+            None,
+        )
+        current = circuits[current_index] if current_index is not None else None
+        if args.command == "claim-successor":
+            if current is not None and current["state"] == "open":
+                raise LedgerError(f"recovery circuit is open for slice {slice_label}")
+            if current is not None and current["state"] == "claimed":
+                raise LedgerError(f"successor is already claimed for slice {slice_label}")
+            updated = current or {
+                "slice_label": slice_label,
+                "consecutive_successor_failures": 0,
+                "state": "closed",
+                "last_reset_evidence": None,
+                "last_reset_at": None,
+            }
+            updated["state"] = "claimed"
+            updated["claimed_by"] = args.actor
+            message = f"claimed successor for {goal['id']} slice {slice_label}"
+        elif args.command == "record-successor-failure":
+            if current is None or current["state"] != "claimed":
+                raise LedgerError(f"slice {slice_label} must be claimed before recording failure")
+            if current["claimed_by"] != args.actor:
+                raise LedgerError(
+                    f"actor {args.actor} does not own the claim for slice {slice_label}"
+                )
+            updated = dict(current)
+            updated["consecutive_successor_failures"] += 1
+            updated["state"] = (
+                "open"
+                if updated["consecutive_successor_failures"] >= SUCCESSOR_FAILURE_THRESHOLD
+                else "closed"
+            )
+            updated["claimed_by"] = None
+            message = f"recorded successor failure for {goal['id']} slice {slice_label}"
+        elif args.command == "record-successor-success":
+            if current is None or current["state"] != "claimed":
+                raise LedgerError(f"slice {slice_label} must be claimed before recording success")
+            if current["claimed_by"] != args.actor:
+                raise LedgerError(
+                    f"actor {args.actor} does not own the claim for slice {slice_label}"
+                )
+            updated = dict(current)
+            updated["consecutive_successor_failures"] = 0
+            updated["state"] = "closed"
+            updated["claimed_by"] = None
+            message = f"recorded successor success for {goal['id']} slice {slice_label}"
+        else:
+            evidence = nonempty_string(args.root_cause_evidence, "root-cause evidence")
+            assert evidence is not None
+            updated = current or {
+                "slice_label": slice_label,
+                "consecutive_successor_failures": 0,
+                "state": "closed",
+                "last_reset_evidence": None,
+                "last_reset_at": None,
+            }
+            updated = dict(updated)
+            updated["consecutive_successor_failures"] = 0
+            updated["state"] = "closed"
+            updated["claimed_by"] = None
+            updated["last_reset_evidence"] = evidence
+            updated["last_reset_at"] = utc_now()
+            message = f"reset recovery for {goal['id']} slice {slice_label}"
+        if current_index is None:
+            circuits.append(updated)
+        else:
+            circuits[current_index] = updated
     else:
         raise LedgerError(f"unsupported mutation: {args.command}")
 
@@ -546,6 +967,28 @@ def main(argv: Sequence[str] | None = None) -> int:
                 print(json.dumps({"valid": True, "ledger": str(path), "goals": len(ledger["goals"])}, indent=2))
             else:
                 print(f"orchestration ledger valid: {path} ({len(ledger['goals'])} goals)")
+            return 0
+        if args.command == "check-recovery":
+            ledger = load_ledger(path)
+            assert ledger is not None
+            circuit = check_recovery(ledger, args.goal_id, args.slice_label)
+            if args.json:
+                print(
+                    json.dumps(
+                        {
+                            "check": "recovery",
+                            "ok": True,
+                            "observation_only": True,
+                            "circuit": circuit,
+                        },
+                        indent=2,
+                    )
+                )
+            else:
+                print(
+                    f"recovery observation passed for {args.goal_id} slice {circuit['slice_label']} "
+                    f"({circuit['state']}, {circuit['consecutive_successor_failures']} consecutive failures)"
+                )
             return 0
 
         with ledger_lock(path):

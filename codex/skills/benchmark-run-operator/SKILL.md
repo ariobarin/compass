@@ -29,6 +29,12 @@ attributable work, including independent single-site tasks or disjoint repair
 slices, without crossing a user hold, provenance, isolation, comparability,
 ownership, or spend boundary.
 
+Name one writer for benchmark policy and queue ownership. Prep agents, runners,
+monitors, and reviewers read that control surface but do not amend policy,
+reassign work, or rewrite its history unless the controller explicitly grants
+that exact edit. Reject an unexpected prior revision instead of reconstructing
+or overwriting the file from partial context.
+
 Front-load the operating doctrine. Any benchmark handoff, runner prompt,
 monitor prompt, or status packet must put the non-negotiables in the first
 screen: desired result, runner owner, strict contract, active stop conditions,
@@ -47,6 +53,13 @@ the benchmark protocol. Idle safe capacity is a signal to inspect. Use safe
 isolated workers, single-site stacks, or disjoint task slices only when they
 have clear ownership, comparable provenance, and no state collision with the
 diagnosis underway.
+
+Use a recovery circuit breaker. After two consecutive successors fail on the
+same slice, do not launch a third symptom-level successor. Preserve both roots,
+move the slice to a fresh root-cause review, and prove the exact child runtime
+path together: service user, environment, imports, browser launch API, provider,
+scorer, encoding, artifact writer, and cleanup. Resume only after that review
+names the failed layer and a bounded successor that addresses it.
 
 Treat an alleged blocker as a diagnosis request. Step back and name the failed
 action, current state, owner, evidence, local recovery tried, smallest

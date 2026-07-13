@@ -72,6 +72,12 @@ finish line, scope boundary, verification evidence, waiting rule, blocker rule,
 and any subagent slices. Prefer named files, repos, PRs, commands, checks,
 artifacts, and review signals over broad intent.
 
+For long or stateful work, name authoritative inputs in precedence order and
+say how to re-anchor after interruption, compaction, or handoff. Separate the
+durable objective from mutable operating policy. The goal should point to a
+short current-state surface for changing owners, holds, runtime state, and next
+actions instead of carrying those details forever in injected goal text.
+
 Write blocker rules as pressure rules. They should force the agent to say what
 failed, what was tried, what evidence changed, what local move remains, and what
 external decision, if any, truly cannot be made from the workspace.
@@ -88,8 +94,10 @@ For ready-to-copy controller, worker, monitor, and subagent templates, read
    recorded evidence as progress.
 4. Record evidence as work completes: command output, tests, diffs, PR state,
    rendered artifacts, runtime behavior, or direct source inspection.
-5. On interruption or continuation, resume from the durable objective and the
-   latest authoritative state, not only from prior chat memory.
+5. On interruption, compaction, continuation, or handoff, re-open the goal's
+   named authoritative inputs in order and resume from their latest current
+   state. Prior chat memory and historical appendices are supporting evidence,
+   not current operational authority.
 6. Before marking complete, audit every explicit requirement against current
    evidence. Weak, partial, indirect, stale, or missing evidence means keep
    working.
