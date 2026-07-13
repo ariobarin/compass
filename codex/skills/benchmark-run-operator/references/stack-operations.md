@@ -94,6 +94,8 @@ Report:
 - Arms and active phase.
 - Stack shape: isolated or shared.
 - Ports and stack labels.
+- Authorized production stacks and lanes by state: counted work, immediate
+  staging, deliberate reserve, blocked, or justified idle.
 - Worker count and active worker processes.
 - Result-directory count and growth rate.
 - Current valid, invalid, timeout, and max-step counts.
@@ -107,11 +109,14 @@ Report:
 Do not infer completion from one scheduler code. Check scheduled task state,
 active workers, child processes, and result-root growth.
 
-Treat idle safe capacity as a diagnostic signal. Step back and identify whether
-the idle capacity is safe, owned, comparable, and useful. If independent
-single-site tasks, isolated stacks, or disjoint task slices can run without
-state collision, name the owner, label the evidence path, and choose whether to
-use them.
+Reconcile the capacity inventory at every controller checkpoint. A blocked lane
+needs the failed action, evidence, owner, and next decision. A reserved or idle
+lane needs a concrete reason. Treat unexplained safe idle capacity as a
+controller defect. If independent single-site tasks, isolated stacks, or
+disjoint task slices can run without state collision, assign an owner, label the
+evidence path, and use that capacity. Never optimize utilization through a user
+hold, shared-state conflict, incomparable setup, unclear ownership, or
+uncontrolled spend.
 
 When one slice fails, step back and classify what is poisoned and what is still
 comparable. Stop only the poisoned slice. Keep unrelated arms, sites, workers,
