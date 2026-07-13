@@ -22,11 +22,26 @@ Front-load every assignment or handoff with:
 2. current owner;
 3. next action;
 4. stop condition;
-5. evidence and history.
+5. authoritative inputs in precedence order;
+6. mutable current-state surface;
+7. evidence and history.
 
 Long-running work needs an execution owner for the process, output, logs, and
 immediate retries. The controller owns the run contract, evidence checks,
 reroutes, and completion decision.
+
+Each mutable control surface has one named writer. Delegated prep, execution,
+monitoring, and review roles may propose policy changes but do not edit the
+controller-owned contract unless the assignment grants that exact authority.
+Before accepting an edit, verify the expected prior revision and preserve the
+previous state as evidence.
+
+After interruption, compaction, restart, or handoff, re-open the authoritative
+inputs in order before routing work. Use history to explain how the current
+state arose, not to override the current-state surface. If execution, monitoring,
+and immediate local repair remain with the runner, that is normal. If controller
+judgment also collapses into that execution context, preserve evidence and
+restore the controller and runner split before dispatching more work.
 
 ## Autonomous Continuation
 
@@ -117,12 +132,15 @@ A handoff should preserve control state, not narrate every attempt.
 Objective:
 Current owner:
 Current runtime state:
+Authoritative inputs, in order:
+Mutable current-state surface:
 Running now:
 Evidence matched:
 Signals needing judgment:
 Reroutes or questions sent:
 Next decision point:
 Remaining dependency:
+Re-anchor action:
 ```
 
 ## Goal Activation

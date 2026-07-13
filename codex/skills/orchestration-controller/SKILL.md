@@ -24,6 +24,12 @@ Generic continuation acknowledgements, repeated nudging, and controller-authored
 task artifacts erase the separation this skill exists to protect. Restore
 worker agency rather than replacing it.
 
+For a long-lived objective, keep a compact control contract that names
+authoritative inputs in precedence order and identifies one mutable current-state
+surface. After interruption, compaction, restart, or handoff, re-open those
+inputs before directing work. Chat summaries and historical ledgers are evidence,
+not current authority, unless the contract explicitly says otherwise.
+
 ## Ownership Boundaries
 
 - The controller owns the parent objective and assignments.
@@ -36,8 +42,18 @@ worker agency rather than replacing it.
   that owner but does not become the runner.
 - Controller edits are limited to control surfaces such as assignments, runtime
   state, monitor schedules, review requests, and handoffs.
+- Name one writer for each mutable control surface. Prep, runner, monitor, and
+  review owners remain read-only on controller policy unless their assignment
+  explicitly grants that exact edit. A delegated suggestion is not edit
+  authority.
 - When a child needs active goal state, the child applies its own goal. The
   controller retains parent-goal ownership and completion authority.
+
+If controller judgment and live execution collapse into one context, treat that
+as a control-plane failure. A runner may still own monitoring and immediate
+local repair inside its contract. Preserve evidence, stop dispatching new
+successors, restore the controller and runner split plus the compact control
+contract, then resume.
 
 ## Continuation And Return Signals
 
