@@ -68,8 +68,12 @@ agent understand the role it is taking on, why that role exists, what failure
 mode it prevents, and what boundaries preserve good judgment.
 
 - Front-load action-critical guidance. If only the first screen or first 10
-  lines are read, the agent should still see the role, non-negotiables, next
-  action, and failure mode to avoid.
+  lines are read, the agent should still see the role, terminal result,
+  non-negotiables, and failure mode to avoid.
+- For goal-bearing or long-lived guidance, put the finished state and completion
+  evidence before the current next action. Keep changing owners, blockers, and
+  next actions in a named live state surface rather than in the durable
+  objective.
 - Lead with the mental model, not a checklist.
 - Use procedures only for fragile or exact operations.
 - Prefer principles, boundaries, and short examples over exhaustive branches.

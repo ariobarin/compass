@@ -11,7 +11,9 @@ and reports once. Do not spend model turns sleeping and rechecking. The script
 owns the clock; the model chooses the condition and judges the result.
 
 This skill covers mechanical waits only. It does not take process ownership or
-recovery judgment from a benchmark operator, runner, or orchestration owner.
+recovery judgment from a benchmark operator, runner, or orchestration owner. A
+wait condition is evidence for the parent contract, not the parent completion
+condition, unless the stable parent outcome explicitly defines it that way.
 
 ## Contract
 
@@ -26,6 +28,9 @@ recovery judgment from a benchmark operator, runner, or orchestration owner.
   with a terminating match.
 - Print one compact result: condition, success or failure, elapsed time, and the
   value the user needed. Keep repeated checks and long logs out of the context.
+- Return the result to the execution owner or controller for comparison with the
+  parent assertions. Exiting the wait successfully does not by itself complete
+  any larger goal.
 
 ## Boundary
 

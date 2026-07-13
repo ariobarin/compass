@@ -34,6 +34,8 @@ should become durable guidance:
 - noisy context: useful evidence was buried under low-value output;
 - weak verification: completion was claimed without a check that covered the
   changed behavior;
+- objective drift: a current obstacle, repair, phase, action, or delegated slice
+  replaced the user's terminal outcome or completion predicate;
 - unsafe mutation: files, branches, services, or external state changed outside
   the intended scope;
 - workflow mismatch: the task needed planning, research, browser validation,
@@ -50,6 +52,18 @@ should become durable guidance:
 5. Remove stale guidance when the underlying failure no longer appears.
 
 ## Recorded Failures
+
+### 2026-07-13: Goal substituted a route for the requested result
+
+- Failure: a parent goal and its delegated slices described the currently known
+  repair sequence and subsequent action instead of the observable state the user
+  wanted at the end. Completing the repair therefore left no durable contract
+  that required the remaining result and evidence.
+- Cause: objective drift, workflow mismatch, weak verification.
+- Durable response: goal contracts separate a stable finished state and required
+  assertions from a mutable acceptance ledger and execution state; child slices
+  name the parent assertions they advance; controllers recompute unmet assertions
+  after every return; monitors and route completion never imply parent completion.
 
 These records preserve the first upstream failure and durable correction. Keep
 detailed evidence with the reviewable change that adopted it, not repeated here.
