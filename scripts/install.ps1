@@ -154,11 +154,20 @@ function Get-GitScalar {
     if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
         return $null
     }
-    $value = & git -C $repoRoot @Arguments 2>$null | Select-Object -First 1
-    if ($LASTEXITCODE -ne 0) {
+
+    $previousErrorActionPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = "Continue"
+        $output = @(& git -C $repoRoot @Arguments 2>$null)
+        $exitCode = $LASTEXITCODE
+    }
+    finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
+    if ($exitCode -ne 0) {
         return $null
     }
-    return $value
+    return $output | Select-Object -First 1
 }
 
 function Test-ReceiptTargetSetEqual {

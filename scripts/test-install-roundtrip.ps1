@@ -15,7 +15,8 @@ function Invoke-TestScript {
     param(
         [string]$Path,
         [string[]]$Arguments,
-        [int]$ExpectedExitCode = 0
+        [int]$ExpectedExitCode = 0,
+        [string]$ProcessPath = $powerShellPath
     )
 
     $processArguments = @("-NoProfile")
@@ -24,7 +25,7 @@ function Invoke-TestScript {
     }
     $processArguments += @("-File", $Path) + $Arguments
 
-    $output = @(& $powerShellPath @processArguments 2>&1 | ForEach-Object { $_.ToString() })
+    $output = @(& $ProcessPath @processArguments 2>&1 | ForEach-Object { $_.ToString() })
     $exitCode = $LASTEXITCODE
     if ($exitCode -ne $ExpectedExitCode) {
         $output | ForEach-Object { Write-Host $_ }
@@ -56,6 +57,11 @@ try {
     )
     $installPath = Join-Path $PSScriptRoot "install.ps1"
     $verifyPath = Join-Path $PSScriptRoot "verify-live.ps1"
+
+    if ($env:OS -eq "Windows_NT") {
+        $windowsPowerShellPath = Join-Path $env:SystemRoot "System32\WindowsPowerShell\v1.0\powershell.exe"
+        [void](Invoke-TestScript -Path $installPath -Arguments (@("-SkipPlugins") + $homeArguments) -ProcessPath $windowsPowerShellPath)
+    }
 
     $preflightSentinel = Join-Path $codexHome "AGENTS.md"
     Set-Content -LiteralPath $preflightSentinel -Encoding utf8NoBOM -Value "preflight sentinel"
