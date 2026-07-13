@@ -9,6 +9,7 @@ param(
 )
 
 . "$PSScriptRoot\common.ps1"
+. "$PSScriptRoot\reviewed-config.ps1"
 
 $repoRoot = Get-RepoRoot
 $liveHome = Get-CodexHome -CodexHome $CodexHome
@@ -21,7 +22,6 @@ $missing = New-Object System.Collections.Generic.List[string]
 $retired = New-Object System.Collections.Generic.List[string]
 $configProblems = New-Object System.Collections.Generic.List[string]
 $pluginProblems = New-Object System.Collections.Generic.List[string]
-$expectedAgentDepth = $null
 
 function Get-RelativeFileMap {
     param([string]$Root)
@@ -117,54 +117,17 @@ foreach ($item in $retiredItems) {
     }
 }
 
-$reviewConfigPath = Join-Path $repoRoot "codex\config.review.toml"
-if (-not (Test-Path -LiteralPath $reviewConfigPath)) {
-    $configProblems.Add("missing reviewed config fragment needed to verify specialist-review agent depth: $reviewConfigPath")
-}
-else {
-    $reviewConfigText = Get-Content -Raw -LiteralPath $reviewConfigPath
-    if ($null -eq $reviewConfigText) {
-        $reviewConfigText = ""
-    }
-    $reviewAgentsSection = [regex]::Match($reviewConfigText, "(?ms)^\[agents\]\s*(.*?)(?=^\[|\z)")
-    if (-not $reviewAgentsSection.Success) {
-        $configProblems.Add("reviewed config fragment is missing [agents] max_depth for specialist-review")
-    }
-    else {
-        $reviewMaxDepth = [regex]::Match($reviewAgentsSection.Groups[1].Value, "(?m)^\s*max_depth\s*=\s*(\d+)\s*(?:#.*)?$")
-        if (-not $reviewMaxDepth.Success) {
-            $configProblems.Add("reviewed config fragment is missing [agents] max_depth for specialist-review")
-        }
-        else {
-            $expectedAgentDepth = [int]$reviewMaxDepth.Groups[1].Value
-        }
+$reviewedConfigContract = Get-ReviewedConfigContract -RepoRoot $repoRoot -CodexHome $liveHome
+$reviewConfigPath = $reviewedConfigContract.ReviewPath
+$liveConfigPath = $reviewedConfigContract.LivePath
+try {
+    $reviewedConfigState = Get-ReviewedConfigState -ReviewPath $reviewConfigPath -LivePath $liveConfigPath
+    foreach ($problem in @(Get-ReviewedConfigProblemStrings -State $reviewedConfigState)) {
+        $configProblems.Add($problem)
     }
 }
-
-$liveConfigPath = Join-Path $liveHome "config.toml"
-if ($null -ne $expectedAgentDepth) {
-    if (-not (Test-Path -LiteralPath $liveConfigPath)) {
-        $configProblems.Add("missing live config.toml needed to verify specialist-review agent depth: $liveConfigPath")
-    }
-    else {
-        $liveConfigText = Get-Content -Raw -LiteralPath $liveConfigPath
-        if ($null -eq $liveConfigText) {
-            $liveConfigText = ""
-        }
-        $agentsSection = [regex]::Match($liveConfigText, "(?ms)^\[agents\]\s*(.*?)(?=^\[|\z)")
-        if (-not $agentsSection.Success) {
-            $configProblems.Add("live config.toml is missing [agents] max_depth = $expectedAgentDepth for specialist-review")
-        }
-        else {
-            $maxDepth = [regex]::Match($agentsSection.Groups[1].Value, "(?m)^\s*max_depth\s*=\s*(\d+)\s*(?:#.*)?$")
-            if (-not $maxDepth.Success) {
-                $configProblems.Add("live config.toml is missing [agents] max_depth = $expectedAgentDepth for specialist-review")
-            }
-            elseif ([int]$maxDepth.Groups[1].Value -ne $expectedAgentDepth) {
-                $configProblems.Add("live config.toml has [agents] max_depth = $($maxDepth.Groups[1].Value), expected exactly $expectedAgentDepth for specialist-review")
-            }
-        }
-    }
+catch {
+    $configProblems.Add($_.Exception.Message)
 }
 
 $pluginManifestPath = Join-Path $repoRoot "manifests\plugins.json"

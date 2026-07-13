@@ -15,8 +15,7 @@ function Invoke-TestScript {
     param(
         [string]$Path,
         [string[]]$Arguments,
-        [int]$ExpectedExitCode = 0,
-        [string]$ProcessPath = $powerShellPath
+        [int]$ExpectedExitCode = 0
     )
 
     $processArguments = @("-NoProfile")
@@ -25,7 +24,7 @@ function Invoke-TestScript {
     }
     $processArguments += @("-File", $Path) + $Arguments
 
-    $output = @(& $ProcessPath @processArguments 2>&1 | ForEach-Object { $_.ToString() })
+    $output = @(& $powerShellPath @processArguments 2>&1 | ForEach-Object { $_.ToString() })
     $exitCode = $LASTEXITCODE
     if ($exitCode -ne $ExpectedExitCode) {
         $output | ForEach-Object { Write-Host $_ }
@@ -43,12 +42,39 @@ function Assert-PathPresent {
     }
 }
 
+function Assert-TextContains {
+    param(
+        [string]$Text,
+        [string]$Expected
+    )
+
+    if (-not $Text.Contains($Expected)) {
+        throw "expected text was not preserved: $Expected"
+    }
+}
+
 try {
     New-Item -ItemType Directory -Force $codexHome, $agentsHome, $claudeHome | Out-Null
-    Set-Content -LiteralPath (Join-Path $codexHome "config.toml") -Encoding utf8NoBOM -Value @(
-        "[agents]",
-        "max_depth = 2"
-    )
+    $configPath = Join-Path $codexHome "config.toml"
+    $originalConfig = @"
+model = "old-model"
+service_tier = "flex"
+custom_root_value = "keep"
+
+[agents]
+max_depth = 1
+custom_agent_value = "keep"
+
+[mcp_servers.example]
+command = "machine-local-command"
+
+[projects.'C:\work\example']
+trust_level = "trusted"
+
+[generated_marketplace]
+last_refresh = "machine-local"
+"@
+    [System.IO.File]::WriteAllText($configPath, $originalConfig, [System.Text.UTF8Encoding]::new($false))
 
     $homeArguments = @(
         "-CodexHome", $codexHome,
@@ -57,11 +83,6 @@ try {
     )
     $installPath = Join-Path $PSScriptRoot "install.ps1"
     $verifyPath = Join-Path $PSScriptRoot "verify-live.ps1"
-
-    if ($env:OS -eq "Windows_NT") {
-        $windowsPowerShellPath = Join-Path $env:SystemRoot "System32\WindowsPowerShell\v1.0\powershell.exe"
-        [void](Invoke-TestScript -Path $installPath -Arguments (@("-SkipPlugins") + $homeArguments) -ProcessPath $windowsPowerShellPath)
-    }
 
     $preflightSentinel = Join-Path $codexHome "AGENTS.md"
     Set-Content -LiteralPath $preflightSentinel -Encoding utf8NoBOM -Value "preflight sentinel"
@@ -86,6 +107,17 @@ try {
     }
     Remove-Item -LiteralPath $preflightSentinel -Force
 
+    $reviewOutput = @(Invoke-TestScript -Path $installPath -Arguments (@("-SkipPlugins") + $homeArguments))
+    if ($reviewOutput -notcontains "planned reviewed config changes:") {
+        throw "review mode did not report reviewed config drift"
+    }
+    if ((Get-Content -Raw -LiteralPath $configPath) -ne $originalConfig) {
+        throw "review mode changed live config.toml"
+    }
+    if (Test-Path -LiteralPath (Join-Path $codexHome "portable-backups")) {
+        throw "review mode created a backup"
+    }
+
     $foreignPath = Join-Path (Join-Path (Join-Path $agentsHome "skills") "compass") "SKILL.md"
     New-Item -ItemType Directory -Force (Split-Path -Parent $foreignPath) | Out-Null
     Set-Content -LiteralPath $foreignPath -Encoding utf8NoBOM -Value "foreign skill"
@@ -97,6 +129,39 @@ try {
     [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins", "-Adopt") + $homeArguments))
     [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPlugins", "-RequireInSync") + $homeArguments))
 
+    $installedConfig = Get-Content -Raw -LiteralPath $configPath
+    foreach ($preserved in @(
+        'service_tier = "flex"',
+        'custom_root_value = "keep"',
+        'custom_agent_value = "keep"',
+        '[mcp_servers.example]',
+        'command = "machine-local-command"',
+        "[projects.'C:\work\example']",
+        '[generated_marketplace]',
+        'last_refresh = "machine-local"'
+    )) {
+        Assert-TextContains -Text $installedConfig -Expected $preserved
+    }
+    foreach ($managed in @(
+        'model = "gpt-5.6-sol"',
+        'model_auto_compact_token_limit = 233000',
+        'approval_policy = "never"',
+        'max_depth = 2',
+        'sandbox = "elevated"',
+        'hide_full_access_warning = true',
+        'tool_namespace = "agents"'
+    )) {
+        Assert-TextContains -Text $installedConfig -Expected $managed
+    }
+
+    $configBackups = @(Get-ChildItem -LiteralPath (Join-Path $codexHome "portable-backups") -Recurse -File -Filter "config.toml")
+    if ($configBackups.Count -ne 1) {
+        throw "expected exactly one config.toml backup, found $($configBackups.Count)"
+    }
+    if ((Get-Content -Raw -LiteralPath $configBackups[0].FullName) -ne $originalConfig) {
+        throw "config.toml backup did not contain the original live file"
+    }
+
     $receiptRoot = Join-Path $codexHome "portable-receipts"
     $currentReceipt = Join-Path $receiptRoot "current.json"
     Assert-PathPresent -Path $currentReceipt
@@ -105,6 +170,9 @@ try {
     $secondInstall = @(Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments))
     if (@($secondInstall | Where-Object { $_ -like "installed:*" }).Count -gt 0) {
         throw "unchanged second install copied portable items"
+    }
+    if ($secondInstall -notcontains "reviewed config unchanged: $configPath") {
+        throw "unchanged second install did not report reviewed config idempotence"
     }
     if ($secondInstall -notcontains "backups: none") {
         throw "unchanged second install created a backup root"
@@ -124,6 +192,23 @@ try {
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $claudeHome "skills") "behavior-validator") "SKILL.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path (Join-Path $claudeHome "skills") "pr-review-loop") "scripts") "build-review-bundle.py")
     Assert-PathPresent -Path (Join-Path (Join-Path $claudeHome "agents") "reviewer.md")
+
+    $missingConfig = (Get-Content -Raw -LiteralPath $configPath) -replace '(?m)^model_auto_compact_token_limit = 233000\r?\n', ''
+    [System.IO.File]::WriteAllText($configPath, $missingConfig, [System.Text.UTF8Encoding]::new($false))
+    $missingOutput = @(Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPlugins", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
+    if (@($missingOutput | Where-Object { $_ -like "*missing reviewed config key: model_auto_compact_token_limit,*" }).Count -eq 0) {
+        throw "verification did not report a missing reviewed config key"
+    }
+    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments))
+
+    $mismatchedConfig = (Get-Content -Raw -LiteralPath $configPath) -replace 'model = "gpt-5.6-sol"', 'model = "wrong-model"'
+    [System.IO.File]::WriteAllText($configPath, $mismatchedConfig, [System.Text.UTF8Encoding]::new($false))
+    $mismatchOutput = @(Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPlugins", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
+    if (@($mismatchOutput | Where-Object { $_ -like '*reviewed config mismatch: model = "wrong-model", expected "gpt-5.6-sol"*' }).Count -eq 0) {
+        throw "verification did not report a reviewed config mismatch"
+    }
+    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments))
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPlugins", "-RequireInSync") + $homeArguments))
 
     $driftPath = Join-Path (Join-Path (Join-Path $agentsHome "skills") "compass") "SKILL.md"
     Add-Content -LiteralPath $driftPath -Value "roundtrip drift"

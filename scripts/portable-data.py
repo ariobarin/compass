@@ -29,10 +29,10 @@ MANIFEST_STRINGS = {
     "codex": ("home",),
     "agents": ("home", "skills_dir"),
     "claude": ("home", "skills_dir", "agents_dir"),
-    "config": ("review_file", "reason"),
+    "config": ("review_file", "install_mode", "reason"),
     "repo_only": ("reason",),
 }
-MANIFEST_BOOLEANS = {"config": ("install_automatically",)}
+MANIFEST_BOOLEANS: dict[str, tuple[str, ...]] = {}
 AGENT_STRING_FIELDS = ("name", "description", "developer_instructions")
 
 
@@ -122,6 +122,9 @@ def validate_manifest(manifest: dict[str, Any]) -> None:
             require_string(table, section, key)
         for key in MANIFEST_BOOLEANS.get(section, ()):
             require_boolean(table, section, key)
+
+    if manifest["config"]["install_mode"] != "overlay":
+        raise ValueError("manifest [config].install_mode must be overlay")
 
 
 def validate_agent(path: Path, data: dict[str, Any]) -> None:
