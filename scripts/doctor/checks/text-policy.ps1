@@ -28,3 +28,18 @@ foreach ($file in $dashCheckedFiles) {
         }
     }
 }
+
+$powerShellFiles = Get-DoctorChildItem -Kind File -Filter "*.ps1"
+foreach ($file in $powerShellFiles) {
+    $parseTokens = $null
+    $parseErrors = $null
+    [System.Management.Automation.Language.Parser]::ParseFile(
+        $file.FullName,
+        [ref]$parseTokens,
+        [ref]$parseErrors
+    ) | Out-Null
+
+    foreach ($parseError in @($parseErrors)) {
+        $problems.Add("PowerShell parse error in $($file.FullName): $($parseError.Message)")
+    }
+}
