@@ -62,13 +62,6 @@ jobs:
         shell: pwsh
         run: python scripts/test-review-bundle.py
 
-      - name: Test signal measurement tools
-        shell: pwsh
-        run: |
-          python scripts/test-prompt-inventory.py
-          python scripts/test-session-trace.py
-          python scripts/test-compaction-accounting.py
-
       - name: Check shell launcher syntax
         if: runner.os == 'Linux'
         shell: bash

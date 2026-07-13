@@ -11,9 +11,6 @@ catch drift before config is copied into a live machine.
 
 - [maintenance-learnings.md](maintenance-learnings.md): local principles for
   making useful changes to Compass without bloating the portable setup.
-- [experiments/agent-signal-and-measurement.md](experiments/agent-signal-and-measurement.md):
-  evidence contract for prompt signal, autonomy-first orchestration, structural
-  traces, routing comparisons, and mechanical compaction accounting.
 - [benchmark-run-evidence.md](benchmark-run-evidence.md):
   compact evidence behind the promoted benchmark and goal guidance, kept out of
   installed runtime behavior.
