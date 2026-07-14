@@ -5,13 +5,13 @@
       "id": "pr-current-head-and-authority",
       "path": "codex/skills/pr-review-loop/SKILL.md",
       "required": [
-        "After any material push, re-read the head SHA and re-request review on that new head before calling the PR ready or merging.",
-        "Merge only when the user or repo workflow explicitly authorized it."
+        "All conclusions are tied to the current head SHA.",
+        "Merge only when explicitly authorized."
       ]
     },
     {
       "id": "behavior-validator-source-blind",
-      "path": "codex/skills/behavior-validator/SKILL.md",
+      "path": "codex/agents/behavior-validator.toml",
       "required": [
         "Do not inspect source files, diffs, tests, git history, implementation notes, or review bundles.",
         "If implementation material becomes visible, mark the run contaminated and restart with a fresh validator."
@@ -31,7 +31,7 @@
       "id": "orchestration-ledger-does-not-grant-authority",
       "path": "workflows/orchestration-ledger.md",
       "required": [
-        "The ledger records the contract and current evidence. It does not execute work, create authority, or replace the worker that owns delivery.",
+        "The ledger records authority, current state, evidence, and recovery gates.",
         "Changing the field does not grant permission."
       ]
     },
@@ -39,15 +39,15 @@
       "id": "goal-completion-authority",
       "path": "codex/skills/using-codex-goals/SKILL.md",
       "required": [
-        "Parent completion authority stays with the controller. A child completion is evidence for the parent goal, not completion of the parent goal.",
-        "For long or stateful work, name authoritative inputs in precedence order and say how to re-anchor after interruption, compaction, or handoff."
+        "The controller owns the parent outcome, assertion text, amendments, and final completion judgment.",
+        "After compaction, restart, or handoff, reopen authoritative inputs in precedence order."
       ]
     },
     {
       "id": "benchmark-recovery-circuit-breaker",
       "path": "codex/skills/benchmark-run-operator/SKILL.md",
       "required": [
-        "After two consecutive successors fail on the same slice, do not launch a third symptom-level successor.",
+        "Do not launch another symptom-level successor when the failure signature, inputs, and runtime path are materially unchanged and the prior attempt produced no new discriminating evidence.",
         "Name one writer for benchmark policy and queue ownership."
       ]
     },

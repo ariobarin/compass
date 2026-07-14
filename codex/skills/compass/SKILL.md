@@ -1,53 +1,35 @@
 ---
 name: compass
-description: Maintain Compass durable setup. Use when editing installed skills, agents, hooks, repo workflows, manifests, scripts, or install wiring.
+description: Maintain Compass source, install boundaries, and validation. Invoke manually for Compass repository changes.
 ---
 
 # Compass
 
-Use this skill when changing Compass itself. Its job is to route durable setup
-changes to the right source file while preserving the install boundary.
+Use this skill only when changing Compass itself.
 
-Repository: [ariobarin/compass](https://github.com/ariobarin/compass).
+## Boundaries
 
-## Stance
-
-Treat this repo as reviewed source, not a backup of a live config home
-(`~/.codex`, `~/.agents`, or `~/.claude`). Keep installed agentic behavior
-separate from repo-maintainer guidance. Let repo-local docs carry procedure
-instead of reconstructing the maintenance flow from memory.
-
-Compass owns the portable bundle. When a bundled skill, agent, hook, script, or
-reviewed config fragment depends on another bundled capability, make the
-capability exact. Fix the source, install map, reviewed config, live verifier,
-or agent contract. Do not add alternate-path, best-effort, or compatibility
-guidance for a capability Compass can provide.
+- Reviewed source lives in this repository, not in live config homes.
+- Installed agent behavior belongs under `codex/`.
+- Repo-maintainer process belongs under `workflows/`, `local-docs/`,
+  `manifests/`, and `scripts/`.
+- Carried opt-in packs belong under `carried/` and stay out of global manifests.
+- Claude surfaces derive from Codex sources where the manifest says so.
+- Deterministic mechanics belong in scripts; reviewer personas belong in agents.
 
 ## Read First
 
-- Read the repo-root `AGENTS.md` and `local-docs/maintenance-learnings.md`.
-- Read `workflows/portable-config.md` for repo-to-live install, snapshot, or
-  drift work.
-- Read `workflows/addition-intake.md` before adding rules, skills, agents,
-  workflows, scripts, manifests, or config fragments.
-- Read `workflows/compass-review-program.md` before auditing or pruning
-  installed skills, agents, hooks, or maintainer guidance.
+Read root `AGENTS.md`, `local-docs/maintenance-learnings.md`,
+`workflows/addition-intake.md`, and the workflow nearest the change.
 
-## Route Changes
+## Change Exactly
 
-- Installed agentic behavior: `codex/AGENTS.md`, `codex/agents/`,
-  `codex/skills/`. The Claude surface derives from these at install.
-- Repo-maintainer guidance: root `AGENTS.md`, `workflows/`, `local-docs/`,
-  `manifests/`, `scripts/`.
-- Reviewed config fragments: `codex/config.review.toml`; do not treat it as a
-  direct replacement for live `config.toml`.
-- Installed skill additions: update `manifests/portable-files.toml`;
-  `scripts/common.ps1` reads that manifest for the install map.
+Update source, install maps, policy contracts, required-file checks, and tests in
+the same branch when ownership changes. Do not add fallback guidance for a
+capability Compass can make exact.
 
-## Validate The Repo Change
+## Validate
 
-- Run `.\scripts\doctor.ps1` before calling the change done.
-- For skill edits, run the local skill validator when present, using the active
-  config home for bundled system tooling instead of a hard-coded user path.
-- Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when live drift matters.
-- Use a PR as the review unit.
+Run `.\scripts\doctor.ps1`, narrow script tests, and `git diff --check`. Use
+`.\scripts\verify-live.ps1 -SkipCodexCommand` only when live drift matters. Use a
+PR as the review unit.

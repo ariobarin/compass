@@ -39,6 +39,9 @@ param(
     [string]$GrantActor,
     [string[]]$Mutation,
     [string]$SliceLabel,
+    [string]$FailureEvidence,
+    [string]$DiscriminatingEvidence,
+    [switch]$NoNewEvidence,
     [Alias("RootCauseLocator", "RootCauseEvidenceLocator")]
     [string]$RootCauseEvidence,
     [string]$Ledger,
@@ -67,6 +70,13 @@ if ($Ledger) {
 }
 $arguments += $Action
 
+function Add-MutationAuth {
+    if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) {
+        throw "mutations require -Actor and -ExpectedRevision"
+    }
+    $script:arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+}
+
 switch ($Action) {
     "status" {
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
@@ -90,8 +100,7 @@ switch ($Action) {
         if ($State) { $arguments += @("--state", $State) }
     }
     "set-owner" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($ExecutionOwner) { $arguments += @("--execution-owner", $ExecutionOwner) }
         if ($ClearWorker) {
@@ -102,14 +111,12 @@ switch ($Action) {
         }
     }
     "set-state" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($State) { $arguments += @("--state", $State) }
     }
     "set-next" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($ClearNext) {
             $arguments += "--clear"
@@ -120,23 +127,20 @@ switch ($Action) {
         if ($NextCheckAt) { $arguments += @("--check-at", $NextCheckAt) }
     }
     "add-evidence" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($EvidenceKind) { $arguments += @("--kind", $EvidenceKind) }
         if ($EvidenceSummary) { $arguments += @("--summary", $EvidenceSummary) }
         if ($EvidenceLocator) { $arguments += @("--locator", $EvidenceLocator) }
     }
     "set-gate" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($Gate) { $arguments += @("--gate", $Gate) }
         if ($GateAction) { $arguments += @("--action", $GateAction) }
     }
     "set-decision" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($DecisionQuestion) { $arguments += @("--question", $DecisionQuestion) }
         foreach ($option in @($DecisionOption)) {
@@ -144,13 +148,11 @@ switch ($Action) {
         }
     }
     "clear-decision" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
     }
     "set-grant" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($GrantActor) { $arguments += @("--grant-actor", $GrantActor) }
         foreach ($item in @($Mutation)) {
@@ -158,32 +160,34 @@ switch ($Action) {
         }
     }
     "clear-grant" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($GrantActor) { $arguments += @("--grant-actor", $GrantActor) }
     }
     "claim-successor" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($SliceLabel) { $arguments += @("--slice-label", $SliceLabel) }
     }
     "record-successor-failure" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($SliceLabel) { $arguments += @("--slice-label", $SliceLabel) }
+        if ($FailureEvidence) { $arguments += @("--failure-evidence", $FailureEvidence) }
+        if ($DiscriminatingEvidence) {
+            $arguments += @("--discriminating-evidence", $DiscriminatingEvidence)
+        }
+        if ($NoNewEvidence) {
+            $arguments += "--no-new-evidence"
+        }
     }
     "record-successor-success" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($SliceLabel) { $arguments += @("--slice-label", $SliceLabel) }
     }
     "reset-recovery" {
-        if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) { throw "mutations require -Actor and -ExpectedRevision" }
-        $arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+        Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($SliceLabel) { $arguments += @("--slice-label", $SliceLabel) }
         if ($RootCauseEvidence) { $arguments += @("--root-cause-evidence", $RootCauseEvidence) }

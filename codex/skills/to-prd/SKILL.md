@@ -1,92 +1,88 @@
 ---
 name: to-prd
-description: Draft PRDs from current context without publishing by default. Use when user asks to create or refine a PRD from existing context.
+description: Draft decision-bearing product requirements from current context without publishing by default.
 ---
 
 # To PRD
 
-Use this skill to turn already-available conversation, codebase, and product
-context into a product requirements document. The role is synthesis: preserve
-the user's intent, separate decisions from assumptions, and make the next
-implementation conversation easier to review.
+Use this skill to turn available product, conversation, and repository context
+into an implementation-ready requirements document. The PRD should carry
+decisions, outcomes, evidence, risks, dependencies, and unresolved choices. It
+should not be a filled template for its own sake.
 
-The failure mode this prevents is premature project tracking. A useful PRD can
-exist as a local draft, chat artifact, or issue body. Do not create, update,
-label, or publish anything in an external tracker unless the user explicitly
-asks for publication and provides the target tracker, repository or project,
-and label policy.
+Do not create or update an external tracker unless the user explicitly requests
+publication and names the target, project, and label policy.
 
-## Drafting Stance
+## Build From Evidence
 
-- Start from current context and nearby repo evidence.
-- Ask only for missing decisions that block a coherent PRD.
-- Mark inferred decisions as assumptions when the user did not confirm them.
-- Prefer domain vocabulary from the project over generic feature language.
-- Keep implementation details stable enough to survive code movement.
+Read relevant guidance, ADRs, glossary material, existing behavior, and nearby
+interfaces. Separate:
 
-## Process
+- confirmed decisions;
+- evidence-backed inferences;
+- assumptions that need confirmation;
+- unresolved decisions that affect scope or implementation.
 
-1. Read relevant project guidance, ADRs, glossary docs, and nearby code when
-   they are available.
-2. Identify the problem, intended users, proposed solution, explicit
-   decisions, assumptions, out-of-scope work, and verification seams.
-3. Draft the PRD using the template below.
-4. If publication was explicitly requested, restate the target tracker,
-   target project, labels, and final remote action before publishing.
+Use project vocabulary. Avoid fragile file paths unless the path itself is a
+requirement.
 
-<prd-template>
+## Required Content
 
-## Problem Statement
+Every PRD should make these clear, using only sections that carry useful content:
 
-Describe the user's problem from the user's perspective.
+### Outcome
 
-## Solution
+Describe the user or operator state that should exist when the work is complete.
 
-Describe the proposed solution from the user's perspective.
+### Success Evidence
 
-## User Stories
+Name observable acceptance evidence: behavior, metrics, artifacts, runtime
+checks, or user outcomes. Avoid vague "works as expected" language.
 
-List user stories in this format:
+### Users And Scenarios
 
-1. As an <actor>, I want <feature>, so that <benefit>.
+Identify primary actors, important flows, edge cases, and operational needs.
+User stories are optional. Use them only when they clarify behavior.
 
-Cover the main actor paths, edge cases, and administrative or operational
-needs that matter for implementation.
+### Scope And Non-Goals
 
-## Implementation Decisions
+State what the first delivery includes and excludes.
 
-List decisions that are already made or strongly implied, including:
+### Decisions And Constraints
 
-- modules or systems involved;
-- API, schema, or interface contracts;
-- architectural decisions;
-- user interactions;
-- technical clarifications from the user.
+Record product, architecture, API, schema, interaction, compatibility, security,
+budget, or policy decisions already made.
 
-Avoid specific file paths unless the path itself is part of the requirement.
-If a prototype produced a compact snippet that captures a decision more clearly
-than prose, include only the decision-bearing part and label it as prototype
-derived.
+### Dependencies
 
-## Testing Decisions
+Name systems, teams, data, migrations, permissions, sequencing, or external
+conditions required for delivery.
 
-List the expected testing seams and prior art, including:
+### Risks And Mitigations
 
-- what user-visible behavior must be tested;
-- which existing test style or layer should be reused;
-- which edge cases need coverage;
-- which manual or runtime checks remain useful.
+Cover credible product, technical, rollout, evidence, and operational risks.
+Pair each material risk with prevention, detection, or fallback.
 
-## Assumptions
+### Unresolved Decisions
 
-List assumptions that should be confirmed before implementation.
+List only choices that materially change outcome, scope, interface, or risk.
+For each, name the decision owner and impact of delay.
 
-## Out of Scope
+### Delivery And Validation
 
-List work that should not be included in the first implementation.
+Describe sequencing, rollout, testing seams, prior art to reuse, and remaining
+manual or runtime proof.
 
-## Further Notes
+## Avoid Template Theater
 
-Add any remaining context that would help an implementer or reviewer.
+- Omit empty sections.
+- Do not invent personas, metrics, deadlines, or implementation decisions.
+- Do not duplicate the same requirement as prose, story, and checklist.
+- Prefer one precise acceptance statement over several aspirational bullets.
+- Mark prototype-derived decisions and include only the decision-bearing part.
+- Keep historical discussion out unless it changes a current decision.
 
-</prd-template>
+## Publication Boundary
+
+When publication is requested, restate the exact destination and remote action
+before writing. Otherwise return a local or chat draft only.

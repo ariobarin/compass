@@ -11,7 +11,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": 2
+      "const": 3
     },
     "updated_at": {
       "type": "string",
@@ -258,22 +258,6 @@
         {
           "if": {
             "properties": {
-              "consecutive_successor_failures": {
-                "minimum": 2
-              }
-            }
-          },
-          "then": {
-            "properties": {
-              "state": {
-                "const": "open"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
               "state": {
                 "const": "claimed"
               }
@@ -281,8 +265,9 @@
           },
           "then": {
             "properties": {
-              "consecutive_successor_failures": {
-                "maximum": 1
+              "claimed_by": {
+                "type": "string",
+                "minLength": 1
               }
             }
           }
@@ -309,16 +294,65 @@
         {
           "if": {
             "properties": {
-              "state": {
-                "const": "claimed"
+              "last_failure_evidence": {
+                "type": "string"
               }
             }
           },
           "then": {
             "properties": {
-              "claimed_by": {
+              "last_failure_at": {
                 "type": "string",
-                "minLength": 1
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "last_failure_evidence": {
+                "const": null
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "last_failure_at": {
+                "const": null
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "last_reset_evidence": {
+                "type": "string"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "last_reset_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "last_reset_evidence": {
+                "const": null
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "last_reset_at": {
+                "const": null
               }
             }
           }
@@ -326,8 +360,9 @@
       ],
       "required": [
         "slice_label",
-        "consecutive_successor_failures",
         "state",
+        "last_failure_evidence",
+        "last_failure_at",
         "last_reset_evidence",
         "last_reset_at",
         "claimed_by"
@@ -337,16 +372,26 @@
           "type": "string",
           "minLength": 1
         },
-        "consecutive_successor_failures": {
-          "type": "integer",
-          "minimum": 0
-        },
         "state": {
           "enum": [
             "open",
             "claimed",
             "closed"
           ]
+        },
+        "last_failure_evidence": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "last_failure_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
         },
         "last_reset_evidence": {
           "type": [

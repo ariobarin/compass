@@ -1,48 +1,33 @@
 ---
 name: monitor-to-completion
-description: "Run mechanical waits to completion in one blocking script. Avoid poll loops where each wake carries the session context again."
+description: Wait on one observable condition in a bounded command and return one compact result.
 ---
 
 # Monitor To Completion
 
-When a build, process, container, deploy, log, endpoint, or rate limit can finish
-without another decision, run one bounded command that exits on the condition
-and reports once. Do not spend model turns sleeping and rechecking. The script
-owns the clock; the model chooses the condition and judges the result.
-
-This skill covers mechanical waits only. It does not take process ownership or
-recovery judgment from a benchmark operator, runner, or orchestration owner. A
-wait condition is evidence for the parent contract, not the parent completion
-condition, unless the stable parent outcome explicitly defines it that way.
+Use this skill only for mechanical waiting. The script owns the clock. The
+parent owner chooses the condition, timeout, and response.
 
 ## Contract
 
-- Wait on the real condition: PID exit, port state, file creation, container
-  status, log line, HTTP response, or another directly observable signal.
-- Poll inside one blocking command, never across model turns. `Start-Sleep`,
-  `sleep`, or `setTimeout` belongs inside that command when no native wait
-  exists.
-- Carry a timeout and a failure exit so the command cannot hang indefinitely.
-- Prefer native waits such as `Wait-Process`, `Wait-Event`, `docker wait`,
-  `kubectl wait`, bounded `curl --fail --retry 30 --retry-all-errors`, or `tail -f`
-  with a terminating match.
-- Print one compact result: condition, success or failure, elapsed time, and the
-  value the user needed. Keep repeated checks and long logs out of the context.
-- Return the result to the execution owner or controller for comparison with the
-  parent assertions. Exiting the wait successfully does not by itself complete
-  any larger goal.
+- Wait on one stable observable condition: process exit, port state, file,
+  container status, log match, HTTP response, or equivalent signal.
+- Prefer a native wait. Otherwise poll inside one blocking command, never across
+  model turns.
+- Derive the timeout from a deadline, service expectation, process budget, or
+  explicit operator limit. Do not use arbitrary poll counts.
+- Exit distinctly on success, target failure, and timeout.
+- Sample diagnostics without streaming repetitive logs into context.
+- Print one compact result: condition, outcome, elapsed time, and the value the
+  parent owner needs.
+- Return the result to the execution or goal owner. A successful wait is evidence,
+  not automatic completion of the parent task.
 
-## Boundary
+## Timeout
 
-Use an orchestration heartbeat only when each wake performs real judgment, such
-as inspecting new evidence, rerouting ownership, requesting review, or choosing
-a recovery action. Put the time between those decisions inside one bounded wait.
+A timeout wakes the parent owner for judgment. Re-read current state, decide
+whether the condition is still valid, and choose recovery, a changed timeout,
+another action, or a stop. Do not silently relaunch the same wait.
 
-When repeated wakes still require judgment, use a fresh non-forked GPT-5.6 Luna
-or GPT-5.6 Terra worker at xhigh with a narrow handoff. Prefer either over
-GPT-5.6 Sol for long-running monitoring. Choose its role, model, effort, service
-tier, and context mode deliberately. Portable role files omit `service_tier`;
-do not rely on inherited routing when effective settings cannot be verified.
-
-If the same condition must be checked over a long span without model judgment,
-use a watcher process or scheduled automation. Do not use the model as a timer.
+Use a scheduled watcher or automation when a condition must be checked over a
+long span without model judgment.

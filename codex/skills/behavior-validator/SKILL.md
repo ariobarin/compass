@@ -1,89 +1,63 @@
 ---
 name: behavior-validator
-description: "Source-blind behavior validation against a written contract for apps, CLIs, APIs, and generated artifacts."
+description: Prepare and delegate source-blind validation of observable behavior contracts.
 ---
 
 # Behavior Validator
 
-Validate the real user or operator surface against a written contract without
-seeing how it was implemented. Read the contract first, exercise the target, and
-try to falsify each claimed behavior. Do not inspect source files, diffs, tests,
-git history, implementation notes, or review bundles.
+Use this skill to create the validation boundary and delegate the actual judgment
+to the dedicated `behavior-validator` agent. The skill owns contract preparation
+and isolation. The agent owns read-only observable testing.
 
-If implementation material becomes visible, mark the run contaminated and
-restart with a fresh validator. A plausible implementation is not behavioral
-proof, and a clean source-aware review does not satisfy this gate.
+## Contract First
 
-## Contract
+Capture the behavior contract before implementation detail can redefine success.
+Use [contract-template.md](references/contract-template.md) for:
 
-Use a prewritten behavior contract. If none exists, write a short contract from
-the user request before touching the target. Use
-[contract-template.md](references/contract-template.md) when the behavior has
-more than one clause or needs reusable evidence.
+- exact target identity and launch or connection instructions;
+- observable clauses with pass evidence;
+- allowed fixtures and approved credential handling;
+- destructive-action limits and cleanup;
+- negative, boundary, and anti-cheat probes;
+- blocked and out-of-scope rules.
 
-The contract must name:
+Do not put source paths, implementation notes, tests, diffs, review conclusions,
+or expected internal mechanisms in the contract.
 
-- the target and user posture;
-- setup, fixtures, credentials, and allowed tools;
-- observable clauses that can pass or fail;
-- anti-cheat probes that distinguish real work from static success text;
-- evidence required for each clause;
-- explicit exclusions and decision-owned behavior.
+## Build The Isolated Workspace
 
-Do not silently weaken the contract after seeing the result. A product decision
-may revise it, but record the revision before rerunning the affected clauses.
+Run the bundled packager from the implementation repository:
 
-## Isolation Boundary
+```powershell
+python .\codex\skills\behavior-validator\scripts\prepare-workspace.py `
+  --source-root <repo-root> `
+  --contract <repo-relative-contract> `
+  --output <fresh-path-outside-repo> `
+  --fixture <approved-repo-relative-fixture>
+```
 
-Work from a source-blind directory or host context whenever practical. Carry
-only the contract, allowed fixtures, credentials through approved secret
-handling, and redacted captured evidence. Do not copy repository source, test
-fixtures that reveal implementation, review reports, or branch history into the
-validator workspace.
+The output path must be new and outside the source tree. The script copies only
+`contract.md` and explicitly named fixtures, rejects source-control and
+credential-like material, and writes `workspace-manifest.json` with hashes.
 
-Use only observable surfaces:
+## Delegate Fresh
 
-- browser or accessibility interactions;
-- CLI commands and documented exit behavior;
-- API requests and responses;
-- generated files, documents, images, or reports;
-- public or operator-visible logs and status output.
+Launch a fresh non-forked `behavior-validator` agent with its working directory
+set to the prepared workspace. Pass only:
 
-If source access is truly required to proceed, stop with
-`blocked_source_required`. Do not cross the boundary and still call the result
-source-blind.
+- the workspace path;
+- observable target access;
+- credentials through approved secret handling;
+- the requested report destination, if any.
 
-## Validation Loop
+Do not pass the implementation conversation, source-aware summaries, review
+bundles, or a forked context. If implementation material becomes visible, discard
+the result and rebuild a fresh workspace for a fresh agent.
 
-1. Parse the contract into clauses, setup, user tasks, anti-cheat probes, and
-   evidence requirements.
-2. Prepare the target without reading implementation. Another worker may launch
-   a build or service, but it must not explain the code path to the validator.
-3. Execute each task as the intended user or operator would.
-4. Vary data and state where useful: refresh, retry, empty and invalid input,
-   changed fixtures, persistence, restart, and generated-output inspection.
-5. Record compact redacted evidence. Never capture credentials, cookies, tokens,
-   private user data, or unrelated logs.
-6. Mark every relevant clause `pass`, `fail`, `blocked`, or `out_of_scope`.
-7. After a repair, rerun the affected clauses and nearby regression probes with a
-   fresh source-blind validator when the prior run was contaminated.
+## Accept Evidence
 
-## Findings
-
-Fail a clause when the observable result violates the contract, the task cannot
-be completed, success is fake or static, persistence is missing, or the evidence
-does not support the claim.
-
-Block only for a concrete missing runtime dependency such as access, credentials,
-fixtures, network, or a required tool. Mark behavior out of scope only when the
-contract excludes it or a user-owned product decision remains open.
-
-Reject code quality, architecture, naming, and implementation-style concerns.
-Those belong to source-aware review.
-
-## Report
-
-Use [report-schema.md](references/report-schema.md) for machine-readable output.
-A normal report includes the target exercised, contract used, clause totals,
-accepted findings with reproduction steps and evidence, anti-cheat probes,
-contamination state, and remaining blockers.
+Read [report-schema.md](references/report-schema.md) when checking the return.
+Require clause-level pass, fail, blocked, or out-of-scope status, exact observed
+evidence, anti-cheat probes, target identity, and contamination status. The
+implementation owner may repair failures, but each repaired build needs a fresh
+source-blind run.
