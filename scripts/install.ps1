@@ -342,7 +342,7 @@ $changes = New-Object System.Collections.Generic.List[object]
 function Get-ItemBackupRoot {
     param([string]$LiveRoot)
 
-    if ($backupRoots.ContaiinsKey($LiveRoot)) {
+    if ($backupRoots.ContainsKey($LiveRoot)) {
         return $backupRoots[$LiveRoot]
     }
 
