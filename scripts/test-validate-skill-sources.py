@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import sys
@@ -109,6 +110,30 @@ class SkillSourceTests(unittest.TestCase):
             )
             problems, _ = self.validate(root)
             self.assertEqual(problems, [])
+
+    def test_source_hash_uses_portable_relative_path_order(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory)
+            references = source / "references"
+            references.mkdir()
+            files = {
+                "SKILL.md": b"skill",
+                "references/upstream.md": b"upstream",
+            }
+            for relative, content in files.items():
+                target = source / relative
+                target.write_bytes(content)
+
+            expected = hashlib.sha256()
+            for relative in sorted(files):
+                relative_bytes = relative.encode("utf-8")
+                expected.update(len(relative_bytes).to_bytes(8, "big"))
+                expected.update(relative_bytes)
+                content = files[relative]
+                expected.update(len(content).to_bytes(8, "big"))
+                expected.update(content)
+
+            self.assertEqual(module.source_tree_sha256(source), expected.hexdigest())
 
     def test_source_hash_changes_with_content(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
