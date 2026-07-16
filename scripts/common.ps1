@@ -372,7 +372,7 @@ function Get-RetiredPortableFileMap {
 
     # Keep retired user-skill removals explicit so install does not delete
     # unrelated personal skills that Compass does not own.
-    foreach ($skill in @("pr-merge-closeout", "ui-ux-pro-max")) {
+    foreach ($skill in @("benchmark-infra-reviewer", "pr-merge-closeout", "ui-ux-pro-max", "webmcp-eval-triage", "webmcp-tool-authoring", "webmcp-verify-tool")) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $AgentsHome "skills") $skill
