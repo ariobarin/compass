@@ -52,6 +52,21 @@
       }
     },
     {
+      "name": "design-taste-frontend",
+      "owner": "Leonxlnx/taste-skill",
+      "source": "codex/skills/design-taste-frontend",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      },
+      "upstream": {
+        "repository": "Leonxlnx/taste-skill",
+        "reviewed_ref": "b17742737e796305d829b3ad39eda3add0d79060",
+        "source_sha256": "70a681a16a3d36b850860559c6fa020c7e418420a607e516a42e5cf01d30ad4a"
+      }
+    },
+    {
       "name": "git-branch-resolver",
       "owner": "compass",
       "source": "codex/skills/git-branch-resolver",
