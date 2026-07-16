@@ -28,8 +28,9 @@ also read [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and
   `codex/skills/` source at install time.
 - `carried/`: opt-in project packs retained in the repository but excluded from
   global installation.
-- `codex/config.review.toml`: stable config fragments for manual review. It is not
-  installed automatically.
+- `codex/config.review.toml`: reviewed scalar config contract overlaid into the
+  live `config.toml` during install and update. Keys absent from the fragment,
+  including generated and machine-local state, are preserved.
 - `workflows/`: repository-side operating notes.
 - `local-docs/`: repository-only maintenance evidence and lessons.
 - `manifests/portable-files.toml`: install allowlist, repository-only paths, and
@@ -68,14 +69,15 @@ Verify the live Codex, user skill, and Claude targets:
 .\scripts\verify-live.ps1
 ```
 
-Preview or apply the reviewed install:
+Preview or apply the reviewed file install and reviewed Codex config overlay:
 
 ```powershell
 .\scripts\install.ps1
 .\scripts\install.ps1 -Apply
 ```
 
-Fetch reviewed `origin/main`, install it, and verify the live targets:
+Fetch reviewed `origin/main`, install files and config, and verify the live
+targets:
 
 ```powershell
 .\scripts\update-live.ps1
@@ -88,8 +90,9 @@ Preview or apply a snapshot from the current live allowlist:
 .\scripts\snapshot.ps1 -Apply
 ```
 
-Scripts use `-CodexHome`, `-AgentsHome`, and `-ClaudeHome` when supplied, then
-fall back to the matching environment or home defaults.
+Review mode reports exact reviewed config key changes before apply. Scripts use
+`-CodexHome`, `-AgentsHome`, and `-ClaudeHome` when supplied, then fall back to
+the matching environment or home defaults.
 
 ## Rules
 
@@ -97,8 +100,8 @@ fall back to the matching environment or home defaults.
 - Every durable addition should remove, merge, move, derive, or mechanize
   something, or explicitly justify its recurring cost.
 - Prefer copy-based installation over symlink-based setup.
-- Treat `codex/config.review.toml` as a reviewed fragment, not a replacement for
-  live generated config.
+- Treat every key in `codex/config.review.toml` as authoritative during install
+  while preserving every live key absent from the fragment.
 - Keep `AGENTS.override.md`, local approvals, credentials, runtime state, and
   generated caches out of the repository.
 - Capture reusable automation as a skill, workflow, script, or reviewed config
