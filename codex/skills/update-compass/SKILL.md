@@ -12,6 +12,8 @@ Use the local Compass checkout and run:
 ```
 
 The updater must stop on a dirty worktree, non-fast-forward main branch, install
-failure, or verification failure. Report the new HEAD, backup path, and live
-verification result. Compare stable live config keys with
-`codex/config.review.toml`; do not replace the live config file.
+failure, reviewed-config overlay validation failure, or verification failure.
+Report the new HEAD, backup path, reviewed config change count, and live
+verification result. Installation overlays every reviewed scalar key from
+`codex/config.review.toml` while preserving live keys absent from that fragment;
+never replace the whole live config file.
