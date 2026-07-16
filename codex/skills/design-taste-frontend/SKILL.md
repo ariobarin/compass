@@ -1,6 +1,6 @@
 ---
 name: design-taste-frontend
-description: Design or redesign landing pages, portfolios, marketing sites, and editorial pages with deliberate visual direction instead of generic AI patterns.
+description: Design or redesign landing pages, portfolios, marketing sites, and editorial pages with deliberate visual direction; not dashboards, app flows, or mobile UI.
 ---
 
 # Design Taste Frontend
