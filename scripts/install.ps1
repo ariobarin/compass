@@ -12,6 +12,7 @@ param(
 
 . "$PSScriptRoot\common.ps1"
 . "$PSScriptRoot\receipt-common.ps1"
+. "$PSScriptRoot\reviewed-config.ps1"
 
 [char[]]$pathSeparators = @(
     [System.IO.Path]::DirectorySeparatorChar,
@@ -214,6 +215,10 @@ $claudeHome = Get-ClaudeHome -ClaudeHome $ClaudeHome
 $items = @(Get-PortableFileMap -RepoRoot $repoRoot -CodexHome $liveHome -AgentsHome $agentsHome -ClaudeHome $claudeHome)
 $retiredItems = @(Get-RetiredPortableFileMap -CodexHome $liveHome -AgentsHome $agentsHome)
 $currentReceipt = Get-PortableCurrentReceipt -CodexHome $liveHome
+$reviewedConfigContract = Get-ReviewedConfigContract -RepoRoot $repoRoot -CodexHome $liveHome
+$reviewConfigPath = $reviewedConfigContract.ReviewPath
+$liveConfigPath = $reviewedConfigContract.LivePath
+$reviewedConfigState = Get-ReviewedConfigState -ReviewPath $reviewConfigPath -LivePath $liveConfigPath
 
 $itemStates = @(
     foreach ($item in $items) {
@@ -256,7 +261,6 @@ $missingStates = @($itemStates | Where-Object { -not $_.Exists })
 $changedStates = @($installStates | Where-Object { $_.Exists })
 $unchangedStates = @($itemStates | Where-Object { $_.InSync })
 $retiredRemovalStates = @($retiredStates | Where-Object { $_.Exists -and ($Adopt -or $_.Owned) })
-
 Write-Host "repo: $repoRoot"
 Write-Host "codex: $liveHome"
 Write-Host "agents: $agentsHome"
@@ -272,6 +276,17 @@ if (-not $Apply) {
     else {
         foreach ($state in $installStates) {
             Write-Host "  $($state.Item.RepoPath) -> $($state.Item.LivePath)"
+        }
+    }
+
+    Write-Host ""
+    Write-Host "planned reviewed config changes:"
+    if (-not [bool]$reviewedConfigState.changed) {
+        Write-Host "  none"
+    }
+    else {
+        foreach ($change in @($reviewedConfigState.changes)) {
+            Write-Host "  $($change.path): $($change.actual) -> $($change.expected)"
         }
     }
 
@@ -298,6 +313,7 @@ if (-not $Apply) {
     Write-Host "changed: $($changedStates.Count)"
     Write-Host "missing: $($missingStates.Count)"
     Write-Host "unchanged: $($unchangedStates.Count)"
+    Write-Host "reviewed config: $($reviewedConfigState.changed_count)"
     Write-Host "retired: $($retiredRemovalStates.Count)"
     Write-Host "foreign: $($foreignStates.Count)"
     if (-not $SkipPlugins) {
@@ -378,6 +394,37 @@ foreach ($state in $retiredRemovalStates) {
     Write-Host "removed retired: $($item.LivePath)"
 }
 
+if ([bool]$reviewedConfigState.changed) {
+    $configItem = [pscustomobject]@{
+        LivePath = $liveConfigPath
+        LiveRoot = $liveHome
+        BackupScope = "codex"
+        Type = "file"
+    }
+    $previousState = "missing"
+    $backupPath = $null
+    if ([bool]$reviewedConfigState.live_exists) {
+        $configBackupRoot = Get-ItemBackupRoot -LiveRoot $liveHome
+        $backupPath = Get-ItemBackupPath -Item $configItem -BackupRoot $configBackupRoot
+        Backup-LiveItem -LivePath $liveConfigPath -BackupRoot $configBackupRoot -LiveRoot $liveHome -BackupScope "codex" -Type "file"
+        $previousState = "backup"
+    }
+    Write-ReviewedConfigAtomically -Path $liveConfigPath -Text ([string]$reviewedConfigState.merged_text)
+    $changes.Add([pscustomobject]@{
+        operation = "config-overlay"
+        target = $liveConfigPath
+        type = "config-overlay"
+        live_root = $liveHome
+        previous_state = $previousState
+        backup_path = $backupPath
+        after = Get-PortablePathFingerprint -Path $liveConfigPath
+    })
+    Write-Host "reviewed config overlaid: $liveConfigPath ($($reviewedConfigState.changed_count) settings)"
+}
+else {
+    Write-Host "reviewed config unchanged: $liveConfigPath"
+}
+
 $targetSetChanged = -not (Test-ReceiptTargetSetEqual -Receipt $currentReceipt -ActiveItems $items -RetiredItems $retiredItems)
 $provenanceChanged = $null -eq $currentReceipt -or
     [string]$currentReceipt.source_ref -ne [string]$resolvedSourceRef -or
@@ -439,6 +486,7 @@ Write-Host ""
 Write-Host "changed: $($changedStates.Count)"
 Write-Host "missing: $($missingStates.Count)"
 Write-Host "unchanged: $($unchangedStates.Count)"
+Write-Host "reviewed config: $($reviewedConfigState.changed_count)"
 Write-Host "retired: $($retiredRemovalStates.Count)"
 Write-Host "foreign: $($foreignStates.Count)"
 if ($backupRoots.Count -gt 0) {
@@ -459,4 +507,3 @@ if (-not $SkipPlugins) {
         throw "plugin sync failed"
     }
 }
-Write-Host "config.review.toml was not installed automatically"

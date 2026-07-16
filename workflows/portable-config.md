@@ -29,8 +29,8 @@ under `claude/skills/`.
 3. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when you need a quick
    drift report.
 4. Run `.\scripts\diff-live.ps1` when you need a full diff against live files.
-5. Review the diff.
-6. Run `.\scripts\install.ps1 -Apply` only after the diff is accepted.
+5. Review the diff and the planned reviewed-config key changes.
+6. Run `.\scripts\install.ps1 -Apply` only after the plan is accepted.
 
 ## Latest-to-live flow
 
@@ -61,8 +61,18 @@ checkout manually. Do not make automation resolve those cases.
 
 ## Config handling
 
-Treat `codex/config.review.toml` as a reviewed fragment. It captures stable
-choices, but it is not a full replacement for the live generated config.
+Treat `codex/config.review.toml` as the authoritative contract for the settings
+it contains. Normal install and update flows structurally overlay every reviewed
+scalar key into the live `config.toml`; they do not replace the live file.
+Review mode lists the exact managed key paths that would change. Apply mode backs
+up an existing live file before a changed overlay, writes atomically, and skips
+both backup and rewrite when the reviewed keys already match.
+
+Keys absent from the reviewed fragment are not managed and remain in the live
+file. This includes `service_tier`, generated marketplace state, MCP wiring,
+runtime paths, project trust entries, app-local settings, migration markers, and
+plugin state. Verification compares every reviewed key and ignores unrelated
+live keys.
 
 The current reviewed fragment intentionally reflects a trusted-machine default
 for this user's local work, including `danger-full-access`. Treat that as a
@@ -149,10 +159,11 @@ skill install paths again:
 1. Install Codex normally.
 2. Clone this repo.
 3. Run `.\scripts\doctor.ps1`.
-4. Run `.\scripts\install.ps1` and inspect the planned copies.
+4. Run `.\scripts\install.ps1` and inspect the planned copies and reviewed key
+   changes.
 5. Run `.\scripts\install.ps1 -Apply`.
-6. Review `codex/config.review.toml` and copy only the config fragments that
-   still make sense on that machine.
+6. Run `.\scripts\verify-live.ps1 -SkipCodexCommand -RequireInSync` to confirm
+   every reviewed key was overlaid while machine-local config remained present.
 
 ## Related Workflows
 

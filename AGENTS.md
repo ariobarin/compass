@@ -40,15 +40,15 @@ of `~/.codex`, `$HOME/.agents`, or `$HOME/.claude`.
   generated plugin caches.
 - Run `.\scripts\doctor.ps1` before committing.
 - Use `.\scripts\verify-live.ps1 -SkipCodexCommand` to inspect live drift.
-- Review `codex/config.review.toml` manually before copying any config into a
-  live Codex home.
+- Review `codex/config.review.toml` before changing its contract. Normal install
+  overlays every reviewed key while preserving unrelated live config state.
 
 ## Review guidelines
 
 - Flag changes that accidentally expand the portable scope by committing auth,
   sessions, logs, caches, browser state, SQLite files, generated plugin state,
   or other local-only Codex data.
-- Flag changes that hardcode `~/.codex`, `%USERPROFILE%\\.codex`, or
+- Flag changes that hardcode `~/.codex`, `%USERPROFILE%\.codex`, or
   `$HOME/.agents` when the path should respect `CODEX_HOME` or `-AgentsHome`.
 - Flag changes that hardcode `$HOME/.claude` when the path should respect
   `-ClaudeHome`.

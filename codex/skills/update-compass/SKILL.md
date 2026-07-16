@@ -11,9 +11,11 @@ files by hand.
 1. Confirm the Compass worktree is clean.
 2. Run `.\scripts\update-live.ps1`.
 3. Let it fetch `origin/main`, fast-forward local `main`, install the portable
-   files, and verify live sync.
-4. Stop if it reports local changes, a non-fast-forward branch, or install
-   failure.
-5. Report the new HEAD, backup path, and verification result.
-6. Compare live `config.toml` stable keys with `codex/config.review.toml`
-   without replacing the file.
+   files, overlay every reviewed key from `codex/config.review.toml`, and verify
+   live sync.
+4. Stop if it reports local changes, a non-fast-forward branch, config overlay
+   validation failure, or install failure.
+5. Report the new HEAD, backup path, reviewed config change count, and
+   verification result.
+6. Treat live config keys absent from the reviewed fragment as machine-local and
+   preserved; never replace the whole live `config.toml`.

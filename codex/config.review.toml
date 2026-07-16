@@ -1,8 +1,9 @@
 # Reviewed Codex config fragments.
 #
-# Do not install this file over the live config.toml automatically. The live file
-# also contains generated marketplace state, runtime paths, MCP wiring, project
-# trust entries, and app migration markers that belong to the current machine.
+# Install overlays every setting in this fragment into the live config.toml.
+# The overlay does not replace the live file, which also contains generated
+# marketplace state, runtime paths, MCP wiring, project trust entries, and app
+# migration markers that belong to the current machine.
 #
 # This reviewed fragment intentionally reflects the user's trusted-machine
 # default for local work. Use bounded workflows or runtime flags for lower-trust
