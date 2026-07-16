@@ -114,14 +114,15 @@ class SkillSourceTests(unittest.TestCase):
     def test_source_hash_uses_portable_relative_path_order(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory)
-            references = source / "references"
-            references.mkdir()
             files = {
                 "SKILL.md": b"skill",
+                "a/b.md": b"nested",
+                "a.b.md": b"flat",
                 "references/upstream.md": b"upstream",
             }
             for relative, content in files.items():
                 target = source / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_bytes(content)
 
             expected = hashlib.sha256()
