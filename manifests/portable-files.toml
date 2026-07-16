@@ -91,8 +91,8 @@ derived_agents = [
 
 [config]
 review_file = "config.review.toml"
-install_automatically = false
-reason = "Live config.toml includes generated runtime paths, marketplaces, project trust, and MCP server wiring."
+install_mode = "overlay"
+reason = "Reviewed keys overlay live config.toml while generated and machine-local state remains untouched."
 
 [repo_only]
 # These paths are repository-root paths. Installed Codex and Claude surfaces are
