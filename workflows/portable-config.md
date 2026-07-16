@@ -20,14 +20,15 @@ to the corresponding environment or home defaults. See
 3. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when a quick drift report
    is enough.
 4. Run `.\scripts\diff-live.ps1` for a full review against live files.
-5. Review the planned changes.
-6. Run `.\scripts\install.ps1 -Apply` only after the diff is accepted.
+5. Review the file diff and planned reviewed-config key changes.
+6. Run `.\scripts\install.ps1 -Apply` only after the plan is accepted.
 
 ## Latest To Live
 
 Use `.\scripts\update-live.ps1` when the live targets should follow the latest
 reviewed `origin/main`. It refuses dirty checkouts and non-fast-forward updates,
-protects ignored files, runs the doctor, applies the install, and verifies sync.
+protects ignored files, runs the doctor, applies the file install and reviewed
+config overlay, and verifies sync.
 
 For unattended use, schedule the exact updater command from a trusted checkout.
 Do not make automation resolve dirty state or divergent branches.
@@ -41,18 +42,24 @@ Do not make automation resolve dirty state or divergent branches.
 
 ## Config Handling
 
-Treat `codex/config.review.toml` as a reviewed fragment, not a full live config.
-Keep stable intent there and leave generated paths, project trust, MCP transport,
-OAuth, desktop UI state, plugin caches, auth, browser state, and migration state
-local.
+Treat `codex/config.review.toml` as the authoritative contract for the settings
+it contains. Normal install and update flows structurally overlay every reviewed
+scalar key into the live `config.toml`; they do not replace the live file.
+Review mode lists the exact managed key paths that would change. Apply mode backs
+up an existing live file before a changed overlay, writes atomically, and skips
+both backup and rewrite when the reviewed keys already match.
+
+Keys absent from the reviewed fragment are not managed and remain in the live
+file. This includes generated paths, project trust, MCP transport and OAuth,
+desktop UI state, plugin caches, auth, browser state, migration state, and other
+machine-local values. Verification compares every reviewed key and ignores
+unrelated live keys.
 
 The reviewed fragment may reflect a trusted-machine default. Lower-trust work
 should still use bounded workflows, read-only helper agents, or narrower runtime
-flags.
-
-Do not mix old and new permission models without a deliberate migration. Do not
-copy `AGENTS.override.md`, local rules approvals, or machine-specific values into
-portable setup merely because they exist in the live home.
+flags. Do not mix old and new permission models without a deliberate migration.
+Do not copy `AGENTS.override.md` or local rules approvals into portable setup
+merely because they exist in the live home.
 
 ## Durable Guidance
 
@@ -80,9 +87,10 @@ Shared Claude skills are generated from `[claude].derived_skills`. Shared Claude
 agents are generated from `[claude].derived_agents`. Direct Claude agents are
 copied from `claude/agents/` when listed in `[claude].agents`.
 
-Old Compass-owned copies under `$CODEX_HOME/skills` are retired artifacts.
-Installation may back up and remove owned stale copies, but it must not delete
-unrelated personal skills.
+Old Compass-owned copies under `$CODEX_HOME/skills`, explicitly retired user
+skills under `$HOME/.agents/skills`, and retired Claude-derived skills are stale
+artifacts. Installation may back up and remove those owned copies, but it must
+not delete unrelated personal skills.
 
 Before changing install paths again:
 
@@ -95,10 +103,10 @@ Before changing install paths again:
 1. Install Codex and any supported companion runtime normally.
 2. Clone Compass.
 3. Run `.\scripts\doctor.ps1`.
-4. Run `.\scripts\install.ps1` and inspect the plan.
+4. Run `.\scripts\install.ps1` and inspect the file and reviewed-key plan.
 5. Run `.\scripts\install.ps1 -Apply`.
-6. Review `codex/config.review.toml` and copy only fragments appropriate for that
-   machine.
+6. Run `.\scripts\verify-live.ps1 -SkipCodexCommand -RequireInSync` to confirm
+   every reviewed key was overlaid while machine-local config remained present.
 
 ## Related Workflows
 
