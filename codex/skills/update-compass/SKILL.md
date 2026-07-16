@@ -1,19 +1,21 @@
 ---
 name: update-compass
-description: Refresh live setup from reviewed Compass main. Invoke manually for a local update.
+description: Update live Codex setup from latest reviewed Compass origin/main. Use for local Codex config refreshes or latest-to-live flow.
 ---
 
 # Update Compass
 
-Use the local Compass checkout and run:
+Use the local Compass checkout. Run the reviewed updater instead of copying
+files by hand.
 
-```powershell
-.\scripts\update-live.ps1
-```
-
-The updater must stop on a dirty worktree, non-fast-forward main branch, install
-failure, reviewed-config overlay validation failure, or verification failure.
-Report the new HEAD, backup path, reviewed config change count, and live
-verification result. Installation overlays every reviewed scalar key from
-`codex/config.review.toml` while preserving live keys absent from that fragment;
-never replace the whole live config file.
+1. Confirm the Compass worktree is clean.
+2. Run `.\scripts\update-live.ps1`.
+3. Let it fetch `origin/main`, fast-forward local `main`, install the portable
+   files, overlay every reviewed key from `codex/config.review.toml`, and verify
+   live sync.
+4. Stop if it reports local changes, a non-fast-forward branch, config overlay
+   validation failure, or install failure.
+5. Report the new HEAD, backup path, reviewed config change count, and
+   verification result.
+6. Treat live config keys absent from the reviewed fragment as machine-local and
+   preserved; never replace the whole live `config.toml`.
