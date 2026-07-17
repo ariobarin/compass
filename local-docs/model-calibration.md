@@ -7,6 +7,19 @@ capability, pricing, latency, and runtime support change quickly. Runtime files
 carry the compact active policy. This document preserves the reasoning behind
 it.
 
+## Reviewed Tier Defaults
+
+| Model | Default effort |
+| --- | --- |
+| GPT-5.6 Sol | `high` |
+| GPT-5.6 Terra | `xhigh` |
+| GPT-5.6 Luna | `high` |
+
+These defaults apply when no task or role supplies a deliberate override. A
+reviewed role may pin a different effort when its bounded contract justifies the
+added latency. One-off work should prefer an explicit runtime override rather
+than changing the shared tier default.
+
 ## Codex Profile
 
 ### GPT-5.6 Sol
@@ -15,8 +28,7 @@ Use Sol for the user-facing principal, top-level orchestration, difficult
 integration, and work whose final synthesis benefits from the highest available
 capacity.
 
-The reviewed root default remains Sol at medium effort. Raise effort when the
-work rewards deeper exploration and verification. A Sol child needs a concrete
+The reviewed root default is Sol at high effort. A Sol child needs a concrete
 reason because Luna is the default delegated route.
 
 ### GPT-5.6 Luna
@@ -35,7 +47,8 @@ performance-to-cost fit for Compass coding subagents.
 
 The current Compass coding profile has no default Terra route. Luna is preferred
 for cost-efficient delegated coding work, while Sol is preferred when frontier
-capacity is justified.
+capacity is justified. When Terra is selected explicitly, its tier default is
+`xhigh`.
 
 Reconsider this decision when current evaluations show a distinct Terra role.
 Do not preserve the route merely because earlier files used it.
