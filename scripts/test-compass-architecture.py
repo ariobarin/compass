@@ -112,6 +112,47 @@ class CompassArchitectureTests(unittest.TestCase):
         with self.assertRaisesRegex(LedgerError, "requires schema_version 4"):
             validate_ledger(invalid)
 
+    def test_legacy_recovery_counter_rejects_malformed_values(self) -> None:
+        timestamp = "2026-07-17T12:00:00Z"
+        for invalid_count in (True, -1, "two"):
+            with self.subTest(invalid_count=invalid_count):
+                legacy = {
+                    "schema_version": 2,
+                    "updated_at": timestamp,
+                    "goals": [
+                        {
+                            "id": "legacy",
+                            "goal": "Reject malformed recovery state",
+                            "execution_owner": "principal",
+                            "worker_id": None,
+                            "state": "active",
+                            "next_action": None,
+                            "next_check_at": None,
+                            "completion_evidence": [],
+                            "public_mutation_gate": "closed",
+                            "public_mutation_action": None,
+                            "decision_needed": None,
+                            "control_writer": "principal",
+                            "control_revision": 1,
+                            "control_edit_grants": [],
+                            "recovery_circuits": [
+                                {
+                                    "slice_label": "api",
+                                    "consecutive_successor_failures": invalid_count,
+                                    "state": "open",
+                                    "last_reset_evidence": None,
+                                    "last_reset_at": None,
+                                    "claimed_by": None,
+                                }
+                            ],
+                            "created_at": timestamp,
+                            "updated_at": timestamp,
+                        }
+                    ],
+                }
+                with self.assertRaisesRegex(LedgerError, "unsupported fields"):
+                    validate_ledger(legacy)
+
     def test_codex_agents_follow_luna_first_profile(self) -> None:
         for path in sorted((ROOT / "codex" / "agents").glob("*.toml")):
             with path.open("rb") as handle:
