@@ -1,0 +1,23 @@
+name: export compass source
+
+on:
+  pull_request:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Create source archive
+        shell: bash
+        run: git archive --format=zip --output=compass-source.zip HEAD
+
+      - name: Upload source archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-source
+          path: compass-source.zip
+          if-no-files-found: error
