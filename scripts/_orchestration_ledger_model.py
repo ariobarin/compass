@@ -125,7 +125,10 @@ def migrate_circuit(item: object, fallback_time: str) -> object:
         return item
     migrated = dict(item)
     if "consecutive_successor_failures" in migrated:
-        failures = migrated.pop("consecutive_successor_failures")
+        failures = migrated["consecutive_successor_failures"]
+        if isinstance(failures, bool) or not isinstance(failures, int) or failures < 0:
+            return migrated
+        migrated.pop("consecutive_successor_failures")
         migrated.setdefault(
             "last_failure_evidence",
             f"migrated successor failure count: {failures}" if failures else None,
