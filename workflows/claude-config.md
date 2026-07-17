@@ -1,38 +1,63 @@
 # Portable Claude Config Workflow
 
-Claude is an install target of Compass. Shared skills and most shared agents
-derive from the reviewed `codex/` source. A platform-specific direct agent may
-live under `claude/agents/` when Claude needs different frontmatter, tools, or
-isolation instructions.
+Claude Code is a first-class Compass install target with its own global runtime
+instructions. Shared runtime-neutral skills and most agent roles still derive
+from reviewed Codex sources.
 
-Use [portable-config.md](portable-config.md) for the shared edit, diff, install,
-and latest-to-live flow.
+## Separate Global Guidance
 
-## Source Rules
+Maintain `claude/CLAUDE.md` directly and install it as
+`$HOME/.claude/CLAUDE.md`. Maintain `codex/AGENTS.md` separately.
 
-- Edit shared skills under `codex/skills/<name>/` and list them in
-  `[claude].derived_skills`.
-- Edit shared agents under `codex/agents/<name>.toml` and list them in
-  `[claude].derived_agents`.
-- Put a Claude-specific agent under `claude/agents/<name>.md` and list it in
-  `[claude].agents` only when the shared transform cannot express its contract.
-- With `-ClaudeHome`, skills install to `<ClaudeHome>\skills\<name>` and agents
-  to `<ClaudeHome>\agents\<name>.md`; otherwise their root is `$HOME\.claude`.
-- Keep shared guidance runtime-neutral and avoid Codex-only invocation syntax.
-- Do not list Codex-only skills such as `using-codex-goals` in
-  `[claude].derived_skills`.
-- Carried packs are not installed into Claude unless a target project explicitly
-  adopts them.
+The two files may share values such as writing rules, worktree discipline,
+planning authority, and evidence standards. They should state runtime-specific
+model, delegation, tools, and context behavior directly instead of pretending
+both environments are identical.
 
-## Derivation
+The current Claude profile uses GLM-5.2 for delegated work. Claude guidance
+names that fact so generic examples do not cause invented Opus, Sonnet, Haiku,
+or other unavailable routes.
 
-For each derived skill, the installer copies `SKILL.md`, `references/`,
-`scripts/`, and `assets/` from the Codex source while excluding
-`agents/openai.yaml`.
+## Shared Skills And Agents
 
-For each derived agent, it creates Claude frontmatter from the Codex TOML and
-`scripts/common.ps1`, preserves `developer_instructions`, and drops Codex-only
-fields. Direct Claude agents are copied as authored.
+- Author a shared skill under `codex/skills/<name>`.
+- List it in `[claude].derived_skills` when its behavior is runtime-neutral.
+- Author a shared agent under `codex/agents/<name>.toml`.
+- List it in `[claude].derived_agents` when the transform can express its
+  frontmatter and isolation contract.
+- Put a platform-specific direct agent under `claude/agents/<name>.md` and list
+  it in `[claude].agents` only when derivation is insufficient.
+- Keep carried packs out of Claude global installation unless a target project
+  explicitly adopts them.
 
-The manifest and installer are the mechanical source of truth. Use
-[addition-intake.md](addition-intake.md) when promoting or retiring a capability.
+At install time, a derived skill copies `SKILL.md`, `references/`, `scripts/`,
+and `assets/` while excluding `agents/openai.yaml`. A derived agent receives
+Claude frontmatter from the reviewed transform and the role body from its Codex
+TOML source. Direct Claude agents copy as authored.
+
+## Install Map
+
+`manifests/portable-files.toml` owns:
+
+- `[claude].files` for separately authored top-level files;
+- `[claude].derived_skills` for shared skills;
+- `[claude].agents` for direct platform-specific agents;
+- `[claude].derived_agents` for shared derived roles.
+
+With `-ClaudeHome`, installation targets that root. Otherwise the target is
+`$HOME/.claude`.
+
+The manifest, installer transform, retirement map, doctor checks, and install
+round-trip tests are the mechanical source of truth. Update them together.
+
+## Review
+
+Before accepting a Claude change:
+
+- confirm whether the behavior is global, shared, direct, carried, or
+  project-specific;
+- inspect `claude/CLAUDE.md` for concise, current runtime truth;
+- inspect the derived output contract rather than maintaining a duplicate source;
+- verify model names and routing against dated current calibration;
+- remove retired files from every previously owned live location;
+- run doctor and install round-trip validation.

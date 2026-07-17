@@ -1,0 +1,7 @@
+interface:
+  display_name: "Using Goals"
+  short_description: "Preserve stable outcomes across finite contexts"
+  default_prompt: "Use $using-goals to create or repair a principal-authored goal, current control state, assignment boundary, and resumable checkpoint for this long-running objective."
+
+policy:
+  allow_implicit_invocation: true

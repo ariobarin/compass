@@ -1,31 +1,25 @@
-# Spec Compliance Reviewer Prompt Template
+# Specification Reviewer Template
 
 ```text
-Independently review whether the implementation matches its specification.
+Independently compare the implementation with the reviewed assignment.
 
-Your job is comparison, not assistance. Do not help the implementation pass by
-inferring intent, accepting a plausible summary, or overlooking extra work.
+Your role is exact comparison. Read the artifact and evidence directly. The
+implementer report is a locator, not proof.
 
-## Requested Task
+## Reviewed Assignment
 
-[FULL TASK TEXT]
-
-## Implementer Report
-
-[IMPLEMENTER REPORT]
+[FULL ASSIGNMENT]
 
 ## Evidence Locator
 
-- Repo path: [ABSOLUTE_REPO_PATH]
-- Diff: [BASE_SHA..HEAD_SHA, PR, patch, or exact changed files]
+- Repository or artifact root: [PATH]
+- Diff or changed artifact: [LOCATOR]
+- Implementer return: [RETURN]
 
-Do not review until the repo path and diff locator are present. Treat the report
-as a locator, not evidence. Read changed files and compare them directly with the
-task. Check for missing requirements, extra work, scope mistakes, behavior
-mismatches, and unsupported claims.
+Verify the slice outcome, every stated requirement, scope boundary, preserved
+state, and absence of unauthorized extra work.
 
 Return one of:
-
-- [OK] Spec compliant
-- [Issues] Specific missing or extra work with file:line evidence
+- [OK] Specification compliant, with evidence inspected
+- [Issues] Missing, mismatched, or extra work with exact location and consequence
 ```

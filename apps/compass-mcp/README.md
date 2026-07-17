@@ -2,14 +2,20 @@
 
 This directory exposes the reviewed Compass profile and skills as a read-only MCP server for regular ChatGPT.com chat-mode conversations. ChatGPT work mode and Codex are explicitly outside its intended surface.
 
-At initialization, the server includes the reviewed user profile plus every skill name, description, and source path. This mirrors the native Codex harness: select a workflow from the available catalog without a discovery call, then load only that workflow's full `SKILL.md` before applying it.
+At initialization, the server includes its separately authored ChatGPT profile plus every skill name, description, and source path. This mirrors the native Codex harness: select a workflow from the available catalog without a discovery call, then load only that workflow's full `SKILL.md` before applying it.
 
 ## Tools
 
-- `get_profile` re-reads `codex/AGENTS.md` for explicit inspection or freshness checks. The profile is already present in initialization instructions.
+- `get_profile` re-reads `apps/compass-mcp/profile.md` for explicit inspection or freshness checks. The profile is already present in initialization instructions.
 - `list_skills` re-reads the reviewed skill catalog for explicit inspection or freshness checks. Skill summaries are already present in initialization instructions.
 - `get_skill` loads one full `SKILL.md` after a workflow is selected.
 - `search` and `fetch` expose the same content through the standard read-only knowledge shapes.
+
+
+The app profile is maintained separately from `codex/AGENTS.md` and
+`claude/CLAUDE.md`. It carries shared engineering preferences without importing
+Codex-only Sol and Luna routing or Claude-only GLM-5.2 assumptions into regular
+ChatGPT chat mode.
 
 The app does not install global config, run hooks, mutate the repository, or create subagents. Native subagents remain a host capability. A later server-side workflow can add explicit multi-agent execution without pretending it is native ChatGPT delegation.
 

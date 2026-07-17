@@ -1,35 +1,57 @@
 ---
 name: compass
-description: Maintain Compass source, install boundaries, and validation. Invoke manually for Compass repository changes.
+description: Maintain Compass source, runtime boundaries, install wiring, retirement, and validation. Invoke manually for Compass repository changes.
 ---
 
 # Compass
 
-Use this skill only when changing Compass itself.
+Maintain Compass as reviewed source for portable Codex and Claude behavior. This
+skill exists because a strong runtime change can still fail when source routing,
+derivation, retirement, policy, and verification disagree.
 
-## Boundaries
+Use it only when changing Compass itself.
 
-- Reviewed source lives in this repository, not in live config homes.
-- Installed agent behavior belongs under `codex/`.
-- Repo-maintainer process belongs under `workflows/`, `local-docs/`,
-  `manifests/`, and `scripts/`.
-- Carried opt-in packs belong under `carried/` and stay out of global manifests.
-- Claude surfaces derive from Codex sources where the manifest says so.
-- Deterministic mechanics belong in scripts; reviewer personas belong in agents.
+## Preserve The Source Boundaries
 
-## Read First
+- Codex global guidance belongs in `codex/AGENTS.md`.
+- Claude global guidance belongs in `claude/CLAUDE.md`.
+- Runtime-neutral shared skills and agents belong under `codex/` and derive only
+  where the manifest says so.
+- Claude-specific agent contracts belong under `claude/agents/`.
+- Portable opt-in domain packs belong under `carried/` and stay out of global
+  install lists.
+- Compass maintainer reasoning belongs in `workflows/` and `local-docs/`.
+- Deterministic truth belongs in scripts, hooks, manifests, schemas, and tests.
 
-Read root `AGENTS.md`, `local-docs/maintenance-learnings.md`,
-`workflows/addition-intake.md`, and the workflow nearest the change.
+Read root `AGENTS.md`, `philosophy.md`, `workflows/addition-intake.md`,
+`local-docs/maintenance-learnings.md`, and the workflow nearest the change.
 
-## Change Exactly
+## Change The Whole Ownership Contract
 
-Update source, install maps, policy contracts, required-file checks, and tests in
-the same branch when ownership changes. Do not add fallback guidance for a
-capability Compass can make exact.
+When behavior or ownership moves, update the complete route in one change:
 
-## Validate
+- reviewed source;
+- Codex and Claude install or derivation maps;
+- source provenance;
+- explicit retirement paths;
+- policy and required-file checks;
+- MCP catalog expectations;
+- narrow tests and install round-trip coverage;
+- directly related documentation.
 
-Run `.\scripts\doctor.ps1`, narrow script tests, and `git diff --check`. Use
-`.\scripts\verify-live.ps1 -SkipCodexCommand` only when live drift matters. Use a
-PR as the review unit.
+Make Compass-owned capability exact. A fallback paragraph is not a substitute
+for correct wiring.
+
+## Validate The Result
+
+Run narrow tests first, then:
+
+```powershell
+.\scripts\doctor.ps1
+.\scripts\verify-live.ps1 -SkipCodexCommand
+git diff --check
+```
+
+Exercise install and retirement paths when ownership changes. Forward-test
+judgment changes with a fresh realistic invocation. Use a focused PR as the
+review unit and keep public mutation behind named authority.

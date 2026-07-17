@@ -30,7 +30,7 @@ export class CompassCatalog implements CompassCatalogReader {
 
   constructor(root: string) {
     this.root = path.resolve(root);
-    this.profilePath = path.join(this.root, "codex", "AGENTS.md");
+    this.profilePath = path.join(this.root, "apps", "compass-mcp", "profile.md");
     this.skillsPath = path.join(this.root, "codex", "skills");
 
     if (!existsSync(this.profilePath)) {
@@ -46,8 +46,8 @@ export class CompassCatalog implements CompassCatalogReader {
       id: "profile",
       title: "Compass user profile",
       text: readFileSync(this.profilePath, "utf8"),
-      url: `${REPOSITORY_URL}/blob/main/codex/AGENTS.md`,
-      metadata: { kind: "profile", source: "codex/AGENTS.md" }
+      url: `${REPOSITORY_URL}/blob/main/apps/compass-mcp/profile.md`,
+      metadata: { kind: "profile", source: "apps/compass-mcp/profile.md" }
     };
   }
 

@@ -1,11 +1,17 @@
 # artifacts
 
-Generated evidence: reports, exports, logs, run outputs, and manifests produced
-by tools or runs.
+Generated evidence and deliverables: reports, exports, logs, screenshots,
+scoreboards, run outputs, manifests, and validation packets.
 
-When you preserve evidence here, add a nearby note with source, owner, date
-range, retention, secret-scan status, and how to regenerate it, unless those are
-obvious. Prefer a dated folder name such as `benchmark-run-20260101/`.
+Preserved evidence names:
 
-Do not commit raw dumps or large binaries without a retention note. Pure scratch
-that can be regenerated belongs in `../tmp/`, not here.
+- source or producing command;
+- owner or producer;
+- observed date range and time zone;
+- relevant commit, build, or target identity;
+- secret-scan status;
+- retention or archive decision;
+- regeneration instructions when practical.
+
+Prefer dated, descriptive folders. Keep recreatable scratch in `../tmp/`. Keep
+raw private or secret-bearing output outside tracked files.

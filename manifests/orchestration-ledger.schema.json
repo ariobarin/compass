@@ -1,7 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ariobarin.com/compass/orchestration-ledger.schema.json",
-  "title": "Compass orchestration ledger",
+  "title": "Compass principal-authored orchestration ledger",
+  "description": "A local mechanical index for principal-authored goals, control documents, verified evidence, and recovery gates.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -11,7 +12,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": 3
+      "const": 4
     },
     "updated_at": {
       "type": "string",
@@ -25,27 +26,48 @@
     }
   },
   "$defs": {
+    "nonemptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nullableNonemptyString": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "stringList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/nonemptyString"
+      }
+    },
     "goal": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "id",
         "goal",
+        "anchors",
+        "control_documents",
+        "phase",
         "execution_owner",
         "worker_id",
         "state",
         "next_action",
         "next_check_at",
-        "completion_evidence",
+        "evidence",
         "public_mutation_gate",
         "public_mutation_action",
         "decision_needed",
         "control_writer",
         "control_revision",
-        "control_edit_grants",
         "recovery_circuits",
         "created_at",
-        "updated_at"
+        "updated_at",
+        "last_verified_at"
       ],
       "properties": {
         "id": {
@@ -53,19 +75,25 @@
           "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"
         },
         "goal": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "anchors": {
+          "$ref": "#/$defs/stringList"
+        },
+        "control_documents": {
+          "$ref": "#/$defs/stringList"
+        },
+        "phase": {
+          "enum": [
+            "planning",
+            "implementation"
+          ]
         },
         "execution_owner": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/nonemptyString"
         },
         "worker_id": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "minLength": 1
+          "$ref": "#/$defs/nullableNonemptyString"
         },
         "state": {
           "enum": [
@@ -78,11 +106,7 @@
           ]
         },
         "next_action": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "minLength": 1
+          "$ref": "#/$defs/nullableNonemptyString"
         },
         "next_check_at": {
           "type": [
@@ -91,7 +115,7 @@
           ],
           "format": "date-time"
         },
-        "completion_evidence": {
+        "evidence": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/evidence"
@@ -106,11 +130,7 @@
           ]
         },
         "public_mutation_action": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "minLength": 1
+          "$ref": "#/$defs/nullableNonemptyString"
         },
         "decision_needed": {
           "oneOf": [
@@ -123,22 +143,14 @@
           ]
         },
         "control_writer": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/nonemptyString"
         },
         "control_revision": {
           "type": "integer",
           "minimum": 1
         },
-        "control_edit_grants": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/controlEditGrant"
-          }
-        },
         "recovery_circuits": {
           "type": "array",
-          "uniqueItems": true,
           "items": {
             "$ref": "#/$defs/recoveryCircuit"
           }
@@ -150,8 +162,65 @@
         "updated_at": {
           "type": "string",
           "format": "date-time"
+        },
+        "last_verified_at": {
+          "type": "string",
+          "format": "date-time"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "complete"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              },
+              "next_action": {
+                "const": null
+              },
+              "decision_needed": {
+                "const": null
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "public_mutation_gate": {
+                "const": "closed"
+              }
+            },
+            "required": [
+              "public_mutation_gate"
+            ]
+          },
+          "then": {
+            "properties": {
+              "public_mutation_action": {
+                "const": null
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "public_mutation_action": {
+                "$ref": "#/$defs/nonemptyString"
+              }
+            }
+          }
+        }
+      ]
     },
     "evidence": {
       "type": "object",
@@ -160,6 +229,9 @@
         "kind",
         "summary",
         "locator",
+        "producer",
+        "observed_at",
+        "verified_by",
         "recorded_at"
       ],
       "properties": {
@@ -174,15 +246,20 @@
           ]
         },
         "summary": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/nonemptyString"
         },
         "locator": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "minLength": 1
+          "$ref": "#/$defs/nullableNonemptyString"
+        },
+        "producer": {
+          "$ref": "#/$defs/nullableNonemptyString"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "verified_by": {
+          "$ref": "#/$defs/nonemptyString"
         },
         "recorded_at": {
           "type": "string",
@@ -200,16 +277,14 @@
       ],
       "properties": {
         "question": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/nonemptyString"
         },
         "options": {
           "type": "array",
           "minItems": 2,
           "uniqueItems": true,
           "items": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/$defs/nonemptyString"
           }
         },
         "prepared_at": {
@@ -218,173 +293,34 @@
         }
       }
     },
-    "controlEditGrant": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "actor",
-        "mutations"
-      ],
-      "properties": {
-        "actor": {
-          "type": "string",
-          "minLength": 1
-        },
-        "mutations": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": {
-            "enum": [
-              "set-owner",
-              "set-state",
-              "set-next",
-              "add-evidence",
-              "set-gate",
-              "set-decision",
-              "clear-decision",
-              "claim-successor",
-              "record-successor-failure",
-              "record-successor-success"
-            ]
-          }
-        }
-      }
-    },
     "recoveryCircuit": {
       "type": "object",
       "additionalProperties": false,
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "state": {
-                "const": "claimed"
-              }
-            }
-          },
-          "then": {
-            "properties": {
-              "claimed_by": {
-                "type": "string",
-                "minLength": 1
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "state": {
-                "enum": [
-                  "closed",
-                  "open"
-                ]
-              }
-            }
-          },
-          "then": {
-            "properties": {
-              "claimed_by": {
-                "const": null
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "last_failure_evidence": {
-                "type": "string"
-              }
-            }
-          },
-          "then": {
-            "properties": {
-              "last_failure_at": {
-                "type": "string",
-                "format": "date-time"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "last_failure_evidence": {
-                "const": null
-              }
-            }
-          },
-          "then": {
-            "properties": {
-              "last_failure_at": {
-                "const": null
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "last_reset_evidence": {
-                "type": "string"
-              }
-            }
-          },
-          "then": {
-            "properties": {
-              "last_reset_at": {
-                "type": "string",
-                "format": "date-time"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "last_reset_evidence": {
-                "const": null
-              }
-            }
-          },
-          "then": {
-            "properties": {
-              "last_reset_at": {
-                "const": null
-              }
-            }
-          }
-        }
-      ],
       "required": [
         "slice_label",
         "state",
+        "assigned_worker",
         "last_failure_evidence",
         "last_failure_at",
         "last_reset_evidence",
-        "last_reset_at",
-        "claimed_by"
+        "last_reset_at"
       ],
       "properties": {
         "slice_label": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/nonemptyString"
         },
         "state": {
           "enum": [
-            "open",
-            "claimed",
-            "closed"
+            "closed",
+            "active",
+            "open"
           ]
         },
+        "assigned_worker": {
+          "$ref": "#/$defs/nullableNonemptyString"
+        },
         "last_failure_evidence": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "minLength": 1
+          "$ref": "#/$defs/nullableNonemptyString"
         },
         "last_failure_at": {
           "type": [
@@ -394,11 +330,7 @@
           "format": "date-time"
         },
         "last_reset_evidence": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "minLength": 1
+          "$ref": "#/$defs/nullableNonemptyString"
         },
         "last_reset_at": {
           "type": [
@@ -406,15 +338,90 @@
             "null"
           ],
           "format": "date-time"
-        },
-        "claimed_by": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "minLength": 1
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "active"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "assigned_worker": {
+                "$ref": "#/$defs/nonemptyString"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "assigned_worker": {
+                "const": null
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "last_failure_evidence": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "last_failure_evidence"
+            ]
+          },
+          "then": {
+            "properties": {
+              "last_failure_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "last_failure_at": {
+                "const": null
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "last_reset_evidence": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "last_reset_evidence"
+            ]
+          },
+          "then": {
+            "properties": {
+              "last_reset_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "last_reset_at": {
+                "const": null
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

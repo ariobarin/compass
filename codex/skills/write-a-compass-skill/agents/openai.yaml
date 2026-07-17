@@ -1,0 +1,7 @@
+interface:
+  display_name: "Write A Compass Skill"
+  short_description: "Maintain Compass skill source and install wiring"
+  default_prompt: "Use $write-a-compass-skill to create, revise, route, validate, or retire this Compass skill across source, manifests, Claude derivation, policy, and tests."
+
+policy:
+  allow_implicit_invocation: false

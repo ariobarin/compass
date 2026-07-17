@@ -1,185 +1,101 @@
-# Portable Codex Config Workflow
+# Portable Config Workflow
 
-Use this workflow when changing Codex setup that should survive a new machine,
-fresh profile, or copied repo checkout.
+Use this workflow to diff, install, snapshot, verify, or update the reviewed
+Compass allowlist.
 
-This is repo-maintainer guidance. It is not installed into a live Codex home,
-user skill home, or Claude home.
-Installed agentic guidance source lives under `codex/AGENTS.md`,
-`codex/agents/`, and `codex/skills/`. Claude guidance derives from those
-sources at install time.
+This is maintainer guidance. It is not installed into a Codex home, user-skill
+home, or Claude home.
 
-These scripts use `-CodexHome` for Codex-home files, otherwise
-`$env:CODEX_HOME`, otherwise the default `%USERPROFILE%\.codex` home. They use
-`-AgentsHome` for user skills, otherwise `$HOME\.agents`. They use `-ClaudeHome`
-for Claude-home files, otherwise `$HOME\.claude`.
+## Reviewed Sources
 
-For the Claude Code mirror of this flow, see [claude-config.md](claude-config.md).
-The same `install.ps1`, `verify-live.ps1`, `diff-live.ps1`, and `update-live.ps1`
-scripts install the `claude/` surface into `$HOME/.claude` alongside the Codex
-surface.
-Claude skills listed in `[claude].derived_skills` are generated from the
-reviewed `codex/skills/<name>` source during install instead of being duplicated
-under `claude/skills/`.
+- Codex global guidance: `codex/AGENTS.md`
+- Claude global guidance: `claude/CLAUDE.md`
+- Shared agents and skills: `codex/agents/` and `codex/skills/`
+- Direct Claude agents: `claude/agents/`
+- Codex hooks, keybindings, and config fragment: `codex/`
+- Install and retirement boundaries: `manifests/portable-files.toml`
+- Ownership and provenance: `manifests/skill-sources.json`
 
-## Change flow
+Claude global guidance is separately authored. Runtime-neutral skills and most
+agents derive from Codex source during installation.
 
-1. Edit files in this repo first.
-2. Run `.\scripts\doctor.ps1`.
-3. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when you need a quick
-   drift report.
-4. Run `.\scripts\diff-live.ps1` when you need a full diff against live files.
-5. Review the diff and the planned reviewed-config key changes.
-6. Run `.\scripts\install.ps1 -Apply` only after the plan is accepted.
-
-## Latest-to-live flow
-
-Use `.\scripts\update-live.ps1` when the live Codex home, user skill home, and
-Claude home should track the latest reviewed portable setup from `origin/main`.
-
-The script refuses dirty checkouts, fetches the remote branch, fast-forwards the
-local branch only when Git can do so without a merge, refuses to overwrite
-ignored files during branch updates, runs `doctor.ps1`, runs `install.ps1 -Apply`,
-and finishes with
-`verify-live.ps1 -SkipCodexCommand -RequireInSync`.
-
-For unattended use, schedule this exact command from a trusted local checkout:
+## Preview First
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\update-live.ps1
+.\scripts\diff-live.ps1
+.\scripts\install.ps1
+.\scripts\snapshot.ps1
 ```
 
-If the script stops on local changes or a non-fast-forward branch, inspect the
-checkout manually. Do not make automation resolve those cases.
+Without `-Apply`, install and snapshot report exact planned changes. Inspect the
+copy, retirement, and reviewed-config overlay plan before mutation.
 
-## Snapshot flow
+## Validate
 
-1. Run `.\scripts\snapshot.ps1` to see the allowlist.
-2. Run `.\scripts\snapshot.ps1 -Apply` to copy live allowlisted files into this
-   repo.
-3. Review the git diff before committing.
+```powershell
+.\scripts\doctor.ps1
+.\scripts\verify-live.ps1 -SkipCodexCommand
+```
 
-## Config handling
+Use `-RequireInSync` when drift should fail the command. Doctor validates source
+boundaries, manifests, skills, agents, policies, hooks, Claude derivation, and
+required files.
 
-Treat `codex/config.review.toml` as the authoritative contract for the settings
-it contains. Normal install and update flows structurally overlay every reviewed
-scalar key into the live `config.toml`; they do not replace the live file.
-Review mode lists the exact managed key paths that would change. Apply mode backs
-up an existing live file before a changed overlay, writes atomically, and skips
-both backup and rewrite when the reviewed keys already match.
+## Apply
 
-Keys absent from the reviewed fragment are not managed and remain in the live
-file. This includes `service_tier`, generated marketplace state, MCP wiring,
-runtime paths, project trust entries, app-local settings, migration markers, and
-plugin state. Verification compares every reviewed key and ignores unrelated
-live keys.
+```powershell
+.\scripts\install.ps1 -Apply
+```
 
-The current reviewed fragment intentionally reflects a trusted-machine default
-for this user's local work, including `danger-full-access`. Treat that as a
-personal default, not as a claim that every task should run fully trusted.
-Lower-trust work should still use bounded flows such as
-`workflows/read-only-research.md`, read-only helper agents, or narrower runtime
-flags.
+The installer:
 
-Keep the reviewed fragment internally consistent. If it stays on the older
-`sandbox_mode` path, do not mix in the newer `default_permissions` and
-`[permissions]` profile system without a deliberate migration.
+- copies reviewed Codex and Claude global files;
+- installs Compass-owned user skills;
+- derives selected Claude skills and agents;
+- copies direct Claude agents;
+- backs up and removes explicitly retired Compass-owned paths;
+- overlays every reviewed Codex config key;
+- preserves generated and machine-local live config keys.
 
-Keep portable intent separate from app-shaped local state. Session-wide writing,
-Git, and review preferences belong in `codex/AGENTS.md`. Desktop-only UI state,
-undocumented helper fields, and one-machine app toggles do not belong in the
-reviewed config fragment.
+## Update
 
-## Durable Guidance Edits
+```powershell
+.\scripts\update-live.ps1
+.\scripts\update-live.ps1 -Ref <tag-or-commit>
+```
 
-When the change affects future installed behavior across sessions or machines:
+Branch refs remain fast-forward only. Tags and commit SHAs resolve to an exact
+detached commit before installation.
 
-1. Read the current portable files first.
-2. Draft the exact patch set before editing unless direct edits were explicitly
-   requested.
-3. Prefer default locations and copy-based sync over symlink or installer
-   indirection.
-4. Run `.\scripts\doctor.ps1` after the draft becomes a real change.
+## Snapshot
 
-Do not copy these live `config.toml` sections into the portable file without
-review:
+```powershell
+.\scripts\snapshot.ps1 -Apply
+```
 
-- generated marketplace timestamps and local cache paths;
-- app runtime and MCP binary paths;
-- MCP server transport wiring, URLs, OAuth callback overrides, and token or
-  header config;
-- desktop UI state, app-only helper text blocks, and undocumented app-local
-  toggles;
-- `AGENTS.override.md` behavior or local `rules/` approvals that were accepted
-  interactively on one machine;
-- project trust entries for one machine;
-- plugin cache paths;
-- migration prompts and generated state;
-- auth, browser, or connector state.
+Snapshot only the current allowlist. Runtime-generated state, secrets, sessions,
+caches, local overrides, and plugin caches remain local.
 
-Do not treat live `automations/` state as the portable form of a reusable
-workflow. If an automation pattern should survive across machines, capture it
-as a skill, workflow doc, or reviewed config change instead.
+## Path Resolution
 
-For restart-only local recovery of unfinished sessions, use
-`workflows/codex-restart-recovery.md` and
-`scripts/codex-restart-recovery.ps1`. The scheduled task remains machine-local,
-while the reviewable recovery logic lives in this repo.
+Scripts use:
 
-## Skill Discovery Targets
+- `-CodexHome`, then `$env:CODEX_HOME`, then `%USERPROFILE%\.codex`;
+- `-AgentsHome`, then `$HOME\.agents`;
+- `-ClaudeHome`, then `$HOME\.claude`.
 
-Current Codex docs describe repo skills under `.agents/skills` while walking
-from the current working directory up to the repo root, user skills under
-`$HOME/.agents/skills`, admin skills under `/etc/codex/skills`, and plugins as
-the distribution unit for reusable skills outside one repo. See
-https://developers.openai.com/codex/skills.
+## Ownership Changes
 
-Compass keeps `codex/skills/` as the reviewed repo source tree, but installs
-those user skills into `$HOME/.agents/skills`. That is the direction of the
-current Codex skill model. Target projects should use their own
-`.agents/skills` folders for project-specific skills.
+A rename, move, or retirement updates in one reviewed change:
 
-The old `$CODEX_HOME/skills` copies of Compass-owned skills are retired install
-artifacts. Explicitly retired user skills in `$HOME/.agents/skills` are too.
-`install.ps1 -Apply` backs them up and removes them after installing the
-reviewed copies into `$HOME/.agents/skills`.
+- source path;
+- install manifest;
+- skill-source catalog;
+- derivation transform;
+- retired live paths;
+- policy contracts and required-file checks;
+- install round-trip tests;
+- nearby documentation and MCP catalog expectations.
 
-Before changing `scripts/common.ps1`, `manifests/portable-files.toml`, or these
-skill install paths again:
-
-1. Run current Codex in the target environment and confirm which skill roots
-   appear in the active instruction list.
-2. Check `$CODEX_HOME/skills` for stale owned copies that would create duplicate
-   active skills.
-3. Update README, manifest comments, and this workflow in the same PR as any
-   install map change.
-
-## New machines
-
-1. Install Codex normally.
-2. Clone this repo.
-3. Run `.\scripts\doctor.ps1`.
-4. Run `.\scripts\install.ps1` and inspect the planned copies and reviewed key
-   changes.
-5. Run `.\scripts\install.ps1 -Apply`.
-6. Run `.\scripts\verify-live.ps1 -SkipCodexCommand -RequireInSync` to confirm
-   every reviewed key was overlaid while machine-local config remained present.
-
-## Related Workflows
-
-- [addition-intake.md](addition-intake.md): promoting new portable artifacts and
-  checking related stale guidance.
-- [compass-review-program.md](compass-review-program.md): auditing installed
-  skills, agents, hooks, and maintainer guidance for audience fit, pruning,
-  rerouting, and global-install eligibility.
-- [codex-restart-recovery.md](codex-restart-recovery.md): installing a
-  restart-only local recovery task for unfinished Codex sessions.
-- [which-llm-plugin.md](which-llm-plugin.md): installing and refreshing the
-  separately owned `which-llm` plugin without tracking generated cache state.
-- [plan-template.md](plan-template.md): durable written plan artifacts.
-- [multi-thread-pr-coordination.md](multi-thread-pr-coordination.md): keeping
-  parallel audit threads out of public PR sprawl.
-- [read-only-research.md](read-only-research.md): mapping code paths before
-  edits.
-- [agent-failures.md](agent-failures.md): converting repeated failures into
-  durable improvements.
+Use [addition-intake.md](addition-intake.md) before promoting a new durable
+surface and [claude-config.md](claude-config.md) for Claude-specific routing.

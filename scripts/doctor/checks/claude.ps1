@@ -1,6 +1,28 @@
 $maxDescriptionLength = 160
 $claudeRoot = Join-Path $repoRoot "claude"
 
+# Separately authored Claude global files.
+$manifestPath = Join-Path $repoRoot "manifests\portable-files.toml"
+$manifestText = Get-Content -Raw -LiteralPath $manifestPath
+$manifestClaudeFiles = @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "files" | Sort-Object -Unique)
+foreach ($relative in $manifestClaudeFiles) {
+    $source = Join-Path $claudeRoot $relative
+    if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+        $problems.Add("claude file in manifest missing from disk: $relative")
+    }
+}
+
+$diskClaudeTopLevelFiles = @(
+    Get-ChildItem -LiteralPath $claudeRoot -File -ErrorAction SilentlyContinue |
+        ForEach-Object { $_.Name } |
+        Sort-Object -Unique
+)
+foreach ($relative in $diskClaudeTopLevelFiles) {
+    if ($manifestClaudeFiles -notcontains $relative) {
+        $problems.Add("claude top-level file on disk missing from manifest: $relative")
+    }
+}
+
 # Claude skill frontmatter.
 $claudeSkillFiles = Get-ChildItem -Path (Join-Path $claudeRoot "skills") -Recurse -File -Filter "SKILL.md" -ErrorAction SilentlyContinue
 foreach ($skillFile in $claudeSkillFiles) {
@@ -41,8 +63,6 @@ foreach ($agentFile in $claudeAgentFiles) {
 }
 
 # Manifest [claude] skills and agents must match the install map on disk.
-$manifestPath = Join-Path $repoRoot "manifests\portable-files.toml"
-$manifestText = Get-Content -Raw -LiteralPath $manifestPath
 $claudeSectionMatch = [regex]::Match($manifestText, "(?ms)^\[claude\]\s*(.*?)(?=^\[|\z)")
 if (-not $claudeSectionMatch.Success) {
     $problems.Add("missing claude section in portable manifest")

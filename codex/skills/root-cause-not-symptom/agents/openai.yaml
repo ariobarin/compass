@@ -1,7 +1,7 @@
 interface:
   display_name: "Root Cause, Not Symptom"
-  short_description: "Fix causes, not symptoms"
-  default_prompt: "Use $root-cause-not-symptom to force root-cause-first on this bug: name the cause before any fix, and refuse to patch, suppress, swap, or declare done on a symptom."
+  short_description: "Repair the mechanism and simplify the boundary"
+  default_prompt: "Use $root-cause-not-symptom to establish the causal model and owning boundary before editing, then perform a subtractive review after the repair."
 
 policy:
   allow_implicit_invocation: true

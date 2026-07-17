@@ -59,9 +59,9 @@ class ReviewedConfigTests(unittest.TestCase):
             root = Path(temp_dir)
             reviewed_path = root / "config.review.toml"
             live_path = root / "config.toml"
-            reviewed_path.write_text(reviewed, encoding="utf-8")
+            reviewed_path.write_text(reviewed, encoding="utf-8", newline="")
             if live is not None:
-                live_path.write_text(live, encoding="utf-8")
+                live_path.write_text(live, encoding="utf-8", newline="")
             return reviewed_config.evaluate(reviewed_path, live_path)
 
     def test_overlay_preserves_unreviewed_state(self):

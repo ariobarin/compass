@@ -1,103 +1,101 @@
 # PR Review Loop Playbook
 
-Use this reference for current-head review, confined reviewer context,
-source-blind behavior proof, and stale PR decisions.
+Use this reference when current-head review needs a confined patch, observable
+behavior proof, structured waiting, or a decision about stale PR identity.
 
 ## Current-Head Discipline
 
-Review evidence belongs to a head SHA.
+Evidence belongs to a head SHA.
 
-- Re-read the SHA after push, force-push, rebase, or retarget.
-- Refresh checks and reviewers when their evidence targets an older head.
-- Identify the tested build, ref, or artifact for behavior validation.
-- Do not call a PR ready from stale approval or stale runtime proof.
+- Reread the SHA after every push, rebase, force-push, or retarget.
+- Refresh checks and reviewers whose proof targets an older head.
+- Name the tested build, ref, or artifact for behavior validation.
+- Inspect inline comments independently from top-level comments and review
+  bodies.
+- Treat approval, test output, and runtime proof as stale when their target
+  identity changed materially.
 
 ## Confined Source-Aware Review
 
 Use `scripts/build-review-bundle.py` when a fresh reviewer should see the full
-selected patch without the current conversation or arbitrary checkout files.
+selected patch without parent conversation or arbitrary checkout files.
 
-The bundle includes:
+The bundle contains:
 
-- the complete binary-capable patch;
+- complete binary-capable patch;
 - base and head SHAs;
 - changed paths and hashes;
-- an optional task file;
-- only explicitly selected datasets.
+- optional task file;
+- explicitly selected context datasets.
 
-It rejects dirty worktrees, empty or oversized patches, secret-like content,
-escaping paths, symlinks, and existing output directories. A truncated diff is
-not an equivalent fallback.
+It accepts only a clean committed range and rejects escaping paths, symlinks,
+secret-like content, existing output directories, empty patches, and oversized
+bundles. A truncated diff is not an equivalent review surface.
+
+## Proportionate Review Selection
+
+Choose gates from the claim being made:
+
+- Every PR loop: one independent current-head reviewer.
+- Repository or user policy: every additional named reviewer.
+- Specialized risk: the relevant specialist reviewer.
+- Material observable behavior not fully proven by ordinary tests: fresh
+  source-blind `behavior-validator` result.
+- Narrow documentation, metadata, formatting, or deterministic generated output:
+  the independent review and exact mechanical check may be sufficient.
+
+Record why a gate applies. Neither habitual over-review nor convenient
+under-review is evidence.
 
 ## Source-Blind Behavior Validation
 
 Capture the observable contract before implementation detail can redefine
-success. Build the isolated workspace through `behavior-validator`, then launch
-a fresh non-forked validator agent.
+success. Build an isolated workspace through `behavior-validator` and launch a
+fresh non-forked validator.
 
-Give the validator only:
+Provide only:
 
 - contract and approved fixtures;
-- exact target identity and access instructions;
-- approved credentials;
+- exact target identity and access;
+- approved credential route;
 - observable evidence surfaces.
 
-Do not provide source, diffs, tests, history, review summaries, or a review
-bundle. Contamination requires a fresh workspace and fresh run.
-
-Skip this gate only when there is no user-visible or operator-visible behavior
-claim.
+Implementation source, diffs, tests, history, review summaries, and source-aware
+bundles remain outside the validator. Contamination requires a fresh workspace
+and fresh run.
 
 ## Review Waiting
 
-Review acknowledgement is not approval. Wait on the actual review state with one
-bounded condition:
+Review acknowledgement is not the terminal state. Wait on one observable
+condition:
 
 - requested review submitted;
 - actionable comment added;
-- check reaches terminal state;
+- check reaches a terminal result;
 - head SHA changes and invalidates the wait.
 
-Derive the timeout from a repository SLA, stated reviewer window, user deadline,
-or explicit operational limit. Put polling inside one command. On timeout,
-refresh the live PR once and choose an authorized alternate route or report the
-pending gate. Never use a fixed interval as proof that a reviewer had enough
-time.
+Put polling inside one bounded command. On timeout, refresh live state once and
+choose an authorized alternate reviewer, a changed wait, or a pending-gate
+report.
 
-## Stale PR Rebuild
+## Stale PR Decision
 
-Rebuild when the user wants current-main intent rather than preservation of the
-old PR identity.
+Preserve the named PR when the user wants its branch identity and history.
 
-- Inspect the old branch for source material.
-- Start from current default branch.
-- Reapply only still-relevant intent.
-- Open a new PR when the result is no longer truthfully the same branch history.
+Rebuild from the current default branch when the user wants current intent and
+the old branch can no longer express that truthfully. Inspect the old branch as
+source material, reapply only still-relevant intent, and open a replacement PR
+under explicit authority.
 
-Preserve the named PR when the user asked to keep iterating it.
+## Output Evidence
 
-## Gate Order
+Return:
 
-Unless the user requires parallel review:
-
-1. run narrow checks;
-2. complete `neutral-critic`;
-3. resolve findings and verify the new head;
-4. request the second reviewer;
-5. run source-blind behavior validation when required;
-6. report readiness at the merge boundary.
-
-A pending gate stays pending. An authorized alternate route must be named.
-
-## Output
-
-Report:
-
-- repository and PR;
-- base, head branch, and current SHA;
-- preserved or rebuilt identity;
-- checks and their result;
-- reviewer gates and head SHA each targeted;
-- behavior contract result;
+- PR and branch identity;
+- current head SHA;
+- preserved or rebuilt decision;
+- checks and their target;
+- reviewer gates and their target SHA;
+- behavior proof and target identity;
 - unresolved findings;
-- merge authority and current boundary.
+- current public-mutation boundary.

@@ -25,22 +25,22 @@ skills_dir = "$HOME\\.agents\\skills"
 skills = [
   "action-items-to-prs",
   "behavior-validator",
-  "benchmark-run-operator",
   "compass",
   "design-taste-frontend",
   "git-branch-resolver",
   "grill-me",
-  "input-token-economy",
   "monitor-to-completion",
   "orchestration-controller",
   "pr-review-loop",
   "root-cause-not-symptom",
+  "run-a-micro-experiment",
   "specialist-review",
   "subagent-driven-development",
   "to-prd",
   "update-compass",
-  "using-codex-goals",
+  "using-goals",
   "workspace-steward",
+  "write-a-compass-skill",
   "write-a-skill",
 ]
 
@@ -51,25 +51,31 @@ home = "$HOME\\.claude"
 skills_dir = "$HOME\\.claude\\skills"
 agents_dir = "$HOME\\.claude\\agents"
 
+files = [
+  "CLAUDE.md",
+]
+
 # Claude skills derive from the reviewed codex/skills source at install time.
 # List a skill under `derived_skills` to copy SKILL.md plus references/,
 # scripts/, and assets/, dropping agents/openai.yaml.
 derived_skills = [
   "action-items-to-prs",
   "behavior-validator",
-  "benchmark-run-operator",
   "compass",
   "design-taste-frontend",
   "git-branch-resolver",
   "grill-me",
-  "input-token-economy",
   "monitor-to-completion",
   "orchestration-controller",
   "pr-review-loop",
+  "root-cause-not-symptom",
+  "run-a-micro-experiment",
   "specialist-review",
   "subagent-driven-development",
   "to-prd",
+  "using-goals",
   "workspace-steward",
+  "write-a-compass-skill",
   "write-a-skill",
 ]
 
@@ -77,13 +83,13 @@ derived_skills = [
 # frontmatter and Codex read-only sandbox contracts are platform-specific.
 agents = [
   "behavior-validator",
-  "benchmark-infra-reviewer",
 ]
 
 # Other Claude agents derive from codex/agents/<name>.toml at install time.
 derived_agents = [
   "algorithm-critic",
   "neutral-critic",
+  "progress-monitor",
   "repo-explorer",
   "research-critic",
   "reuse-critic",
@@ -105,6 +111,7 @@ files = [
   "AGENTS.md",
   "CODE_OF_CONDUCT.md",
   "CONTRIBUTING.md",
+  "glossary.md",
   "LICENSE",
   "README.md",
   "SECURITY.md",

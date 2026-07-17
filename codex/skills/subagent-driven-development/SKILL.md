@@ -1,126 +1,95 @@
 ---
 name: subagent-driven-development
-description: Execute a real implementation plan through independent worker slices with shared-checkout safety and staged review.
+description: Execute an approved implementation plan through bounded worker-owned slices, safe checkouts, and independent evidence gates.
 ---
 
 # Subagent-Driven Development
 
-Use this skill when a real implementation plan exists and its tasks are
-independent enough to hand off with local context and concrete checks. Do not use
-it for exploration, tightly coupled work, branch triage, ordinary review, or a
-one-shot manual change.
+Use fresh implementers when an approved implementation plan contains slices that
+can be owned and verified independently. This skill exists to reduce context and
+increase focus without losing integration, scope, or review discipline.
 
-## Posture
+It is an implementation pipeline, not an alternate controller. The user-facing
+principal keeps the parent goal, plan, control documents, assignment authorship,
+and final completion judgment.
 
-This is a disciplined implementation pipeline, not permission to maximize
-fan-out. Delegate only when a fresh execution owner gains clarity or reduces the
-controller's working set. The controller holds the parent outcome and acceptance
-criteria above execution. It is accountable for task boundaries, sequence,
-review, integration, and completion, but should be reluctant to prove its value
-by editing the worker's slice.
+## Delegate Only A Coherent Slice
 
-The implementer owns the assigned artifact and carries ordinary setup,
-debugging, testing, and recovery inside that boundary. Ordinary continuation is
-implicit. A worker keeps the slice until it verifies its postcondition or reaches
-a real exception; it does not return merely to ask whether it should keep
-working. Completion and exception reports are evidence for routing, not
-self-verifying runtime state.
+A slice is ready when it has:
 
-A slice is a route for advancing the parent outcome. It is not permission to
-replace that outcome with the current implementation task. The parent outcome
-and assertion text remain read-only unless the user explicitly amends them.
+- one observable postcondition;
+- the parent assertion IDs it advances;
+- an integration target;
+- authoritative anchors;
+- exact scope and preservation boundaries;
+- production and public mutation authority;
+- a concrete evidence target;
+- limited collision with other active work;
+- a named return channel.
 
-## Task Shape
+The principal prepares and reviews the assignment before launch. Material slice
+boundaries remain available for user review unless existing authority or an
+explicit waiver covers them.
 
-A slice is ready for delegation when it has:
+Keep coupled changes with one owner. A fresh worker is useful when it gains a
+cleaner context, not merely because another agent slot exists.
 
-- one coherent observable slice outcome or postcondition;
-- the parent assertion IDs it is meant to advance;
-- an integration target that explains how the artifact contributes to the
-  parent result;
-- an owner who can work without constant shared reasoning;
-- exact context and scope boundaries;
-- a concrete validation target;
-- limited collision with other active work.
+## Preserve Checkout Ownership
 
-Do not split work merely because several agents are available. Keep coupled
-changes with one owner. Do not derive a slice only from the latest symptom;
-derive it from an unmet parent assertion and the current evidence about the gap.
+One editing owner operates in one checkout at a time. Use a dedicated worktree
+for production-bound work when parallel activity or a dirty main checkout would
+create collisions.
 
-## Ownership Boundaries
+The principal stays read-only against worker-owned files until the worker
+returns or the assignment is explicitly held, cancelled, or reassigned.
 
-- The controller owns the stable parent outcome, required assertions, plan, task
-  boundaries, sequence, review gates, integration, and completion judgment.
-- The implementer owns assigned edits, focused tests, narrow validation, and
-  ordinary recovery inside the slice. Route repairs back through the implementer
-  path instead of editing worker-owned artifacts.
-- The implementer may adapt its local route, but it may not rewrite the parent
-  outcome or parent assertion text.
-- Use a fresh implementer for an unrelated slice.
-- Do not run multiple editing implementers against the same checkout. While a
-  child may edit shared files, keep controller work read-only and outside that
-  slice. Account for the child before the controller edits shared files.
-- Do not start implementation on the default branch without explicit consent.
+## Worker Ownership
 
-## Required Handoffs
+The implementer owns ordinary setup, repository reading, debugging, focused
+tests, and local recovery inside the assignment. It continues while safe,
+authorized work remains and returns only when:
 
-Use these templates:
+- the slice postcondition is verified;
+- one exact decision or permission blocks all useful work;
+- a named external event remains with no useful parallel work;
+- recovery is exhausted or a safety boundary stops execution.
 
-- [implementer-prompt.md](implementer-prompt.md)
-- [spec-reviewer-prompt.md](spec-reviewer-prompt.md)
-- [code-quality-reviewer-prompt.md](code-quality-reviewer-prompt.md)
+The worker returns artifacts and evidence. It does not edit the parent goal,
+catalog, ledger, checkpoint, or assignment after dispatch.
 
-Give the implementer the parent outcome as read-only context, parent assertion
-IDs, observable slice outcome, integration target, full task text, absolute repo
-path, exact files or artifacts, scope boundaries, validation target, and known
-pitfalls.
+Use [implementer-prompt.md](implementer-prompt.md) for the assignment handoff.
 
-Require one return record only when the slice is complete or a real exception
-prevents further safe useful work. The return kind describes why control is
-being returned; it is not a repeated progress status:
+## Independent Evidence Gates
 
-- `completed`: the slice postcondition is evidenced, the artifact exists, focused
-  checks ran, and self-review is done. Proceed to independent spec review; do not
-  accept the claim as proof or infer parent completion.
-- `needs_input`: an exact fact, decision, permission, or context item blocks all
-  remaining safe work. Supply it or route it to the correct owner.
-- `waiting_external`: a named process or event remains and no useful parallel
-  work is available. Assign a bounded monitor rather than spending model turns
-  waiting.
-- `failed`: local recovery is exhausted or a safety boundary prevents further
-  execution. Diagnose the failed action, evidence, current state, smallest
-  reversible move, and next owner.
+After implementation, test two different claims:
 
-Keep residual concerns in a separate field. Do not encode concern severity as a
-different completion state. A negative search or test result belongs in evidence
-and may still support completion, replanning, or a more precise input request.
+1. **Specification:** the accepted artifact matches the assigned slice and adds
+   no unauthorized scope.
+2. **Quality:** the accepted slice is correct, robust, tested, maintainable,
+   integrated, and no larger than its ownership boundary requires.
 
-A progress update, timeout, or quiet child is not an automatic pause or takeover
-signal. Collect partial evidence, account for shared-checkout ownership, and
-restore a concrete next move. If the host forces a checkpoint, preserve the
-parent assertion mapping, slice outcome, current route, and evidence, then
-requeue the same owner unless the route changes.
+Use separate reviewers for substantial or risky slices. A narrow low-risk slice
+may use one combined independent review when the approved assignment says so.
+Implementer self-review supports these gates and does not replace them.
 
-## Required Sequence
+Route findings back to the implementation owner or a fresh explicitly assigned
+repair worker. Re-run the failed evidence gate after material changes.
 
-1. Dispatch the implementer with the parent assertion mapping and slice
-   postcondition.
-2. After implementation, run spec compliance review, then code quality review.
-3. Send findings back through the implementer path and repeat the failed review
-   until clear.
-4. Map accepted evidence to the parent assertions, update their status, and
-   recompute which assertions remain unmet before choosing another slice or
-   declaring completion.
+Use [spec-reviewer-prompt.md](spec-reviewer-prompt.md) and
+[code-quality-reviewer-prompt.md](code-quality-reviewer-prompt.md).
 
-The two reviews are independent gates, not ceremony. Spec review compares the
-artifact with the requested slice. Quality review tests whether the accepted
-slice is well built. Do not replace either with implementer self-review or a
-controller summary.
+## Return To The Principal
 
-## Completion
+The pipeline returns:
 
-Complete only when every required parent assertion is verified by current
-evidence, every delegated slice used as proof has passed both reviews,
-integration checks pass, and branch readiness or the next repair owner is named.
-Completing the predefined task list is not sufficient if the parent outcome is
-still unmet.
+- slice postcondition;
+- artifact and exact changed files;
+- checks and results;
+- independent review results;
+- evidence mapped to parent assertions;
+- integration status;
+- remaining concerns or repair owner.
+
+The principal reconciles this evidence against the complete parent goal.
+Completing the planned slice list is not sufficient while a required parent
+assertion remains unverified.

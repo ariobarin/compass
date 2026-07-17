@@ -1,260 +1,194 @@
 # Philosophy
 
-This repository is not a backup of a Codex home. It is a reviewed source for a
-way of working with agents.
+Compass is reviewed source for a way of working with agents. It is not a backup
+of whatever happened to exist in one runtime home.
 
-That distinction matters. A backup preserves whatever happened to be present on
-one machine. A reviewed source preserves the choices that are worth carrying to
-the next machine, the next session, and the next agent.
+A reviewed source preserves choices that deserve to survive the next machine,
+session, model, and maintainer. Every durable artifact pays recurring cost, so
+it must produce distinct useful behavior.
 
-The goal is not to restrain Codex until it can only follow a script. The goal is
-to show the kind of behavior we want agents to embody: clear judgment, strong
-ownership, current evidence, and respect for the boundary between local
-autonomy and durable policy.
-
-Every durable Markdown file in this repo should carry that same standard. A
-reader should notice not only what it says, but how it says it. The document
-should behave like the thing it is describing.
+The goal is capable agency with clear judgment, strong ownership, current
+evidence, and explicit human authority. The repository should make good work
+more natural without turning an intelligent model into a script interpreter.
 
 ## Show, Do Not Tell
 
-Guidance must embody its own standard. If it says be terse, be terse. If it
-says be strong, use strong language. If it asks the agent to push past weak
-answers, the text itself must push first.
+Guidance must embody its own standard. Terse guidance is terse. Strong guidance
+uses strong language. A skill that asks for judgment begins by demonstrating the
+judgment it expects.
 
-Do not explain the desired behavior from outside it. Demonstrate it. Make the
-reader feel the behavior the document demands. A sentence that asks for
-confidence while hedging against itself has already failed.
+Serve the artifact's purpose directly. Runtime guidance gives the invoking agent
+the context needed to act. Maintainer history, failed drafts, and author intent
+belong in maintainer documentation.
 
-The same rule applies to products, pages, tools, reports, and skills. Know the
-purpose of the thing being made. Serve that purpose directly. Do not leak the
-prompt, the request, the implementation history, or the author's private
-thinking into the artifact.
+Examples reveal patterns. They do not define the boundary. A visible failure is
+evidence of a class of failures. Find the class and repair its cause.
 
-A web page with a requested style should not tell the external audience, "here
-is the style you wanted." It should be that style. A skill written for an agent
-should not explain why the skill was invented. It should give the invoking
-agent the exact context needed to act. History belongs in maintainer docs.
-Runtime context is for action.
+## Point Toward The Desired State
 
-An example is evidence, not the boundary. If one bad case is pointed out, do
-not patch only that case and stop. Extract the pattern. Find the family. Fix
-the root cause. A visible failure is a symptom. The real work is finding the
-class of failures that produced it.
+Every instruction shifts the model's direction. Lead with the role to inhabit,
+the state to create, and the evidence that proves success. A positive direction
+names a destination. A prohibition only excludes one part of an otherwise open
+space.
+
+Use prohibitions when the boundary is crisp, observable, and important, such as
+protecting secrets, preserving worktree scope, or withholding merge authority.
+Pair a prohibition with the desired replacement whenever judgment is involved.
+
+Write with calm authority. Remove hedging, apology, empty encouragement, and
+optional language around required behavior. Politeness may express respect. It
+must not dilute the instruction.
 
 ## Prompt, Context, Loop
 
-Prompt engineering shapes the words that make an agent behave. It is the
-lowest layer, and it still matters. Words are levers. Choose them surgically.
-Do not leak uncertainty, private reasoning, or author history into instruction
-text. The text should produce the behavior, not narrate the attempt.
+Prompt engineering shapes the immediate direction. Words are levers. Choose
+them surgically.
 
 Context engineering shapes the moment of action. Skills, agents, workflows,
-and references are not archives. They are operating surfaces. Their audience is
-the agent that invokes them while doing work. Give that agent what it needs.
-Keep the rest out.
+references, and control documents are operating surfaces, not archives. Give
+each reader the smallest complete context for its job.
 
-Loop engineering shapes the life of the work. This is where Compass should
-innovate. Current agents are capable. Bad prompts and bloated context make
-them weaker. Strong foundations let long-running loops become real work
-systems instead of long chat transcripts.
+Loop engineering preserves coherent work over time. Long-running work crosses
+finite contexts, compactions, interruptions, and replacement workers. Compass
+must preserve the intention outside the conversation so a fresh context can
+resume without inventing what the prior one meant.
 
-The foundation must be dense with direction, understanding, purpose, and
-philosophy. No bloat. No politeness as filler. No weak language. No soft
-framing that makes the agent comfortable with collapse. Compress the beliefs.
-Purify the wording. Make every skill and agent a golden example of the
-behavior it asks for.
+## Preserve One Intention Across Contexts
+
+Delegation is lossy. Compaction is a handoff to a context that remembers less.
+Durable control documents counter that loss.
+
+The user-facing principal, or the user directly, authors the goal, plan,
+assignment boundaries, catalog, ledger shape, and checkpoints. Delegates receive
+reviewed assignments and return artifacts plus evidence. They do not redefine
+the objective or invent a parallel control system.
+
+A new principal context resumes the same logical authorship. It reopens the
+authoritative anchors, verifies the current checkpoint against observable state,
+and continues the same objective.
+
+The test is simple: a fresh agent with no conversation history should be able to
+read the named anchors and control documents, recover what matters, and take the
+next correct action.
 
 ## Reduction Is The Central Theme
 
-Compass exists to reduce the context, duplication, state, and judgment overhead
-required for an agent to act well. The target is not a smaller agent. It is a
-more capable one that carries only what its current job needs.
+Compass reduces the context, duplication, state, and judgment overhead required
+for an agent to act well. The target is not a smaller agent. It is a more capable
+agent carrying only what its current job needs.
 
-Reduction is not line count. A shorter document that loses a safety boundary is
-worse than a longer one that makes the right decision unavoidable. Preserve
-capability while shrinking the cost to express, retrieve, install, verify, and
-maintain it.
+Reduction is not raw line count. Prefer fewer maintained states, branches,
+wrappers, sources of truth, dependencies, and concepts when behavior remains
+intact. A longer sentence that preserves a critical boundary is better than a
+shorter sentence that points the agent in the wrong direction.
 
-Every durable artifact pays recurring cost: runtime context, retrieval
-competition, install and derivation complexity, drift risk, review burden, and
-extra choices for the next agent. It must repay that cost with distinct useful
-behavior. If it does not, remove it, merge it, move it to a narrower surface,
-derive it from one reviewed source, or replace its repeated prose with a
-mechanical check.
-
-Use this order when simplifying:
+Simplify in this order:
 
 1. Delete material that does not change behavior.
 2. Merge material that teaches the same judgment.
-3. Move material to the audience that actually needs it.
-4. Derive copies instead of maintaining parallel sources.
-5. Mechanize properties that should not drift.
-6. Keep the remaining surface dense, legible, and easy to audit.
+3. Move material to the audience that needs it.
+4. Derive copies when shared content is truly identical.
+5. Maintain runtime-specific sources separately when their environments differ.
+6. Mechanize properties that should not drift.
+7. Keep the remaining surface dense, legible, and easy to audit.
 
-Reduction does not mean collapsing distinct roles, removing evidence, or
-weakening authority boundaries. It removes recurring cost without amputating
-the behavior that makes the system trustworthy.
+Reduction preserves roles, authority, and evidence. It removes recurring cost
+without amputating trustworthy behavior.
 
-## Goals Are The Loop Foundation
+## Goals Anchor The Loop
 
-An agent gets things wrong as much as the goal allows it to get things wrong.
+A goal states the achieved condition, the evidence that proves it, the
+constraints that remain true, and the authority available to reach it. It stays
+stable while routes, owners, blockers, and next actions change.
 
-"Run the benchmark" is not enough. That goal lets the worker run a script,
-collect errors, and call the job done. The real goal is to get valid benchmark
-results for a specific configuration, with specific metrics and statistics,
-enough to support a decision by the deadline.
+Current state belongs in a ledger or checkpoint. Historical detail belongs in
+an archive. A completed command, phase, worker slice, or review is progress until
+current evidence satisfies the complete goal.
 
-Say the achieved state. Say what does not count. Say what evidence proves the
-goal. Say what authority the agent has to repair, rerun, branch, patch, make a
-PR, restart services, preserve artifacts, and keep moving. If that authority is
-not explicit, the agent will invent a conservative boundary and stop inside it.
+Blockers are evidence, not a substitute for the requested result. They trigger
+diagnosis, repair, rerouting, a prepared decision, or an explicit authorized
+change to the goal.
 
-A blocker report is not the product when the requested product is results.
-Blockers are evidence. They should trigger diagnosis, repair, rerouting,
-replacement, or escalation with options. They are not a resting place.
+## Planning Earns Implementation
 
-## Managers Need Meetings
+Eagerness is not understanding. Planning work establishes the objective,
+constraints, anchors, risks, and evidence before production mutation begins.
 
-Loop engineering lets us treat agents more like workers in an organization.
+When the user reserves implementation authority, exploration, research,
+questions, plans, and explicitly scoped experiments may proceed. Product edits,
+implementation worktrees, and public mutations begin only after that authority
+is granted.
 
-The human owns taste and direction. The project manager agent owns delivery
-pressure. It does not need to care about implementation. It needs to know what
-done looks like, what matters, who owns each slice, what evidence is real, and
-when the next meeting happens.
+Good planning compresses later execution. It creates a brief that a fresh
+worker can act on without reconstructing the user's intent from chat history.
 
-Scheduled meetings are not ceremony. They create pressure before the final
-deadline. They force compression. They force proof. The manager must arrive
-with progress, evidence, risks, decisions needed, and the next move. The worker
-must arrive with its slice advanced or with a concrete reason, evidence, and a
-repair path.
+## Guidance Shapes Judgment
 
-The manager does not micromanage. It stays closer to the details than the
-human, audits worker claims, corrects bad context, replaces polluted workers,
-and keeps the goal alive. A failed worker is usually not a defective model. It
-is usually defective context. Diagnose the context, fix it, and spawn a clean
-instance when needed.
+A skill gives the agent a stance before procedure. The opening should make the
+role, desired result, reason for the role, evidence standard, and authority
+boundary legible.
 
-Escalation should be normal, but not lazy. Do not bring every friction point to
-the human. Solve inside authority first. Escalate when direction, taste, risk,
-or irreversible cost exceeds the contract. Bring evidence and options, not a
-helpless status packet.
+Exact procedures protect fragile mechanics, irreversible actions, and handoff
+contracts. Principles, boundaries, and compact examples handle judgment. A
+checklist can preserve a delicate operation. It cannot replace understanding
+what good work looks like.
 
-The long-term shape is an agent organization: top-level orchestrators, project
-managers, team leads, workers, critics, and verifiers, all reporting upward at
-strict cadences. Work should trickle up as compressed evidence. Direction
-should flow down as clarified goals, corrected context, and sharper authority.
+The purpose of a skill is to make the model grok the direction strongly enough
+to handle cases the author did not enumerate.
 
-## Guidance Should Shape Judgment
+## Roles Stay Distinct
 
-Good guidance begins by giving the agent a stance. It makes the role legible,
-explains why it exists, what failure it prevents, what evidence matters, and
-what boundary keeps the work honest. Once those things are clear, a capable
-agent can make decisions without being walked through every branch.
+A worker owns the assigned artifact and carries ordinary implementation friction
+inside that boundary.
 
-Numbered lists still have a place. They are useful when order is real, state is
-fragile, or a command must be run exactly. They are weak when they stand in for
-judgment. A checklist can preserve a delicate operation. It cannot substitute
-for understanding what good work looks like.
+A critic owns doubt. It tests claims independently and returns evidence-backed
+findings.
 
-Skills should make the role felt before procedure. A skill is a role, not a
-trigger plus a task list. A reviewer should feel independent and
-evidence-hungry. A controller should feel calm, directive, and unwilling to
-confuse motion with completion. A writing skill should make the agent attentive
-to audience, structure, and reader impact before it starts.
+An explorer maps terrain until the principal can act without guessing.
 
-Use exact steps when they protect fragile mechanics, preserve a handoff
-contract, or prevent a known recurring mistake. Otherwise, a clear principle,
-boundary, and small example teach better judgment than a flowchart.
+A monitor observes a named condition or workstream and escalates only when a
+judgment point appears. Mechanical waiting belongs inside one bounded command.
 
-The point of a skill is to make the agent better oriented, not smaller.
+A controller stays above execution. It preserves the parent objective, prepares
+reviewed assignments, reconciles returned evidence, corrects drift, and decides
+when the goal is complete. It creates pressure without standing over a coherent
+worker's shoulder.
 
-## Agents Have Different Work To Do
-
-Agents are not interchangeable workers with longer prompts.
-
-A worker owns implementation. It reads the code, makes the change, runs the
-checks, and carries ordinary friction inside its scope. A worker that reports a
-routine failure has not completed the goal. It has produced evidence that the
-work needs a sharper next move.
-
-A critic does not own the diff. It owns doubt. It can run commands, inspect
-state, use a browser, or gather whatever evidence is needed to test a claim, but
-it stays independent from the implementation it is judging.
-
-An explorer maps the current terrain. It should be patient with files, branches,
-tool output, and source evidence. Its job is not to sound decisive before the
-repo has taught it what is true.
-
-A controller holds the level above execution. It keeps the parent objective
-visible, notices when work has become thrash, asks questions that restore
-agency, routes work to the right owner, and verifies evidence when someone says
-done. It does not prove its value by becoming the fastest worker in the room.
-
-These boundaries do not make agents passive. They make their agency cleaner.
+These boundaries create cleaner agency, not passive agents.
 
 ## Authority Belongs In The Narrowest Surface
 
-Durable guidance has weight, so it should live where its authority actually
-belongs.
+Global instructions are rare because they affect every future session. Skills
+and agents carry reusable runtime judgment. Project guidance stays with the
+project. Workflows and local docs carry maintainer reasoning. Scripts and
+manifests carry mechanical truth.
 
-Global instructions should be rare. They affect every future session, so they
-need stronger justification than a repo-local workflow or a focused skill.
-
-Skills and agents carry reusable runtime judgment. They should speak directly
-to the agent that will use them. They should not ask that agent to sort through
-maintainer history, packaging details, or dated observations before acting.
-
-Workflows and local docs carry maintainer reasoning. They explain why this repo
-is shaped the way it is, how additions are reviewed, and what mistakes should
-not be repeated. They can hold context that would distract a runtime agent.
-
-Scripts and manifests carry mechanical truth. If a property should not drift,
-it should be checked by `doctor.ps1`, an install map, a manifest, or CI when
-that is practical. Memory is useful for orientation. It is not a guardrail.
+Codex and Claude share values but operate through different runtime contracts.
+Maintain their global instruction files separately. Share a rule only when both
+runtimes genuinely need the same behavior.
 
 The destination of a document determines its voice.
 
-## Autonomy, Evidence, and Human Authority
+## Autonomy, Evidence, And Human Authority
 
-This setup is comfortable with trusted-machine autonomy. Codex should move
-quickly when the machine, repository, and task are trusted, but strong claims
-still need current evidence: files read, commands run, tests passed, GitHub
-state checked, or live drift inspected.
+Trusted-machine autonomy should move quickly. Strong claims still require
+current evidence: files read, commands run, tests passed, runtime state
+observed, or remote state checked.
 
-Prior chats can explain why we care and suggest where to look. They do not
-replace looking again. Good agents do not need ceremony, but they must show
-their work wherever a future maintainer, reviewer, or user could ask, "How do
-we know?"
+Prior chats explain history. They do not replace current inspection.
 
-Local autonomy does not grant durable authority. A high-trust local
-configuration does not make durable or remote state the agent's to change
-silently.
-
-A ready pull request is a good stopping point. Merging, closing, retargeting,
-force pushing, deleting branches, or publishing to another system changes shared
-state. Those actions need explicit user intent.
+Local autonomy does not grant durable or public authority. A ready pull request
+is a useful result. Merging, closing, retargeting, force pushing, deleting,
+publishing, or changing shared state requires the authority named for that
+action.
 
 Readiness is not permission.
 
-## The Writing Should Embody The System
+## The Writing Is Part Of The System
 
-Markdown is part of the system. It is not just commentary around the system.
+Markdown is operating behavior. A skill should feel like the role it creates. A
+workflow should be usable. A local lesson should preserve reasoning without
+polluting runtime context. A manifest should make boundaries auditable.
 
-A skill file should feel like a skill worth using. A workflow should feel like a
-workflow a maintainer could actually follow. A local lesson should preserve the
-reason without leaking that reason into runtime behavior. A manifest should make
-the boundary easier to audit. A README should orient without trying to carry
-every argument itself.
-
-This is the real standard: each document should make its reader more capable of
-doing the next right thing.
-
-That is why the repo prefers small durable artifacts over swollen instruction
-blocks. It is why procedure belongs after posture. It is why evidence beats
-habit, and why mechanical checks are better than remembered preferences. It is
-why an agent should not merely comply with the words in a file, but absorb the
-shape of good work that the file demonstrates.
-
-The best guidance in this repo should not feel like a cage. It should feel like
-good taste made explicit enough to be shared.
+Each document should make its reader more capable of the next right action.
+The best guidance feels like good taste made explicit enough to share.

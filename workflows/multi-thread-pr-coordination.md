@@ -1,102 +1,93 @@
 # Multi-Thread PR Coordination
 
-Use this workflow when launching multiple Codex threads, worktrees, or agents
-against one repository objective. The goal is parallel discovery without public
-PR sprawl.
+Use this workflow when one repository objective benefits from parallel Codex
+contexts, worktrees, or agents while the public review surface remains coherent.
 
-This is repo-maintainer guidance. It is not installed into a live Codex home,
-user skill home, or Claude home.
-Use it from this checkout when coordinating local branches, scratch notes, and
-reviewable upstream PRs.
+The principal owns the objective, assignments, integration map, and public PR
+authority. Workers own reviewed slices and return artifacts plus evidence.
 
-## Coordinator Stance
+## Establish The Control Packet
 
-The coordinator is not a passive tracker. It protects the public review surface
-while workers do the ground work. Local notes can be messy and provisional.
-Public PRs should be focused, verified, and useful to future reviewers.
+Before dispatch, the principal authors a compact goal and catalog that name:
 
-## Default Shape
+- the finished state and evidence required;
+- current base branch and authoritative repository state;
+- active worktrees and their exact scope;
+- reviewed worker assignments;
+- dependencies and collision boundaries;
+- the public PR budget;
+- the return channel;
+- public mutation authority.
 
-- One coordinator thread owns public branch and PR hygiene.
-- Worker threads use their own branches and worktrees outside this checkout.
-- Tracking notes stay local by default, under `.local/` or another ignored
-  private note.
-- Repo-local `.local/` is for ignored notes and scratch evidence, not nested
-  worktrees.
-- Public PRs are only for independently reviewable upstream changes.
+Keep private operational state under `.local/` or another ignored project
+surface. Keep worker worktrees outside the principal checkout.
 
-## Before Launching Workers
+## Prepare Reviewed Assignments
 
-1. Write a short coordinator goal: what success means, what is in scope, and
-   what is out of scope.
-2. Decide where local tracking lives. Prefer `.local/<topic>/` when the notes
-   are not useful upstream. Put worker worktrees outside this checkout.
-3. Set a PR budget, usually no more than three active PRs from the workstream.
-4. Tell workers whether they may open PRs, or whether coordinator approval is
-   required first. Default to coordinator approval when the workstream could
-   produce tracker notes, broad audits, or overlapping fixes.
-5. Tell workers how to report findings:
-   - finding;
-   - files affected;
-   - risk;
-   - verification available;
-   - recommended target branch.
+Each assignment states:
 
-## Worker Rules
+- one bounded outcome;
+- relevant goal assertion identifiers;
+- authoritative anchors;
+- exact worktree and branch;
+- allowed edits and actions;
+- integration target;
+- checks and evidence required;
+- whether a PR may be opened;
+- return conditions and channel.
 
-Workers should not open a PR for tracker notes, partial findings, broad audits,
-or speculative fixes. They should update local evidence and report back to the
-coordinator.
+The principal reviews the assignment before launch. Give the user an opportunity
+to review material slice boundaries and public authority unless prior authority
+or an explicit waiver covers the dispatch.
 
-Workers may open a PR only when all are true:
+Workers report through the assignment return shape. They do not invent separate
+tracking systems or rewrite the principal catalog.
 
-- the change is focused;
-- the target branch is clear;
-- the diff is not mixed with tracker notes;
-- verification is listed or the verification gap is explicit;
-- the coordinator has approved opening that PR.
+## Preserve Worktree Independence
 
-## PR Types
+Use one editing owner per worktree. Start production-bound branches from the
+intended current base, usually `origin/main`, after refreshing refs. Preserve
+unrelated user work and keep experiments outside PR worktrees.
 
-Keep each PR in exactly one class:
+Parallelize slices only when their files, state, and integration order remain
+clear. Keep coupled changes with one owner.
 
-- behavior fix;
-- guard or check improvement;
-- docs intended for upstream readers;
-- eval or fixture update;
-- preservation branch for a specific known risk.
+## Keep Public Review Focused
 
-Do not mix audit tracking, tool code, eval changes, and local evidence in one
-PR. If a finding needs both a fix and documentation, prefer one fix PR and one
-small upstream-doc PR only when the docs are useful to future readers.
+Set a visible PR budget, usually no more than three active PRs for one workstream.
+A worker opens a PR only when the assignment grants that action and the change is:
 
-## Consolidation Loop
+- independently reviewable;
+- scoped to one purpose;
+- free of private tracking notes;
+- based on the intended branch;
+- accompanied by current verification or an explicit evidence gap.
 
-During active parallel work, the coordinator should periodically inspect PRs
-created by the current workstream:
+The principal classifies each public change as a behavior fix, guard, durable
+documentation change, eval or fixture update, or a narrowly justified
+preservation branch. Mixed audit notes and speculative fixes remain local.
 
-Mutate current-workstream PRs only when the user granted that authority for the
-workstream. Otherwise, report the recommended cleanup and ask before closing,
-rebasing, retargeting, or refreshing.
+## Reconcile Returns
 
-1. List current-workstream PRs and classify them.
-2. Close duplicate, scratch, or mixed workstream PRs with a short comment.
-3. Rebase or refresh viable workstream PRs on current main.
-4. Keep the PR budget visible to the workers.
-5. Preserve local evidence without pushing it upstream.
+After a worker returns:
 
-Treat unrelated PRs as context only. Do not close, rebase, retarget, or refresh
-an unrelated PR without explicit owner approval.
+1. inspect the artifact and current branch state;
+2. map evidence to the parent goal;
+3. update the principal catalog and checkpoint;
+4. identify integration dependencies and stale assignments;
+5. prepare repair, review, or the next dispatch;
+6. recompute the active PR budget.
 
-## When To Keep Tracking Local
+A worker completion claim advances the objective only after the principal checks
+the returned evidence.
 
-Keep tracking local when it contains:
+## Consolidate With Authority
 
-- scratch findings;
-- temporary matrices;
-- local ports, paths, containers, screenshots, or logs;
-- seeded benchmark values used only for setup;
-- notes useful only to the current operator.
+Inspect current-workstream PRs at meaningful decision points. Close duplicates,
+refresh branches, retarget, or rewrite public state only within granted
+authority. Treat unrelated PRs as context and preserve their owner boundaries.
 
-Promote tracking upstream only when it becomes durable documentation for future
-contributors.
+Keep local tracking local when it contains scratch findings, temporary matrices,
+ports, machine paths, logs, screenshots, seeded values, or notes useful only to
+the current operator. Promote material upstream only when it becomes durable
+project guidance or reviewable product work.

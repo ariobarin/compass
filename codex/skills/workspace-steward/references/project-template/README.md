@@ -1,58 +1,78 @@
 # <Project> Workspace
 
-Umbrella workspace for <project>. This root coordinates several child repos and
-local operating surfaces. It is usually its own git repo, but it is not a
-monorepo: canonical repo checkouts stay visible at the root by name.
+Umbrella workspace for <project>. This root coordinates child repositories,
+production worktrees, disposable experiments, control documents, evidence, and
+archives. It may be its own small Git repository, but it is not automatically a
+monorepo. Canonical child checkouts stay visible at the root by name.
+
+## Operating Model
+
+One user-facing principal preserves the objective across contexts. The user or
+principal authors goals, plans, catalogs, assignments, and checkpoints under
+`local-docs/`. Delegates execute reviewed assignments and return artifacts plus
+evidence. A fresh principal context resumes from those anchors rather than from
+conversation memory.
+
+Use absolute timestamps with time zones in mutable control documents and
+evidence notes. `Last verified at` matters more than a vague modification date.
 
 ## Layout
 
-- `<repo>/` and `<repo>-main/` - canonical repo checkouts live at the root,
-  revealed by name, never tucked under `src/` or a generic bucket. A `<repo>-main`
-  checkout stays on the default branch for reading, syncing, and spawning
-  worktrees; keep it clean of implementation edits.
-- `worktrees/prs/` - branch and PR work that is meant to be pushed. Start each
-  from the child repo's `origin/main`, not a dirty local main.
-- `experiments/` - exploratory work that is not yet a repo, artifact, or PR.
-  Promote it out when it earns a place.
-- `local-docs/` - controller notes, plans, and handoffs: state about operating
-  this workspace.
-- `docs/` - durable project and workspace documentation.
-- `artifacts/` - generated evidence: reports, exports, logs, manifests.
-- `tmp/` - scratch files that can be recreated or deleted.
-- `archived/` - inactive reference material, preserved as-is.
+- `<repo>-main/`: clean default-branch checkout for reading, syncing, and
+  creating worktrees.
+- `<repo>/`: canonical checkout when the project needs one distinct from the
+  clean-main checkout.
+- `worktrees/prs/`: production-bound branch and PR work.
+- `worktrees/spikes/`: disposable integration spikes that require the real
+  repository but are not production-bound.
+- `experiments/`: tiny isolated programs that answer one uncertainty and never
+  become production code.
+- `local-docs/`: principal-authored goals, plans, catalogs, assignments,
+  checkpoints, and decisions.
+- `docs/`: durable project and workspace documentation.
+- `artifacts/`: generated evidence, reports, exports, logs, and manifests.
+- `tmp/`: recreatable scratch.
+- `archived/`: inactive material preserved with dated context.
+- `glossary.md`: terms whose distinctions change behavior.
 
-Each directory above has its own README with the rules that keep it honest.
+Each lifecycle area has its own README. Read it before creating or promoting
+material there.
 
-## Adopt this template
+## Adopt This Template
 
-1. Copy the contents of this directory into your new project root.
-2. If the root is not yet a git repo, `git init` it. The shipped `.gitignore`
-   keeps `tmp/` and child-repo worktrees out, and ignores secrets and caches.
-3. Add each real root checkout name to `.gitignore`, such as
-   `/example-repo/` and `/example-repo-main/`, before cloning child repos.
-4. Clone each child repo as a clean `<repo>-main` on the default branch, used
-   only for reading, syncing, and creating worktrees.
-5. Start PR work in `worktrees/prs/<slug>` from the child repo's `origin/main`.
-6. Replace this heading and the bracketed placeholders with the project name and
-   real repo identities.
+1. Copy the template contents into a new workspace root.
+2. Replace `<Project>` and other placeholders with real names.
+3. Initialize the root repository when it will own these control documents.
+4. Add concrete child checkout names to `.gitignore` before cloning.
+5. Clone each child as a clean `<repo>-main` checkout.
+6. Record repository identities and default branches in the root documentation.
+7. Create production work in `worktrees/prs/<slug>` from the intended current
+   remote base, usually `origin/main`.
+8. Keep experiments and spikes visibly disposable.
+9. Review `AGENTS.md`, `CLAUDE.md`, and `glossary.md` for project-specific truth.
 
-## Worktree convention
-
-Keep the clean main checkout clean. Create PR worktrees from the child repo:
+## Fresh Worktree Convention
 
 ```sh
 git -C <repo>-main fetch origin
-git -C <repo>-main worktree add -b <branch> <root>/worktrees/prs/<slug> origin/main
+git -C <repo>-main status --short --branch
+git -C <repo>-main worktree add -b <branch> <workspace>/worktrees/prs/<slug> origin/main
 ```
 
-If local project guidance names a different default branch, use it explicitly
-and note why. Move worktrees with `git worktree move`, and remove them with
-`git worktree remove` only after merge, preservation, or explicit disposable
-evidence.
+Use the project-declared default branch when it differs. Move registered
+worktrees with `git worktree move`. Remove them with `git worktree remove` only
+after merge, preservation, or explicit disposable evidence.
 
-## Operating notes
+## Continuity Test
 
-Read this README and `AGENTS.md` before changing layout. Treat `tmp/` as
-deletable: promote useful scratch to `artifacts/`, `scripts/`, `docs/`, or
-`local-docs/`. Add `scripts/` or `manifests/` only when a repeated operation
-earns the maintenance.
+A fresh principal context should be able to open the current goal, plan,
+catalog, checkpoint, and named repository state, then answer:
+
+- What finished state remains authoritative?
+- What phase is authorized?
+- Which assignments are active?
+- What evidence is current?
+- What remains unresolved?
+- What action can produce the next useful proof?
+
+When it cannot, repair the control documents before adding more work.

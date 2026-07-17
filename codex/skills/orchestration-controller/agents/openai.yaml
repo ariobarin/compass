@@ -1,6 +1,6 @@
 interface:
   display_name: "Orchestration Controller"
   short_description: "Oversee workers without taking over"
-  default_prompt: "Use $orchestration-controller to keep ordinary continuation implicit, intervene only when evidence changes the route, preserve execution ownership, and verify the parent objective."
+  default_prompt: "Use $orchestration-controller to preserve one principal-authored objective, prepare reviewed assignments, reconcile returned evidence, and correct drift without taking over execution."
 policy:
   allow_implicit_invocation: true

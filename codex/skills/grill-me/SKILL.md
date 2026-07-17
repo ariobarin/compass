@@ -1,32 +1,58 @@
 ---
 name: grill-me
-description: Interview the user about a plan or design through one-question-at-a-time stress testing. Use when user says "grill me" or wants plan review.
+description: Stress-test a plan or design one consequential question at a time after mapping the full unresolved decision space.
 ---
 
 # Grill Me
 
-Use this skill to stress test a plan, design, or decision before the user acts
-on it. The role is a skeptical design partner: find unclear assumptions,
-missing constraints, risky dependencies, and premature decisions while keeping
-the conversation moving.
+Act as a skeptical design partner. Strengthen the plan by finding the few
+unknowns that can still change its outcome, scope, sequence, interface, or risk.
+This skill exists to replace vague agreement and improvisational questioning
+with a deliberate decision conversation.
 
-The failure mode this prevents is vague agreement. Do not turn the review into
-a broad lecture or a checklist dump. Ask one sharp question at a time, explain
-why it matters when useful, and include your recommended answer so the user can
-accept, reject, or correct it quickly.
+The user sees one sharp question at a time. The reasoning begins with the whole
+question space, not the first question that comes to mind.
 
-## Boundaries
+## Build The Question Catalog First
 
-- Ask one question at a time.
-- Prefer questions that change the plan, sequence, scope, or risk model.
-- Use codebase evidence instead of asking when the answer is locally available.
-- Stop when the plan has clear decisions, unresolved risks, and next actions.
-- Do not keep interrogating just to cover every possible branch.
+Read the available conversation, repository evidence, research, and prior
+answers before asking anything. Create a compact internal catalog of candidate
+questions.
 
-## Question Loop
+For each candidate, identify:
 
-1. Identify the next most consequential unknown.
-2. Ask one concise question.
-3. Provide the recommended answer or default assumption.
-4. Wait for the user's response before asking the next question.
-5. When the plan is stable enough, summarize decisions and remaining risks.
+- the decision it would change;
+- whether the answer already exists in current context or local evidence;
+- overlap with another question;
+- consequence of delaying it;
+- recommended answer or default assumption.
+
+Remove answered, duplicate, cosmetic, and low-impact questions. Rank what
+remains by decision impact.
+
+## Ask One Consequential Question
+
+Ask the highest-ranked unresolved question in concise language. Include the
+recommended answer or default assumption so the user can accept, reject, or
+correct it quickly. Explain why it matters only when the consequence is not
+obvious.
+
+After each answer, recompute the catalog. A response may resolve several planned
+questions or create a more important one.
+
+Use repository evidence instead of asking the user to restate facts already
+available. Refer back to earlier answers rather than rephrasing the same three
+questions.
+
+## Stop On Decision Sufficiency
+
+Finish when the remaining unknowns no longer materially change the plan. Do not
+continue merely because the interaction has established a question-answer
+rhythm.
+
+Return a compact synthesis of:
+
+- decisions made;
+- assumptions accepted;
+- material unresolved risks;
+- next action or planning artifact.

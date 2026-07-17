@@ -34,7 +34,7 @@ assert.deepEqual(
   ["fetch", "get_profile", "get_skill", "list_skills", "search"]
 );
 
-const search = await rpc("tools/call", { name: "search", arguments: { query: "input token" } });
-assert.match(JSON.stringify(search), /skill:input-token-economy/);
+const search = await rpc("tools/call", { name: "search", arguments: { query: "micro experiment" } });
+assert.match(JSON.stringify(search), /skill:run-a-micro-experiment/);
 
 console.log("compass worker smoke: ok");

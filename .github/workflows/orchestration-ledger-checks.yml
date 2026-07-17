@@ -9,8 +9,9 @@ on:
       - "scripts/compass.ps1"
       - "scripts/orchestration-ledger.py"
       - "scripts/orchestration-ledger.ps1"
-      - "scripts/test-orchestration-ledger-lock.py"
-      - "scripts/test-orchestration-ledger.py"
+      - "scripts/_orchestration_ledger_*.py"
+      - "scripts/test-orchestration-ledger*.py"
+      - "scripts/test-orchestration-ledger*.ps1"
       - "workflows/orchestration-ledger.md"
   push:
     branches:
@@ -22,8 +23,9 @@ on:
       - "scripts/compass.ps1"
       - "scripts/orchestration-ledger.py"
       - "scripts/orchestration-ledger.ps1"
-      - "scripts/test-orchestration-ledger-lock.py"
-      - "scripts/test-orchestration-ledger.py"
+      - "scripts/_orchestration_ledger_*.py"
+      - "scripts/test-orchestration-ledger*.py"
+      - "scripts/test-orchestration-ledger*.ps1"
       - "workflows/orchestration-ledger.md"
 
 jobs:
@@ -47,6 +49,16 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Compile ledger sources
+        shell: pwsh
+        run: |
+          Get-ChildItem scripts -File -Filter "*orchestration_ledger*.py" |
+            ForEach-Object {
+              python -m py_compile $_.FullName
+              if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            }
+          python -m py_compile scripts/orchestration-ledger.py
+
       - name: Run ledger tests
         id: ledger
         continue-on-error: true
@@ -56,6 +68,7 @@ jobs:
           $exitCode = 0
           foreach ($test in @(
             "scripts/test-orchestration-ledger.py",
+            "scripts/test-orchestration-ledger-output.py",
             "scripts/test-orchestration-ledger-lock.py"
           )) {
             $output.Add("== $test ==")
@@ -71,6 +84,10 @@ jobs:
           $output | Set-Content -LiteralPath orchestration-ledger-test.txt -Encoding utf8NoBOM
           $output | ForEach-Object { Write-Host $_ }
           exit $exitCode
+
+      - name: Test PowerShell ledger wrapper
+        shell: pwsh
+        run: ./scripts/test-orchestration-ledger-wrapper.ps1
 
       - name: Smoke test orchestration dispatcher
         shell: pwsh

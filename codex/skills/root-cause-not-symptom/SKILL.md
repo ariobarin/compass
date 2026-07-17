@@ -1,78 +1,77 @@
 ---
 name: root-cause-not-symptom
-description: Force root-cause-first on bugs, errors, and failing tests. Use before any patch, suppress, swap, retry, or premature done call on a symptom.
+description: Diagnose the mechanism and owning boundary before repairing bugs, errors, regressions, and failing tests.
 ---
 
 # Root Cause, Not Symptom
 
-A symptom is what you see: an error, a failing test, a wrong value, a strange
-output. The cause is the mechanism, one or more layers down, that produces it.
-You fix causes. You do not patch symptoms. A bandage stops the bleeding for a
-minute. The cut is still open. This skill exists to make you get the stitches.
+Repair the mechanism that produces the failure. This skill exists because a
+visible error invites guards, retries, catches, rewrites, and suppressions that
+make the symptom disappear while the broken ownership remains.
 
-The posture is the point: name the cause before you touch code. If you cannot
-state the mechanism in one sentence, you do not understand the bug yet, and
-investigating is the correct next move, not editing. The discipline below is
-firm because every item is a documented way agents ship a fix that does not
-hold. It is orientation, not a cage.
+The first deliverable is a causal model strong enough to locate the repair.
 
-## Name The Cause Before The Fix
+## State The Causal Model
 
-Before you write, edit, delete, or swap a line, state in one sentence:
+Before production edits, state:
 
-  The cause is X. The fix lives at Y. Because Z.
+> The observed symptom is S. The supported cause is X. The repair belongs at Y
+> because Z. The evidence is E.
 
-- X is the mechanism, not the symptom. "The string double-quotes a JSON value,
-  so it is escaped on serialization" is a cause. "Quotes are escaped" is a
-  symptom.
-- Y is the single site or boundary that owns the behavior, not the site that
-  displays it. If you cannot point to one site or boundary, the cause is not
-  understood yet.
-- Z is why that site owns the behavior.
+`X` names the producing mechanism. `Y` names the narrowest ownership boundary
+that can correct it. `Z` explains why that boundary owns the behavior. `E`
+distinguishes observation from inference.
 
-If you cannot fill X, Y, and Z, stop and investigate. Patching a cause you
-cannot name is the exact failure this skill prevents.
+Some failures have interacting or independent causes. Name the causal chain or
+cause set when one site cannot truthfully explain the result.
 
-## The Recurrence Rule
+When the statement is not yet supportable, investigate. Trace inputs, state,
+ownership, execution flow, and the earliest divergence from the required
+contract.
 
-If the same class of symptom returns after your fix, your fix was symptomatic.
-Do not patch again.
+## Let Recurrence Reopen The Model
 
-A returning symptom is a signal, not a todo. Reopen the cause statement,
-assume your first cause was wrong, and look one layer deeper. One fix per
-cause. A second fix for the same symptom is reason to re-examine the cause.
+A recurring symptom is new evidence. Reopen the causal model before adding
+another layer. Determine whether:
 
-## What This Rules Out
+- the first cause was incomplete;
+- another independent cause produces the same symptom;
+- the repair landed outside the owning boundary;
+- stale state or a different runtime path bypasses the repair;
+- the verification never exercised the real failure path.
 
-These are the recurring shapes of the failure. Recognize them and refuse them.
+A second patch begins with a changed explanation, not a larger pile of guards.
 
-- fix-output-not-cause: editing the producing string or display layer to hide
-  a symptom while the data contract underneath is wrong.
-- patch-and-pray: stacking a second guard on a guard that "did not fully work."
-  Layers mean you missed the cause.
-- declare-done-on-disappearance: calling it fixed because the symptom vanished
-  in one run. Symptom gone is not cause fixed. Re-run from a clean state and
-  confirm the cause is gone.
-- suppress-the-signal: catching, swallowing, filtering, or defaulting past the
-  error instead of removing its source.
-- swap-instead-of-diagnose: rewriting the format or delivery shape, or swapping
-  a component, because the real fix is hard. Diagnose first; swap only if
-  diagnosis says swap.
-- react-to-surface-signal: reshaping behavior around a heuristic you inferred
-  ("these look simple") instead of the stated requirement. Re-read the spec.
-  The spec beats your read of the surface.
-- enshrine-as-policy: rewriting docs, evals, or READMEs to make a symptomatic
-  fix permanent instead of reverting it.
+## Repair The Owning Boundary
 
-## When To Stop And Surface
+Make the smallest coherent change that removes the supported cause while
+preserving required behavior. Verification should reproduce the original path
+from a clean state and show that the mechanism, not only the visible message,
+changed.
 
-- You have written more than one fix for the same symptom. Stop.
-- The spec is ambiguous or self-contradictory. Ask; do not infer and proceed.
-- Fixing the cause would delete or reshape behavior the user did not ask to
-  change. Confirm scope first.
+Crisp boundaries remain firm:
 
-## Judgment Over Checklist
+- Error suppression is not a repair when the error source remains.
+- A rewritten requirement is not evidence that a broken implementation became
+  correct.
+- A component swap follows diagnosis; it does not substitute for diagnosis.
 
-The lists above are guardrails against known failures, not a replacement for
-thinking. Keep the stance: causes first, symptoms second, and a returning
-symptom is always a reason to go deeper, never a reason to patch again.
+## Subtractive Review
+
+After the repair works, inspect the changed and neighboring surface:
+
+- Which guard, wrapper, fallback, branch, state, or compatibility path became
+  obsolete?
+- Did the patch introduce a second source of truth?
+- Did an existing abstraction already own the behavior?
+- Is the changed surface broader than the causal boundary requires?
+- Can the same behavior remain with fewer maintained concepts or states?
+
+Line reduction is useful evidence, not the target. The target is a system with a
+simpler truthful explanation.
+
+## Completion Evidence
+
+Report the symptom, causal model, evidence, owning boundary, repair, focused
+checks, clean-state reproduction, removed obsolete machinery, and any remaining
+unverified cause.

@@ -4,7 +4,7 @@ param(
     [string]$StateDir,
     [string]$TaskName = "Codex Restart Recovery",
     [string]$TaskPath = "\Compass\",
-    [string]$Prompt = "continue, the computer restarted for some reason",
+    [string]$Prompt = "Resume the interrupted task. Reopen repository guidance and any named goal, plan, ledger, or checkpoint. Verify current state before continuing.",
     [ValidateRange(1, 720)]
     [int]$LookbackHours = 24,
     [ValidateRange(1, 20)]

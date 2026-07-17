@@ -1,5 +1,20 @@
 $maxDescriptionLength = 160
-$skillFiles = Get-ChildItem -Path (Join-Path $repoRoot "codex\skills") -Recurse -File -Filter "SKILL.md" -ErrorAction SilentlyContinue
+$skillRoots = @(
+    (Join-Path $repoRoot "codex\skills")
+)
+$carriedRoot = Join-Path $repoRoot "carried"
+if (Test-Path -LiteralPath $carriedRoot) {
+    $skillRoots += @(
+        Get-ChildItem -LiteralPath $carriedRoot -Directory -ErrorAction SilentlyContinue |
+            ForEach-Object { Join-Path $_.FullName "skills" } |
+            Where-Object { Test-Path -LiteralPath $_ }
+    )
+}
+$skillFiles = @(
+    foreach ($skillRoot in $skillRoots) {
+        Get-ChildItem -Path $skillRoot -Recurse -File -Filter "SKILL.md" -ErrorAction SilentlyContinue
+    }
+)
 $skillNames = New-Object 'System.Collections.Generic.Dictionary[string, string]' ([System.StringComparer]::OrdinalIgnoreCase)
 
 function Get-SkillFrontMatterValue {

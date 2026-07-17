@@ -18,7 +18,7 @@
 # `codex/AGENTS.md`.
 
 model = "gpt-5.6-sol"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "high"
 model_context_window = 272000
 model_auto_compact_token_limit = 233000
 model_auto_compact_token_limit_scope = "total"

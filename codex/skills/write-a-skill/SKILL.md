@@ -1,32 +1,54 @@
 ---
 name: write-a-skill
-description: Create or revise a Compass skill and its install wiring. Invoke manually for skill work.
+description: Create or revise a reusable agent skill that strongly orients judgment, stays lean, and proves its behavior.
 ---
 
 # Write A Skill
 
-Use the system Skill Creator for general skill design when it is available. This
-skill is the Compass overlay for routing, source layout, install wiring,
-retirement, and repository review boundaries. Read the repo-root `AGENTS.md` and
-`workflows/addition-intake.md` before editing.
+Create a direction vector strong enough to change how a capable model judges new
+cases. This skill exists because weak skills become trigger phrases plus
+checklists, while bloated skills compete for context and still fail to establish
+the role.
 
-## Choose The Right Surface
+The terminal result is a lean reusable skill whose purpose, trigger, stance,
+evidence, and authority are clear before its procedure.
 
-- reusable global agent capability: `codex/skills/`;
-- carried but not global pack: `carried/`;
-- project-specific capability: the target repository's skill folder;
-- skeptical or independent reviewer persona: `codex/agents/`;
-- deterministic or fragile mechanic: `scripts/`;
-- repo-maintainer process: `workflows/`;
-- portability boundary: `manifests/`;
-- repo-only lesson: `local-docs/`.
+## Establish The Role
 
-Do not promote a project-specific pack into global context without repeated
-cross-repository evidence.
+Front-load what the invoking agent must absorb:
 
-## Author The Skill
+- role;
+- desired terminal result;
+- why the role exists at runtime;
+- recurring failure it corrects;
+- evidence that matters;
+- authority boundary.
 
-A normal skill contains:
+Give only enough explanation of purpose to orient action. Preserve discovery
+history, model anecdotes, and maintenance rationale outside the installed skill.
+
+## Point Positively
+
+Lead with the behavior and state to create. Use prohibitions for crisp,
+observable boundaries and recurring failure shapes with an unambiguous forbidden
+form. Pair a prohibition with the desired replacement when judgment is involved.
+
+Write decisively. Remove hedging, filler politeness, apology, and optional
+language around required behavior.
+
+## Teach Judgment Before Procedure
+
+Use principles, boundaries, and compact examples for decisions that vary by
+context. Use ordered steps when sequence is real, mechanics are fragile, or a
+handoff contract must remain exact.
+
+A skill should help the model handle cases the author did not enumerate. A long
+branching flowchart usually means the skill has not yet expressed the underlying
+judgment.
+
+## Keep The Runtime Surface Lean
+
+A normal skill may contain:
 
 ```text
 skill-name/
@@ -34,50 +56,51 @@ skill-name/
   references/
   scripts/
   assets/
+  agents/openai.yaml
 ```
 
-Use only needed folders. Frontmatter contains `name` and `description`. The
-description states capability and trigger in no more than 160 characters.
+Use only needed folders.
 
-Front-load role, non-negotiables, failure mode, and next decision. Keep
-`SKILL.md` lean. Put detailed reference material one level under `references/`,
-deterministic mechanics under `scripts/`, and output resources under `assets/`.
+- `SKILL.md` carries the role and action-critical guidance.
+- `references/` carries detail loaded only when needed.
+- `scripts/` carries deterministic or fragile mechanics.
+- `assets/` carries output resources.
+- `agents/openai.yaml` carries Codex discovery metadata when that runtime uses
+  it.
 
-Do not add auxiliary README, changelog, quick-reference, or installation files
-inside an installed skill.
+Frontmatter contains a kebab-case `name` and a concise capability plus trigger
+description. Avoid auxiliary installation notes, changelogs, and duplicate quick
+references inside an installed skill.
 
-## Install Wiring
+## Separate Scope Correctly
 
-For a global skill, update together:
+Choose the narrowest durable surface:
 
-1. `codex/skills/<name>/`;
-2. `[agents].skills` in `manifests/portable-files.toml`;
-3. `[claude].derived_skills` when Claude should derive it;
-4. `manifests/skill-sources.json`;
-5. policy or required-file checks that bind to the skill.
+- reusable cross-project judgment: global skill;
+- project-specific capability: project skill;
+- reviewer persona: agent;
+- repeated human maintenance process: workflow;
+- deterministic guard: script, hook, manifest, or test;
+- portable but opt-in domain pack: carried resource.
 
-For a carried pack, create the real `carried/` path, keep it out of installed
-skill lists, and document the opt-in route. For a project-local skill, edit the
-target repository instead.
+A useful one-off does not automatically earn global retrieval cost.
 
-For a retirement, remove installed and derived manifest entries, remove the
-source catalog record, and add explicit retired paths for every live location
-Compass previously owned. Preserve useful project-specific material in its
-authorized destination or a documented carried route before removing the global
-copy.
+## Prove The Skill
 
-## Validate
+Review the skill as behavior, not prose alone:
 
-Run:
+- Can the right trigger be distinguished from neighboring skills?
+- Does the first screen establish role, result, failure, evidence, and boundary?
+- Does the language point toward the desired state?
+- Can detailed material move to a reference or mechanic?
+- Does any rule make a decision that should remain contextual?
+- Does a fresh agent behave differently on a realistic task?
+- Can the skill be shortened without losing behavior?
 
-```powershell
-.\scripts\doctor.ps1
-git diff --check origin/main...HEAD
-```
+Forward-test fragile judgment with realistic prompts and inspect failure cases.
+Revise the cause of weak behavior rather than adding another isolated warning.
 
-Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when install or retirement
-drift matters. Run added scripts and tests directly. Forward-test fragile
-judgment with a fresh agent and realistic task. Before review, check for
-duplicated skills, stale triggers, missing references, forgotten manifests, and
-mechanics that should move to scripts. Keep a focused PR draft until current-head
-review and required checks are complete.
+## Output
+
+Return the authored skill, resources, trigger rationale, behavior evidence,
+known boundaries, and the durable surface that owns its installation.
