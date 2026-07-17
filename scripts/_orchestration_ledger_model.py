@@ -279,7 +279,11 @@ def validate_ledger(value: object) -> dict[str, Any]:
         raise LedgerError("ledger must be a JSON object")
     check_unknown(value, {"schema_version", "updated_at", "goals"}, "ledger")
     schema_version = value.get("schema_version")
-    if schema_version not in LEGACY_SCHEMA_VERSIONS | {SCHEMA_VERSION}:
+    if (
+        isinstance(schema_version, bool)
+        or not isinstance(schema_version, int)
+        or schema_version not in LEGACY_SCHEMA_VERSIONS | {SCHEMA_VERSION}
+    ):
         legacy = ", ".join(str(item) for item in sorted(LEGACY_SCHEMA_VERSIONS))
         raise LedgerError(
             f"ledger requires schema_version {SCHEMA_VERSION} "
@@ -288,7 +292,7 @@ def validate_ledger(value: object) -> dict[str, Any]:
     goals = value.get("goals")
     if not isinstance(goals, list):
         raise LedgerError("ledger.goals must be an array")
-    normalized = [migrate_goal(goal, int(schema_version)) for goal in goals]
+    normalized = [migrate_goal(goal, schema_version) for goal in goals]
     validated = [validate_goal(goal, index) for index, goal in enumerate(normalized)]
     ids = [goal["id"] for goal in validated]
     if len(ids) != len(set(ids)):
