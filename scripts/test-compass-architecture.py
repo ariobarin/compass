@@ -103,6 +103,15 @@ class CompassArchitectureTests(unittest.TestCase):
         with self.assertRaisesRegex(LedgerError, "missing required fields: anchors"):
             validate_ledger(current)
 
+    def test_ledger_schema_version_rejects_boolean_values(self) -> None:
+        invalid = {
+            "schema_version": True,
+            "updated_at": "2026-07-17T12:00:00Z",
+            "goals": [],
+        }
+        with self.assertRaisesRegex(LedgerError, "requires schema_version 4"):
+            validate_ledger(invalid)
+
     def test_codex_agents_follow_luna_first_profile(self) -> None:
         for path in sorted((ROOT / "codex" / "agents").glob("*.toml")):
             with path.open("rb") as handle:
