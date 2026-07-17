@@ -22,16 +22,6 @@
       }
     },
     {
-      "name": "benchmark-infra-reviewer",
-      "owner": "compass",
-      "source": "codex/skills/benchmark-infra-reviewer",
-      "profile": "default",
-      "targets": {
-        "codex": "copy",
-        "claude": "derived"
-      }
-    },
-    {
       "name": "benchmark-run-operator",
       "owner": "compass",
       "source": "codex/skills/benchmark-run-operator",
@@ -180,36 +170,6 @@
       "name": "using-codex-goals",
       "owner": "compass",
       "source": "codex/skills/using-codex-goals",
-      "profile": "default",
-      "targets": {
-        "codex": "copy",
-        "claude": "none"
-      }
-    },
-    {
-      "name": "webmcp-eval-triage",
-      "owner": "compass",
-      "source": "codex/skills/webmcp-eval-triage",
-      "profile": "default",
-      "targets": {
-        "codex": "copy",
-        "claude": "none"
-      }
-    },
-    {
-      "name": "webmcp-tool-authoring",
-      "owner": "compass",
-      "source": "codex/skills/webmcp-tool-authoring",
-      "profile": "default",
-      "targets": {
-        "codex": "copy",
-        "claude": "none"
-      }
-    },
-    {
-      "name": "webmcp-verify-tool",
-      "owner": "compass",
-      "source": "codex/skills/webmcp-verify-tool",
       "profile": "default",
       "targets": {
         "codex": "copy",
