@@ -26,7 +26,7 @@ The recovery script:
 The default prompt is:
 
 ```text
-Resume the interrupted task. Reopen repository guidance and any named goal, plan, ledger, or checkpoint. Verify current state before continuing.
+continue, the computer restarted for some reason
 ```
 
 ## Install
