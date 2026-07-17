@@ -6,6 +6,8 @@ import tomllib
 import unittest
 from pathlib import Path
 
+from _orchestration_ledger_model import LedgerError, validate_ledger
+
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_EFFORT_DEFAULTS = {
     "gpt-5.6-sol": "high",
@@ -71,6 +73,35 @@ class CompassArchitectureTests(unittest.TestCase):
             ("GPT-5.6 Luna", "high"),
         ):
             self.assertIn(f"| {model_name} | `{effort}` |", calibration)
+
+    def test_current_ledger_schema_does_not_backfill_legacy_fields(self) -> None:
+        timestamp = "2026-07-17T12:00:00Z"
+        goal = {
+            "id": "strict-v4",
+            "goal": "Reject malformed current records",
+            "anchors": ["product-requirements.md"],
+            "control_documents": ["local-docs/control/goal.md"],
+            "phase": "planning",
+            "execution_owner": "principal",
+            "worker_id": None,
+            "state": "planned",
+            "next_action": None,
+            "next_check_at": None,
+            "evidence": [],
+            "public_mutation_gate": "closed",
+            "public_mutation_action": None,
+            "decision_needed": None,
+            "control_writer": "principal",
+            "control_revision": 1,
+            "recovery_circuits": [],
+            "created_at": timestamp,
+            "updated_at": timestamp,
+            "last_verified_at": timestamp,
+        }
+        del goal["anchors"]
+        current = {"schema_version": 4, "updated_at": timestamp, "goals": [goal]}
+        with self.assertRaisesRegex(LedgerError, "missing required fields: anchors"):
+            validate_ledger(current)
 
     def test_codex_agents_follow_luna_first_profile(self) -> None:
         for path in sorted((ROOT / "codex" / "agents").glob("*.toml")):
