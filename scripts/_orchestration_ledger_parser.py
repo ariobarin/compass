@@ -1,25 +1,19 @@
 from __future__ import annotations
 
 import argparse
-import json
-import os
-import re
-import stat
-import sys
-import tempfile
-from contextlib import contextmanager
-from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterator, Sequence
+from typing import Sequence
 
 from _orchestration_ledger_core import *
+
 
 def add_common_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--ledger", type=Path)
 
+
 def add_mutation_auth_options(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--actor", "--control-actor", required=True)
+    parser.add_argument("--actor", "--principal", required=True)
     parser.add_argument(
         "--expected-revision",
         "--expected-control-revision",
@@ -28,6 +22,7 @@ def add_mutation_auth_options(parser: argparse.ArgumentParser) -> None:
         required=True,
         type=int,
     )
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -45,8 +40,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     init = subparsers.add_parser("init")
     init.add_argument("--goal-id", required=True)
     init.add_argument("--goal", required=True)
+    init.add_argument("--anchor", action="append", required=True)
+    init.add_argument("--control-document", action="append", required=True)
+    init.add_argument("--phase", choices=sorted(PHASES), default="planning")
     init.add_argument("--execution-owner", required=True)
-    init.add_argument("--control-writer", "--writer")
+    init.add_argument("--control-writer", "--principal", required=True)
     init.add_argument("--control-revision", type=int, default=1)
     init.add_argument("--worker-id")
     init.add_argument("--state", choices=sorted(STATES), default="planned")
@@ -58,6 +56,17 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     worker_group = owner.add_mutually_exclusive_group()
     worker_group.add_argument("--worker-id")
     worker_group.add_argument("--clear-worker", action="store_true")
+
+    phase = subparsers.add_parser("set-phase")
+    add_mutation_auth_options(phase)
+    phase.add_argument("--goal-id", required=True)
+    phase.add_argument("--phase", choices=sorted(PHASES), required=True)
+
+    links = subparsers.add_parser("set-links")
+    add_mutation_auth_options(links)
+    links.add_argument("--goal-id", required=True)
+    links.add_argument("--anchor", action="append", required=True)
+    links.add_argument("--control-document", action="append", required=True)
 
     state = subparsers.add_parser("set-state")
     add_mutation_auth_options(state)
@@ -78,6 +87,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     evidence.add_argument("--kind", choices=sorted(EVIDENCE_KINDS), required=True)
     evidence.add_argument("--summary", required=True)
     evidence.add_argument("--locator")
+    evidence.add_argument("--producer")
+    evidence.add_argument("--observed-at")
 
     gate = subparsers.add_parser("set-gate")
     add_mutation_auth_options(gate)
@@ -95,31 +106,13 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     add_mutation_auth_options(clear_decision)
     clear_decision.add_argument("--goal-id", required=True)
 
-    grant = subparsers.add_parser("set-grant", aliases=["set-control-grant"])
-    add_mutation_auth_options(grant)
-    grant.add_argument("--goal-id", required=True)
-    grant.add_argument("--grant-actor", "--granted-actor", required=True)
-    grant.add_argument(
-        "--mutation",
-        "--command",
-        "--edit",
-        "--grant-mutation",
-        dest="mutations",
-        action="append",
-        required=True,
-    )
+    begin = subparsers.add_parser("begin-recovery")
+    add_mutation_auth_options(begin)
+    begin.add_argument("--goal-id", required=True)
+    begin.add_argument("--slice-label", required=True)
+    begin.add_argument("--worker-id", required=True)
 
-    clear_grant = subparsers.add_parser("clear-grant", aliases=["clear-control-grant"])
-    add_mutation_auth_options(clear_grant)
-    clear_grant.add_argument("--goal-id", required=True)
-    clear_grant.add_argument("--grant-actor", "--granted-actor", required=True)
-
-    claim = subparsers.add_parser("claim-successor")
-    add_mutation_auth_options(claim)
-    claim.add_argument("--goal-id", required=True)
-    claim.add_argument("--slice-label", required=True)
-
-    failure = subparsers.add_parser("record-successor-failure")
+    failure = subparsers.add_parser("record-recovery-failure")
     add_mutation_auth_options(failure)
     failure.add_argument("--goal-id", required=True)
     failure.add_argument("--slice-label", required=True)
@@ -128,7 +121,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     failure_route.add_argument("--discriminating-evidence")
     failure_route.add_argument("--no-new-evidence", action="store_true")
 
-    success = subparsers.add_parser("record-successor-success")
+    success = subparsers.add_parser("record-recovery-success")
     add_mutation_auth_options(success)
     success.add_argument("--goal-id", required=True)
     success.add_argument("--slice-label", required=True)
@@ -137,12 +130,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     add_mutation_auth_options(reset)
     reset.add_argument("--goal-id", required=True)
     reset.add_argument("--slice-label", required=True)
-    reset.add_argument(
-        "--root-cause-evidence",
-        "--root-cause-evidence-locator",
-        "--evidence-locator",
-        required=True,
-    )
+    reset.add_argument("--root-cause-evidence", required=True)
 
     recovery_check = subparsers.add_parser("check-recovery")
     recovery_check.add_argument("--goal-id", required=True)
@@ -150,12 +138,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     recovery_check.add_argument("--json", action="store_true")
 
     args = parser.parse_args(argv)
-    args.command = {
-        "set-control-grant": "set-grant",
-        "clear-control-grant": "clear-grant",
-    }.get(args.command, args.command)
     if getattr(args, "json", False) and getattr(args, "plain", False):
         parser.error("choose either --json or --plain")
-    if args.command == "init" and (args.control_revision is None or args.control_revision < 1):
+    if args.command == "init" and args.control_revision < 1:
         parser.error("--control-revision must be a positive integer")
     return args

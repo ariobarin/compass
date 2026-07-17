@@ -50,22 +50,26 @@ structural findings or an exceeded budget should fail the command. Run
 `scripts/skills-audit.ps1` directly for usage-log, context-window, and threshold
 options. Usage scanning is opt-in and never emits raw log content.
 
-`orchestration` reads compact local controller state from
+`orchestration` reads the local mechanical control index from
 `.local/orchestration-ledger.json` by default. Use `-GoalId` for one goal and
-`-Ledger` for an explicit path under `.local/`. Mutations go through
-`scripts/orchestration-ledger.ps1`, which records owners, next actions, evidence,
-public-mutation gates, prepared decisions, control writers, optimistic control
-revisions, delegated edit grants, and recovery circuits with exclusive locking,
-guarded validation, and atomic writes. Existing schema version 1 ledgers are
-read with migration defaults and become version 2 on the next successful write.
-Mutating an existing goal requires `-Actor` and `-ExpectedRevision`; delegated
-actors must have a grant for the exact action. The live ledger remains local and
-ignored. Run `orchestration-ledger.ps1 check-recovery -GoalId <id>
--SliceLabel <slice>` for read-only observation. Use
-`claim-successor` as the atomic prelaunch gate, then record a successor
-failure or success. Only the control writer can run `reset-recovery`, which
-requires root-cause evidence. A claimed slice records `claimed_by`, and only
-that actor can record its outcome.
+`-Ledger` for an explicit path under `.local/`. Durable meaning remains in the
+principal-authored Markdown goal, plan, catalog, assignment, and checkpoint
+documents referenced by the ledger.
+
+Mutations go through `scripts/orchestration-ledger.ps1`. Schema version 4
+records anchors, control-document links, planning or implementation phase,
+current routing, principal-verified evidence with producer and observation
+time, public-mutation gates, decisions, timestamps, and recovery circuits.
+Every mutation requires the named principal and expected revision. Delegated
+workers return artifacts and evidence; they cannot mutate control state. Schema
+versions 1 through 3 migrate on load and are rewritten as version 4 on the next
+successful write.
+
+Use `check-recovery` for read-only observation. Use `begin-recovery` after the
+principal reviews an assignment. A failure with no new discriminating evidence
+opens the circuit. Resume after a changed hypothesis, input, runtime path, or
+root-cause finding is recorded through `reset-recovery`. The ledger stays local,
+uses exclusive locking, validates before write, and replaces files atomically.
 
 `update` accepts a branch, tag, commit SHA, or other resolvable Git commit with
 `-Ref`; `-Branch` remains an alias for compatibility. Branch refs keep the

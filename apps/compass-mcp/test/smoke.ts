@@ -39,10 +39,10 @@ try {
 
   await client.connect(transport);
   const instructions = client.getInstructions() ?? "";
-  assert.match(instructions, /# User preferences/);
-  assert.match(instructions, /- input-token-economy:/);
-  assert.match(instructions, /Do not call list_skills just to discover skills/);
-  assert.doesNotMatch(instructions, /Call list_skills before selecting a workflow/);
+  assert.match(instructions, /# User Preferences/);
+  assert.match(instructions, /- run-a-micro-experiment:/);
+  assert.match(instructions, /Select workflows from the reviewed skill catalog already included below/);
+  assert.match(instructions, /Load the selected workflow with get_skill/);
 
   const tools = await client.listTools();
   assert.deepEqual(
@@ -56,18 +56,20 @@ try {
 
   const profile = await client.callTool({ name: "get_profile", arguments: {} });
   assert.equal(profile.isError, undefined);
-  assert.match(JSON.stringify(profile), /Prefer a pull request as the unit for repository changes/);
+  const profileText = JSON.stringify(profile);
+  assert.match(profileText, /Prefer a pull request as the unit for repository changes/);
+  assert.doesNotMatch(profileText, /GPT-5\.6 Sol|GLM-5\.2/);
 
   const skills = await client.callTool({ name: "list_skills", arguments: {} });
   assert.equal(skills.isError, undefined);
-  assert.match(JSON.stringify(skills), /input-token-economy/);
+  assert.match(JSON.stringify(skills), /run-a-micro-experiment/);
 
-  const skill = await client.callTool({ name: "get_skill", arguments: { name: "input-token-economy" } });
+  const skill = await client.callTool({ name: "get_skill", arguments: { name: "run-a-micro-experiment" } });
   assert.equal(skill.isError, undefined);
-  assert.match(JSON.stringify(skill), /Input Token Economy/);
+  assert.match(JSON.stringify(skill), /Run A Micro-Experiment/);
 
-  const search = await client.callTool({ name: "search", arguments: { query: "input token" } });
-  assert.match(JSON.stringify(search), /skill:input-token-economy/);
+  const search = await client.callTool({ name: "search", arguments: { query: "micro experiment" } });
+  assert.match(JSON.stringify(search), /skill:run-a-micro-experiment/);
 
   console.log("compass mcp smoke: ok");
 } finally {

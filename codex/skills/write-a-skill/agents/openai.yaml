@@ -1,7 +1,7 @@
 interface:
   display_name: "Write A Skill"
-  short_description: "Maintain Compass skills"
-  default_prompt: "Use $write-a-skill to create or revise a Compass skill and its install wiring."
+  short_description: "Write strong lean reusable agent skills"
+  default_prompt: "Use $write-a-skill to create or revise a reusable skill that establishes a strong role, desired result, evidence standard, and authority boundary before procedure."
 
 policy:
   allow_implicit_invocation: false

@@ -1,56 +1,79 @@
-# Plan Template
+# Durable Plan Template
 
-Use this template only when Compass needs a written plan artifact that will be
-reviewed, handed off, or kept with repo-local evidence.
+Use this template when a plan must survive review, compaction, delegation, or a
+fresh principal context. The user-facing principal, or the user directly,
+authors and maintains it.
 
-This is repo-maintainer guidance and is not installed into a live Codex home,
-user skill home, or Claude home.
-Put reusable agent behavior in installed agents or skills instead.
+This is maintainer guidance. It is not installed into runtime homes.
 
-Do not use this for normal in-chat planning. Prefer Plan mode or `update_plan`
-when the work is interactive. Use `using-codex-goals` when the user asks for a
-durable Codex goal. Use this file only when a plan itself is an artifact.
+A plan is the current route, not the stable goal. Link the authoritative goal
+and update the plan when evidence changes. Keep implementation authority
+explicit so planning cannot silently become production mutation.
 
-Keep the plan short enough to guide execution. If a section does not change a
-future decision, cut it.
+```markdown
+# Plan: <name>
 
-## Goal
+Created at: <ISO 8601 timestamp with timezone>
+Last verified at: <ISO 8601 timestamp with timezone>
+Principal: <logical principal identity>
+Status: draft | reviewed | approved | superseded | complete
+Implementation authority: withheld | granted
+Authority source: <user statement, issue, workflow, or none>
 
-State the end state in one or two paragraphs. Include what must be true for the
-work to count as done.
+## Goal Anchor
 
-## Scope
+- Goal document:
+- Goal revision:
+- Other authoritative sources, in precedence order:
 
-- In scope:
-- Out of scope:
-- Repos or paths:
-- Existing branches or PRs:
+## Desired Result
 
-## Context To Gather
+State what this route is intended to produce. Keep completion meaning in the
+goal document rather than rewriting it here.
 
-- Files, docs, issues, logs, or commands that must be inspected first:
-- External docs or APIs that may need verification:
-- Assumptions to challenge or verify:
+## Observed State
 
-## Execution Steps
+Record current facts with evidence locators. Separate direct observation from
+inference.
 
-Use numbered steps only when order matters. Each step should name an action and
-the evidence it should produce.
+## Decisions
+
+Record decisions already made, why they matter, and who had authority.
+
+## Route
+
+Describe the smallest coherent route from observed state to the goal. Use
+numbered steps only when order is real. For each material step, name the evidence
+it should produce.
+
+## Assignments
+
+List reviewed delegate packets by locator. The principal owns this index;
+delegates return artifacts and evidence.
 
 ## Verification
 
-- Required commands:
-- Runtime or browser checks:
-- GitHub checks or review path (CI, requested reviewers, `@codex review`):
-- Artifacts to inspect:
-- Evidence that proves completion:
+- Required checks:
+- Runtime or browser evidence:
+- Independent review:
+- Evidence that closes each goal assertion:
 
-## Rollback
+## Risks And Recovery
 
-- Files or config that would need to be reverted:
-- Data, containers, branches, or services that need cleanup:
+Name credible failure modes, preservation boundaries, and the smallest
+reversible recovery action.
 
-## Open Questions
+## Open Decisions
 
-List only questions that block useful progress. Make reasonable assumptions for
-everything else and state them before editing.
+List only choices that materially change outcome, scope, interface, authority,
+or risk. Include options and a recommendation.
+
+## Next Principal Action
+
+Name the next judgment-bearing action. Put pure waiting in a bounded command or
+monitor.
+```
+
+Before implementation begins, verify that the plan is reviewed, the goal is
+anchored, the mutation boundary is explicit, and a fresh context can understand
+the route without the conversation that produced it.

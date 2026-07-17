@@ -1,7 +1,7 @@
 interface:
   display_name: "PR Review Loop"
   short_description: "Review and close out a PR"
-  default_prompt: "Use $pr-review-loop to iterate on this pull request with explicit PR identity, green neutral-critic review before @codex review for ariobarin repos, current-head checks, quiet acknowledged-review waits, merge-boundary discipline, and archive-after-merge closeout when requested."
+  default_prompt: "Use $pr-review-loop to preserve this pull request identity, bind every claim to the current head, choose proportionate independent gates, route findings to the implementation owner, and stop at the authorized mutation boundary."
 
 policy:
   allow_implicit_invocation: true

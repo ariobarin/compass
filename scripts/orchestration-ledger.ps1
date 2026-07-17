@@ -3,22 +3,29 @@
 Reads and updates the local Compass orchestration ledger.
 
 .DESCRIPTION
-Stores control state under .local/orchestration-ledger.json. The ledger is
-repo-local, ignored, and never installed into Codex or Claude homes.
+Stores a principal-authored mechanical index under
+.local/orchestration-ledger.json. The durable goal, plan, catalog,
+assignments, and checkpoints remain Markdown control documents. Delegated
+workers return artifacts and evidence; only the named principal writes ledger
+control state.
 #>
 [CmdletBinding()]
 param(
-    [ValidateSet("status", "validate", "init", "set-owner", "set-state", "set-next", "add-evidence", "set-gate", "set-decision", "clear-decision", "set-grant", "clear-grant", "claim-successor", "record-successor-failure", "record-successor-success", "reset-recovery", "check-recovery")]
+    [ValidateSet("status", "validate", "init", "set-owner", "set-phase", "set-links", "set-state", "set-next", "add-evidence", "set-gate", "set-decision", "clear-decision", "begin-recovery", "record-recovery-failure", "record-recovery-success", "reset-recovery", "check-recovery")]
     [string]$Action = "status",
     [string]$GoalId,
     [string]$Goal,
-    [Alias("ControlActor")]
+    [Alias("Principal", "ControlActor")]
     [string]$Actor,
     [string]$ExecutionOwner,
     [Alias("Writer")]
     [string]$ControlWriter,
     [string]$WorkerId,
     [switch]$ClearWorker,
+    [string[]]$Anchor,
+    [string[]]$ControlDocument,
+    [ValidateSet("planning", "implementation")]
+    [string]$Phase,
     [ValidateSet("planned", "active", "waiting", "blocked", "complete", "cancelled")]
     [string]$State,
     [string]$NextAction,
@@ -28,6 +35,8 @@ param(
     [string]$EvidenceKind,
     [string]$EvidenceSummary,
     [string]$EvidenceLocator,
+    [string]$EvidenceProducer,
+    [string]$EvidenceObservedAt,
     [ValidateSet("closed", "authorized", "in_flight", "complete")]
     [string]$Gate,
     [string]$GateAction,
@@ -35,9 +44,6 @@ param(
     [string[]]$DecisionOption,
     [Alias("ExpectedControlRevision", "Revision")]
     [Nullable[int]]$ExpectedRevision,
-    [Alias("GrantedActor")]
-    [string]$GrantActor,
-    [string[]]$Mutation,
     [string]$SliceLabel,
     [string]$FailureEvidence,
     [string]$DiscriminatingEvidence,
@@ -71,10 +77,23 @@ if ($Ledger) {
 $arguments += $Action
 
 function Add-MutationAuth {
-    if (-not $PSBoundParameters.ContainsKey("Actor") -or -not $PSBoundParameters.ContainsKey("ExpectedRevision")) {
+    if ([string]::IsNullOrWhiteSpace($Actor) -or $null -eq $ExpectedRevision) {
         throw "mutations require -Actor and -ExpectedRevision"
     }
     $script:arguments += @("--actor", $Actor, "--expected-revision", $ExpectedRevision)
+}
+
+function Add-RepeatedArgument {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Name,
+        [string[]]$Values
+    )
+    foreach ($value in @($Values)) {
+        if ($value) {
+            $script:arguments += @($Name, $value)
+        }
+    }
 }
 
 switch ($Action) {
@@ -94,6 +113,9 @@ switch ($Action) {
     "init" {
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($Goal) { $arguments += @("--goal", $Goal) }
+        Add-RepeatedArgument -Name "--anchor" -Values $Anchor
+        Add-RepeatedArgument -Name "--control-document" -Values $ControlDocument
+        if ($Phase) { $arguments += @("--phase", $Phase) }
         if ($ExecutionOwner) { $arguments += @("--execution-owner", $ExecutionOwner) }
         if ($ControlWriter) { $arguments += @("--control-writer", $ControlWriter) }
         if ($WorkerId) { $arguments += @("--worker-id", $WorkerId) }
@@ -109,6 +131,17 @@ switch ($Action) {
         elseif ($WorkerId) {
             $arguments += @("--worker-id", $WorkerId)
         }
+    }
+    "set-phase" {
+        Add-MutationAuth
+        if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
+        if ($Phase) { $arguments += @("--phase", $Phase) }
+    }
+    "set-links" {
+        Add-MutationAuth
+        if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
+        Add-RepeatedArgument -Name "--anchor" -Values $Anchor
+        Add-RepeatedArgument -Name "--control-document" -Values $ControlDocument
     }
     "set-state" {
         Add-MutationAuth
@@ -132,6 +165,8 @@ switch ($Action) {
         if ($EvidenceKind) { $arguments += @("--kind", $EvidenceKind) }
         if ($EvidenceSummary) { $arguments += @("--summary", $EvidenceSummary) }
         if ($EvidenceLocator) { $arguments += @("--locator", $EvidenceLocator) }
+        if ($EvidenceProducer) { $arguments += @("--producer", $EvidenceProducer) }
+        if ($EvidenceObservedAt) { $arguments += @("--observed-at", $EvidenceObservedAt) }
     }
     "set-gate" {
         Add-MutationAuth
@@ -143,33 +178,19 @@ switch ($Action) {
         Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($DecisionQuestion) { $arguments += @("--question", $DecisionQuestion) }
-        foreach ($option in @($DecisionOption)) {
-            if ($option) { $arguments += @("--option", $option) }
-        }
+        Add-RepeatedArgument -Name "--option" -Values $DecisionOption
     }
     "clear-decision" {
         Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
     }
-    "set-grant" {
-        Add-MutationAuth
-        if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
-        if ($GrantActor) { $arguments += @("--grant-actor", $GrantActor) }
-        foreach ($item in @($Mutation)) {
-            if ($item) { $arguments += @("--mutation", $item) }
-        }
-    }
-    "clear-grant" {
-        Add-MutationAuth
-        if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
-        if ($GrantActor) { $arguments += @("--grant-actor", $GrantActor) }
-    }
-    "claim-successor" {
+    "begin-recovery" {
         Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($SliceLabel) { $arguments += @("--slice-label", $SliceLabel) }
+        if ($WorkerId) { $arguments += @("--worker-id", $WorkerId) }
     }
-    "record-successor-failure" {
+    "record-recovery-failure" {
         Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($SliceLabel) { $arguments += @("--slice-label", $SliceLabel) }
@@ -181,7 +202,7 @@ switch ($Action) {
             $arguments += "--no-new-evidence"
         }
     }
-    "record-successor-success" {
+    "record-recovery-success" {
         Add-MutationAuth
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($SliceLabel) { $arguments += @("--slice-label", $SliceLabel) }

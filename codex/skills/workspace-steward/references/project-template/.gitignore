@@ -1,16 +1,18 @@
-# Scratch - recreatable and deletable. Keep the directory, ignore its contents.
+# Recreatable scratch. Keep the directory contract, ignore its contents.
 /tmp/*
 !/tmp/README.md
 
-# Child-repo worktrees - linked through git, not tracked in this root repo.
+# Child-repository worktrees are linked through Git, not tracked by this root.
 /worktrees/prs/*
-!/worktrees/prs/.gitkeep
+!/worktrees/prs/README.md
+/worktrees/spikes/*
+!/worktrees/spikes/README.md
 
-# Canonical child repo checkouts - add concrete names before cloning.
+# Canonical child checkouts. Add concrete names before cloning.
 # /example-repo/
 # /example-repo-main/
 
-# Secrets and credentials - never commit.
+# Secrets and credentials.
 .env
 .env.*
 !.env.example
@@ -18,8 +20,9 @@
 *.key
 *.p12
 secrets/
+credentials/
 
-# Local runtime state - browser profiles, sessions, logs, and databases.
+# Machine-only runtime state.
 /browser/
 /browser-profile/
 /cache/
@@ -39,7 +42,7 @@ secrets/
 *.db-wal
 *.log
 
-# Machine-only runtime caches and build state.
+# Build and tool caches.
 **/__pycache__/
 **/.venv/
 **/node_modules/

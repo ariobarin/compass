@@ -185,6 +185,10 @@ function Get-PortableManifestArray {
     return @($keyValue)
 }
 
+function Get-PortableClaudeFileNames {
+    return Get-PortableManifestArray -Section "claude" -Key "files"
+}
+
 function Get-PortableClaudeSkillNames {
     return Get-PortableManifestArray -Section "claude" -Key "skills"
 }
@@ -208,6 +212,7 @@ function Get-PortableClaudeDerivedAgentNames {
 $script:ClaudeDerivedAgentFrontmatter = @{
     "algorithm-critic" = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
     "neutral-critic"   = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
+    "progress-monitor" = @{ Tools = "Read, Grep, Glob, Bash"; Color = "yellow" }
     "repo-explorer"    = @{ Tools = "Read, Grep, Glob, Bash"; Color = "blue" }
     "research-critic"  = @{ Tools = "Read, Grep, Glob, Bash, WebSearch, WebFetch"; Color = "red" }
     "reuse-critic"     = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
@@ -309,6 +314,18 @@ function Get-PortableFileMap {
         })
     }
 
+    # Claude owns a separately authored global instruction file. Shared skills
+    # and most agents still derive from the reviewed Codex source.
+    foreach ($relative in Get-PortableClaudeFileNames) {
+        $items.Add([pscustomobject]@{
+            Type = "file"
+            RepoPath = Join-Path (Join-Path $RepoRoot "claude") $relative
+            LivePath = Join-Path $ClaudeHome $relative
+            LiveRoot = $ClaudeHome
+            BackupScope = "claude"
+        })
+    }
+
     # Claude skills install to ~/.claude/skills and agents to ~/.claude/agents.
     $claudeSkillsHome = Join-Path $ClaudeHome "skills"
     foreach ($skill in Get-PortableClaudeSkillNames) {
@@ -363,7 +380,7 @@ function Get-RetiredPortableFileMap {
 
     $items = New-Object System.Collections.Generic.List[object]
 
-    foreach ($skill in @(@(Get-PortableSkillNames) + @("codex-portable", "pr-merge-closeout", "proper-flowcharts", "ui-ux-pro-max"))) {
+    foreach ($skill in @(@(Get-PortableSkillNames) + @("benchmark-run-operator", "codex-portable", "input-token-economy", "pr-merge-closeout", "proper-flowcharts", "ui-ux-pro-max", "using-codex-goals"))) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $CodexHome "skills") $skill
@@ -374,7 +391,7 @@ function Get-RetiredPortableFileMap {
 
     # Keep retired user-skill removals explicit so install does not delete
     # unrelated personal skills that Compass does not own.
-    foreach ($skill in @("benchmark-infra-reviewer", "pr-merge-closeout", "ui-ux-pro-max", "webmcp-eval-triage", "webmcp-tool-authoring", "webmcp-verify-tool")) {
+    foreach ($skill in @("benchmark-infra-reviewer", "benchmark-run-operator", "input-token-economy", "pr-merge-closeout", "ui-ux-pro-max", "using-codex-goals", "webmcp-eval-triage", "webmcp-tool-authoring", "webmcp-verify-tool")) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $AgentsHome "skills") $skill
@@ -389,7 +406,7 @@ function Get-RetiredPortableFileMap {
     if (-not $claudeHome) {
         $claudeHome = Get-ClaudeHome
     }
-    foreach ($skill in @("benchmark-infra-reviewer")) {
+    foreach ($skill in @("benchmark-infra-reviewer", "benchmark-run-operator", "input-token-economy", "using-codex-goals")) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $claudeHome "skills") $skill
@@ -397,6 +414,13 @@ function Get-RetiredPortableFileMap {
             BackupScope = "claude"
         })
     }
+
+    $items.Add([pscustomobject]@{
+        Type = "file"
+        LivePath = Join-Path (Join-Path $claudeHome "agents") "benchmark-infra-reviewer.md"
+        LiveRoot = $claudeHome
+        BackupScope = "claude"
+    })
 
     return $items
 }

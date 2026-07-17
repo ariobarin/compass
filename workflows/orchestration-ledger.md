@@ -1,210 +1,270 @@
 # Orchestration Ledger
 
-Use this workflow when a controller needs durable local control state across
-sessions, workers, checks, or decision points. The ledger records authority, current state, evidence, and recovery gates. It does not execute work or replace
-the worker that owns delivery.
+Use this workflow when a long-running objective needs a compact mechanical index
+across contexts, compactions, delegates, checks, or recovery decisions. The
+principal authors the durable goal, plan, catalog, assignments, and checkpoints
+in Markdown. The JSON ledger points to those control documents and records
+principal-verified evidence, current routing, timestamps, and recovery gates.
 
 This is repo-maintainer state. It is not installed into a Codex home, user skill
 home, or Claude home.
+
+## Purpose
+
+A conversation is not a durable control surface. Contexts end, compactions lose
+detail, and delegation changes the reader. The ledger makes the current control
+state observable without asking every fresh context to reconstruct it from chat.
+
+The ledger stays mechanical. The Markdown control documents carry meaning.
+
+- **Goal document:** stable finished state, evidence standard, constraints, and
+  amendment authority.
+- **Plan and catalog:** approved route, active assignments, artifact locations,
+  dependencies, and current decisions.
+- **Assignment:** reviewed work packet given to a delegate.
+- **Checkpoint:** principal-authored resume point before compaction or handoff.
+- **JSON ledger:** links, phase, state, current owner, verified evidence,
+  timestamps, mutation authority, and recovery circuits.
+
+A delegate returns artifacts and evidence. The principal verifies that return and
+records any resulting control-state change. Delegates do not invent ledger
+formats or mutate the principal's control record.
 
 ## Local Boundary
 
 The supported location is under `.local/`, with
 `.local/orchestration-ledger.json` as the default. The directory is ignored and
-listed as local-only. Do not copy the ledger into commits, prompts, PR bodies,
-MCP responses, or installed guidance.
+listed as local-only. Keep durable project control documents in the project
+location selected by its workspace guidance, usually under `local-docs/`.
 
-The ledger may contain compact goal labels, worker labels, evidence locators,
-and prepared decisions. It must not contain credentials, tokens, cookies,
-private message content, raw logs, or copied source artifacts.
+The ledger may contain compact goal labels, file or URL locators, worker labels,
+evidence summaries, and prepared decisions. Keep credentials, tokens, cookies,
+private message content, raw logs, and copied source artifacts out of it.
 
-## Control Record
+## One Logical Principal
+
+Every goal names one `control_writer`. That identity is the logical principal,
+not a permanent process. A fresh context may assume the role only after reading
+and verifying the named anchors and control documents.
+
+Every mutation supplies:
+
+- the principal identity;
+- the expected control revision;
+- the exact goal being changed.
+
+A non-principal actor or stale revision fails before writing. The tool does not
+support delegated edit grants. This preserves one reviewed interpretation of the
+objective across finite contexts.
+
+## Goal Record
 
 Each goal records:
 
-- the outcome to pursue;
-- execution owner and worker identity;
-- current state and next action;
-- compact completion evidence;
+- the stable goal statement;
+- authoritative anchors;
+- principal-authored control documents;
+- phase: `planning` or `implementation`;
+- execution owner and current worker identity;
+- current state and next judgment point;
+- principal-verified evidence with producer and observation time;
 - public-mutation authority and the exact named action;
 - one prepared human decision, when needed;
-- one control writer and optimistic revision;
-- exact delegated mutation grants;
-- per-slice recovery circuits.
+- one principal writer and optimistic revision;
+- per-slice recovery circuits;
+- created, updated, and last-verified timestamps.
 
-A recovery circuit records whether a successor is unclaimed, claimed, or open,
-plus the latest failure evidence and the evidence that permits another attempt.
-It does not count retries. A failed successor must declare one of two states:
+Changing `phase` to `implementation` records authority that already exists. It
+does not create implementation authority by itself. The approved goal or plan
+remains the source of that authority.
 
-- new discriminating evidence changed the diagnosis, inputs, or runtime path, so
-  another bounded successor may be claimed;
-- no new discriminating evidence exists, so the circuit opens and another
-  symptom-level successor is refused.
+## Initialize A Goal
 
-Resetting an open circuit is control-writer-only and requires root-cause
-evidence.
+Create the Markdown control documents first, then initialize the index:
 
-Schema version 3 replaces the successor failure counter with evidence fields.
-The runtime reads schema versions 1 and 2 and migrates them on the next
-successful write. A version 2 count becomes a compact migration evidence
-locator, while its prior open or closed state is preserved.
+```powershell
+.\scripts\orchestration-ledger.ps1 -Action init `
+  -GoalId release-42 `
+  -Goal "Ship the reviewed release" `
+  -Anchor "product-requirements.md" `
+  -ControlDocument "local-docs/control/goal.md" `
+  -ControlDocument "local-docs/control/catalog.md" `
+  -ExecutionOwner principal `
+  -ControlWriter principal `
+  -Phase planning `
+  -State planned
+```
 
-## Authority
+The goal statement is not mutable through this CLI. Amend the authoritative goal
+document under its declared authority, then create a new goal record or use the
+project's explicit amendment procedure.
 
-Every mutation of an existing goal declares the actor and expected control
-revision. The control writer may perform any mutation. Another actor needs a
-grant naming the exact mutation. A successful mutation increments the revision.
-A stale revision or missing grant fails before any write.
-
-The public-mutation gate records authority that already exists:
-
-- `closed`: no public mutation is authorized;
-- `authorized`: the user or repository workflow granted the recorded action;
-- `in_flight`: the authorized public sequence started;
-- `complete`: the authorized sequence finished and was verified.
-
-Changing the field does not grant permission.
-
-## Commands
-
-Read the ledger:
+## Read And Validate
 
 ```powershell
 .\scripts\compass.ps1 orchestration
 .\scripts\compass.ps1 orchestration -GoalId release-42 -Json
+.\scripts\orchestration-ledger.ps1 -Action validate
 ```
 
-Initialize a goal:
+Before a fresh context continues work, it should be able to answer from the goal,
+control documents, and current ledger:
+
+- What finished state remains authoritative?
+- Which source documents establish it?
+- What phase is authorized?
+- What evidence is current?
+- What remains unresolved?
+- What action can produce the next useful proof?
+
+That is the fresh-context resume test.
+
+## Record Phase And Routing
+
+After an approved transition to implementation:
 
 ```powershell
-.\scripts\orchestration-ledger.ps1 init `
+.\scripts\orchestration-ledger.ps1 -Action set-phase `
   -GoalId release-42 `
-  -Goal "Ship the reviewed release" `
-  -ExecutionOwner release-worker `
-  -ControlWriter controller `
-  -WorkerId thread-123 `
-  -State active
-```
-
-Grant a recovery worker only the mutations it needs:
-
-```powershell
-.\scripts\orchestration-ledger.ps1 set-grant `
-  -GoalId release-42 `
-  -Actor controller `
+  -Actor principal `
   -ExpectedRevision 1 `
-  -GrantActor recovery-worker `
-  -Mutation claim-successor `
-  -Mutation record-successor-failure `
-  -Mutation record-successor-success
+  -Phase implementation
 ```
 
-Claim a slice as the atomic prelaunch gate:
+Record a current owner or worker without transferring control authorship:
 
 ```powershell
-.\scripts\orchestration-ledger.ps1 claim-successor `
+.\scripts\orchestration-ledger.ps1 -Action set-owner `
   -GoalId release-42 `
-  -Actor recovery-worker `
+  -Actor principal `
   -ExpectedRevision 2 `
-  -SliceLabel magento-checkout
+  -ExecutionOwner principal `
+  -WorkerId implementation-auth-01
 ```
 
-Record a failed attempt that produced new discriminating evidence:
+Update links when a reviewed control document supersedes an older one:
 
 ```powershell
-.\scripts\orchestration-ledger.ps1 record-successor-failure `
+.\scripts\orchestration-ledger.ps1 -Action set-links `
   -GoalId release-42 `
-  -Actor recovery-worker `
+  -Actor principal `
   -ExpectedRevision 3 `
-  -SliceLabel magento-checkout `
-  -FailureEvidence run:842 `
+  -Anchor "product-requirements.md#revision-4" `
+  -ControlDocument "local-docs/control/checkpoint.md"
+```
+
+## Record Verified Evidence
+
+A delegate may produce the observation. The principal inspects it and records
+what it proves:
+
+```powershell
+.\scripts\orchestration-ledger.ps1 -Action add-evidence `
+  -GoalId release-42 `
+  -Actor principal `
+  -ExpectedRevision 4 `
+  -EvidenceKind test `
+  -EvidenceSummary "Portable checks passed on the current head" `
+  -EvidenceLocator "run:835" `
+  -EvidenceProducer "implementation-auth-01" `
+  -EvidenceObservedAt "2026-07-17T09:15:00-06:00"
+```
+
+The record distinguishes:
+
+- who produced the evidence;
+- when the state was observed;
+- which principal verified and recorded it.
+
+A worker's confident completion claim is a locator for inspection, not evidence
+by itself.
+
+## Recovery Circuits
+
+A recovery circuit protects one slice from unchanged repeated attempts.
+
+Begin an approved recovery assignment:
+
+```powershell
+.\scripts\orchestration-ledger.ps1 -Action begin-recovery `
+  -GoalId release-42 `
+  -Actor principal `
+  -ExpectedRevision 5 `
+  -SliceLabel checkout `
+  -WorkerId recovery-01
+```
+
+Record a failure that changed the diagnosis or route:
+
+```powershell
+.\scripts\orchestration-ledger.ps1 -Action record-recovery-failure `
+  -GoalId release-42 `
+  -Actor principal `
+  -ExpectedRevision 6 `
+  -SliceLabel checkout `
+  -FailureEvidence "run:842" `
   -DiscriminatingEvidence "trace isolates provider startup"
 ```
 
-The slice closes and may be claimed again because the next attempt has a changed
-basis.
+The circuit closes because another bounded attempt has a changed basis.
 
-Record a failed attempt that did not improve the diagnosis:
+Record a failure that produced no new discriminating evidence:
 
 ```powershell
-.\scripts\orchestration-ledger.ps1 record-successor-failure `
+.\scripts\orchestration-ledger.ps1 -Action record-recovery-failure `
   -GoalId release-42 `
-  -Actor recovery-worker `
-  -ExpectedRevision 5 `
-  -SliceLabel magento-checkout `
-  -FailureEvidence run:843 `
+  -Actor principal `
+  -ExpectedRevision 7 `
+  -SliceLabel checkout `
+  -FailureEvidence "run:843" `
   -NoNewEvidence
 ```
 
-The slice opens. `check-recovery` and `claim-successor` then fail for that slice.
-
-Reset after root-cause evidence changes the route:
-
-```powershell
-.\scripts\orchestration-ledger.ps1 reset-recovery `
-  -GoalId release-42 `
-  -Actor controller `
-  -ExpectedRevision 6 `
-  -SliceLabel magento-checkout `
-  -RootCauseEvidence review:runtime-child-path
-```
-
-Record success only from the actor that owns the claim:
+The circuit opens. Another attempt requires a changed hypothesis, input, runtime
+path, or root-cause finding:
 
 ```powershell
-.\scripts\orchestration-ledger.ps1 record-successor-success `
+.\scripts\orchestration-ledger.ps1 -Action reset-recovery `
   -GoalId release-42 `
-  -Actor recovery-worker `
+  -Actor principal `
   -ExpectedRevision 8 `
-  -SliceLabel magento-checkout
+  -SliceLabel checkout `
+  -RootCauseEvidence "review:provider-startup"
 ```
 
-Record a next action only when a future wake needs judgment:
+`check-recovery` is an observation. It never claims or launches a worker.
 
-```powershell
-.\scripts\orchestration-ledger.ps1 set-next `
-  -GoalId release-42 `
-  -Actor controller `
-  -ExpectedRevision 9 `
-  -NextAction "Inspect hosted checks and current-head review" `
-  -NextCheckAt "2026-07-12T12:00:00Z"
-```
+## Public Mutation Gate
 
-Append compact evidence:
+The gate records authority already granted by the user or repository workflow:
 
-```powershell
-.\scripts\orchestration-ledger.ps1 add-evidence `
-  -GoalId release-42 `
-  -Actor controller `
-  -ExpectedRevision 10 `
-  -EvidenceKind test `
-  -EvidenceSummary "Portable checks passed on the current head" `
-  -EvidenceLocator "run:835"
-```
+- `closed`: no public mutation is authorized;
+- `authorized`: the exact recorded action is authorized;
+- `in_flight`: that authorized sequence started;
+- `complete`: that authorized sequence finished and was verified.
 
-Validate the stored shape:
-
-```powershell
-.\scripts\orchestration-ledger.ps1 validate
-```
+Changing the field does not grant permission.
 
 ## Operating Discipline
 
-- Keep one execution owner per goal.
-- Use the ledger for control state, not narrative history.
-- Put mechanical waits inside one bounded command.
-- Append evidence that can support or falsify completion.
+- Keep one logical principal writer per goal.
+- Let delegates own assigned artifacts and return evidence.
+- Keep objective meaning in reviewed Markdown control documents.
+- Keep the JSON ledger compact and mechanical.
+- Put pure waiting inside one bounded command.
+- Use a monitor agent only when each observation requires limited judgment.
+- Record absolute timestamps with time zones.
 - Open recovery when another unchanged attempt would repeat motion without
   learning.
-- Resume only when a changed hypothesis, input, runtime path, or root-cause
-  finding is named.
-- Mark a goal complete only when evidence matches the outcome or the user
-  explicitly accepts an incomplete endpoint.
+- Complete only when current evidence verifies the authoritative finished state,
+  or the authorized owner amends that state.
 
 ## Verification
 
-`manifests/orchestration-ledger.schema.json` documents the stored shape.
-`scripts/orchestration-ledger.py` validates it without an external schema
-dependency, writes atomically, and restricts paths to `.local/`.
-`scripts/test-orchestration-ledger.py` covers lifecycle, authority, migration,
-and evidence-based recovery behavior.
+- `manifests/orchestration-ledger.schema.json` documents schema version 4.
+- `scripts/orchestration-ledger.py` validates and writes the ledger atomically.
+- The path is restricted to `.local/` and rejects symlink traversal.
+- `scripts/test-orchestration-ledger.py` covers principal authority, optimistic
+  revision, evidence provenance, phase and link updates, recovery, migration,
+  and path boundaries.
+- `scripts/test-orchestration-ledger-lock.py` covers single-writer locking.

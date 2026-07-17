@@ -1,153 +1,132 @@
 ---
 name: workspace-steward
-description: Organize and audit local multi-repo workspaces with clean main checkouts, PR worktrees, experiments, local docs, artifacts, tmp space, and evidence rules.
+description: Organize and audit agentic multi-repo workspaces, worktrees, control docs, experiments, evidence, scratch, and archives.
 ---
 
 # Workspace Steward
 
-Use this skill to make a workspace easier to enter, operate, and review while
-preserving active work and evidence. The first move is to make the requested
-change earn its place.
+Create a workspace that makes parallel agent work easy to enter, isolate,
+resume, review, and retire. This skill exists because repositories, worktrees,
+control documents, experiments, artifacts, and scratch acquire different
+lifecycles, and a flat directory turns those differences into hidden risk.
 
-An umbrella workspace coordinates multiple child repos and local operating
-surfaces. It is not automatically a monorepo, and its root might not be the repo
-that a command should operate on.
+The requested organization must earn its maintenance. Preserve active work and
+make the smallest layout change that removes real confusion, repeated cost, or
+safety risk.
 
-## Decision Filter
+## Apply The Reduction Filter
 
-Run this filter in order before changing layout, moving files, adding scripts,
-or automating cleanup:
+Before moving files or adding process:
 
-1. Challenge the requirement. State the current confusion, repeated cost, or
-   safety risk the change is meant to fix.
-2. Remove what does not earn maintenance. Delete proposed buckets, docs, scripts,
-   or conventions that do not solve that stated problem.
-3. Simplify what remains. Prefer fewer paths, clearer names, and existing Git
-   or shell behavior over new process.
-4. Speed up only after the shape is right. Add aliases, scripts, templates, or
-   manifests only when they shorten a proven workflow.
-5. Automate last. Automate only stable, repeated operations with clear inputs,
-   outputs, rollback, and preservation boundaries.
+1. Name the current confusion, repeated cost, or preservation risk.
+2. Remove proposed buckets, docs, scripts, or automation that do not solve it.
+3. Simplify names and paths around existing Git and shell behavior.
+4. Accelerate a proven workflow only after its shape is clear.
+5. Automate stable repeated operations with explicit inputs, outputs, rollback,
+   and preservation boundaries.
 
-If a proposed folder, move, script, or automation fails an earlier filter, stop
-and report the smaller change that survived.
+A smaller note, ignore rule, catalog, or worktree convention may solve the
+problem better than a new hierarchy.
 
-When creating a new umbrella workspace from scratch, use
-`references/project-template/` only after the decision filter leaves a full
-skeleton as the smallest useful shape. Read
-`references/project-template/README.md`, copy the template contents into the new
-workspace root, and replace placeholders with real project and repo names.
+## Separate Lifecycles
 
-## Operating Model
+An umbrella workspace coordinates child repositories and local operating state.
+It is not automatically a monorepo.
 
-Question the target layout before moving anything. Ask what problem the change
-solves, who will use it next, and whether a smaller note, ignore rule, or
-worktree convention would solve it.
+Use visible, purpose-named areas when they match the work:
 
-Keep top-level areas tied to one lifecycle:
+- canonical repositories and clean default-branch checkouts at the root;
+- `worktrees/prs/` for branch work intended to become reviewed repository
+  changes;
+- `worktrees/spikes/` for disposable integration questions against the real
+  repository;
+- `experiments/` for tiny disposable mechanism tests;
+- `local-docs/` for principal-authored goals, plans, catalogs, assignments,
+  checkpoints, and handoffs;
+- `docs/` for durable project or workspace documentation;
+- `artifacts/` for generated evidence, reports, exports, logs, and manifests;
+- `tmp/` for recreatable scratch;
+- `archived/` for inactive material retained as reference.
 
-- canonical repo checkouts stay visible at the root;
-- clean main checkouts, usually `<repo>-main`, stay on the default branch for
-  reading, syncing, and creating worktrees;
-- `worktrees/prs/` holds branch or PR work that is intended to be pushed;
-- `experiments/` holds exploratory work that is not yet a repo, artifact, or
-  PR;
-- `local-docs/` holds controller notes, plans, and handoffs;
-- `docs/` holds durable project or workspace documentation;
-- `artifacts/` holds generated evidence, reports, exports, logs, and manifests;
-- `tmp/` holds scratch files that can be recreated or deleted;
-- `archived/` holds inactive reference material.
+Use names that reveal repository and workstream identity. Generic buckets such
+as `src/` weaken an umbrella workspace unless the root is truly one repository.
 
-Use names that reveal repo identity. Do not move active repos under generic
-buckets such as `src/` unless the workspace is actually one repository with
-internal packages and every path dependency has a migration plan.
+## Worktrees Are Real Work
 
-## Before Editing
+Keep a clean default-branch checkout for reading, syncing, and creating
+worktrees. Start production-bound work from the intended current remote base,
+usually `origin/main`, after fetching and verifying state.
 
-1. Read root `AGENTS.md`, root `README.md`, and the nearest docs index.
-2. Identify the actual Git repo before branch, commit, push, or status work:
+Use `git-branch-resolver` whenever branch identity, divergence, registration,
+cleanup, or PR state needs interpretation.
 
-```powershell
-git rev-parse --show-toplevel
-git status --short --branch
-git remote -v
-```
+Move registered worktrees with Git. Remove them after merge, preservation, or
+explicit disposable evidence. A dirty worktree remains active work until its
+contents are understood and preserved.
 
-3. Classify each uncertain directory by evidence, not name:
+## Experiments Are Disposable Learning
 
-```powershell
-git -C <candidate> rev-parse --git-common-dir
-git -C <candidate> worktree list --porcelain
-git -C <candidate> status --short --branch
-```
+A micro-experiment answers one uncertainty with tiny code that will never be
+copied into production. Keep it independent of the project when the mechanism
+can be isolated. Record the finding, then implement deliberately in a real
+worktree.
 
-4. Inspect dirty state and preserve useful work before moving or deleting files.
-5. Draft the smallest target layout that solves the specific confusion.
+Use `run-a-micro-experiment` for that contract. Use a disposable integration
+spike worktree when the uncertainty requires the real repository.
 
-## Worktree Rules
+## Preserve Principal Control State
 
-Keep the clean main checkout clean. Use it for reading, syncing, and creating
-worktrees, not ordinary implementation edits.
+Long-running goals, plans, catalogs, assignments, and checkpoints are authored
+by the user-facing principal or the user. Delegated workers return evidence and
+artifacts through named channels rather than maintaining independent control
+files.
 
-Start PR worktrees from `origin/main` by default, not from a dirty local main
-checkout:
+Keep current state compact. Timestamp operational documents with the fields that
+answer freshness questions, such as:
 
-```powershell
-git -C <repo-main> fetch origin
-git -C <repo-main> status --short --branch
-git -C <repo-main> worktree add -b <branch-name> <umbrella>\worktrees\prs\<slug> origin/main
-```
+- created at;
+- updated at;
+- last verified at;
+- next check at;
+- applies to commit or runtime identity;
+- archived at.
 
-If local project guidance names a different default branch, use that branch
-explicitly and explain the deviation.
+Use absolute ISO 8601 timestamps with time zones. Source code and ordinary code
+comments do not need historical timestamps.
 
-Treat `worktrees/prs/` as pushed-work territory. If the work is exploratory or
-local-only, use `experiments/`, `artifacts/`, or `local-docs/` instead.
+## Promote Useful State
 
-Move registered worktrees with `git worktree move`. Remove them with
-`git worktree remove` only after merge, preservation, or explicit disposable
-evidence.
+Scratch must not become a hidden source of truth. Promote useful material to the
+surface that owns its lifecycle:
 
-Before cleanup, inspect registration:
+- reproducible evidence to `artifacts/`;
+- reusable tooling to a reviewed script or repository;
+- durable project guidance to `docs/`;
+- principal control state to `local-docs/`;
+- production-bound edits to a branch and PR.
 
-```powershell
-git -C <repo-main> worktree list --porcelain
-git -C <repo-main> worktree prune --dry-run --verbose
-```
+Generated evidence should record source, owner, observed time, secret-scan state,
+and regeneration instructions when those facts are not obvious.
 
-Treat stale or prunable entries as report targets first. Run `git worktree
-prune` only after confirming the path is gone and no work needs preservation.
+## Copyable Workspace
 
-## Evidence Rules
+For a new umbrella workspace, use `references/project-template/` only when the
+reduction filter leaves the full structure as the smallest useful shape. Read
+its root README, glossary, runtime guidance, and lifecycle READMEs before
+copying it.
 
-Do not let `tmp/` become a hidden source of truth. Promote useful scratch work
-to the right durable surface:
+## Audit Result
 
-- reproducible evidence or reports: `artifacts/`;
-- reusable tooling: `scripts/`;
-- project or workspace docs: `docs/`;
-- controller notes or handoffs: `local-docs/`;
-- branch-bound code changes: a repo branch or PR.
+A workspace audit should make these answers immediate:
 
-When preserving generated evidence, add nearby notes with source, owner, date
-range, retention, secret-scan status, and regeneration instructions when those
-details are not obvious.
+- Where is each canonical repository?
+- Which checkout is clean default branch?
+- Which worktrees are active production work?
+- Which experiments are disposable and what question did each answer?
+- Which control documents are current and when were they last verified?
+- Which artifacts are accepted evidence and how were they produced?
+- Which paths are safe to delete because they are recreatable scratch?
+- Which inactive material should be archived or removed?
 
-Keep secrets, credentials, browser state, local trust state, and machine-only
-runtime caches ignored and local.
-
-## Maintenance Pass
-
-When auditing an existing workspace, answer these questions in the final report
-or the changed README:
-
-- Where is the canonical repo?
-- Which checkout is clean main?
-- Which worktrees are active PR work?
-- Which artifacts are evidence, and how were they produced?
-- Which notes are local controller state instead of product docs?
-- Which files are safe to delete because they are recreatable scratch?
-
-Prefer one small ownership README or ignore rule over a broad cleanup. Cleanup
-is done when the workspace is easier to operate, not when the root has the
-fewest folders.
+Cleanup is complete when the workspace is easier to operate and resume, not when
+it has the fewest visible folders.

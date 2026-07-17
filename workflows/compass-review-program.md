@@ -1,235 +1,181 @@
 # Compass Review Program
 
-Use this workflow when auditing Compass itself: installed skills, agents, hooks,
-maintainer docs, workflows, manifests, scripts, and reviewed config. The work is
-slow by design. Do not one-shot the repo.
+Use this workflow to audit Compass runtime guidance, agents, skills, hooks,
+maintainer documentation, carried packs, manifests, scripts, reviewed config,
+and install behavior.
 
-This is repo-maintainer guidance. It is not installed into a live Codex home,
-user skill home, or Claude home.
+Review one coherent surface family at a time. Understand first. Reduce recurring
+cost without weakening capability.
 
 ## Purpose
 
-Compass is the configuration of the configuration. If agents are led astray
-while maintaining this repo, the first suspect is Compass itself.
+Compass is configuration for agent judgment. A fresh runtime begins without the
+user's lived context or implicit taste. The reviewed source must establish the
+right direction quickly, preserve it across finite contexts, and make drift
+visible.
 
-The job is to make the setup night and day better than vanilla Codex, not a
-little better. That starts with understanding. A fresh agent begins with no
-project memory, no lived history, and no implicit taste. The repo must implant
-the right ideas quickly, without bloat, weak language, or distracting context.
+Review asks:
 
-Review is not cleanup theater. Review asks what each surface is for, who reads
-it, what they need at that moment, and what can be cut or moved without behavior
-loss. If pruning preserves behavior or improves behavior, the removed text was
-probably for the wrong audience or carried weak signal.
+- who reads this surface;
+- what state the reader is in;
+- what behavior the surface must create;
+- what evidence proves that behavior;
+- what authority belongs here;
+- what material can move, merge, mechanize, or disappear.
 
-The central theme is reduction: remove recurring context, duplication, state,
-and maintenance cost while preserving the behavior that makes the system useful
-and trustworthy.
+## Inventory The Current System
 
-## Review Stance
+Classify each item:
 
-Understand first. Cut second. Reduce cost, not capability.
+- Codex runtime global: `codex/AGENTS.md`;
+- Claude runtime global: `claude/CLAUDE.md`;
+- shared installed runtime capability: `codex/agents/` or `codex/skills/` with an
+  explicit Claude derivation decision;
+- Claude-specific runtime capability: `claude/agents/`;
+- carried capability: `carried/`;
+- maintainer context: root `AGENTS.md`, `workflows/`, or `local-docs/`;
+- mechanical truth: `scripts/`, `manifests/`, hooks, and reviewed config;
+- stale or removal candidate.
 
-Do not begin by rewriting. Read the target surface, name its runtime or
-maintainer audience, and state the job it must perform. Then decide what
-belongs, what distracts, what should move, and what should disappear.
-
-Examples are symptoms. If one skill leaks history, look for history leakage in
-nearby skills. If one workflow dilly-dallies around its point, look for the
-same weakness in related docs. If one global skill looks project-specific, check
-the installed set, the manifest, the Claude mirror, and the retirement path.
-
-## Inventory Pass
-
-Before editing a family of files, create a compact inventory. Use current files
-as authority, and update the inventory only when the map changes.
-
-Classify each item as one of:
-
-- runtime context: installed agentic behavior under `codex/AGENTS.md`,
-  `codex/agents/`, or `codex/skills/` (the Claude surface derives from these);
-- maintainer context: repo-only guidance under `AGENTS.md`, `workflows/`,
-  `local-docs/`, `manifests/`, or `scripts/`;
-- mechanical truth: scripts, manifests, checks, and reviewed config fragments;
-- historical evidence: failure journals and maintenance learnings;
-- carried but not global candidate: useful material that should travel in this
-  repo but should not be installed for every session;
-- stale or removal candidate: text or files that no longer justify their cost.
-
-For each item, record:
+Record only what changes a decision:
 
 ```text
 Path:
 Audience:
 Purpose:
+Desired behavior:
 Must preserve:
 Recurring cost:
+Overlap or stale route:
 Reduction move or net-new justification:
-What becomes obsolete, if anything:
-Possible cuts:
-Move candidates:
-Global-install justification:
 Evidence to inspect:
-Recommended PR:
+Verification:
 ```
 
-Keep the inventory short. It is a decision tool, not a second repo.
+## Review Runtime Guidance
 
-## Runtime Surface Audit
+Runtime guidance should establish a direction before procedure. The first screen
+should reveal:
 
-Installed runtime context must speak to the agent using it while doing work.
+- role;
+- desired result;
+- reason the role exists;
+- evidence standard;
+- authority boundary.
 
-Ask:
+Prefer desired-state-first language. Keep prohibitions when the forbidden shape
+is crisp, observable, and materially safer. Replace soft modal language around
+required behavior with calm direct instruction.
 
-- Who invokes this, and in what state?
-- What must the agent understand in the first screen?
-- What exact behavior should the text produce?
-- What authority does the agent have?
-- What must not be decided by this agent?
-- What evidence proves done?
-- What text explains history instead of producing action?
-- What phrasing makes failure, waiting, fallback, or drift feel acceptable?
-- What could be moved to maintainer docs with no runtime loss?
+Move dated observations, author history, packaging rationale, and maintainer
+debates out of runtime context. Keep exact procedures only where order protects
+a fragile mechanic, public mutation, isolation boundary, or handoff contract.
 
-Cut provenance, dated observations, packaging explanation, stale caveats, owner
-intent, and maintainer reasoning from runtime context. Keep the role, stance,
-non-negotiables, boundaries, evidence standard, and fragile procedure.
+For long-running guidance, verify that:
 
-## Hook Surface Audit
+- one logical principal authors control documents across contexts;
+- delegates receive reviewed assignments and return evidence;
+- compaction and restart can resume from anchors plus a checkpoint;
+- current route never replaces the stable goal;
+- planning authority is explicit before production mutation.
 
-Hooks are installed runtime behavior, not agent prose. Audit them as mechanical
-guards.
+## Review Model Routing
 
-Ask:
+Compare every role file with `local-docs/model-calibration.md` and current
+runtime support.
 
-- What event invokes this hook?
-- What does the hook add, deny, or block?
-- Does it fail open or fail closed, and is that correct for the event?
-- What exact guard module handles the behavior?
-- What doctor test proves the portable copy works?
-- Does hook-local documentation explain trust review and disablement?
-- Is this better as a hook than a skill, agent, script, or local workflow?
+For the current profile:
 
-Keep hook behavior narrow. Put broad judgment in skills, agents, or workflows.
-Hook PRs should include the hook definition, guard module, hook-local docs, and
-doctor tests.
+- Sol owns the Codex principal and work that justifies frontier capacity;
+- Luna is the default Codex delegated route;
+- Terra has no default coding role;
+- Claude delegates use the configured GLM-5.2 route;
+- effort matches the persistence and verification needed by the assignment;
+- mechanical waits use `monitor-to-completion` rather than a model loop.
 
-## Maintainer Surface Audit
+Treat this as dated policy. Update the calibration and runtime files together
+when evidence changes.
 
-Maintainer docs should make Compass easier to change without bloating runtime
-context.
+## Review Skills And Agents
 
-Ask:
+Every installed capability pays retrieval and maintenance cost. Ask:
 
-- Does this help a future maintainer understand why the repo is shaped this way?
-- Does it route a decision to the right surface?
-- Does it preserve history that would distract a runtime agent?
-- Does it explain a mechanical check, install boundary, or promotion path?
-- Does it make the next PR smaller and safer?
+- Is the behavior reusable across repositories?
+- Does ordinary runtime work benefit from retrieving it?
+- Is its description specific enough for natural invocation?
+- Does it shape judgment rather than prescribe every thought?
+- Does it overlap another role or merely compose with it?
+- Would a carried or project-local route preserve value at lower global cost?
+- Does the Claude derivation remain truthful?
+- Do install maps, source records, retirements, policy checks, and MCP catalogs
+  agree?
 
-Maintainer docs may hold history. They should not become dumping grounds. Keep
-history only when it changes a future maintenance decision.
+Useful specialized material moves to `carried/` before its global copy retires.
 
-## Skill Set Audit
+## Review Control And Ledger Surfaces
 
-Every installed skill pays rent. Being useful once is not enough.
+Control documents preserve one principal intention. Verify:
 
-For each global skill, ask:
+- principal-only authorship of goal, plan, catalog, assignments, and checkpoint;
+- evidence provenance for delegated returns;
+- absolute timestamps with time zones;
+- compact mutable state rather than narrative history;
+- optimistic revision protection for mechanical ledgers;
+- recovery that requires changed evidence before another equivalent attempt;
+- a fresh-context resume path.
 
-- Is this reusable across repos or workflows?
-- Does it need to be retrieved during ordinary Codex work?
-- Is it project-specific, benchmark-specific, or temporary?
-- Could it live as repo-carried but not globally installed material?
-- Does it overlap another skill enough to fold?
-- Does its Claude mirror still match the intended behavior?
-- Do manifests, installer logic, retired maps, and docs agree?
+A ledger supports the work. It never becomes the product.
 
-Do not delete useful material just because it is not global. Move it to a
-carried-but-not-global area only after the route exists and the install map,
-docs, and retirement behavior are clear.
+## Review Hooks And Mechanics
 
-## Pruning Standard
+Hooks and scripts enforce exact properties. Ask:
 
-Cut text when cutting it does not weaken the behavior. Cut harder when cutting
-it strengthens the behavior.
+- what event or command invokes the mechanic;
+- what it permits, adds, denies, or validates;
+- whether failure behavior matches the risk;
+- which test proves the reviewed copy works;
+- whether broad judgment has leaked into code;
+- whether prose describes a property that should be mechanized.
 
-Good pruning removes:
+## Reduction Standard
 
+Good reduction removes:
+
+- duplicate doctrine;
+- distributed state and alternate sources of truth;
 - audience mismatch;
-- author history in runtime context;
-- alternate paths for Compass-owned capabilities;
-- compatibility prose without a current compatibility need;
-- repeated explanation that hides the first action;
-- soft wording that makes collapse acceptable;
-- examples that became the boundary instead of teaching the pattern;
-- lists that replace judgment without preserving a fragile operation.
+- project lore from global context;
+- model routes preserved by habit;
+- soft wording that weakens required behavior;
+- lists that replace judgment without protecting a fragile operation;
+- wrappers, branches, fallbacks, and compatibility paths made obsolete by the
+  accepted design.
 
-Do not equate shorter with better. Dense is better. Exact is better. A small
-sentence that points the agent the wrong way is worse than a longer sentence
-that makes the right behavior unavoidable.
+Measure maintained surface, concepts, states, dependencies, and sources of truth.
+Raw line count is supporting evidence, not the target.
 
-## PR Rhythm
+## Review And Verification
 
-Use focused PRs. The review program should create pressure and evidence, not
-one giant rewrite.
+Use a focused PR as the review unit. Record:
 
-Good PR boundaries:
+- surface and audience;
+- behavior preserved or changed;
+- files moved, merged, added, retired, or mechanized;
+- recurring cost reduced;
+- verification performed;
+- remaining risk or dated assumption.
 
-- add or revise the audit rubric;
-- inventory one family;
-- prune one skill or one closely related skill family;
-- move one project-specific capability out of global install;
-- add a check that prevents a repeated drift;
-- update maintainer docs after a runtime cleanup.
+Run the narrow checks, then the repository doctor and install round trip when the
+changed surface affects portability. Forward-test judgment changes with a fresh
+agent. Inspect current-head checks, reviews, inline threads, and behavior proof
+before calling the PR ready.
 
-The review artifact should say:
+A green build is evidence. Readiness still requires the current review contract.
+Public mutation still requires authority.
 
-- what surface was reviewed;
-- what audience it serves;
-- what was cut, moved, or preserved;
-- what recurring cost was reduced, or why a net-new surface earns its cost;
-- what behavior should change;
-- what commands or source inspection verified the change.
+## Taste Boundary
 
-Keep the PR body consistent with repo convention: short, motivation-first, and
-without headers or checklists. Put detailed evidence in the audit packet, local
-doc, final report, or review comment that travels with the PR.
-
-Run `.\scripts\doctor.ps1` before committing. Run skill validation for skill
-edits when available. Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when
-live drift matters.
-
-## Review Gate
-
-Green draft PRs are build evidence. They are not readiness.
-
-Before calling a Compass review-program PR ready, inspect the live PR state:
-base branch, head branch, head SHA, check results, review status, and open
-comments. For stacked PRs, verify every base points at the intended previous
-head and name the merge order.
-
-Inspect inline review comments separately from top-level PR comments and review
-bodies. A clean current-head review comment does not prove every inline finding
-has been checked. On GitHub, include the pull review comments endpoint, for
-example `gh api repos/<owner>/<repo>/pulls/<number>/comments --paginate`, or a
-thread-aware equivalent when resolution state matters.
-
-Use `pr-review-loop` for the final review path. Local checks and GitHub checks
-support readiness, but they do not replace current-head review gates. After any
-material push, re-read the head SHA and make sure required reviewers are looking
-at that SHA before marking the PR ready.
-
-If the current session lacks authority to invoke a required reviewer, stop at
-that gate and name it as unsatisfied. Do not self-review, count a local check as
-review, or keep stacking PRs as if review happened. Ask for the authority or an
-explicit approved reviewer route.
-
-## Stop Conditions
-
-Stop and ask for user taste when the decision changes the system's philosophy,
-removes a valued capability, narrows global behavior in a way that may affect
-ordinary work, or chooses between two plausible directions with different
-values.
-
-Do not stop for routine cuts, stale wording, missing links, or obvious audience
-mismatch. Make the narrow PR and preserve evidence.
+Bring the user a prepared decision when a change alters Compass philosophy,
+removes a valued capability, materially narrows ordinary behavior, or chooses
+between plausible value systems. Apply routine stale-guidance repair and exact
+mechanical reconciliation without turning every cleanup into a taste question.

@@ -1,19 +1,16 @@
 from __future__ import annotations
 
-import argparse
 import json
 import os
-import re
 import stat
-import sys
 import tempfile
 from contextlib import contextmanager
-from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterator, Sequence
+from typing import Any, Iterator
 
 from _orchestration_ledger_core import *
-from _orchestration_ledger_model import *
+from _orchestration_ledger_model import validate_ledger
+
 
 def resolve_ledger_path(root: Path, raw: Path | None) -> tuple[Path, Path]:
     root = root.expanduser().resolve()
@@ -33,6 +30,7 @@ def resolve_ledger_path(root: Path, raw: Path | None) -> tuple[Path, Path]:
             raise LedgerError(f"ledger path must not traverse a symlink: {cursor}")
     return root, candidate
 
+
 def load_ledger(path: Path, *, allow_missing: bool = False) -> dict[str, Any] | None:
     try:
         raw = json.loads(path.read_text(encoding="utf-8-sig"))
@@ -46,11 +44,13 @@ def load_ledger(path: Path, *, allow_missing: bool = False) -> dict[str, Any] | 
         ) from error
     return validate_ledger(raw)
 
+
 def set_private_mode(path: Path, directory: bool) -> None:
     try:
         path.chmod(stat.S_IRUSR | stat.S_IWUSR | (stat.S_IXUSR if directory else 0))
     except OSError:
         pass
+
 
 @contextmanager
 def ledger_lock(path: Path) -> Iterator[None]:
@@ -75,6 +75,7 @@ def ledger_lock(path: Path) -> Iterator[None]:
         except FileNotFoundError:
             pass
 
+
 def write_ledger(path: Path, ledger: dict[str, Any]) -> None:
     ledger = validate_ledger(ledger)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -83,9 +84,7 @@ def write_ledger(path: Path, ledger: dict[str, Any]) -> None:
     set_private_mode(path.parent, True)
     payload = (json.dumps(ledger, indent=2, sort_keys=False) + "\n").encode("utf-8")
     descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{path.name}.",
-        suffix=".tmp",
-        dir=path.parent,
+        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
     )
     temporary = Path(temporary_name)
     try:
@@ -100,14 +99,17 @@ def write_ledger(path: Path, ledger: dict[str, Any]) -> None:
         if temporary.exists():
             temporary.unlink()
 
+
 def goal_by_id(ledger: dict[str, Any], goal_id: str) -> dict[str, Any]:
     for goal in ledger["goals"]:
         if goal["id"] == goal_id:
             return goal
     raise LedgerError(f"unknown goal id: {goal_id}")
 
-def authorize_mutation(args: argparse.Namespace, goal: dict[str, Any]) -> None:
+
+def authorize_mutation(args: Any, goal: dict[str, Any]) -> str:
     actor = nonempty_string(getattr(args, "actor", None), "actor")
+    assert actor is not None
     expected_revision = getattr(args, "expected_revision", None)
     if isinstance(expected_revision, bool) or not isinstance(expected_revision, int) or expected_revision < 1:
         raise LedgerError("expected revision must be a positive integer")
@@ -116,17 +118,12 @@ def authorize_mutation(args: argparse.Namespace, goal: dict[str, Any]) -> None:
             f"stale control revision for {goal['id']}: "
             f"expected {expected_revision}, current {goal['control_revision']}"
         )
-    command = getattr(args, "command", None)
-    if command in CONTROL_ONLY_MUTATIONS:
-        if actor != goal["control_writer"]:
-            raise LedgerError(f"only control writer may mutate {goal['id']} with {command}")
-        return
-    if actor == goal["control_writer"]:
-        return
-    for grant in goal["control_edit_grants"]:
-        if grant["actor"] == actor and command in grant["mutations"]:
-            return
-    raise LedgerError(f"actor {actor} is not authorized to mutate {goal['id']} with {command}")
+    if actor != goal["control_writer"]:
+        raise LedgerError(
+            f"only principal control writer {goal['control_writer']} may mutate {goal['id']}"
+        )
+    return actor
+
 
 def touch(ledger: dict[str, Any], goal: dict[str, Any]) -> None:
     now = utc_now()
@@ -134,16 +131,18 @@ def touch(ledger: dict[str, Any], goal: dict[str, Any]) -> None:
     goal["control_revision"] += 1
     ledger["updated_at"] = now
 
+
 def empty_circuit(slice_label: str) -> dict[str, Any]:
     return {
         "slice_label": slice_label,
         "state": "closed",
+        "assigned_worker": None,
         "last_failure_evidence": None,
         "last_failure_at": None,
         "last_reset_evidence": None,
         "last_reset_at": None,
-        "claimed_by": None,
     }
+
 
 def status_payload(path: Path, ledger: dict[str, Any] | None, goal_id: str | None) -> dict[str, Any]:
     if ledger is None:
@@ -164,6 +163,7 @@ def status_payload(path: Path, ledger: dict[str, Any] | None, goal_id: str | Non
         "goals": goals,
     }
 
+
 def check_recovery(ledger: dict[str, Any], goal_id: str, slice_label: str) -> dict[str, Any]:
     goal = goal_by_id(ledger, validate_id(goal_id))
     label = nonempty_string(slice_label, "slice label")
@@ -175,9 +175,10 @@ def check_recovery(ledger: dict[str, Any], goal_id: str, slice_label: str) -> di
     if circuit is not None and circuit["state"] == "open":
         raise LedgerError(
             f"recovery circuit is open for {goal['id']} slice {label}; "
-            "no new discriminating evidence supports another successor"
+            "a changed hypothesis, input, runtime path, or root-cause finding is required"
         )
     return circuit or empty_circuit(label)
+
 
 def render_status(payload: dict[str, Any], plain: bool) -> str:
     if not payload["present"]:
@@ -196,24 +197,30 @@ def render_status(payload: dict[str, Any], plain: bool) -> str:
                 " ".join(
                     [
                         f"goal={goal['id']}",
+                        f"phase={goal['phase']}",
                         f"state={goal['state']}",
                         f"owner={goal['execution_owner']}",
-                        f"writer={goal['control_writer']}",
+                        f"principal={goal['control_writer']}",
                         f"revision={goal['control_revision']}",
                         f"worker={goal['worker_id'] or 'none'}",
                         f"gate={goal['public_mutation_gate']}",
-                        f"evidence={len(goal['completion_evidence'])}",
+                        f"evidence={len(goal['evidence'])}",
                         f"decision={'yes' if decision else 'no'}",
                     ]
                 )
             )
             continue
         lines.append(
-            f"{goal['id']}: {goal['state']} | owner {goal['execution_owner']} | "
-            f"writer {goal['control_writer']} rev {goal['control_revision']} | "
+            f"{goal['id']}: {goal['phase']} | {goal['state']} | "
+            f"principal {goal['control_writer']} rev {goal['control_revision']} | "
             f"gate {goal['public_mutation_gate']}"
         )
         lines.append(f"  goal: {goal['goal']}")
+        lines.append(f"  last verified: {goal['last_verified_at']}")
+        for anchor in goal["anchors"]:
+            lines.append(f"  anchor: {anchor}")
+        for document in goal["control_documents"]:
+            lines.append(f"  control: {document}")
         if goal["worker_id"]:
             lines.append(f"  worker: {goal['worker_id']}")
         if goal["public_mutation_action"]:
@@ -221,15 +228,15 @@ def render_status(payload: dict[str, Any], plain: bool) -> str:
         if goal["next_action"]:
             suffix = f" at {goal['next_check_at']}" if goal["next_check_at"] else ""
             lines.append(f"  next: {goal['next_action']}{suffix}")
-        lines.append(f"  evidence: {len(goal['completion_evidence'])}")
+        lines.append(f"  evidence: {len(goal['evidence'])}")
         for circuit in goal["recovery_circuits"]:
             lines.append(f"  recovery: {circuit['slice_label']} | {circuit['state']}")
+            if circuit["assigned_worker"]:
+                lines.append(f"    worker: {circuit['assigned_worker']}")
             if circuit["last_failure_evidence"]:
                 lines.append(f"    last failure: {circuit['last_failure_evidence']}")
             if circuit["last_reset_evidence"]:
                 lines.append(f"    resume evidence: {circuit['last_reset_evidence']}")
-            if circuit["claimed_by"]:
-                lines.append(f"    claimed by: {circuit['claimed_by']}")
         if decision:
             lines.append(f"  decision: {decision['question']}")
             for option in decision["options"]:

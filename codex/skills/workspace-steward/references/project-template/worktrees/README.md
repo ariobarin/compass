@@ -1,14 +1,14 @@
 # worktrees
 
-Branch and PR work for the child repos, kept out of the clean main checkouts.
+Real child-repository checkouts attached to branches.
 
-- `prs/<slug>/` - worktrees for branches or PRs that are meant to be pushed.
-- Create them from the child repo's `origin/main`, not a dirty local main.
-- Exploratory or local-only work does not belong here; use `../experiments/`,
-  `../artifacts/`, or `../local-docs/` instead.
+- `prs/<slug>/`: production-bound work intended for review and possible merge.
+- `spikes/<slug>/`: disposable integration questions against the real project.
 
-The contents of `prs/` are gitignored in the root repo because each entry is a
-git worktree linked to its child repo, not files this root should track.
+Create each worktree from the intended current remote base after fetching and
+checking the clean-main checkout. Keep one coherent scope per branch. Preserve
+useful dirty work before rebase, move, or removal.
 
-Move worktrees with `git worktree move`, and remove them with `git worktree
-remove` only after merge, preservation, or explicit disposable evidence.
+A spike remains disposable. Reimplement accepted findings in a fresh PR
+worktree. Move registered worktrees with `git worktree move` and remove them with
+`git worktree remove` only after merge, preservation, or explicit disposal.

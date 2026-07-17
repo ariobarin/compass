@@ -1,149 +1,156 @@
 # Compass
 
-Reviewed source for my human-owned Codex setup.
+Reviewed source for a human-owned Codex and Claude Code setup.
 
-Its central theme is reduction: preserve capability while reducing the context,
-duplication, state, and maintenance overhead required to use it well.
+Compass preserves capability while reducing the context, duplication, state,
+and maintenance overhead required to use agents well. Its central concern is
+coherence: one intention should survive long sessions, compaction, delegation,
+model changes, and machine changes without turning intelligent work into a rigid
+script.
 
-This repo is intentionally an allowlist, not a backup of the whole Codex home,
-user skill home, or Claude home. The live Codex directory contains auth, logs,
-sessions, caches, databases, generated plugin state, browser state, and
-machine-specific runtime paths. Those are not portable and should not be
-committed.
+This repository is an allowlist, not a backup of runtime homes. Authentication,
+sessions, logs, caches, databases, browser state, generated plugin state,
+machine paths, hosted settings, cloud task history, and connector installs stay
+outside the reviewed source.
 
-Hosted Codex web settings, cloud task history, repository connections, and
-workspace connector installs such as Slack or Linear are also out of scope for
-this repo. They are service-side state, not portable files.
+Read [philosophy.md](philosophy.md) for the governing ideas and
+[glossary.md](glossary.md) for terms whose distinctions change behavior.
 
-For the philosophy behind this repo's shape, see [philosophy.md](philosophy.md).
-
-For public use, treat this repository as a worked example of a reviewed portable
-Codex setup. Read [CONTRIBUTING.md](CONTRIBUTING.md),
-[SECURITY.md](SECURITY.md), and [SUPPORT.md](SUPPORT.md) before copying its
-files or proposing changes.
+For public use, treat this repository as a worked example. Review
+[CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and
+[SUPPORT.md](SUPPORT.md) before copying its files or proposing changes.
 
 ## Layout
 
-- `codex/AGENTS.md`: portable source for the live global `AGENTS.md` in the
-  active Codex home, usually `~/.codex/AGENTS.md`. Keep only session-wide
-  defaults there. Keep `AGENTS.override.md` local, and keep project
-  `AGENTS.md` files in the target repo.
-- `AGENTS.md`: repo-local maintenance guidance for this portable config repo.
-  Use this for Compass process and review rules.
-- `codex/keybindings.json`: portable keyboard bindings.
-- `codex/hooks.json` and `codex/hooks/`: reviewed Codex hooks installed into
-  the live Codex home. Hooks require `/hooks` trust review after install.
-- `codex/agents/`: reusable global custom agents installed into the live Codex
-  home. Project-specific custom agents belong in the target repo.
-- `codex/skills/`: reviewed source for reusable user skills installed into
-  `$HOME/.agents/skills`, excluding system and plugin cache skills.
-  Project-specific `.agents/skills` belong in the target repo. Broader sharing
-  should usually happen through a plugin.
-- Claude Code skills and agents are installed into `$HOME/.claude` from the
-  reviewed `codex/` source at install time (listed in
-  `[claude].derived_skills` and `[claude].derived_agents`). There are no
-  hand-maintained `claude/` source files in the repo. See
-  `workflows/claude-config.md`.
-- `codex/config.review.toml`: reviewed scalar config contract overlaid into the
-  live `config.toml` during install and update. Keys absent from the fragment,
-  including generated and machine-local state, are preserved.
-- `workflows/`: repo-side operating notes for recurring maintenance work. These
-  are not installed into a live Codex home, user skill home, or Claude home.
-  Start with [workflows/README.md](workflows/README.md) to select the matching
-  workflow.
-  Use `workflows/addition-intake.md` before promoting new portable artifacts.
-  Use `workflows/compass-review-program.md` when auditing installed skills,
-  agents, hooks, and maintainer guidance for pruning or rerouting.
-  Use `workflows/codex-restart-recovery.md` for restart-only recovery of
-  unfinished local Codex sessions.
-  Use `workflows/which-llm-plugin.md` for the durable `which-llm` plugin
-  install and update route.
-- `local-docs/`: repo-local maintenance learnings that are not installed into a
-  live Codex home, user skill home, or Claude home.
-- `manifests/portable-files.toml`: the install allowlist, repo-only list, and
-  local-only denylist.
-- `manifests/plugins.json`: external plugin marketplaces and plugins that the
-  reviewed install keeps present without tracking generated plugin state.
-- `manifests/tool-surfaces.md`: repo-side review notes for tools that can touch
-  local or external state.
-- `scripts/`: repo-side snapshot, diff, install, and health check helpers.
+### Runtime instruction sources
 
-## Common commands
+- `codex/AGENTS.md` is the separately authored global instruction source for
+  Codex, normally installed as `~/.codex/AGENTS.md`.
+- `claude/CLAUDE.md` is the separately authored global instruction source for
+  Claude Code, normally installed as `~/.claude/CLAUDE.md`.
+- `codex/agents/` contains reusable Codex agent roles. Most derive into Claude
+  agent files during installation. Platform-specific Claude agents live under
+  `claude/agents/` only when the shared transform cannot express their contract.
+- `codex/skills/` contains reviewed reusable skills installed into
+  `$HOME/.agents/skills`. Runtime-neutral skills listed in the manifest derive
+  into `$HOME/.claude/skills` from the same reviewed source.
+- `codex/hooks.json` and `codex/hooks/` contain reviewed Codex hooks. Hooks
+  require runtime trust review after installation.
+- `codex/keybindings.json` contains portable Codex keyboard bindings.
+- `codex/config.review.toml` is the reviewed scalar config fragment overlaid on
+  the live Codex config. Live keys absent from the fragment remain untouched.
 
-Preview the difference between this repo and the live install targets:
+Global Codex and Claude instruction files remain separate because their runtime,
+model, context, and delegation contracts differ. Shared skills and most shared
+agent roles derive when the behavior is genuinely runtime-neutral.
+
+### Narrower and maintainer surfaces
+
+- `carried/` contains portable opt-in domain packs that do not belong in every
+  session. The benchmark operations pack and WebMCP pack live here.
+- `workflows/` contains recurring Compass maintenance procedures. Start with
+  [workflows/README.md](workflows/README.md).
+- `local-docs/` contains reviewed maintenance reasoning and dated calibration
+  that should not enter runtime context.
+- `manifests/` contains install boundaries, skill ownership, policy contracts,
+  plugins, and mechanical schemas.
+- `scripts/` contains deterministic install, diff, validation, status,
+  orchestration-ledger, and recovery mechanics.
+- `AGENTS.md` is repository-local guidance for maintaining Compass itself.
+
+Project-specific `AGENTS.md`, `CLAUDE.md`, agents, and skills belong in their
+project. `AGENTS.override.md` and machine-only rules remain local unless they are
+deliberately adopted as reviewed portable policy.
+
+## Long-Running Work
+
+Long-running work uses durable control documents rather than conversation
+history as authority. The user-facing principal, or the user directly, authors
+the goal, plan, catalog, assignments, and checkpoints. Delegates receive
+reviewed assignments and return artifacts plus evidence. A fresh principal
+context resumes the same logical role by reopening and verifying those anchors.
+
+See [workflows/long-running-work.md](workflows/long-running-work.md) and
+[workflows/orchestration-ledger.md](workflows/orchestration-ledger.md).
+
+## Common Commands
+
+Preview the difference between reviewed source and live install targets:
 
 ```powershell
 .\scripts\diff-live.ps1
 ```
 
-Check the repo for obvious portability mistakes:
+Check portability, manifests, policies, skills, agents, hooks, and text rules:
 
 ```powershell
 .\scripts\doctor.ps1
 ```
 
-Preview local Codex sessions that would be resumed after a restart:
+Preview unfinished Codex sessions that restart recovery would resume:
 
 ```powershell
 .\scripts\codex-restart-recovery.ps1 -DryRun
 ```
 
-Check whether live Codex, user skill, and Claude files match the portable
-allowlist and ask Codex to report active instruction sources:
+Check live Codex, user-skill, and Claude files against the allowlist:
 
 ```powershell
 .\scripts\verify-live.ps1
 ```
 
-Install reviewed portable files and overlay reviewed Codex config into the live
-Codex home, user skill home, and Claude home:
+Preview an installation:
+
+```powershell
+.\scripts\install.ps1
+```
+
+Apply the reviewed installation and config overlay:
 
 ```powershell
 .\scripts\install.ps1 -Apply
 ```
 
-Fetch latest `main`, fast-forward the checkout, install reviewed portable
-files and config, and verify the live allowlist:
+Fetch the requested reviewed ref, install it, and verify live state:
 
 ```powershell
 .\scripts\update-live.ps1
 ```
 
-Refresh the repo from the current live allowlist:
+Refresh reviewed source from the current live allowlist:
 
 ```powershell
 .\scripts\snapshot.ps1 -Apply
 ```
 
-Without `-Apply`, `snapshot.ps1` and `install.ps1` run in review mode and explain
-what they would change, including exact reviewed config key paths.
+Read local orchestration state:
 
-Scripts use `-CodexHome` for Codex-home files, otherwise `$env:CODEX_HOME`,
-otherwise `%USERPROFILE%\.codex`. They use `-AgentsHome` for user skills,
-otherwise `$HOME\.agents`. They use `-ClaudeHome` for Claude-home files,
-otherwise `$HOME\.claude`.
+```powershell
+.\scripts\compass.ps1 orchestration
+```
 
-## Rules
+Without `-Apply`, mutation scripts stay in review mode and report exact planned
+changes. Scripts use `-CodexHome`, then `$env:CODEX_HOME`, then
+`%USERPROFILE%\.codex`; `-AgentsHome`, then `$HOME\.agents`; and `-ClaudeHome`,
+then `$HOME\.claude`.
 
-- Keep this repo small and boring.
-- Every durable addition should delete, merge, move, derive, or mechanize
-  something, or explicitly justify its recurring cost.
-- Copy ordinary files into normal Codex locations. Avoid symlink-based setup.
-- Treat every key in `codex/config.review.toml` as authoritative during install
-  while preserving every live key absent from the fragment.
-- Keep `AGENTS.override.md` and `rules/` local unless you deliberately decide
-  they are reviewed portable policy.
-- Do not commit secrets, auth files, SQLite state, logs, session history, caches,
-  browser profiles, generated plugin caches, or machine runtime paths.
-- If an automation should become portable, capture it as a skill, workflow, or
-  reviewed config change, not by tracking live `automations/` state.
-- If you intentionally author a plugin, keep the plugin source and marketplace
-  metadata in a normal repo path or dedicated plugin repo, not in live cache
-  directories.
-- Keep plugin install routes in workflows. Keep installed plugin cache and
-  generated marketplace state local.
-- Keep machine-specific values in ignored local files or in live config only.
-- Keep skill descriptions concise. Put detailed instructions in `SKILL.md` and
-  references.
-- Promote additions through a PR after checking nearby docs, manifests, and
-  install maps for stale guidance.
+## Repository Rules
+
+- Keep Compass small, explicit, and auditable.
+- Every durable addition removes, merges, narrows, derives, or mechanizes
+  recurring cost, or states why its distinct behavior earns that cost.
+- Lead guidance with the role and desired state. Use prohibitions for crisp
+  boundaries and known failure shapes.
+- Shape judgment before procedure. Exact steps protect fragile mechanics,
+  irreversible actions, and handoff contracts.
+- Preserve one logical principal author across long-running contexts. Delegates
+  return evidence instead of inventing parallel control state.
+- Keep model-specific observations dated and revisable in maintainer docs.
+- Copy ordinary files into normal runtime locations. Avoid symlink-based setup.
+- Keep secrets, auth, databases, logs, sessions, browser profiles, caches,
+  generated plugin state, and machine paths outside the repository.
+- Keep plugin source in a normal repository and install routes in workflows.
+- Keep skill descriptions concise. Put action-critical behavior in `SKILL.md`,
+  optional detail in references, and deterministic mechanics in scripts.
+- Use a pull request as the durable review unit. Readiness never grants merge or
+  other public-mutation authority.

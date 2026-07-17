@@ -1,8 +1,8 @@
 # docs
 
-Durable project and workspace documentation that is meant to be read over time:
-indexes, glossaries, standards, designs, and runbooks that describe how the
-workspace operates.
+Durable project and workspace truth: architecture, standards, glossaries,
+decisions intended for broad reuse, and runbooks that remain authoritative over
+time.
 
-This is product and workspace truth, checked into git. Put controller operating
-state, plans, and handoffs in `../local-docs/` instead.
+Current principal operating state, assignments, and checkpoints belong in
+`../local-docs/`. Generated evidence belongs in `../artifacts/`.

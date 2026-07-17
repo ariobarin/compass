@@ -1,0 +1,7 @@
+interface:
+  display_name: "Run A Micro-Experiment"
+  short_description: "Answer one uncertainty with disposable code"
+  default_prompt: "Use $run-a-micro-experiment to reduce this uncertainty to one tiny disposable program, record the finding, and keep experimental code out of production."
+
+policy:
+  allow_implicit_invocation: true

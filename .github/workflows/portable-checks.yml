@@ -43,12 +43,25 @@ jobs:
           $files = @(
             Get-ChildItem codex/hooks -Recurse -File -Filter *.py
             Get-ChildItem codex/skills -Recurse -File -Filter *.py
+            Get-ChildItem carried -Recurse -File -Filter *.py
             Get-ChildItem scripts -File -Filter *.py
           )
           foreach ($file in $files) {
             python -m py_compile $file.FullName
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
+
+      - name: Test Compass architecture
+        shell: pwsh
+        run: python scripts/test-compass-architecture.py
+
+      - name: Test behavior-validator isolation
+        shell: pwsh
+        run: python scripts/test-behavior-validator-workspace.py
+
+      - name: Test reviewed config
+        shell: pwsh
+        run: python scripts/test-reviewed-config.py
 
       - name: Test skill audit
         shell: pwsh
@@ -61,6 +74,14 @@ jobs:
       - name: Test review bundle isolation
         shell: pwsh
         run: python scripts/test-review-bundle.py
+
+      - name: Validate policy contracts
+        shell: pwsh
+        run: python scripts/validate-policy-contracts.py
+
+      - name: Validate skill sources
+        shell: pwsh
+        run: python scripts/validate-skill-sources.py
 
       - name: Check shell launcher syntax
         if: runner.os == 'Linux'

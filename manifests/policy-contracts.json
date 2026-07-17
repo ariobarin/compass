@@ -2,53 +2,129 @@
   "schema_version": 1,
   "contracts": [
     {
+      "id": "desired-state-first-prompting",
+      "path": "philosophy.md",
+      "required": [
+        "Lead with the role to inhabit, the state to create, and the evidence that proves success.",
+        "Pair a prohibition with the desired replacement whenever judgment is involved."
+      ]
+    },
+    {
+      "id": "separate-runtime-global-sources",
+      "path": "AGENTS.md",
+      "required": [
+        "Maintain those two files separately. Share values, not runtime fiction.",
+        "Delegates execute reviewed assignments and return artifacts plus evidence. Do not distribute control authorship across worker-written ledgers."
+      ]
+    },
+    {
+      "id": "codex-luna-first-delegation",
+      "path": "codex/AGENTS.md",
+      "required": [
+        "The root session uses GPT-5.6 Sol.",
+        "Fresh delegated work uses GPT-5.6 Luna by default.",
+        "A Sol child needs a concrete capability reason."
+      ],
+      "forbidden": [
+        "GPT-5.6 Terra"
+      ]
+    },
+    {
+      "id": "claude-glm-only-routing",
+      "path": "claude/CLAUDE.md",
+      "required": [
+        "Treat GLM-5.2 as the only available child model identity.",
+        "Prefer a fresh narrow subagent for a bounded assignment."
+      ]
+    },
+    {
+      "id": "mcp-runtime-neutral-profile",
+      "path": "apps/compass-mcp/profile.md",
+      "required": [
+        "Lead with the role, desired state, and evidence.",
+        "Preserve one logical principal across long contexts."
+      ],
+      "forbidden": [
+        "GPT-5.6 Sol",
+        "GLM-5.2"
+      ]
+    },
+    {
       "id": "pr-current-head-and-authority",
       "path": "codex/skills/pr-review-loop/SKILL.md",
       "required": [
-        "All conclusions are tied to the current head SHA.",
-        "Merge only when explicitly authorized."
+        "All readiness conclusions target one exact head SHA.",
+        "Merge only when explicitly authorized and every required current-head gate is satisfied."
       ]
     },
     {
       "id": "behavior-validator-source-blind",
       "path": "codex/agents/behavior-validator.toml",
       "required": [
-        "Do not inspect source files, diffs, tests, git history, implementation notes, or review bundles.",
-        "If implementation material becomes visible, mark the run contaminated and restart with a fresh validator."
+        "Implementation shape, test names, static success text, reviewer claims, and the desired conclusion carry no evidentiary weight.",
+        "Exposure to source, diffs, tests, history, implementation notes, or review bundles contaminates the run."
       ]
     },
     {
-      "id": "controller-does-not-absorb-worker-work",
+      "id": "controller-preserves-principal-authorship",
       "path": "codex/skills/orchestration-controller/SKILL.md",
       "required": [
-        "Do not write worker-owned code, config, docs, benchmark output, product output, or task artifacts. That work belongs to the worker or a fresh worker.",
-        "The controller owns the stable parent outcome, required assertions, amendment history, assignments, routing, evidence checks, and completion judgment.",
-        "Name one writer for each mutable control surface.",
-        "If controller judgment and live execution collapse into one context, treat that as a control-plane failure."
+        "The controller is the user-facing logical principal. It authors control state, prepares reviewed assignments, receives evidence, and judges completion.",
+        "Delegates own assigned artifacts and investigations. They return evidence through the named return channel.",
+        "Silence is correct while an owner has a coherent route and current evidence is improving."
       ]
     },
     {
-      "id": "orchestration-ledger-does-not-grant-authority",
+      "id": "orchestration-ledger-principal-only",
       "path": "workflows/orchestration-ledger.md",
       "required": [
-        "The ledger records authority, current state, evidence, and recovery gates.",
+        "A delegate returns artifacts and evidence. The principal verifies that return and records any resulting control-state change.",
+        "The tool does not support delegated edit grants.",
         "Changing the field does not grant permission."
+      ],
+      "forbidden": [
+        "set-grant",
+        "claim-successor"
       ]
     },
     {
-      "id": "goal-completion-authority",
-      "path": "codex/skills/using-codex-goals/SKILL.md",
+      "id": "goal-stability-and-resume",
+      "path": "codex/skills/using-goals/SKILL.md",
       "required": [
-        "The controller owns the parent outcome, assertion text, amendments, and final completion judgment.",
-        "After compaction, restart, or handoff, reopen authoritative inputs in precedence order."
+        "The goal remains stable until its named authority records an amendment.",
+        "A successor principal reopens authoritative anchors in order and verifies changeable state before continuing.",
+        "Production mutation begins when the named authority opens that phase."
+      ]
+    },
+    {
+      "id": "monitor-keeps-clock-outside-context",
+      "path": "codex/skills/monitor-to-completion/SKILL.md",
+      "required": [
+        "One blocking command owns the wait.",
+        "A successful wait is evidence for the parent objective. The parent decides what that evidence means."
+      ]
+    },
+    {
+      "id": "root-cause-subtractive-repair",
+      "path": "codex/skills/root-cause-not-symptom/SKILL.md",
+      "required": [
+        "A recurring symptom is new evidence. Reopen the causal model before adding another layer.",
+        "Line reduction is useful evidence, not the target. The target is a system with a simpler truthful explanation."
+      ]
+    },
+    {
+      "id": "micro-experiment-code-does-not-graduate",
+      "path": "codex/skills/run-a-micro-experiment/SKILL.md",
+      "required": [
+        "Experimental code does not graduate into production. The finding graduates."
       ]
     },
     {
       "id": "benchmark-recovery-circuit-breaker",
-      "path": "codex/skills/benchmark-run-operator/SKILL.md",
+      "path": "carried/benchmark/skills/benchmark-run-operator/SKILL.md",
       "required": [
-        "Do not launch another symptom-level successor when the failure signature, inputs, and runtime path are materially unchanged and the prior attempt produced no new discriminating evidence.",
-        "Name one writer for benchmark policy and queue ownership."
+        "Open the recovery circuit when the failure signature, inputs, and runtime path remain materially unchanged and the prior attempt produced no new discriminating evidence.",
+        "The user-facing principal authors benchmark policy, queue shape, comparability decisions, and control documents before dispatch."
       ]
     },
     {

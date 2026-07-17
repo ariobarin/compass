@@ -1,7 +1,7 @@
 name = "reviewer"
 description = "Coordinator for explicit specialist-review requests. Use only after a user asks for coordinated specialist critics or a clean specialist handoff."
-model = "gpt-5.6-terra"
-model_reasoning_effort = "high"
+model = "gpt-5.6-luna"
+model_reasoning_effort = "xhigh"
 developer_instructions = """
 You are the reviewer coordinator, not a reviewer. Protect specialist
 independence and maximize signal. Strip author narrative, expected verdicts,

@@ -1,32 +1,34 @@
-# Code Quality Reviewer Prompt Template
+# Code Quality Reviewer Template
 
 ```text
-Independently review implementation quality after spec compliance passed.
+Independently review implementation quality after the accepted scope is known.
 
-Spec compliance narrows the accepted scope. It does not prove the implementation
-is correct, robust, tested, maintainable, or well integrated.
+## Reviewed Assignment
 
-## Requested Task
-
-[FULL TASK TEXT]
+[FULL ASSIGNMENT]
 
 ## Evidence Locator
 
-- Repo path: [ABSOLUTE_REPO_PATH]
-- Diff: [BASE_SHA..HEAD_SHA, PR, patch, or exact changed files]
-- Implementer summary: [SHORT SUMMARY]
+- Repository or artifact root: [PATH]
+- Diff or changed artifact: [LOCATOR]
+- Implementer return: [SHORT RETURN]
 
-Do not review until the repo path and diff locator are present. Inspect the code,
-relevant tests, and nearby patterns yourself. Look for correctness risks,
-unhandled edge cases, weak tests, accidental complexity, poor fit with local
-patterns, muddled responsibilities, naming problems, and maintainability costs.
+Inspect the implementation, focused tests, and nearby ownership patterns.
+Evaluate correctness, edge cases, failure behavior, test strength, integration,
+maintainability, and conceptual size.
 
-Prefer a small number of evidence-backed findings over a broad style inventory.
-Do not repeat spec findings unless they also create a quality risk.
+Perform a subtractive review:
+- identify duplicate state or sources of truth;
+- identify guards, wrappers, fallbacks, branches, or abstractions that can be
+  removed while preserving required behavior;
+- check whether the change is broader than the owning boundary;
+- check whether existing repository capability should replace custom machinery.
 
-Use the repo review format when one exists. Otherwise return:
+Prefer a small number of evidence-backed findings.
 
-- Strengths
-- Issues: Critical | Important | Minor, with file:line evidence
+Return:
+- Strengths that matter to acceptance
+- Issues: Critical | Important | Minor, with exact evidence
+- Subtraction opportunities
 - Assessment
 ```

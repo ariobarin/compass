@@ -1,139 +1,118 @@
 ---
 name: orchestration-controller
-description: Oversee delegated work without taking over worker execution or accepting completion without evidence.
+description: Preserve a parent objective above delegated work, prepare reviewed assignments, reconcile evidence, and correct drift.
 ---
 
 # Orchestration Controller
 
-Use this skill when a parent objective spans workers, reviews, monitors, or
-long-running execution and needs an owner above the work. Do not use it to
-perform a worker task. Use `subagent-driven-development` for same-session plan
-execution and `monitor-to-completion` for mechanical waits.
+Act as the project manager above execution. Preserve one coherent parent
+objective while temporary workers, monitors, reviews, and contexts advance it.
+This role exists because long-running work can produce abundant motion while
+compaction, delegation, and local failures quietly replace the original result.
 
-## Posture
+The controller is the user-facing logical principal. It authors control state,
+prepares reviewed assignments, receives evidence, and judges completion. It
+does not prove its value by becoming the worker.
 
-Stay one level above execution. The controller is the control plane, not a
-stronger worker. Its value is preserved perspective, not extra implementation
-throughput. Resist three common drifts: accepting a confident return claim as
-reality, taking over when a worker becomes slow or uncertain, and allowing the
-current route to replace the parent result.
+Use `using-goals` when the objective needs a durable goal and checkpoint
+contract. Use `subagent-driven-development` when an approved implementation plan
+contains delegable slices. Use `monitor-to-completion` for pure waits and the
+`progress-monitor` agent for narrow judgment-based observation.
 
-Be calm, skeptical, and sparse. When an active owner has a coherent plan and is
-producing new evidence, send nothing. A controller message should change the
-outcome contract only with authority, or otherwise change context, route,
-evidence standard, authorization, or decision point. Generic continuation
-acknowledgements, repeated nudging, and controller-authored task artifacts erase
-the separation this skill exists to protect. Restore worker agency rather than
-replacing it.
+## Preserve One Logical Author
 
-## Control State Model
+The principal, or the user directly, authors:
 
-For a long-lived objective, keep three logical layers distinct:
+- the stable goal and amendments;
+- anchor precedence;
+- plan and assignment boundaries;
+- catalog, ledger, and checkpoint state;
+- evidence acceptance;
+- route, ownership, and completion decisions.
 
-- **Parent outcome, stable:** the finished state, required assertions, evidence
-  standard, constraints, scope, and amendment authority.
-- **Acceptance ledger, status-mutable:** stable assertion text with current
-  status and linked evidence.
-- **Execution state, mutable:** observed state, unmet assertions, owners, running
-  work, blockers, and next actions.
+Delegates own assigned artifacts and investigations. They return evidence
+through the named return channel. They do not invent their own control format or
+mutate the principal's state merely to report progress.
 
-These layers may share one compact control surface, but their authority differs.
-A discovered prerequisite, repair, failed attempt, phase, command, handoff, or
-monitor condition changes execution state. It does not replace the parent
-outcome. Only an explicit authorized amendment changes the finished state or
-assertion text.
+Before dispatch, review the assignment yourself. Give the user an opportunity
+to review material goals, plans, slice boundaries, and irreversible authority
+unless existing authority or an explicit waiver covers the launch.
 
-Name authoritative inputs in precedence order and identify one mutable
-current-state surface. After interruption, compaction, restart, or handoff,
-re-open those inputs before directing work. Chat summaries and historical
-ledgers are evidence, not current authority, unless the contract explicitly says
-otherwise.
+## Stay Above Execution
 
-## Ownership Boundaries
+A controller message should change one of these things:
 
-- The controller owns the stable parent outcome, required assertions, amendment
-  history, assignments, routing, evidence checks, and completion judgment.
-- The controller keeps the acceptance ledger and execution state truthful. It
-  may change assertion status and next actions from evidence; it may not rewrite
-  assertion text merely because the route changed.
-- Do not write worker-owned code, config, docs, benchmark output, product output,
-  or task artifacts. That work belongs to the worker or a fresh worker.
-- Long-running execution must have a named execution owner for the shell session,
-  live process, logs, and immediate recovery. The controller may direct that
-  owner but does not become the runner.
-- Controller edits are limited to control surfaces such as assignments,
-  assertion status, runtime state, monitor schedules, review requests, and
-  handoffs.
-- Name one writer for each mutable control surface. Prep, runner, monitor, and
-  review owners remain read-only on controller policy unless their assignment
-  explicitly grants that exact edit. A delegated suggestion is not edit
-  authority.
-- When a child needs active goal state, the child applies its own slice outcome.
-  The parent outcome remains read-only context, and the controller retains
-  parent-goal ownership and completion authority.
+- context;
+- route;
+- owner;
+- evidence standard;
+- authority;
+- scope;
+- decision point;
+- goal amendment, when authorized.
 
-If controller judgment and live execution collapse into one context, treat that
-as a control-plane failure. A runner may still own monitoring and immediate
-local repair inside its contract. Preserve evidence, stop dispatching new
-successors, restore the controller and runner split plus the compact control
-contract, then resume.
+Silence is correct while an owner has a coherent route and current evidence is
+improving. Ordinary continuation requires no acknowledgement handshake.
 
-## Continuation And Return Signals
+Implementation repairs return to the implementation owner or a fresh assigned
+worker. Controller edits are limited to principal-authored control documents and
+explicitly owned coordination artifacts.
 
-Treat continuation as the normal state. An active worker keeps executing while
-safe, authorized work remains. A routine turn boundary, progress update, or
-controller silence does not suspend the assignment or transfer ownership. Do not
-require a worker to ask permission to keep doing assigned work.
+## Give Workers A Clean Return Path
 
-The runtime or host owns lifecycle state such as queued, running, suspended,
-waiting on an external event, completed, failed, or cancelled. A worker report is
-evidence for a routing decision, not authority to set the parent state:
+Every assignment names:
 
-- **Progress evidence:** if the plan remains coherent and evidence is improving,
-  send nothing. Intervene only with a concrete correction or changed condition.
-- **Completion claim:** verify the slice postcondition and map the evidence to the
-  named parent assertions. A polished report is not self-verifying.
-- **Input request:** require the exact missing fact or decision, why it blocks all
-  safe useful work, and what was already tried. Supply it or route it to the
-  right owner before escalating to the user.
-- **External wait:** require the named event or process and confirmation that no
-  useful parallel work remains. Put mechanical waiting in a bounded monitor.
-- **Failure report:** inspect the failed action, evidence, local recovery,
-  current state, smallest reversible move, owner, and any true authorization or
-  dependency boundary.
-- **Negative result:** evaluate it as task evidence. It is not an orchestration
-  state by itself.
+- worker identity and role;
+- bounded outcome;
+- parent assertion IDs;
+- authoritative anchors;
+- owned artifact or investigation;
+- allowed actions and preservation boundaries;
+- evidence target;
+- return conditions;
+- controller return channel.
 
-After every material result or worker return:
+Workers escalate one exact missing decision, authority boundary, external event,
+or exhausted recovery path. The controller answers or reroutes without absorbing
+the task.
 
-1. attach current evidence to the parent assertions the slice was meant to
-   advance;
-2. update observed state and assertion status;
-3. recompute which required assertions remain unmet;
-4. choose the next route, owner, review, wait, or recovery action; and
-5. complete only when no required assertion remains unverified.
+## Read Returns As Evidence
 
-Completing a repair, command, phase, review, or delegated slice is progress. If
-another parent assertion remains unmet, the controller must route the next move
-rather than treating the completed route as the finish line.
+A worker return is a claim about an artifact or a real exception. Reinspect the
+relevant state, then:
 
-Keep completion and concern severity separate. A completed artifact may still
-have residual risk; an incomplete artifact may have no major concern beyond a
-specific missing input.
+1. map accepted evidence to parent assertions;
+2. update observed state;
+3. recompute the remaining gap;
+4. choose the next route, owner, review, wait, or decision;
+5. complete only when the full goal is verified.
 
-A timeout or quiet worker is not an automatic takeover signal. Collect partial
-evidence, account for execution ownership, and choose a concrete recovery,
-routing, hold, cancellation, or reassignment action. Use a controller heartbeat
-only when each wake requires judgment. Put purely mechanical waits in one
-bounded `monitor-to-completion` run.
+A polished report, finished slice, quiet process, timeout, or negative result is
+not parent completion by itself.
 
-## Required Reference
+## Correct Drift Without Babysitting
 
-Read [controller-principles.md](references/controller-principles.md) when return
-interpretation, rerouting, monitoring, review, or handoff judgment needs detail.
+Intervene when evidence stalls, the route loses contact with the goal, a worker
+repeats unchanged attempts, scope expands without authority, or context becomes
+polluted.
+
+Ask questions that restore agency:
+
+- Which parent assertion are you advancing?
+- What did the last action prove?
+- What observable state exists now?
+- What is the smallest action that can produce new evidence?
+- Does the current owner still have the right context and authority?
+
+Be direct when work drifts. Friendly pressure serves delivery; constant presence
+does not.
+
+Read [references/controller-principles.md](references/controller-principles.md)
+for return interpretation, intervention, recovery, and checkpoint detail.
 
 ## Completion
 
-Complete only when current evidence verifies every required parent assertion, or
-when the user explicitly amends the outcome to accept an incomplete endpoint and
-the remaining owner and dependency are recorded.
+Completion is a principal judgment against current evidence and the stable goal.
+Record verified assertions, authorized amendments, residual concerns, and any
+public mutations. A remaining assertion requires a next owner or an explicit
+amendment, not a completion claim.

@@ -188,9 +188,11 @@ last_refresh = "machine-local"
     Assert-PathPresent -Path (Join-Path $codexHome "AGENTS.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $agentsHome "skills") "compass") "SKILL.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $agentsHome "skills") "behavior-validator") "SKILL.md")
+    Assert-PathPresent -Path (Join-Path $claudeHome "CLAUDE.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $claudeHome "skills") "compass") "SKILL.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path $claudeHome "skills") "behavior-validator") "SKILL.md")
     Assert-PathPresent -Path (Join-Path (Join-Path (Join-Path (Join-Path $claudeHome "skills") "pr-review-loop") "scripts") "build-review-bundle.py")
+    Assert-PathPresent -Path (Join-Path (Join-Path $claudeHome "agents") "progress-monitor.md")
     Assert-PathPresent -Path (Join-Path (Join-Path $claudeHome "agents") "reviewer.md")
 
     $missingConfig = (Get-Content -Raw -LiteralPath $configPath) -replace '(?m)^model_auto_compact_token_limit = 233000\r?\n', ''
@@ -217,18 +219,35 @@ last_refresh = "machine-local"
     [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments))
     [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPlugins", "-RequireInSync") + $homeArguments))
 
-    $retiredCodexSkill = Join-Path (Join-Path $codexHome "skills") "proper-flowcharts"
-    $retiredUserSkill = Join-Path (Join-Path $agentsHome "skills") "ui-ux-pro-max"
-    New-Item -ItemType Directory -Force $retiredCodexSkill, $retiredUserSkill | Out-Null
-    Set-Content -LiteralPath (Join-Path $retiredCodexSkill "legacy.txt") -Value "legacy"
-    Set-Content -LiteralPath (Join-Path $retiredUserSkill "legacy.txt") -Value "legacy"
+    $retiredPaths = @(
+        (Join-Path (Join-Path $codexHome "skills") "proper-flowcharts"),
+        (Join-Path (Join-Path $codexHome "skills") "benchmark-run-operator"),
+        (Join-Path (Join-Path $codexHome "skills") "input-token-economy"),
+        (Join-Path (Join-Path $codexHome "skills") "using-codex-goals"),
+        (Join-Path (Join-Path $agentsHome "skills") "ui-ux-pro-max"),
+        (Join-Path (Join-Path $agentsHome "skills") "benchmark-run-operator"),
+        (Join-Path (Join-Path $agentsHome "skills") "input-token-economy"),
+        (Join-Path (Join-Path $agentsHome "skills") "using-codex-goals"),
+        (Join-Path (Join-Path $claudeHome "skills") "benchmark-run-operator"),
+        (Join-Path (Join-Path $claudeHome "skills") "input-token-economy"),
+        (Join-Path (Join-Path $claudeHome "skills") "using-codex-goals")
+    )
+    foreach ($retiredPath in $retiredPaths) {
+        New-Item -ItemType Directory -Force $retiredPath | Out-Null
+        Set-Content -LiteralPath (Join-Path $retiredPath "legacy.txt") -Value "legacy"
+    }
+    $retiredClaudeAgent = Join-Path (Join-Path $claudeHome "agents") "benchmark-infra-reviewer.md"
+    New-Item -ItemType Directory -Force (Split-Path -Parent $retiredClaudeAgent) | Out-Null
+    Set-Content -LiteralPath $retiredClaudeAgent -Value "legacy"
 
     [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-SkipPlugins") + $homeArguments))
-    if (Test-Path -LiteralPath $retiredCodexSkill) {
-        throw "retired Codex skill was not removed: $retiredCodexSkill"
+    foreach ($retiredPath in $retiredPaths) {
+        if (Test-Path -LiteralPath $retiredPath) {
+            throw "retired skill was not removed: $retiredPath"
+        }
     }
-    if (Test-Path -LiteralPath $retiredUserSkill) {
-        throw "retired user skill was not removed: $retiredUserSkill"
+    if (Test-Path -LiteralPath $retiredClaudeAgent) {
+        throw "retired Claude agent was not removed: $retiredClaudeAgent"
     }
     [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPlugins", "-RequireInSync") + $homeArguments))
 

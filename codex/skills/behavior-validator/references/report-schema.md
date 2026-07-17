@@ -1,18 +1,23 @@
 # Behavior Validation Report Schema
 
-Use this shape when another agent or script will consume the result.
+Use this shape when a principal, reviewer, or script will consume the result.
+The report records exactly which isolated workspace and target were tested.
 
 ```json
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "tested_at": "ISO 8601 timestamp with timezone",
+  "workspace": {
+    "manifest_sha256": "hex digest",
+    "allowed_local_paths_checked": true
+  },
   "target": {
     "surface": "string",
-    "identity": "string",
+    "identity": "exact build, ref, version, or artifact",
     "user_posture": "string"
   },
   "contract": {
-    "path": "string or null",
-    "inline": false,
+    "path": "contract.md",
     "revision": "string or null"
   },
   "source_blind": true,
@@ -33,12 +38,20 @@ Use this shape when another agent or script will consume the result.
       "finding": "string or null"
     }
   ],
-  "anti_cheat_probes": ["string"],
-  "blockers": ["string"]
+  "anti_cheat_probes": [
+    {
+      "probe": "string",
+      "observed": "string",
+      "result": "pass | fail | blocked"
+    }
+  ],
+  "blockers": ["string"],
+  "remaining_proof_gaps": ["string"]
 }
 ```
 
-Do not place credentials, cookies, tokens, private user data, raw session logs,
-or implementation details in the report. When contamination occurs, set
-`source_blind` to `false`, set `contaminated` to `true`, and do not count that run
-as the behavior gate.
+Keep credentials, cookies, tokens, private user data, raw session logs, source,
+and implementation details outside the report. When implementation material
+becomes visible, set `source_blind` to `false`, set `contaminated` to `true`,
+record what was exposed, and stop. A contaminated report cannot close the
+behavior gate.

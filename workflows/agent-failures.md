@@ -1,124 +1,167 @@
 # Agent Failure Journal
 
-Use this file to convert repeated agent mistakes into targeted workflow changes.
-Do not add global rules for one-off failures. Record enough detail to identify
-the first upstream failure and decide whether the fix belongs in instructions,
-a skill, a script, a test, or repo documentation.
+Use this file to convert repeated agent mistakes into targeted system changes.
+Record the first upstream failure, the evidence that exposes it, and the narrowest
+surface that can prevent recurrence.
 
-This is repo-maintainer guidance and is not installed into a live Codex home,
-user skill home, or Claude home. When a failure should change future agent
-behavior, route the fix into the reviewed source under `codex/AGENTS.md`,
-`codex/agents/`, or `codex/skills/`. The Claude surface derives from those
-sources at install time.
+This is maintainer evidence. Runtime corrections belong in the separately
+reviewed Codex or Claude global source, a focused skill or agent, a project
+surface, or a mechanical check.
 
 ## Entry Template
 
 ```text
 date:
+runtime and model:
 repo or workflow:
 task:
 first failure:
 downstream effects:
 evidence:
 root cause category:
-fix made:
+durable response:
 verification:
-should become durable guidance:
+review date:
 ```
 
 ## Categories
 
-- missing context: the agent did not inspect required files, docs, logs, or
-  runtime state;
-- incorrect context: the agent relied on stale, guessed, or irrelevant facts;
-- noisy context: useful evidence was buried under low-value output;
-- weak verification: completion was claimed without a check that covered the
-  changed behavior;
-- objective drift: a current obstacle, repair, phase, action, or delegated slice
-  replaced the user's terminal outcome or completion predicate;
+- missing context: authoritative files, runtime state, or prior decisions were
+  not inspected;
+- incorrect context: stale, guessed, or irrelevant material drove the route;
+- noisy context: useful evidence was buried under low-value transcript or logs;
+- lossy delegation: an assignment or compaction handoff weakened the original
+  understanding;
+- distributed control authorship: delegates invented or rewrote the goal, plan,
+  catalog, ledger, or checkpoint;
+- premature implementation: production mutation began before the objective and
+  authority were stable;
+- accretive repair: repeated guards, wrappers, or rewrites accumulated around a
+  cause that remained uncorrected;
+- weak verification: completion was claimed without evidence covering the
+  required behavior;
+- objective drift: the current route replaced the requested finished state;
 - unsafe mutation: files, branches, services, or external state changed outside
-  the intended scope;
-- workflow mismatch: the task needed planning, research, browser validation,
-  or PR handling but ran as a simple edit;
-- tool-surface risk: a plugin, MCP server, browser, shell, or network tool had
-  broader capability than the task required.
+  granted authority;
+- workflow mismatch: the task needed planning, research, experimentation,
+  monitoring, review, or orchestration but used the wrong operating shape;
+- tool-surface risk: a tool had broader capability than the assignment needed.
 
 ## Review Loop
 
-1. Record the first failure, not every downstream symptom.
-2. Group similar entries after several traces.
-3. Add durable guidance only when the same category repeats.
-4. Prefer a script or focused workflow over a broad global rule.
-5. Remove stale guidance when the underlying failure no longer appears.
+1. Capture the first failure and current evidence.
+2. Group repeated instances by cause rather than visible symptom.
+3. Select the narrowest durable correction.
+4. Prefer mechanics for exact properties and guidance for judgment.
+5. Forward-test behavioral corrections with a fresh context.
+6. Revisit dated model counterweights when the model profile changes.
+7. Remove guidance after evidence shows the failure no longer justifies its
+   recurring cost.
 
 ## Recorded Failures
 
+### 2026-07-17: Delegates became authors of control state
+
+- Failure: control guidance assigned separate goal, catalog, and worker-ledger
+  writers. Each delegation added another interpretation layer and another state
+  format.
+- Cause: lossy delegation, distributed control authorship, noisy context.
+- Durable response: one logical user-facing principal authors the goal, plan,
+  catalog, assignments, ledger shape, and checkpoints across contexts. Delegates
+  receive reviewed assignments and return artifacts plus evidence. Principal-only
+  ledger mutation is mechanically enforced.
+- Verification: schema version 4 rejects delegated control grants and records
+  evidence provenance while preserving optimistic revision checks.
+
+### 2026-07-17: Negative-only guidance left the route undefined
+
+- Failure: several instructions described forbidden behavior without naming the
+  desired replacement, leaving a broad unstable action space.
+- Cause: incorrect context, workflow mismatch.
+- Durable response: Compass guidance leads with role, desired state, evidence,
+  and authority. Crisp prohibitions remain for secrets, worktree scope, public
+  mutation, and similarly observable boundaries.
+- Verification: philosophy, skill-authoring guidance, runtime globals, and policy
+  contracts encode desired-state-first prompting.
+
+### 2026-07-17: Eager implementation outran understanding
+
+- Failure: production edits began while the user was still shaping the plan.
+  Early motion made a weak interpretation costly to stop.
+- Cause: premature implementation, objective drift.
+- Durable response: goals and control state carry a planning or implementation
+  phase. Material plans and assignments remain reviewable before dispatch unless
+  the user has granted or waived that review boundary.
+- Verification: long-running-work guidance, plan templates, global instructions,
+  and ledger phase state preserve the implementation gate.
+
+### 2026-07-17: Persistent repair accumulated code around symptoms
+
+- Failure: repeated patches added guards, wrappers, and broad rewrites instead
+  of repairing the owning boundary.
+- Cause: accretive repair, weak verification.
+- Durable response: `root-cause-not-symptom` reopens the causal model when the
+  symptom recurs and ends with a subtractive review for duplicate state,
+  unnecessary branches, and obsolete compatibility paths.
+- Verification: the skill and code-quality review template require causal and
+  subtractive evidence.
+
 ### 2026-07-13: Goal substituted a route for the requested result
 
-- Failure: a parent goal and its delegated slices described the currently known
-  repair sequence and subsequent action instead of the observable state the user
-  wanted at the end. Completing the repair therefore left no durable contract
-  that required the remaining result and evidence.
+- Failure: a parent goal described a repair sequence instead of the observable
+  state the user wanted at the end.
 - Cause: objective drift, workflow mismatch, weak verification.
-- Durable response: goal contracts separate a stable finished state and required
-  assertions from a mutable acceptance ledger and execution state; child slices
-  name the parent assertions they advance; controllers recompute unmet assertions
-  after every return; monitors and route completion never imply parent completion.
+- Durable response: `using-goals` separates stable finished state and assertions
+  from mutable route, owner, blocker, and next action. Completion reconciles the
+  whole goal after every material return.
 
-These records preserve the first upstream failure and durable correction. Keep
-detailed evidence with the reviewable change that adopted it, not repeated here.
+### 2026-07-13: Long-running work lost its operational map
 
-### 2026-07-13: Goal lost its operational map
+- Failure: a child reconstructed a control file from partial context, then role
+  boundaries collapsed and the surviving documents became contradictory.
+- Cause: lossy delegation, distributed control authorship, noisy context.
+- Durable response: principal-authored anchors, a compact current checkpoint,
+  evidence provenance, and the fresh-context resume test preserve one intention
+  across compaction and replacement contexts.
 
-- Failure: a prep-only benchmark child amended and reconstructed a
-  controller-owned Markdown control file without edit authority. Later, the
-  long-running goal kept driving output after controller, worker, monitor, and
-  repair roles collapsed together and required control files became large,
-  contradictory, and partly historical.
-- Cause: missing context, incorrect context, noisy context, workflow mismatch.
-- Durable response: mutable control surfaces have one named writer and delegated
-  roles need exact edit authority; goal contracts name authoritative inputs in
-  precedence order, one short mutable-state surface, and a compaction or handoff
-  re-anchor; orchestration restores separate controller and execution owners
-  before new dispatches; benchmark recovery stops after two failed successors
-  until the complete child runtime path receives fresh root-cause review.
-
-### 2026-07-08: Inline review visibility
+### 2026-07-08: Inline review findings remained hidden
 
 - Failure: top-level PR comments, reviews, and checks hid actionable inline
   comments.
 - Cause: missing context, weak verification.
-- Durable response: `compass-review-program` and `pr-review-loop` require
-  current-head inline-comment inspection alongside top-level review state.
+- Durable response: `pr-review-loop` inspects current-head inline threads beside
+  top-level review state.
 
-### 2026-07-02: Specialist review delegation
+### 2026-07-02: Specialist review lost independence
 
-- Failure: a parent shell-launched CLI children after missing the subagent route,
-  then risked reporting that output as coordinated specialist review.
+- Failure: a parent substituted shell-launched prompts for the dedicated
+  specialist route, then risked reporting the output as coordinated review.
 - Cause: workflow mismatch, tool-surface risk.
-- Durable response: `specialist-review` and `reviewer` require direct specialist
-  subagents; a manual prompt is explicitly outside coordinated review.
+- Durable response: `specialist-review` routes a neutral handoff through the
+  dedicated reviewer and reports failure when that capability is unavailable.
 
-### 2026-06-12: Multi-thread public-branch sprawl
+### 2026-06-12: Parallel work created public-branch sprawl
 
 - Failure: workers combined local tracking with public PR authority, producing
   overlapping drafts and scratch content.
-- Cause: workflow mismatch.
-- Durable response: `multi-thread-pr-coordination.md` separates local tracking
-  from focused PR branches, with current-head review gates for publication.
+- Cause: workflow mismatch, unsafe mutation.
+- Durable response: `multi-thread-pr-coordination.md` gives one principal public
+  branch authority, principal-authored assignments, and a focused PR budget.
 
-### 2026-06-18 and 2026-06-22: Controller recovery posture
+### 2026-06-18 and 2026-06-22: Controllers alternated between passivity and takeover
 
 - Failure: controllers accepted blocker or waiting claims as endpoints, then
-  overcorrected by taking worker-owned execution.
+  overcorrected by absorbing worker-owned execution.
 - Cause: workflow mismatch, weak verification.
-- Durable response: controller, goal, subagent, and benchmark guidance treat
-  those claims as evidence to diagnose, route to a named owner, and keep moving.
+- Durable response: the controller stays above execution, treats returns as
+  evidence, prepares the next reviewed route, and lets coherent workers continue
+  without babysitting.
 
-### 2026-06-23: Invalid benchmark rows as terminal blockers
+### 2026-06-23: Invalid benchmark rows became terminal blockers
 
 - Failure: timeout and provider-failure rows stopped healthy comparable work and
-  pulled the controller into the runner role.
+  pulled the principal into the runner role.
 - Cause: workflow mismatch, weak verification.
-- Durable response: benchmark and goal guidance treat invalid rows as recovery
-  work, preserve a named runner owner, and continue unaffected safe slices.
+- Durable response: the carried benchmark pack treats invalid rows as attributable
+  recovery work, preserves a named runner, and continues unaffected comparable
+  slices while provenance remains clean.

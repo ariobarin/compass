@@ -35,8 +35,14 @@ class OrchestrationLedgerLockTests(unittest.TestCase):
                             "sample",
                             "--goal",
                             "Keep concurrent updates",
+                            "--anchor",
+                            "requirements.md",
+                            "--control-document",
+                            "local-docs/control/goal.md",
                             "--execution-owner",
-                            "worker",
+                            "principal",
+                            "--control-writer",
+                            "principal",
                         ]
                     )
 

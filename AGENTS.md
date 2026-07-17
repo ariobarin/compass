@@ -1,85 +1,100 @@
 # Repository Guidance
 
-Compass is the reviewed source for portable Codex setup. It is not a raw backup
-of `~/.codex`, `$HOME/.agents`, or `$HOME/.claude`.
+Compass is reviewed source for portable Codex and Claude Code behavior. It is
+not a raw runtime-home backup.
 
-- `codex/AGENTS.md` is the portable source for the live global
-  `~/.codex/AGENTS.md`. Only put session-wide defaults there.
-- Installed agentic guidance source belongs under `codex/AGENTS.md`,
-  `codex/agents/`, or `codex/skills/`.
-- Installed Codex hook behavior belongs under `codex/hooks.json` or
-  `codex/hooks/`.
-- This repo-root `AGENTS.md` is for Compass maintenance guidance.
-- If a rule only makes sense while editing Compass, put it here or in
-  `workflows/` or `local-docs/`, not in installed agentic docs.
-- Repo-maintainer guidance belongs in this file, `workflows/`, `local-docs/`,
-  `manifests/`, or `scripts/`. These surfaces are not copied into live install
-  targets as agent behavior.
-- Keep `codex/AGENTS.md` short and global.
-- Put detailed operating behavior in the narrowest surface: installed agents or
-  skills for reusable agent capability, hook docs for hook operation, repo
-  workflows for Compass maintenance, scripts for mechanical checks, and
-  manifests for boundaries.
-- Treat `codex/agents` and manifest-listed `codex/skills` as one portable
-  bundle. When editing bundled skills or agents, reference bundled capabilities
-  directly instead of making them sound optional. Keep conditional wording for
-  external services, permissions, credentials, CI, browser state, MCP tools,
-  goal tools, or repository access.
-- For Compass-owned capabilities, fix the config, install map, verifier, or
-  agent contract. Do not add alternate-path, best-effort, or compatibility
-  prose to installed skills when this repo can make the capability exact.
-- Codex is the reviewed source of truth for shared skills and agents. Claude
-  skills and most agents derive from `codex/skills/<name>` and
-  `codex/agents/<name>.toml` at install time, so a shared change lands on both
-  runtimes. A platform-specific direct agent may live under `claude/agents/`
-  only when the shared transform cannot express its frontmatter, tools, or
-  isolation contract. See `workflows/claude-config.md`.
-- For nontrivial changes to this repo, read
-  `local-docs/maintenance-learnings.md` before editing.
-- For Compass audits, use `workflows/compass-review-program.md` before pruning
-  installed skills, agents, hooks, or maintainer guidance.
-- Do not commit auth, sessions, logs, caches, browser state, SQLite files, or
-  generated plugin caches.
+## Source Boundaries
+
+- `codex/AGENTS.md` is the separately authored Codex global instruction source.
+- `claude/CLAUDE.md` is the separately authored Claude global instruction
+  source.
+- Maintain those two files separately. Share values, not runtime fiction.
+- Reusable runtime-neutral skills live under `codex/skills/` and may derive into
+  Claude when listed in `manifests/portable-files.toml`.
+- Shared agent roles live under `codex/agents/`. Direct Claude agents live under
+  `claude/agents/` only when their platform contract cannot be derived.
+- Installed hook behavior lives under `codex/hooks.json` and `codex/hooks/`.
+- Portable opt-in domain packs live under `carried/` and stay out of global
+  install lists.
+- Compass-only maintenance belongs in this file, `workflows/`, `local-docs/`,
+  `manifests/`, or `scripts/`.
+- Project-specific capability belongs in the target project.
+
+Keep `codex/AGENTS.md` and `claude/CLAUDE.md` short and session-wide. Put focused
+runtime judgment in the narrowest skill or agent. Put deterministic truth in a
+script, hook, manifest, schema, or test.
+
+## Maintenance Posture
+
+Read [philosophy.md](philosophy.md), [glossary.md](glossary.md),
+[local-docs/maintenance-learnings.md](local-docs/maintenance-learnings.md), and
+the workflow nearest the change before a nontrivial edit.
+
+Understand first. Reduce second. Preserve behavior while reducing repeated
+context, duplicate sources, mutable states, weak choices, and maintenance cost.
+
+Lead documentation with the desired role and state. Use a prohibition when the
+forbidden boundary is crisp or when a recurring failure has an unmistakable
+shape. Pair judgment-heavy prohibitions with the positive replacement.
+
+For long-running work, preserve one logical principal across contexts. The
+principal or user authors the goal, plan, catalog, assignments, and checkpoints.
+Delegates execute reviewed assignments and return artifacts plus evidence. Do
+not distribute control authorship across worker-written ledgers.
+
+Material plans and assignments should be reviewable before dispatch unless the
+user has already granted or explicitly waived that review boundary.
+
+## Exact Repository Rules
+
+- Treat every manifest-listed skill and agent as one reviewed portable bundle.
+- Fix Compass-owned wiring in source, transforms, manifests, policy contracts,
+  and tests. Avoid alternate-path prose where Compass can make the route exact.
+- Update source, install maps, retirement maps, required-file checks, policy
+  contracts, MCP catalog expectations, and tests together when ownership moves.
+- Preserve external provenance and license evidence for imported skills.
+- Keep `AGENTS.override.md`, auth, sessions, logs, caches, browser state,
+  database files, generated plugin state, and machine-only values untracked.
+- Respect `CODEX_HOME`, `-AgentsHome`, and `-ClaudeHome` instead of hardcoding
+  default runtime paths.
+- Review `codex/config.review.toml` before changing its authority. Install
+  overlays reviewed keys and preserves unrelated live keys.
+- Use a focused pull request as the review unit.
+- Run `git diff --check` and the narrow tests for every changed mechanism.
 - Run `.\scripts\doctor.ps1` before committing.
-- Use `.\scripts\verify-live.ps1 -SkipCodexCommand` to inspect live drift.
-- Review `codex/config.review.toml` before changing its contract. Normal install
-  overlays every reviewed key while preserving unrelated live config state.
+- Run `.\scripts\verify-live.ps1 -SkipCodexCommand` when install or retirement
+  drift matters.
 
-## Review guidelines
+## Skill Authoring
 
-- Flag changes that accidentally expand the portable scope by committing auth,
-  sessions, logs, caches, browser state, SQLite files, generated plugin state,
-  or other local-only Codex data.
-- Flag changes that hardcode `~/.codex`, `%USERPROFILE%\.codex`, or
-  `$HOME/.agents` when the path should respect `CODEX_HOME` or `-AgentsHome`.
-- Flag changes that hardcode `$HOME/.claude` when the path should respect
-  `-ClaudeHome`.
-- Flag config changes that introduce undocumented keys, stale settings, or
-  stronger default authority without a current-doc justification.
-- Flag guidance that routes project-specific behavior into Compass
-  when it should live in the target project repo instead.
-- Flag tracked `AGENTS.override.md` or `rules/` files unless they were
-  intentionally adopted as reviewed portable policy.
-- Flag project-specific agents or skills routed into Compass when they
-  should live in the target repo.
+Use `write-a-skill` for general skill design and `write-a-compass-skill` for
+Compass routing, install, derivation, provenance, retirement, and validation.
 
-## Skill authoring
+A skill should make the reader absorb, in its first screen:
 
-Skills should shape judgment before they prescribe steps. Start by making the
-agent understand the role it is taking on, why that role exists, what failure
-mode it prevents, and what boundaries preserve good judgment.
+- the role;
+- the desired terminal result;
+- why the role exists at runtime;
+- the recurring failure it corrects;
+- the evidence that matters;
+- the authority boundary.
 
-- Front-load action-critical guidance. If only the first screen or first 10
-  lines are read, the agent should still see the role, terminal result,
-  non-negotiables, and failure mode to avoid.
-- For goal-bearing or long-lived guidance, put the finished state and completion
-  evidence before the current next action. Keep changing owners, blockers, and
-  next actions in a named live state surface rather than in the durable
-  objective.
-- Lead with the mental model, not a checklist.
-- Use procedures only for fragile or exact operations.
-- Prefer principles, boundaries, and short examples over exhaustive branches.
-- Trust the agent to reason from the right stance instead of turning the skill
-  into a flowchart.
-- Keep concrete prompts and templates where they teach the role or preserve a
-  handoff contract.
+Shape judgment before prescribing steps. Use procedures only when order is real
+or mechanics are fragile. Keep maintainer history and model anecdotes out of
+installed runtime text.
+
+## Review Focus
+
+Flag:
+
+- accidental expansion of the portable boundary;
+- project-specific material promoted globally;
+- duplicated Codex and Claude global guidance that should remain separate;
+- soft language around required behavior;
+- negative-only guidance with no desired replacement;
+- distributed control authorship in long-running work;
+- premature implementation while authority remains in planning;
+- worker claims accepted without current evidence;
+- model routing that conflicts with the dated current profile;
+- stale skill names, install maps, retirement paths, policy strings, or tests;
+- generated mechanics expressed only as remembered prose.

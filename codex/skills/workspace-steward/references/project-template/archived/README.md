@@ -1,13 +1,8 @@
 # archived
 
-Historical folders that should be preserved but are not active work targets.
+Inactive material retained for reference. Archive only after current catalogs
+and control documents point to the active replacement or record closure.
 
-Rules:
-
-- Do not use archived folders as current runbooks or the current source of truth.
-- Do not move active worktrees here. Active, review, preserved, and
-  delete-candidate worktrees belong under `../worktrees/`.
-- Do not delete archived folders unless a later cleanup pass records explicit
-  owner approval and preservation evidence.
-- Keep archive evidence intact. Prefer adding a dated note over editing old
-  chronology.
+Preserve chronology. Add a dated archive note instead of rewriting historical
+state. Active worktrees, current runbooks, and authoritative control documents
+remain in their live lifecycle locations.

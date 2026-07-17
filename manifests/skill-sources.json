@@ -22,16 +22,6 @@
       }
     },
     {
-      "name": "benchmark-run-operator",
-      "owner": "compass",
-      "source": "codex/skills/benchmark-run-operator",
-      "profile": "default",
-      "targets": {
-        "codex": "copy",
-        "claude": "derived"
-      }
-    },
-    {
       "name": "compass",
       "owner": "compass",
       "source": "codex/skills/compass",
@@ -77,16 +67,6 @@
       }
     },
     {
-      "name": "input-token-economy",
-      "owner": "compass",
-      "source": "codex/skills/input-token-economy",
-      "profile": "default",
-      "targets": {
-        "codex": "copy",
-        "claude": "derived"
-      }
-    },
-    {
       "name": "monitor-to-completion",
       "owner": "compass",
       "source": "codex/skills/monitor-to-completion",
@@ -123,7 +103,17 @@
       "profile": "default",
       "targets": {
         "codex": "copy",
-        "claude": "none"
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "run-a-micro-experiment",
+      "owner": "compass",
+      "source": "codex/skills/run-a-micro-experiment",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
       }
     },
     {
@@ -167,19 +157,29 @@
       }
     },
     {
-      "name": "using-codex-goals",
+      "name": "using-goals",
       "owner": "compass",
-      "source": "codex/skills/using-codex-goals",
+      "source": "codex/skills/using-goals",
       "profile": "default",
       "targets": {
         "codex": "copy",
-        "claude": "none"
+        "claude": "derived"
       }
     },
     {
       "name": "workspace-steward",
       "owner": "compass",
       "source": "codex/skills/workspace-steward",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "derived"
+      }
+    },
+    {
+      "name": "write-a-compass-skill",
+      "owner": "compass",
+      "source": "codex/skills/write-a-compass-skill",
       "profile": "default",
       "targets": {
         "codex": "copy",

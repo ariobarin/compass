@@ -1,7 +1,7 @@
 interface:
   display_name: "Monitor To Completion"
-  short_description: "Run waits in one blocking script, not a poll loop"
-  default_prompt: "Use $monitor-to-completion to run this mechanical wait or watch to completion in one blocking script instead of polling in a sleep loop, which carries session context on every wake."
+  short_description: "Concentrate one mechanical wait in one command"
+  default_prompt: "Use $monitor-to-completion to wait for this one observable condition inside a bounded command and return a compact terminal result."
 
 policy:
   allow_implicit_invocation: true

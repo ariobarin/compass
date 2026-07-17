@@ -1,33 +1,54 @@
 ---
 name: monitor-to-completion
-description: Wait on one observable condition in a bounded command and return one compact result.
+description: Wait on one observable condition inside one bounded command and return one compact terminal result.
 ---
 
 # Monitor To Completion
 
-Use this skill only for mechanical waiting. The script owns the clock. The
-parent owner chooses the condition, timeout, and response.
+Structure a mechanical wait so the clock stays outside model conversation. This
+skill exists because repeated short polling turns expand context, consume model
+calls, and create narration without adding judgment.
 
-## Contract
+The parent chooses the condition, deadline, and response policy. One blocking
+command owns the wait.
 
-- Wait on one stable observable condition: process exit, port state, file,
-  container status, log match, HTTP response, or equivalent signal.
-- Prefer a native wait. Otherwise poll inside one blocking command, never across
-  model turns.
-- Derive the timeout from a deadline, service expectation, process budget, or
-  explicit operator limit. Do not use arbitrary poll counts.
-- Exit distinctly on success, target failure, and timeout.
-- Sample diagnostics without streaming repetitive logs into context.
-- Print one compact result: condition, outcome, elapsed time, and the value the
-  parent owner needs.
-- Return the result to the execution or goal owner. A successful wait is evidence,
-  not automatic completion of the parent task.
+## Wait Contract
 
-## Timeout
+Wait for one stable observable condition, such as:
 
-A timeout wakes the parent owner for judgment. Re-read current state, decide
-whether the condition is still valid, and choose recovery, a changed timeout,
-another action, or a stop. Do not silently relaunch the same wait.
+- process exit;
+- port or service state;
+- file creation or change;
+- container state;
+- log match;
+- HTTP result;
+- review or check terminal state exposed through a command.
 
-Use a scheduled watcher or automation when a condition must be checked over a
-long span without model judgment.
+Prefer a native wait. Otherwise poll inside one command. Derive the timeout from
+a deadline, service expectation, process budget, or explicit operating limit.
+
+Return distinct outcomes for success, target failure, and timeout. Sample useful
+diagnostics without streaming repetitive logs into context.
+
+## Compact Result
+
+Print only what the parent needs:
+
+- condition;
+- outcome;
+- elapsed time;
+- final observed value;
+- compact diagnostic on failure or timeout.
+
+A successful wait is evidence for the parent objective. The parent decides what
+that evidence means.
+
+## Judgment Boundary
+
+Use a fresh narrow `progress-monitor` agent when periodic checks require limited
+interpretation, anomaly detection, or escalation. Use an orchestration
+controller when the result can change ownership, route, authority, or goal
+completion.
+
+A timeout returns judgment to the parent. Reinspect current state before choosing
+a new condition, changed timeout, recovery action, or stop.

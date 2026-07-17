@@ -1,156 +1,147 @@
 # Addition Intake Workflow
 
-Use this workflow when deciding whether a new Compass rule, workflow, skill,
-agent, hook, script, manifest entry, or config fragment belongs in Compass.
-This is maintainer guidance for promoting durable artifacts, not a runtime rule
-for every agent session.
+Use this workflow to decide whether a new Compass rule, workflow, skill, agent,
+hook, script, manifest entry, config fragment, or carried pack deserves a durable
+place in the repository.
 
-## Intake Standard
+Compass is an allowlist. Every addition must earn its recurring context,
+retrieval, install, validation, and maintenance cost.
 
-Treat additions as candidates until evidence shows they solve a repeated problem
-and can be reviewed, reinstalled, and verified without carrying generated state.
-Promote additions when they are human-owned, portable, and useful outside one
-transient task.
+## Start With The Reduction Case
 
-## Reduction Case
+State the repeated problem and the cost the addition removes or prevents:
 
-Before treating an addition as durable, name its reduction case:
+- recurring context or explanation;
+- duplicate sources or decisions;
+- generated state mistaken for reviewed source;
+- drift that should become mechanically detectable;
+- repeated judgment that needs a durable stance;
+- a distinct capability worth its continuing cost.
 
-- the recurring context, state, duplication, drift, or maintenance cost it
-  removes or prevents;
-- the existing artifact, manual step, duplicate source, or decision branch it
-  replaces, merges, narrows, derives, or mechanizes;
-- why the remaining surface is the narrowest one that preserves the behavior.
+Name what the addition replaces, narrows, derives, mechanizes, or makes
+obsolete. When it creates net-new behavior, say why that behavior belongs in
+every intended runtime instead of one project, one experiment, or one machine.
 
-An addition can be justified when it creates distinct new behavior. In that
-case, state why its continuing cost is worth carrying instead of presenting it
-as free improvement.
+Generated state, auth, sessions, logs, browser profiles, caches, machine paths,
+and live trust settings remain local.
 
-Keep generated state, plugin cache output, auth state, sessions, logs, browser
-profiles, local runtime paths, and one-machine trust settings in live or ignored
-local storage.
+## Choose The Narrowest Durable Surface
 
-The default path is staged:
+Route the behavior to the reader that needs it:
 
-1. For installed agentic guidance, use or test the addition in the live target
-   home first when that is the lowest risk way to validate behavior.
-2. Capture the problem it solves, the evidence that it worked, and its
-   reduction case.
-3. Decide the smallest durable artifact type and what existing surface it can
-   replace, narrow, or intentionally leave unchanged.
-4. Copy only reviewed portable files into this repo.
-5. Wire the addition into the route-specific allowlist, install map, docs, and
-   checks that apply to that artifact type.
-6. Open a PR before treating the portable copy as accepted.
+- session-wide Codex defaults: `codex/AGENTS.md`;
+- session-wide Claude defaults: `claude/CLAUDE.md`;
+- reusable runtime judgment: `codex/skills/`;
+- reusable reviewer, explorer, monitor, or worker persona: `codex/agents/`;
+- Claude-specific agent contract that cannot derive safely: `claude/agents/`;
+- project-specific capability: the target project repository;
+- useful portable pack outside every global session: `carried/`;
+- Compass maintainer process: `workflows/`;
+- maintainer reasoning and dated evidence: `local-docs/`;
+- deterministic or fragile mechanics: `scripts/`;
+- install, portability, schema, and policy truth: `manifests/`;
+- stable reviewed Codex configuration: `codex/config.review.toml`.
 
-Imported setup from other agents follows the same path. Treat imported files,
-skills, hooks, MCP config, and settings as candidate input only. Review them,
-route them to the narrowest durable artifact, and keep imported chats, project
-lists, auth, plugin follow-up state, and other migration-only runtime data out
-of this repo unless the repo intentionally adopts a reviewed portable form.
+Codex and Claude share skills and many agents when the runtime contract is truly
+portable. Their global instruction files remain separately authored because the
+runtimes, models, and delegation surfaces differ.
 
-## Routing
+## Shape Runtime Guidance
 
-- Repeated human process: add a focused file in `workflows/`.
-- Specialized agent behavior: add a skill under `codex/skills/`.
-- Focused reviewer or researcher persona: add an agent under `codex/agents/`.
-- Claude Code skill or agent: add the reviewed source under `codex/skills/` or
-  `codex/agents/`, then list it in `[claude].derived_skills` or
-  `[claude].derived_agents` so it derives at install time.
-- Mechanical check or sync behavior: add or update a script under `scripts/`.
-- Portability boundary or tool capability: update `manifests/`.
-- Repo-only maintenance lesson: update `local-docs/`.
-- Session-wide personal default: update `codex/AGENTS.md` only after review.
-- Stable config fragment: update `codex/config.review.toml`; keep live
-  `config.toml` out of repo changes.
+Installed guidance points toward a desired state. Front-load:
 
-If an addition fits more than one route, choose the narrowest route that solves
-the repeated problem.
+- the role being adopted;
+- the result it should create;
+- the repeated failure the role corrects;
+- the evidence that proves success;
+- the authority boundary that preserves trust.
 
-## Runtime Vs Maintainer Guidance
+Use decisive positive direction for judgment. Reserve prohibitions for crisp,
+observable boundaries and recurring failure shapes. Put exact procedures only
+where sequence protects a fragile operation or handoff contract.
 
-Decide whether the artifact is meant to be installed into a live Codex home,
-user skill home, Claude home, or only used to maintain this repo.
+Runtime files carry action. Maintainer history, model calibration, provenance,
+and packaging rationale belong in maintainer documentation or references that
+normal work does not load.
 
-Installed agentic guidance changes how future agent sessions behave. Put its
-reviewed source in `codex/AGENTS.md`, `codex/agents/`, or `codex/skills/`; the
-Claude surface derives from that source at install time. Keep it focused on
-durable role, stance, judgment, and capability boundaries. Do not include
-Compass maintenance process, PR hygiene, install-map details, or one-repo
-review habits in installed agentic docs.
+## Prove The Addition Before Promotion
 
-Repo-maintainer guidance helps humans and agents edit this repository. Put that
-in this root `AGENTS.md`, `workflows/`, `local-docs/`, `manifests/`, or
-`scripts/`. It can explain promotion rules, local checks, stale-guidance sweeps,
-and why a portable file belongs here. It should not pretend to be a runtime rule
-for every agent session.
+A durable addition follows this path:
 
-## Skill And Agent Additions
+1. Observe a repeated failure or distinct recurring need.
+2. Test the smallest candidate behavior in the lowest-risk appropriate surface.
+3. Record the reduction case and evidence.
+4. Choose the narrowest durable artifact.
+5. Remove or update the surface the addition supersedes.
+6. Wire the reviewed files into the exact install and derivation maps.
+7. Add mechanical checks for properties that should not drift.
+8. Forward-test judgment guidance with a fresh realistic agent when behavior is
+   the product.
+9. Review the complete change as one PR before treating it as accepted.
 
-Skills and agents need extra review because they shape future agent behavior.
+Imported setup is candidate material, not reviewed source. Preserve only the
+portable behavior Compass intentionally adopts.
 
-- Keep skill descriptions concise and specific.
-- Put detailed skill instructions in `SKILL.md`, references, scripts, or
-  assets.
-- Exclude system skills and plugin cache skills unless the repo intentionally
-  owns a local copy.
-- Install user skills into `$HOME/.agents/skills`; keep `codex/skills/` as the
-  reviewed source tree.
-- Add each portable skill name to `manifests/portable-files.toml`.
-- `scripts/common.ps1` reads portable skill names from that manifest.
-- For Claude skills and agents, list the codex skill in `[claude].derived_skills`
-  and the codex agent in `[claude].derived_agents` in
-  `manifests/portable-files.toml`.
-- When removing a previously portable user skill, keep its legacy Codex-home
-  retirement entry and add an explicit user-home retirement entry to
-  `Get-RetiredPortableFileMap` so `install.ps1 -Apply` actually uninstalls
-  both live copies.
-- Give agents a sandbox that matches their evidence path. Pure explorers that
-  should never mutate state need `sandbox_mode = "read-only"`. Reviewers that
-  must run tests, commands, browser checks, or plugin-backed validation should
-  be non-editing by instruction instead of blocked by sandbox.
-- Run `.\scripts\doctor.ps1` to catch manifest boundary and agent sandbox
-  drift.
+## Skills And Agents
 
-## Memory-Only Skills
+A global skill or agent must remain useful across repositories and ordinary
+workflows. Project lore, benchmark families, and temporary experiments belong
+in the target repository or a carried pack.
 
-Treat files under the live Codex memory skills directory (`$CODEX_HOME/memories/skills` or equivalent) as candidate
-legacy material, not active portable skills. They are useful evidence about past
-workflow experiments, but they do not belong in `codex/skills/` until fresh
-examples show the capability is still repeated, portable, and worth installing.
+For an installed skill:
 
-When reviewing a memory-only skill:
+- keep `SKILL.md` lean and put optional depth one level under `references/`;
+- put deterministic mechanics under `scripts/`;
+- put output resources under `assets/`;
+- keep the description concise enough to route invocation correctly;
+- list it in `[agents].skills`;
+- list it in `[claude].derived_skills` only when the runtime contract is shared;
+- add its reviewed source record to `manifests/skill-sources.json`;
+- update required-file and policy checks that bind to it.
 
-- Promote it only when recent repeated examples prove the same capability is
-  still useful across repos or workflows.
-- Fold it into an existing Compass skill when the behavior overlaps a current
-  installed skill.
-- Retire it as stale local history when it no longer maps to current Codex,
-  Compass, or repo workflows.
-- Prefer a maintainer workflow note, local doc, or `*-learnings.md` entry in `local-docs/` when
-  the material explains how to maintain Compass rather than how future agent
-  sessions should act.
+For a shared agent, maintain the reviewed Codex source and derive Claude only
+when the transform preserves its tools, model-independent role, and isolation
+contract. Maintain a direct Claude agent when the platform-specific contract is
+material.
 
-Do not create a new installed global skill from memory-only material unless the
-fresh evidence supports promotion better than a repo-maintainer note or an
-update to an existing Compass skill.
+Model and effort routing should reflect the current dated profile, not inherited
+habit. Runtime role files state their effective route where the platform
+supports it.
 
-## Stale Guidance Sweep
+## Retirement Is Part Of The Change
 
-Every addition should include a nearby stale-guidance pass:
+Removing or renaming an installed capability requires explicit retirement for
+every live location Compass previously owned:
 
-- Check whether README layout notes mention the new artifact type or workflow.
-- Check whether `local-docs/README.md` lists new local docs.
-- Check whether `workflows/portable-config.md` links new workflows.
-- Check whether `scripts/doctor.ps1` should require the new durable file.
-- Check whether agent or tool docs still match current sandbox and review rules.
-- Replace guidance that describes an old flow with the current route.
+- legacy Codex-home skill copies;
+- user skill-home copies;
+- derived Claude skill copies;
+- direct or derived agent copies;
+- stale manifest, source catalog, doctor, MCP, and documentation references.
 
-Scope the sweep to directly related cleanup. Fix stale items that affect the new
-addition flow or current portability checks.
+Preserve useful specialized material in its authorized carried or project route
+before retiring the global copy.
 
-## PR Shape
+## Memory-Only Material
 
-Use a pull request as the review unit for additions. Keep the PR focused on the
-addition and its directly related stale-guidance fixes. Include the verification
-commands in the PR body or final report.
+Treat live memory skills as historical evidence. Promote them only when fresh
+examples prove a repeated portable capability. Fold overlapping behavior into
+an existing skill, route maintainer lessons to `local-docs/`, and retire stale
+experiments instead of converting history directly into global context.
+
+## Stale-Guidance Sweep
+
+Every addition or retirement checks the nearby system:
+
+- root and workflow indexes;
+- Codex and Claude global guidance;
+- install and derivation maps;
+- source provenance;
+- retired-path maps;
+- required-file and policy checks;
+- MCP catalogs and smoke tests;
+- copyable workspace guidance;
+- model calibration when routing changed.
+
+Fix directly related stale guidance in the same change. The accepted repository
+should describe one current route.

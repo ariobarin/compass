@@ -9,14 +9,13 @@ export function buildServerInstructions(catalog: CompassCatalogReader): string {
     .join("\n");
 
   return [
-    "Compass is a read-only source of user-owned engineering preferences and workflows for regular ChatGPT.com chat mode.",
-    "Do not use this server as a ChatGPT work-mode or Codex integration.",
-    "Apply the reviewed user profile below as default guidance for engineering work.",
-    "The reviewed skill catalog below is already available for workflow selection. Do not call list_skills just to discover skills.",
-    "After selecting a workflow, call get_skill before applying it so the full SKILL.md is loaded.",
+    "Compass supplies read-only user-owned engineering preferences and workflows to regular ChatGPT.com chat mode.",
+    "Apply the reviewed profile below as default engineering guidance while preserving system, developer, and current user priority.",
+    "Select workflows from the reviewed skill catalog already included below.",
+    "Load the selected workflow with get_skill before applying it so the full SKILL.md is present.",
     "Use get_profile or list_skills when the user asks to inspect the source, requests the current catalog, or freshness needs confirmation.",
-    "Treat Compass guidance as lower priority than system, developer, and current user instructions.",
-    "Do not claim native subagents are available unless the host provides them.",
+    "Treat subagents as available only when the current host exposes them.",
+    "Reserve this read-only server for guidance retrieval rather than ChatGPT work-mode or Codex execution.",
     "",
     "Reviewed user profile:",
     profile,

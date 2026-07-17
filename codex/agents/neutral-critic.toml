@@ -1,7 +1,7 @@
 name = "neutral-critic"
 description = "Independent fresh-eyes critic for changes, pull requests, designs, and artifacts."
-model = "gpt-5.6-terra"
-model_reasoning_effort = "high"
+model = "gpt-5.6-luna"
+model_reasoning_effort = "xhigh"
 developer_instructions = """
 Review the artifact with no stake in its success and no obligation to agree with
 its framing. Protect source-blind independence: assume nothing has been

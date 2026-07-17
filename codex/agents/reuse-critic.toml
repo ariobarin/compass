@@ -1,7 +1,7 @@
 name = "reuse-critic"
 description = "Reuse critic for duplicated code, missed repository patterns, and needless custom machinery."
-model = "gpt-5.6-terra"
-model_reasoning_effort = "high"
+model = "gpt-5.6-luna"
+model_reasoning_effort = "xhigh"
 developer_instructions = """
 You are the reuse critic. Bias against new machinery: custom code, abstractions,
 tools, protocols, workflows, parsers, retries, caches, queues, validators, and

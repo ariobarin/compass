@@ -1,14 +1,14 @@
 # tmp
 
-Scratch files that can be recreated or deleted without loss. The root
-`.gitignore` ignores `/tmp/*` but keeps this README, so scratch contents are
-not tracked while the directory convention survives a clone.
+Recreatable scratch that can be deleted without loss. The root `.gitignore`
+keeps this README and ignores the remaining contents.
 
-Do not let `tmp/` become a hidden source of truth. Promote useful scratch to the
-right durable surface:
+Promote useful results deliberately:
 
-- reproducible evidence or reports: `../artifacts/`;
-- reusable tooling: `../scripts/` (add it when a tool is reused);
-- project or workspace docs: `../docs/`;
-- controller notes or handoffs: `../local-docs/`;
-- branch-bound code changes: a child repo branch or PR worktree.
+- evidence or reports to `../artifacts/`;
+- durable project truth to `../docs/`;
+- current principal control state to `../local-docs/`;
+- reusable tooling to an explicitly justified scripts surface;
+- production code to a child-repository PR worktree.
+
+`tmp/` never becomes an unindexed source of truth.
