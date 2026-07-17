@@ -7,6 +7,11 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+MODEL_EFFORT_DEFAULTS = {
+    "gpt-5.6-sol": "high",
+    "gpt-5.6-terra": "xhigh",
+    "gpt-5.6-luna": "high",
+}
 
 
 class CompassArchitectureTests(unittest.TestCase):
@@ -52,6 +57,20 @@ class CompassArchitectureTests(unittest.TestCase):
         self.assertNotIn("GPT-5.6 Luna", claude)
 
         self.assertNotRegex(mcp, r"GPT-5\.6 (?:Sol|Luna|Terra)|GLM-5\.2")
+
+    def test_model_tier_defaults_are_documented_and_applied(self) -> None:
+        with (ROOT / "codex" / "config.review.toml").open("rb") as handle:
+            config = tomllib.load(handle)
+        model = config["model"]
+        self.assertEqual(config["model_reasoning_effort"], MODEL_EFFORT_DEFAULTS[model])
+
+        calibration = self.read("local-docs/model-calibration.md")
+        for model_name, effort in (
+            ("GPT-5.6 Sol", "high"),
+            ("GPT-5.6 Terra", "xhigh"),
+            ("GPT-5.6 Luna", "high"),
+        ):
+            self.assertIn(f"| {model_name} | `{effort}` |", calibration)
 
     def test_codex_agents_follow_luna_first_profile(self) -> None:
         for path in sorted((ROOT / "codex" / "agents").glob("*.toml")):
