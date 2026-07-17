@@ -125,8 +125,16 @@ def validate_upstream(record_name: str, value: object) -> list[str]:
 def source_tree_sha256(path: Path) -> str:
     """Hash a source directory deterministically for reviewed external snapshots."""
     digest = hashlib.sha256()
-    for file in sorted(candidate for candidate in path.rglob("*") if candidate.is_file()):
-        relative = file.relative_to(path).as_posix().encode("utf-8")
+    files = sorted(
+        (
+            candidate.relative_to(path).as_posix(),
+            candidate,
+        )
+        for candidate in path.rglob("*")
+        if candidate.is_file()
+    )
+    for relative_path, file in files:
+        relative = relative_path.encode("utf-8")
         digest.update(len(relative).to_bytes(8, "big"))
         digest.update(relative)
         content = file.read_bytes()
