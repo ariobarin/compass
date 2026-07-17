@@ -28,10 +28,12 @@ of `~/.codex`, `$HOME/.agents`, or `$HOME/.claude`.
 - For Compass-owned capabilities, fix the config, install map, verifier, or
   agent contract. Do not add alternate-path, best-effort, or compatibility
   prose to installed skills when this repo can make the capability exact.
-- Codex is the reviewed source of truth. All Claude skills and agents derive
-  from `codex/skills/<name>` and `codex/agents/<name>.toml` at install time, so a
-  change there lands on both runtimes. There are no hand-maintained `claude/`
-  source files. See `workflows/claude-config.md`.
+- Codex is the reviewed source of truth for shared skills and agents. Claude
+  skills and most agents derive from `codex/skills/<name>` and
+  `codex/agents/<name>.toml` at install time, so a shared change lands on both
+  runtimes. A platform-specific direct agent may live under `claude/agents/`
+  only when the shared transform cannot express its frontmatter, tools, or
+  isolation contract. See `workflows/claude-config.md`.
 - For nontrivial changes to this repo, read
   `local-docs/maintenance-learnings.md` before editing.
 - For Compass audits, use `workflows/compass-review-program.md` before pruning

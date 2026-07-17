@@ -1,7 +1,7 @@
 interface:
   display_name: "Write A Skill"
-  short_description: "Maintain portable Codex skills"
-  default_prompt: "Use $write-a-skill to create or revise a Compass skill with current structure, manifest wiring, and validation."
+  short_description: "Maintain Compass skills"
+  default_prompt: "Use $write-a-skill to create or revise a Compass skill and its install wiring."
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

@@ -12,11 +12,11 @@ local.
 | Repair launches depended on working wrappers, upstream health, port validity, and ownership. | Reuse proven launch records and stop the smallest poisoned slice. | `stack-operations.md` |
 | Observed valid-row pace contradicted requested deadlines. | Report observed and required pace, then act on the rate gap. | `benchmark-run-operator` and `stack-operations.md` |
 | A user pause had to stop owned work and monitors without claiming completion. | Preserve resume state and keep pause distinct from completion or blockage. | `using-codex-goals` and `goal-contracts.md` |
-| A prep-only child amended and then reconstructed a controller-owned Markdown control file from partial context, creating competing revisions. | Require one named writer, exact edit authority for delegated roles, prior-revision checks, and preservation instead of reconstruction after a mismatch. | `orchestration-controller` and `benchmark-run-operator` |
-| A long-running goal kept producing work after compaction while its control files had become large, contradictory, and partly historical. | Require precedence-ordered authoritative inputs, one short mutable-state surface, explicit re-anchoring after compaction or handoff, and restoration of split controller and execution ownership. | `using-codex-goals`, `goal-contracts.md`, and `orchestration-controller` |
-| Repeated recovery successors passed narrow gates but failed at different layers of the real child runtime. | Stop after two consecutive successor failures and prove the complete child path before another launch. | `benchmark-run-operator` |
+| A prep-only child amended and reconstructed a controller-owned control file from partial context. | Require one named writer, exact edit authority, revision checks, and preservation after a mismatch. | `orchestration-controller` and `benchmark-run-operator` |
+| A long-running goal kept producing work after compaction while control files became contradictory. | Require precedence-ordered inputs, one small live surface, explicit re-anchoring, and split controller and execution ownership. | `using-codex-goals`, `goal-contracts.md`, and `orchestration-controller` |
+| Recovery successors passed narrow gates but repeated an unchanged real child failure path. | Open recovery when no new discriminating evidence exists, and resume only after the hypothesis, inputs, runtime path, or root-cause evidence changes. | `benchmark-run-operator` and `orchestration-ledger` |
 
 The control-file overwrite and repeated recovery failures justified promoting
-writer, revision, delegated edit, and recovery circuit state into the local
-orchestration ledger. Route new evidence through `workflows/addition-intake.md`
-and `workflows/agent-failures.md` rather than adding another narrative record.
+writer, revision, delegated edit, and evidence-based recovery state into the
+local orchestration ledger. Route new evidence through
+`workflows/addition-intake.md` and `workflows/agent-failures.md`.

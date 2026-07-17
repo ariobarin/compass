@@ -1,74 +1,80 @@
 # Orchestration Ledger
 
 Use this workflow when a controller needs durable local control state across
-several sessions, workers, checks, or decision points. The ledger records the
-contract and current evidence. It does not execute work, create authority, or
-replace the worker that owns delivery.
+sessions, workers, checks, or decision points. The ledger records authority, current state, evidence, and recovery gates. It does not execute work or replace
+the worker that owns delivery.
 
 This is repo-maintainer state. It is not installed into a Codex home, user skill
 home, or Claude home.
 
 ## Local Boundary
 
-The only supported location is under `.local/`, with
+The supported location is under `.local/`, with
 `.local/orchestration-ledger.json` as the default. The directory is ignored and
 listed as local-only. Do not copy the ledger into commits, prompts, PR bodies,
-MCP responses, or installed agent guidance.
+MCP responses, or installed guidance.
 
-The ledger may contain goal and worker labels, evidence locators, and prepared
-decisions. It must not contain credentials, tokens, cookies, private message
-content, raw logs, or copied source artifacts. Use compact locators such as a
-commit SHA, PR number, workflow run, test command, or local artifact name.
-
-Compass MCP is intentionally unauthenticated and read-only. Do not expose this
-local ledger through it without a separate authenticated design and an explicit
-review of what becomes remotely visible.
+The ledger may contain compact goal labels, worker labels, evidence locators,
+and prepared decisions. It must not contain credentials, tokens, cookies,
+private message content, raw logs, or copied source artifacts.
 
 ## Control Record
 
 Each goal records:
 
-- achieved state to pursue;
+- the outcome to pursue;
 - execution owner and worker identity;
-- current state;
-- next action and optional next check time;
+- current state and next action;
 - compact completion evidence;
-- public-mutation gate and the exact named action it covers;
-- one prepared human decision, when needed.
-- one control writer and a positive control revision;
-- explicit delegated control-edit grants by actor and mutation name;
-- recovery circuits as a per-slice array, each with a slice label, consecutive
-  successor failure count, closed, claimed, or open state, claim owner, and
-  reset evidence.
+- public-mutation authority and the exact named action;
+- one prepared human decision, when needed;
+- one control writer and optimistic revision;
+- exact delegated mutation grants;
+- per-slice recovery circuits.
 
-Schema version 2 adds these control fields. The runtime still reads schema
-version 1 ledgers, infers the execution owner as the control writer, starts the
-control revision at 1, and supplies an empty grant list and recovery circuits
-array. Legacy circuits receive null reset evidence fields. The next successful
-write stores the migrated version 2 shape. A legacy claimed circuit without a
-claim owner is normalized to open so it cannot be completed by an unknown
-actor.
+A recovery circuit records whether a successor is unclaimed, claimed, or open,
+plus the latest failure evidence and the evidence that permits another attempt.
+It does not count retries. A failed successor must declare one of two states:
+
+- new discriminating evidence changed the diagnosis, inputs, or runtime path, so
+  another bounded successor may be claimed;
+- no new discriminating evidence exists, so the circuit opens and another
+  symptom-level successor is refused.
+
+Resetting an open circuit is control-writer-only and requires root-cause
+evidence.
+
+Schema version 3 replaces the successor failure counter with evidence fields.
+The runtime reads schema versions 1 and 2 and migrates them on the next
+successful write. A version 2 count becomes a compact migration evidence
+locator, while its prior open or closed state is preserved.
+
+## Authority
+
+Every mutation of an existing goal declares the actor and expected control
+revision. The control writer may perform any mutation. Another actor needs a
+grant naming the exact mutation. A successful mutation increments the revision.
+A stale revision or missing grant fails before any write.
 
 The public-mutation gate records authority that already exists:
 
 - `closed`: no public mutation is authorized;
 - `authorized`: the user or repository workflow granted the recorded action;
-- `in_flight`: the authorized public sequence has started;
-- `complete`: the authorized public sequence finished and was verified.
+- `in_flight`: the authorized public sequence started;
+- `complete`: the authorized sequence finished and was verified.
 
-Changing the field does not grant permission. Set `authorized` only after the
-real user or repository contract authorizes the corresponding public action.
+Changing the field does not grant permission.
 
 ## Commands
 
-Read all goals or one goal:
+Read the ledger:
 
 ```powershell
 .\scripts\compass.ps1 orchestration
 .\scripts\compass.ps1 orchestration -GoalId release-42 -Json
 ```
 
-Initialize a goal and name its execution owner:
+Initialize a goal:
 
 ```powershell
 .\scripts\orchestration-ledger.ps1 init `
@@ -80,107 +86,88 @@ Initialize a goal and name its execution owner:
   -State active
 ```
 
-Reroute execution ownership without recreating the goal:
-
-```powershell
-.\scripts\orchestration-ledger.ps1 set-owner `
-  -GoalId release-42 `
-  -Actor controller `
-  -ExpectedRevision 1 `
-  -ExecutionOwner recovery-worker `
-  -WorkerId thread-456
-```
-
-Every mutation of an existing goal must declare the actor and expected control
-revision. The control writer may edit any mutation. Another actor needs a
-grant that names the exact mutation, and a successful mutation increments the
-revision. A stale expected revision or missing grant fails before any write.
-
-Grant a worker a narrow set of control edits:
+Grant a recovery worker only the mutations it needs:
 
 ```powershell
 .\scripts\orchestration-ledger.ps1 set-grant `
   -GoalId release-42 `
   -Actor controller `
-  -ExpectedRevision 2 `
+  -ExpectedRevision 1 `
   -GrantActor recovery-worker `
   -Mutation claim-successor `
   -Mutation record-successor-failure `
   -Mutation record-successor-success
 ```
 
-Claim a slice as the atomic prelaunch gate, then record the outcome. A first
-failure closes the slice for another claim, and a second consecutive failure
-opens it:
+Claim a slice as the atomic prelaunch gate:
 
 ```powershell
 .\scripts\orchestration-ledger.ps1 claim-successor `
   -GoalId release-42 `
   -Actor recovery-worker `
-  -ExpectedRevision 3 `
-  -SliceLabel magento-checkout
-
-.\scripts\orchestration-ledger.ps1 record-successor-failure `
-  -GoalId release-42 `
-  -Actor recovery-worker `
-  -ExpectedRevision 4 `
-  -SliceLabel magento-checkout
-
-.\scripts\orchestration-ledger.ps1 check-recovery `
-  -GoalId release-42 `
-  -SliceLabel magento-checkout
-
-.\scripts\orchestration-ledger.ps1 claim-successor `
-  -GoalId release-42 `
-  -Actor recovery-worker `
-  -ExpectedRevision 5 `
-  -SliceLabel magento-checkout
-
-.\scripts\orchestration-ledger.ps1 record-successor-success `
-  -GoalId release-42 `
-  -Actor recovery-worker `
-  -ExpectedRevision 6 `
+  -ExpectedRevision 2 `
   -SliceLabel magento-checkout
 ```
 
-Reset is control-writer-only and requires a nonempty root-cause evidence
-locator:
+Record a failed attempt that produced new discriminating evidence:
+
+```powershell
+.\scripts\orchestration-ledger.ps1 record-successor-failure `
+  -GoalId release-42 `
+  -Actor recovery-worker `
+  -ExpectedRevision 3 `
+  -SliceLabel magento-checkout `
+  -FailureEvidence run:842 `
+  -DiscriminatingEvidence "trace isolates provider startup"
+```
+
+The slice closes and may be claimed again because the next attempt has a changed
+basis.
+
+Record a failed attempt that did not improve the diagnosis:
+
+```powershell
+.\scripts\orchestration-ledger.ps1 record-successor-failure `
+  -GoalId release-42 `
+  -Actor recovery-worker `
+  -ExpectedRevision 5 `
+  -SliceLabel magento-checkout `
+  -FailureEvidence run:843 `
+  -NoNewEvidence
+```
+
+The slice opens. `check-recovery` and `claim-successor` then fail for that slice.
+
+Reset after root-cause evidence changes the route:
 
 ```powershell
 .\scripts\orchestration-ledger.ps1 reset-recovery `
   -GoalId release-42 `
   -Actor controller `
-  -ExpectedRevision 7 `
+  -ExpectedRevision 6 `
   -SliceLabel magento-checkout `
   -RootCauseEvidence review:runtime-child-path
 ```
 
-`check-recovery` is read-only observation. It succeeds for an absent, closed,
-or claimed slice and fails for an open slice, but it does not authorize a
-launch. Use `claim-successor` as the atomic prelaunch gate. Only the actor recorded in
-`claimed_by` may record that claim's success or failure; those outcomes clear
-the claim owner.
+Record success only from the actor that owns the claim:
 
-Record the next action and the time when fresh judgment is useful:
+```powershell
+.\scripts\orchestration-ledger.ps1 record-successor-success `
+  -GoalId release-42 `
+  -Actor recovery-worker `
+  -ExpectedRevision 8 `
+  -SliceLabel magento-checkout
+```
+
+Record a next action only when a future wake needs judgment:
 
 ```powershell
 .\scripts\orchestration-ledger.ps1 set-next `
   -GoalId release-42 `
   -Actor controller `
-  -ExpectedRevision 8 `
+  -ExpectedRevision 9 `
   -NextAction "Inspect hosted checks and current-head review" `
   -NextCheckAt "2026-07-12T12:00:00Z"
-```
-
-Record an already-authorized public action before it starts:
-
-```powershell
-.\scripts\orchestration-ledger.ps1 set-gate `
-  -GoalId release-42 `
-  -Actor controller `
-  -ExpectedRevision 9 `
-  -Gate authorized `
-  -GateAction "merge PR 42"
 ```
 
 Append compact evidence:
@@ -195,17 +182,6 @@ Append compact evidence:
   -EvidenceLocator "run:835"
 ```
 
-Prepare the exact decision that exceeds controller authority:
-
-```powershell
-.\scripts\orchestration-ledger.ps1 set-decision `
-  -GoalId release-42 `
-  -Actor controller `
-  -ExpectedRevision 11 `
-  -DecisionQuestion "Which release channel should receive this build?" `
-  -DecisionOption @("stable", "beta")
-```
-
 Validate the stored shape:
 
 ```powershell
@@ -214,25 +190,21 @@ Validate the stored shape:
 
 ## Operating Discipline
 
-- Keep one execution owner per goal. The controller records and verifies; the
-  worker owns implementation, processes, logs, and immediate recovery.
-- Update the next action when the current one completes or stops being the
-  smallest executable move.
-- Put mechanical waits inside one bounded command. Use a next-check time only
-  when the next wake requires model judgment.
-- Append evidence that can support or falsify completion. Do not use tidy status
-  prose as proof.
-- Prepare a decision only after safe reversible work is complete. Include real
-  options rather than a helpless blocker report.
-- Mark a goal complete only when its evidence matches the achieved state or the
-  user explicitly accepts an incomplete endpoint.
+- Keep one execution owner per goal.
+- Use the ledger for control state, not narrative history.
+- Put mechanical waits inside one bounded command.
+- Append evidence that can support or falsify completion.
+- Open recovery when another unchanged attempt would repeat motion without
+  learning.
+- Resume only when a changed hypothesis, input, runtime path, or root-cause
+  finding is named.
+- Mark a goal complete only when evidence matches the outcome or the user
+  explicitly accepts an incomplete endpoint.
 
-## Schema And Verification
+## Verification
 
 `manifests/orchestration-ledger.schema.json` documents the stored shape.
-`scripts/orchestration-ledger.py` performs the runtime validation without an
-external JSON Schema dependency, writes atomically, and restricts paths to the
-repo's `.local/` directory. `scripts/test-orchestration-ledger.py` covers the
-control lifecycle, actor authorization, optimistic revisions, delegated grants,
-recovery circuit behavior, invalid state, path escape, symlink, and validation
-cases.
+`scripts/orchestration-ledger.py` validates it without an external schema
+dependency, writes atomically, and restricts paths to `.local/`.
+`scripts/test-orchestration-ledger.py` covers lifecycle, authority, migration,
+and evidence-based recovery behavior.

@@ -25,7 +25,6 @@ skills_dir = "$HOME\\.agents\\skills"
 skills = [
   "action-items-to-prs",
   "behavior-validator",
-  "benchmark-infra-reviewer",
   "benchmark-run-operator",
   "compass",
   "git-branch-resolver",
@@ -40,9 +39,6 @@ skills = [
   "to-prd",
   "update-compass",
   "using-codex-goals",
-  "webmcp-eval-triage",
-  "webmcp-tool-authoring",
-  "webmcp-verify-tool",
   "workspace-steward",
   "write-a-skill",
 ]
@@ -54,15 +50,12 @@ home = "$HOME\\.claude"
 skills_dir = "$HOME\\.claude\\skills"
 agents_dir = "$HOME\\.claude\\agents"
 
-# All Claude skills derive from the reviewed codex/skills source at install
-# time. List a skill under `derived_skills` to generate it from
-# codex/skills/<name> (SKILL.md plus references/, scripts/, and assets/, dropping agents/openai.yaml).
-# There are no hand-maintained claude/skills/ overrides; codex/ is the single
-# source of truth.
+# Claude skills derive from the reviewed codex/skills source at install time.
+# List a skill under `derived_skills` to copy SKILL.md plus references/,
+# scripts/, and assets/, dropping agents/openai.yaml.
 derived_skills = [
   "action-items-to-prs",
   "behavior-validator",
-  "benchmark-infra-reviewer",
   "benchmark-run-operator",
   "compass",
   "git-branch-resolver",
@@ -78,9 +71,14 @@ derived_skills = [
   "write-a-skill",
 ]
 
-# All Claude agents derive from codex/agents/<name>.toml at install time. The
-# tools and color come from $ClaudeDerivedAgentFrontmatter in
-# scripts/common.ps1. There are no hand-maintained claude/agents/ overrides.
+# These reviewer agents are maintained explicitly because their Claude
+# frontmatter and Codex read-only sandbox contracts are platform-specific.
+agents = [
+  "behavior-validator",
+  "benchmark-infra-reviewer",
+]
+
+# Other Claude agents derive from codex/agents/<name>.toml at install time.
 derived_agents = [
   "algorithm-critic",
   "neutral-critic",
@@ -97,9 +95,8 @@ install_mode = "overlay"
 reason = "Reviewed keys overlay live config.toml while generated and machine-local state remains untouched."
 
 [repo_only]
-# These paths are repository-root paths. The [codex] section above maps files
-# from the repo's codex/ directory into the live Codex home. The [agents]
-# section maps repo skills into the user skill home.
+# These paths are repository-root paths. Installed Codex and Claude surfaces are
+# mapped above. Carried packs are opt-in project resources and are not installed.
 files = [
   ".gitattributes",
   ".gitignore",
@@ -116,12 +113,13 @@ files = [
 dirs = [
   ".github",
   "apps",
+  "carried",
   "local-docs",
   "manifests",
   "scripts",
   "workflows",
 ]
-reason = "These files guide repository maintenance but are not installed into a live Codex home, user skill home, or Claude home."
+reason = "These paths guide repository maintenance or carry opt-in project packs but are not installed into a live Codex home, user skill home, or Claude home."
 
 [local_only]
 files = [

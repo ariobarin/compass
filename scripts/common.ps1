@@ -54,6 +54,7 @@ function Get-NormalizedMarketplaceSource {
 
 $script:PortablePythonRunner = $null
 $script:PortableGeneratedData = $null
+$script:PortableResolvedClaudeHome = $null
 
 function Get-PortablePythonRunner {
     if ($script:PortablePythonRunner) {
@@ -271,6 +272,7 @@ function Get-PortableFileMap {
     if (-not $ClaudeHome) {
         $ClaudeHome = Get-ClaudeHome
     }
+    $script:PortableResolvedClaudeHome = $ClaudeHome
 
     $items = New-Object System.Collections.Generic.List[object]
 
@@ -372,12 +374,27 @@ function Get-RetiredPortableFileMap {
 
     # Keep retired user-skill removals explicit so install does not delete
     # unrelated personal skills that Compass does not own.
-    foreach ($skill in @("pr-merge-closeout", "ui-ux-pro-max")) {
+    foreach ($skill in @("benchmark-infra-reviewer", "pr-merge-closeout", "ui-ux-pro-max", "webmcp-eval-triage", "webmcp-tool-authoring", "webmcp-verify-tool")) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $AgentsHome "skills") $skill
             LiveRoot = $AgentsHome
             BackupScope = "agents"
+        })
+    }
+
+    # Get-PortableFileMap runs first in install and verification, so this retains
+    # an explicitly supplied Claude home without coupling callers to another map argument.
+    $claudeHome = $script:PortableResolvedClaudeHome
+    if (-not $claudeHome) {
+        $claudeHome = Get-ClaudeHome
+    }
+    foreach ($skill in @("benchmark-infra-reviewer")) {
+        $items.Add([pscustomobject]@{
+            Type = "dir"
+            LivePath = Join-Path (Join-Path $claudeHome "skills") $skill
+            LiveRoot = $claudeHome
+            BackupScope = "claude"
         })
     }
 

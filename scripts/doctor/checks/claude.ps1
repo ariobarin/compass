@@ -53,8 +53,8 @@ else {
     $manifestClaudeAgents = @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "agents" | Sort-Object -Unique)
     $manifestClaudeDerivedAgents = @(Get-PortableManifestArray -Text $manifestText -Section "claude" -Key "derived_agents" | Sort-Object -Unique)
 
-    # [claude].skills and [claude].agents may be empty: every Claude skill and
-    # agent derives from codex/, so there are no hand-maintained claude/ sources.
+    # Direct and derived lists are both supported. A name must appear in only
+    # one list, and each direct source must exist under claude/.
 
     $diskClaudeSkills = @(
         Get-ChildItem -Path (Join-Path $claudeRoot "skills") -Directory -ErrorAction SilentlyContinue |

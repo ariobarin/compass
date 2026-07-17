@@ -1,4 +1,7 @@
 interface:
   display_name: "Update Compass"
-  short_description: "Refresh live Codex setup from Compass"
-  default_prompt: "Use $update-compass to update my live Codex setup from the latest Compass origin/main."
+  short_description: "Refresh live setup from Compass"
+  default_prompt: "Use $update-compass to refresh my live setup from reviewed Compass main."
+
+policy:
+  allow_implicit_invocation: false
