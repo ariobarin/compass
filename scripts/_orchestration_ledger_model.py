@@ -142,7 +142,7 @@ def migrate_circuit(item: object, fallback_time: str) -> object:
 
 
 def migrate_goal(value: object, schema_version: int) -> object:
-    if not isinstance(value, dict):
+    if not isinstance(value, dict) or schema_version == SCHEMA_VERSION:
         return value
     goal = dict(value)
     updated = goal.get("updated_at") if isinstance(goal.get("updated_at"), str) else utc_now()
