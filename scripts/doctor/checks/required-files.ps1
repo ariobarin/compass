@@ -86,6 +86,7 @@ foreach ($path in @(
     "scripts\test-install-roundtrip.ps1",
     "scripts\test-orchestration-ledger-lock.py",
     "scripts\test-orchestration-ledger-output.py",
+    "scripts\test-orchestration-ledger-wrapper.ps1",
     "scripts\test-orchestration-ledger.py",
     "scripts\test-review-bundle.py",
     "scripts\test-reviewed-config.py",
