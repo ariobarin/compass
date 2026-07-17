@@ -166,7 +166,7 @@ else {
 
         $failedPromptFixture = New-RestartRecoveryFixture -Root (Join-Path $restartRecoveryTemp "failed-prompt") -Lines @(
             New-RestartRecoveryRecord -Kind "response_item" -Role "user" -Text "recover this"
-            New-RestartRecoveryRecord -Kind "response_item" -Role "user" -Text "Continue, the computer restarted for some reason"
+            New-RestartRecoveryRecord -Kind "response_item" -Role "user" -Text "continue, the computer restarted for some reason"
         )
         $failedPromptCandidates = @(Invoke-RestartRecoveryDryRun -Fixture $failedPromptFixture)
         if ($failedPromptCandidates.SessionId -notcontains $failedPromptFixture.SessionId) {
