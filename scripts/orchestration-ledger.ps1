@@ -111,13 +111,18 @@ switch ($Action) {
         if ($Json) { $arguments += "--json" }
     }
     "init" {
+        if ($ControlWriter -and $Actor -and $ControlWriter -ne $Actor) {
+            throw "init received conflicting -ControlWriter and -Principal values"
+        }
+        $principal = if ($ControlWriter) { $ControlWriter } else { $Actor }
+
         if ($GoalId) { $arguments += @("--goal-id", $GoalId) }
         if ($Goal) { $arguments += @("--goal", $Goal) }
         Add-RepeatedArgument -Name "--anchor" -Values $Anchor
         Add-RepeatedArgument -Name "--control-document" -Values $ControlDocument
         if ($Phase) { $arguments += @("--phase", $Phase) }
         if ($ExecutionOwner) { $arguments += @("--execution-owner", $ExecutionOwner) }
-        if ($ControlWriter) { $arguments += @("--control-writer", $ControlWriter) }
+        if ($principal) { $arguments += @("--control-writer", $principal) }
         if ($WorkerId) { $arguments += @("--worker-id", $WorkerId) }
         if ($State) { $arguments += @("--state", $State) }
     }
