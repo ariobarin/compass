@@ -84,11 +84,16 @@ catch {
     $configProblems.Add($_.Exception.Message)
 }
 
-if (-not $SkipPluginCheck) {
-    $pluginOutput = @(& (Join-Path $PSScriptRoot "retire-plugins.ps1") -CodexHome $liveHome -RequireAbsent 2>&1 | ForEach-Object { $_.ToString() })
+if (-not $SkipPluginCheck -and -not $SkipCodexCommand) {
+    $pluginOutput = @(& (Join-Path $PSScriptRoot "retire-plugins.ps1") -CodexHome $liveHome -RequireAbsent *>&1 | ForEach-Object { $_.ToString() })
     if ($LASTEXITCODE -ne 0) {
-        foreach ($line in $pluginOutput) {
-            $pluginProblems.Add($line)
+        if ($pluginOutput.Count -eq 0) {
+            $pluginProblems.Add("retired plugin verification failed")
+        }
+        else {
+            foreach ($line in $pluginOutput) {
+                $pluginProblems.Add($line)
+            }
         }
     }
 }

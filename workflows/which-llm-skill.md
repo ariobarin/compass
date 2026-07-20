@@ -37,8 +37,10 @@ Preview or apply the normal portable install:
 .\scripts\install.ps1 -Apply
 ```
 
-Apply mode installs `cryptography` when needed and refreshes a missing or stale
+Apply mode checks or installs `cryptography`, then refreshes a missing or stale
 live snapshot. It preserves live data and exports across later Compass updates.
+If refresh is unavailable, installation preserves the bundled snapshot and
+warns that recommendations must wait for a successful refresh.
 Run refresh commands only from the installed skill, not the reviewed source
 copy.
 

@@ -457,7 +457,8 @@ function Copy-PortableItem {
         [string]$Source,
         [string]$Destination,
         [string]$Type,
-        [string]$AllowedRoot
+        [string]$AllowedRoot,
+        [switch]$SkipRuntimeBootstrap
     )
 
     if (-not (Test-Path $Source)) {
@@ -469,6 +470,7 @@ function Copy-PortableItem {
     }
 
     if ($Type -eq "stateful-dir") {
+        $destinationExisted = Test-Path -LiteralPath $Destination -PathType Container
         New-Item -ItemType Directory -Force $Destination | Out-Null
 
         $sourceRoot = (Resolve-Path -LiteralPath $Source).Path
@@ -490,6 +492,13 @@ function Copy-PortableItem {
             $obsoletePath = Join-Path $destinationRoot $relative
             Assert-PathUnderRoot -Path $obsoletePath -Root $destinationRoot
             Remove-Item -LiteralPath $obsoletePath -Force
+        }
+
+        if (-not $destinationExisted -and -not $SkipRuntimeBootstrap) {
+            $sourceArtifacts = Join-Path $sourceRoot "artifacts"
+            if (Test-Path -LiteralPath $sourceArtifacts -PathType Container) {
+                Copy-Item -LiteralPath $sourceArtifacts -Destination (Join-Path $destinationRoot "artifacts") -Recurse -Force
+            }
         }
         return
     }

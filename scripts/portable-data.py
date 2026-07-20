@@ -126,6 +126,14 @@ def validate_manifest(manifest: dict[str, Any]) -> None:
     if manifest["config"]["install_mode"] != "overlay":
         raise ValueError("manifest [config].install_mode must be overlay")
 
+    skills = set(manifest["agents"]["skills"])
+    unknown_stateful = sorted(set(manifest["agents"]["stateful_skills"]) - skills)
+    if unknown_stateful:
+        raise ValueError(
+            "manifest stateful skills missing from agents.skills: "
+            + ", ".join(unknown_stateful)
+        )
+
 
 def validate_agent(path: Path, data: dict[str, Any]) -> None:
     for field in AGENT_STRING_FIELDS:

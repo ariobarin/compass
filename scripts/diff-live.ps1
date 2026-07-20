@@ -19,8 +19,16 @@ foreach ($item in $items) {
     }
 
     $repoPath = $item.RepoPath
+    $livePath = $item.LivePath
     $tempRoot = $null
-    if (($item.Type -in @("derived-skill", "derived-agent", "stateful-dir")) -and (Test-Path $item.RepoPath)) {
+    if ($item.Type -eq "stateful-dir" -and (Test-Path $item.RepoPath) -and (Test-Path $item.LivePath)) {
+        $tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("compass-stateful-diff-" + [guid]::NewGuid().ToString("N"))
+        $repoPath = Join-Path $tempRoot "repo"
+        $livePath = Join-Path $tempRoot "live"
+        Copy-PortableItem -Source $item.RepoPath -Destination $repoPath -Type $item.Type -AllowedRoot $tempRoot -SkipRuntimeBootstrap
+        Copy-PortableItem -Source $item.LivePath -Destination $livePath -Type $item.Type -AllowedRoot $tempRoot -SkipRuntimeBootstrap
+    }
+    elseif (($item.Type -in @("derived-skill", "derived-agent")) -and (Test-Path $item.RepoPath)) {
         $tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("compass-derived-diff-" + [guid]::NewGuid().ToString("N"))
         $leaf = if ($item.Type -eq "derived-agent") { "agent.md" } else { "skill" }
         $repoPath = Join-Path $tempRoot $leaf
@@ -28,8 +36,8 @@ foreach ($item in $items) {
     }
 
     Write-Host ""
-    Write-Host "diff: $repoPath <=> $($item.LivePath)"
-    git diff --no-index -- $repoPath $item.LivePath
+    Write-Host "diff: $repoPath <=> $livePath"
+    git diff --no-index -- $repoPath $livePath
     if ($LASTEXITCODE -eq 1) {
         $hadDiff = $true
     }

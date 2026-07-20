@@ -83,8 +83,14 @@ last_refresh = "machine-local"
         "-SkipPluginRetirement",
         "-SkipSkillRuntimeSetup"
     )
+    $diffArguments = @(
+        "-CodexHome", $codexHome,
+        "-AgentsHome", $agentsHome,
+        "-ClaudeHome", $claudeHome
+    )
     $installPath = Join-Path $PSScriptRoot "install.ps1"
     $verifyPath = Join-Path $PSScriptRoot "verify-live.ps1"
+    $diffPath = Join-Path $PSScriptRoot "diff-live.ps1"
 
     $preflightSentinel = Join-Path $codexHome "AGENTS.md"
     Set-Content -LiteralPath $preflightSentinel -Encoding utf8NoBOM -Value "preflight sentinel"
@@ -197,16 +203,19 @@ last_refresh = "machine-local"
     Assert-PathPresent -Path (Join-Path (Join-Path $claudeHome "agents") "reviewer.md")
 
     $whichLlmRoot = Join-Path (Join-Path $agentsHome "skills") "which-llm"
+    Assert-PathPresent -Path (Join-Path (Join-Path $whichLlmRoot "artifacts") "models_enriched.csv")
     $runtimeArtifact = Join-Path (Join-Path $whichLlmRoot "artifacts") "exports\local.csv"
     $runtimeCache = Join-Path (Join-Path $whichLlmRoot "__pycache__") "query.pyc"
     New-Item -ItemType Directory -Force (Split-Path -Parent $runtimeArtifact), (Split-Path -Parent $runtimeCache) | Out-Null
     Set-Content -LiteralPath $runtimeArtifact -Value "local runtime data"
     Set-Content -LiteralPath $runtimeCache -Value "local cache"
     [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments))
+    [void](Invoke-TestScript -Path $diffPath -Arguments $diffArguments)
 
     $whichLlmManagedFile = Join-Path $whichLlmRoot "pick.py"
     Add-Content -LiteralPath $whichLlmManagedFile -Value "# managed drift"
     [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
+    [void](Invoke-TestScript -Path $diffPath -Arguments $diffArguments -ExpectedExitCode 1)
     [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
     foreach ($runtimePath in @($runtimeArtifact, $runtimeCache)) {
         Assert-PathPresent -Path $runtimePath
