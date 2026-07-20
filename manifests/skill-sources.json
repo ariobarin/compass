@@ -167,6 +167,21 @@
       }
     },
     {
+      "name": "which-llm",
+      "owner": "ariobarin/which-llm",
+      "source": "codex/skills/which-llm",
+      "profile": "default",
+      "targets": {
+        "codex": "copy",
+        "claude": "none"
+      },
+      "upstream": {
+        "repository": "ariobarin/which-llm",
+        "reviewed_ref": "b0e9dbceedde2ecb65768b01237492382e7f07fd",
+        "source_sha256": "8ff904784c4b53a2037aed744d5b1012ae09e41dbe10f437aaa6c1df87bd874f"
+      }
+    },
+    {
       "name": "workspace-steward",
       "owner": "compass",
       "source": "codex/skills/workspace-steward",

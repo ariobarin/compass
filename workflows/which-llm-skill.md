@@ -1,0 +1,56 @@
+# which-llm Skill Workflow
+
+Use this workflow to review and refresh the portable `which-llm` skill without
+installing its plugin wrapper.
+
+## Boundary
+
+- `ariobarin/which-llm` owns the skill package, model snapshot, and release
+  history.
+- Compass owns the reviewed skill copy, exact upstream provenance, install map,
+  and live drift verification.
+- The live user skill home owns runtime-generated refresh data and local cache
+  state.
+- Do not install the `which-llm` marketplace or plugin. The normal Compass skill
+  installer is the only live route.
+
+## Review An Update
+
+Import `skills/which-llm` from an exact upstream commit with the system skill
+installer into `codex/skills`, then preserve the upstream MIT license in the
+skill directory. Review the complete diff, update the exact commit and tree hash
+in `manifests/skill-sources.json`, and run the normal Compass validation.
+
+Do not import the plugin wrapper, marketplace metadata, generated plugin cache,
+credentials, or machine-local paths.
+
+## Install
+
+Preview or apply the normal portable install:
+
+```powershell
+.\scripts\install.ps1
+.\scripts\install.ps1 -Apply
+```
+
+The reviewed skill installs to the user skill home declared in
+`manifests/portable-files.toml`. Start a fresh Codex session after installation
+so the skill is discovered.
+
+## Verify
+
+Run:
+
+```powershell
+.\scripts\doctor.ps1
+.\scripts\verify-live.ps1 -SkipCodexCommand -RequireInSync
+python "$HOME\.agents\skills\which-llm\pick.py" --help
+```
+
+Run `python "$HOME\.agents\skills\which-llm\query.py" data status` separately
+to check snapshot freshness. Refresh stale data before making recommendations.
+
+`pick.py`, `compare.py`, `profile.py`, `resolve.py`, `slug.py`, `frontier.py`,
+and `export.py` should be present in the installed skill directory.
+
+Changes to model data or command behavior belong in `ariobarin/which-llm`.

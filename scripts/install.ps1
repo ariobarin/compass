@@ -1,6 +1,5 @@
 param(
     [switch]$Apply,
-    [switch]$SkipPlugins,
     [Alias("ReplaceForeign")]
     [switch]$Adopt,
     [string]$SourceRef,
@@ -316,13 +315,6 @@ if (-not $Apply) {
     Write-Host "reviewed config: $($reviewedConfigState.changed_count)"
     Write-Host "retired: $($retiredRemovalStates.Count)"
     Write-Host "foreign: $($foreignStates.Count)"
-    if (-not $SkipPlugins) {
-        Write-Host ""
-        & (Join-Path $PSScriptRoot "sync-plugins.ps1") -CodexHome $liveHome
-        if ($LASTEXITCODE -ne 0) {
-            throw "plugin sync review failed"
-        }
-    }
     Write-Host "run with -Apply to install the approved plan"
     exit 0
 }
@@ -500,10 +492,4 @@ if ($receiptPath) {
 }
 else {
     Write-Host "receipt: unchanged"
-}
-if (-not $SkipPlugins) {
-    & (Join-Path $PSScriptRoot "sync-plugins.ps1") -Apply -CodexHome $liveHome
-    if ($LASTEXITCODE -ne 0) {
-        throw "plugin sync failed"
-    }
 }
