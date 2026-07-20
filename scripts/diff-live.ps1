@@ -20,9 +20,9 @@ foreach ($item in $items) {
 
     $repoPath = $item.RepoPath
     $tempRoot = $null
-    if (($item.Type -eq "derived-skill" -or $item.Type -eq "derived-agent") -and (Test-Path $item.RepoPath)) {
+    if (($item.Type -in @("derived-skill", "derived-agent", "stateful-dir")) -and (Test-Path $item.RepoPath)) {
         $tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("compass-derived-diff-" + [guid]::NewGuid().ToString("N"))
-        $leaf = if ($item.Type -eq "derived-skill") { "skill" } else { "agent.md" }
+        $leaf = if ($item.Type -eq "derived-agent") { "agent.md" } else { "skill" }
         $repoPath = Join-Path $tempRoot $leaf
         Copy-PortableItem -Source $item.RepoPath -Destination $repoPath -Type $item.Type -AllowedRoot $tempRoot
     }

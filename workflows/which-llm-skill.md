@@ -11,8 +11,12 @@ installing its plugin wrapper.
   and live drift verification.
 - The live user skill home owns runtime-generated refresh data and local cache
   state.
+- Compass manages skill code separately from `artifacts/`, exports, and Python
+  caches so normal use does not create portable drift.
 - Do not install the `which-llm` marketplace or plugin. The normal Compass skill
-  installer is the only live route.
+  installer retires that legacy route and is the only live route.
+- This Compass route targets Codex. Upstream also supports Claude, but Compass
+  does not derive it because the command modules live at the skill root.
 
 ## Review An Update
 
@@ -32,6 +36,11 @@ Preview or apply the normal portable install:
 .\scripts\install.ps1
 .\scripts\install.ps1 -Apply
 ```
+
+Apply mode installs `cryptography` when needed and refreshes a missing or stale
+live snapshot. It preserves live data and exports across later Compass updates.
+Run refresh commands only from the installed skill, not the reviewed source
+copy.
 
 The reviewed skill installs to the user skill home declared in
 `manifests/portable-files.toml`. Start a fresh Codex session after installation

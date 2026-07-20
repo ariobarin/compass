@@ -20,7 +20,7 @@ MANIFEST_SECTIONS = (
 )
 MANIFEST_ARRAYS = {
     "codex": ("files", "dirs"),
-    "agents": ("skills",),
+    "agents": ("skills", "stateful_skills"),
     "claude": ("files", "derived_skills", "agents", "derived_agents"),
     "repo_only": ("files", "dirs"),
     "local_only": ("files", "dirs", "patterns"),

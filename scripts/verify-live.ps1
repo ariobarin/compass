@@ -3,6 +3,7 @@ param(
     [string]$AgentsHome,
     [string]$ClaudeHome,
     [switch]$SkipCodexCommand,
+    [switch]$SkipPluginCheck,
     [switch]$RequireInSync,
     [int]$TimeoutSeconds = 180
 )
@@ -20,47 +21,7 @@ $drift = New-Object System.Collections.Generic.List[string]
 $missing = New-Object System.Collections.Generic.List[string]
 $retired = New-Object System.Collections.Generic.List[string]
 $configProblems = New-Object System.Collections.Generic.List[string]
-
-function Get-RelativeFileMap {
-    param([string]$Root)
-
-    $map = @{}
-    if (-not (Test-Path $Root)) {
-        return $map
-    }
-
-    foreach ($file in Get-ChildItem -LiteralPath $Root -Recurse -File -Force) {
-        $relative = $file.FullName.Substring((Resolve-Path $Root).Path.Length).TrimStart("\")
-        $map[$relative] = (Get-FileHash -Algorithm SHA256 -LiteralPath $file.FullName).Hash
-    }
-    return $map
-}
-
-function Get-DerivedSkillFileMap {
-    param([string]$Root)
-
-    $map = @{}
-    if (-not (Test-Path $Root)) {
-        return $map
-    }
-
-    $skillFile = Join-Path $Root "SKILL.md"
-    if (Test-Path -LiteralPath $skillFile) {
-        $map["SKILL.md"] = (Get-FileHash -Algorithm SHA256 -LiteralPath $skillFile).Hash
-    }
-
-    foreach ($resourceDirectory in @("references", "scripts", "assets")) {
-        $resourceRoot = Join-Path $Root $resourceDirectory
-        if (Test-Path -LiteralPath $resourceRoot) {
-            foreach ($file in Get-ChildItem -LiteralPath $resourceRoot -Recurse -File -Force) {
-                $relative = $file.FullName.Substring((Resolve-Path $Root).Path.Length).TrimStart("\")
-                $map[$relative] = (Get-FileHash -Algorithm SHA256 -LiteralPath $file.FullName).Hash
-            }
-        }
-    }
-
-    return $map
-}
+$pluginProblems = New-Object System.Collections.Generic.List[string]
 
 foreach ($item in $items) {
     if (-not (Test-Path $item.LivePath)) {
@@ -94,13 +55,8 @@ foreach ($item in $items) {
         continue
     }
 
-    if ($item.Type -eq "derived-skill") {
-        $repoMap = Get-DerivedSkillFileMap -Root $item.RepoPath
-    }
-    else {
-        $repoMap = Get-RelativeFileMap -Root $item.RepoPath
-    }
-    $liveMap = Get-RelativeFileMap -Root $item.LivePath
+    $repoMap = Get-PortableDirectoryFileMap -Root $item.RepoPath -DerivedSkill:($item.Type -eq "derived-skill") -Stateful:($item.Type -eq "stateful-dir")
+    $liveMap = Get-PortableDirectoryFileMap -Root $item.LivePath -Stateful:($item.Type -eq "stateful-dir")
     $allKeys = @(@($repoMap.Keys) + @($liveMap.Keys) | Sort-Object -Unique)
     foreach ($key in $allKeys) {
         if (-not $repoMap.ContainsKey($key) -or -not $liveMap.ContainsKey($key) -or $repoMap[$key] -ne $liveMap[$key]) {
@@ -126,6 +82,15 @@ try {
 }
 catch {
     $configProblems.Add($_.Exception.Message)
+}
+
+if (-not $SkipPluginCheck) {
+    $pluginOutput = @(& (Join-Path $PSScriptRoot "retire-plugins.ps1") -CodexHome $liveHome -RequireAbsent 2>&1 | ForEach-Object { $_.ToString() })
+    if ($LASTEXITCODE -ne 0) {
+        foreach ($line in $pluginOutput) {
+            $pluginProblems.Add($line)
+        }
+    }
 }
 
 Write-Host "repo: $repoRoot"
@@ -162,11 +127,18 @@ if ($configProblems.Count -gt 0) {
         Write-Host "  $problem"
     }
 }
-if ($missing.Count -eq 0 -and $drift.Count -eq 0 -and $retired.Count -eq 0 -and $configProblems.Count -eq 0) {
+if ($pluginProblems.Count -gt 0) {
+    Write-Host ""
+    Write-Host "plugin problems:"
+    foreach ($problem in $pluginProblems) {
+        Write-Host "  $problem"
+    }
+}
+if ($missing.Count -eq 0 -and $drift.Count -eq 0 -and $retired.Count -eq 0 -and $configProblems.Count -eq 0 -and $pluginProblems.Count -eq 0) {
     Write-Host "portable files match live allowlist"
 }
 
-if ($RequireInSync -and ($missing.Count -gt 0 -or $drift.Count -gt 0 -or $retired.Count -gt 0 -or $configProblems.Count -gt 0)) {
+if ($RequireInSync -and ($missing.Count -gt 0 -or $drift.Count -gt 0 -or $retired.Count -gt 0 -or $configProblems.Count -gt 0 -or $pluginProblems.Count -gt 0)) {
     exit 1
 }
 

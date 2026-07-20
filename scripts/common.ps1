@@ -152,6 +152,10 @@ function Get-PortableSkillNames {
     return Get-PortableManifestArray -Section "agents" -Key "skills"
 }
 
+function Get-PortableStatefulSkillNames {
+    return Get-PortableManifestArray -Section "agents" -Key "stateful_skills"
+}
+
 function Get-PortableManifestArray {
     param(
         [string]$Section,
@@ -294,9 +298,10 @@ function Get-PortableFileMap {
     # User skills follow the current user skill home. Project `.agents/skills`
     # stay with the target repo.
     $userSkillsHome = Join-Path $AgentsHome "skills"
+    $statefulSkills = @(Get-PortableStatefulSkillNames)
     foreach ($skill in Get-PortableSkillNames) {
         $items.Add([pscustomobject]@{
-            Type = "dir"
+            Type = if ($statefulSkills -contains $skill) { "stateful-dir" } else { "dir" }
             RepoPath = Join-Path (Join-Path (Join-Path $RepoRoot "codex") "skills") $skill
             LivePath = Join-Path $userSkillsHome $skill
             LiveRoot = $AgentsHome
@@ -437,7 +442,7 @@ function Backup-LiveItem {
     }
     $backupPath = Join-Path $backupBase $relative
 
-    if ($Type -in @("dir", "derived-skill")) {
+    if ($Type -in @("dir", "stateful-dir", "derived-skill")) {
         New-Item -ItemType Directory -Force (Split-Path -Parent $backupPath) | Out-Null
         Copy-Item -LiteralPath $LivePath -Destination $backupPath -Recurse -Force
         return
@@ -461,6 +466,32 @@ function Copy-PortableItem {
 
     if ($AllowedRoot) {
         Assert-PathUnderRoot -Path $Destination -Root $AllowedRoot
+    }
+
+    if ($Type -eq "stateful-dir") {
+        New-Item -ItemType Directory -Force $Destination | Out-Null
+
+        $sourceRoot = (Resolve-Path -LiteralPath $Source).Path
+        $destinationRoot = (Resolve-Path -LiteralPath $Destination).Path
+        $sourceMap = Get-PortableDirectoryFileMap -Root $Source -Stateful
+        $destinationMap = Get-PortableDirectoryFileMap -Root $Destination -Stateful
+
+        foreach ($relative in $sourceMap.Keys) {
+            $sourcePath = Join-Path $sourceRoot $relative
+            $destinationPath = Join-Path $destinationRoot $relative
+            New-DirectoryForFile -Path $destinationPath
+            Copy-Item -LiteralPath $sourcePath -Destination $destinationPath -Force
+        }
+
+        foreach ($relative in $destinationMap.Keys) {
+            if ($sourceMap.ContainsKey($relative)) {
+                continue
+            }
+            $obsoletePath = Join-Path $destinationRoot $relative
+            Assert-PathUnderRoot -Path $obsoletePath -Root $destinationRoot
+            Remove-Item -LiteralPath $obsoletePath -Force
+        }
+        return
     }
 
     if ($Type -eq "dir") {
@@ -518,4 +549,61 @@ function Copy-PortableItem {
 
     New-DirectoryForFile -Path $Destination
     Copy-Item -LiteralPath $Source -Destination $Destination -Force
+}
+
+function Test-PortableRuntimePath {
+    param([string]$RelativePath)
+
+    $normalized = $RelativePath.Replace("\", "/").TrimStart("/")
+    if ($normalized -eq "artifacts" -or $normalized.StartsWith("artifacts/", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $true
+    }
+    if ($normalized -match '(^|/)__pycache__(/|$)') {
+        return $true
+    }
+    return $normalized.EndsWith(".pyc", [System.StringComparison]::OrdinalIgnoreCase) -or
+        $normalized.EndsWith(".pyo", [System.StringComparison]::OrdinalIgnoreCase)
+}
+
+function Get-PortableDirectoryFileMap {
+    param(
+        [string]$Root,
+        [switch]$DerivedSkill,
+        [switch]$Stateful
+    )
+
+    $map = @{}
+    if (-not (Test-Path -LiteralPath $Root -PathType Container)) {
+        return $map
+    }
+
+    $files = if ($DerivedSkill) {
+        $selected = New-Object System.Collections.Generic.List[object]
+        $skillFile = Join-Path $Root "SKILL.md"
+        if (Test-Path -LiteralPath $skillFile -PathType Leaf) {
+            $selected.Add((Get-Item -LiteralPath $skillFile))
+        }
+        foreach ($resourceDirectory in @("references", "scripts", "assets")) {
+            $resourceRoot = Join-Path $Root $resourceDirectory
+            if (Test-Path -LiteralPath $resourceRoot -PathType Container) {
+                foreach ($file in Get-ChildItem -LiteralPath $resourceRoot -Recurse -File -Force) {
+                    $selected.Add($file)
+                }
+            }
+        }
+        $selected.ToArray()
+    }
+    else {
+        @(Get-ChildItem -LiteralPath $Root -Recurse -File -Force)
+    }
+
+    $resolvedRoot = (Resolve-Path -LiteralPath $Root).Path
+    foreach ($file in $files) {
+        $relative = $file.FullName.Substring($resolvedRoot.Length).TrimStart("\", "/")
+        if ($Stateful -and (Test-PortableRuntimePath -RelativePath $relative)) {
+            continue
+        }
+        $map[$relative] = (Get-FileHash -Algorithm SHA256 -LiteralPath $file.FullName).Hash
+    }
+    return $map
 }

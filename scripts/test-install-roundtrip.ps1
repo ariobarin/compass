@@ -79,7 +79,9 @@ last_refresh = "machine-local"
     $homeArguments = @(
         "-CodexHome", $codexHome,
         "-AgentsHome", $agentsHome,
-        "-ClaudeHome", $claudeHome
+        "-ClaudeHome", $claudeHome,
+        "-SkipPluginRetirement",
+        "-SkipSkillRuntimeSetup"
     )
     $installPath = Join-Path $PSScriptRoot "install.ps1"
     $verifyPath = Join-Path $PSScriptRoot "verify-live.ps1"
@@ -126,7 +128,7 @@ last_refresh = "machine-local"
     }
 
     [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply", "-Adopt") + $homeArguments))
-    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments))
 
     $installedConfig = Get-Content -Raw -LiteralPath $configPath
     foreach ($preserved in @(
@@ -194,9 +196,26 @@ last_refresh = "machine-local"
     Assert-PathPresent -Path (Join-Path (Join-Path $claudeHome "agents") "progress-monitor.md")
     Assert-PathPresent -Path (Join-Path (Join-Path $claudeHome "agents") "reviewer.md")
 
+    $whichLlmRoot = Join-Path (Join-Path $agentsHome "skills") "which-llm"
+    $runtimeArtifact = Join-Path (Join-Path $whichLlmRoot "artifacts") "exports\local.csv"
+    $runtimeCache = Join-Path (Join-Path $whichLlmRoot "__pycache__") "query.pyc"
+    New-Item -ItemType Directory -Force (Split-Path -Parent $runtimeArtifact), (Split-Path -Parent $runtimeCache) | Out-Null
+    Set-Content -LiteralPath $runtimeArtifact -Value "local runtime data"
+    Set-Content -LiteralPath $runtimeCache -Value "local cache"
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments))
+
+    $whichLlmManagedFile = Join-Path $whichLlmRoot "pick.py"
+    Add-Content -LiteralPath $whichLlmManagedFile -Value "# managed drift"
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
+    [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
+    foreach ($runtimePath in @($runtimeArtifact, $runtimeCache)) {
+        Assert-PathPresent -Path $runtimePath
+    }
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments))
+
     $missingConfig = (Get-Content -Raw -LiteralPath $configPath) -replace '(?m)^model_auto_compact_token_limit = 233000\r?\n', ''
     [System.IO.File]::WriteAllText($configPath, $missingConfig, [System.Text.UTF8Encoding]::new($false))
-    $missingOutput = @(Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
+    $missingOutput = @(Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
     if (@($missingOutput | Where-Object { $_ -like "*missing reviewed config key: model_auto_compact_token_limit,*" }).Count -eq 0) {
         throw "verification did not report a missing reviewed config key"
     }
@@ -204,19 +223,19 @@ last_refresh = "machine-local"
 
     $mismatchedConfig = (Get-Content -Raw -LiteralPath $configPath) -replace 'model = "gpt-5.6-sol"', 'model = "wrong-model"'
     [System.IO.File]::WriteAllText($configPath, $mismatchedConfig, [System.Text.UTF8Encoding]::new($false))
-    $mismatchOutput = @(Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
+    $mismatchOutput = @(Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
     if (@($mismatchOutput | Where-Object { $_ -like '*reviewed config mismatch: model = "wrong-model", expected "gpt-5.6-sol"*' }).Count -eq 0) {
         throw "verification did not report a reviewed config mismatch"
     }
     [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
-    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments))
 
     $driftPath = Join-Path (Join-Path (Join-Path $agentsHome "skills") "compass") "SKILL.md"
     Add-Content -LiteralPath $driftPath -Value "roundtrip drift"
-    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments) -ExpectedExitCode 1)
 
     [void](Invoke-TestScript -Path $installPath -Arguments (@("-Apply") + $homeArguments))
-    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments))
 
     $retiredPaths = @(
         (Join-Path (Join-Path $codexHome "skills") "proper-flowcharts"),
@@ -248,7 +267,7 @@ last_refresh = "machine-local"
     if (Test-Path -LiteralPath $retiredClaudeAgent) {
         throw "retired Claude agent was not removed: $retiredClaudeAgent"
     }
-    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-RequireInSync") + $homeArguments))
+    [void](Invoke-TestScript -Path $verifyPath -Arguments (@("-SkipCodexCommand", "-SkipPluginCheck", "-RequireInSync") + $homeArguments))
 
     Write-Host "install round trip: ok"
 }

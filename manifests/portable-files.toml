@@ -45,6 +45,12 @@ skills = [
   "write-a-skill",
 ]
 
+# These skills write refresh data, exports, and Python caches inside their live
+# directory. Compass manages their code while preserving those runtime paths.
+stateful_skills = [
+  "which-llm",
+]
+
 [claude]
 # The live target is the active Claude home: $HOME/.claude. Claude skills
 # install to ~/.claude/skills and agents to ~/.claude/agents.
