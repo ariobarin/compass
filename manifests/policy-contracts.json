@@ -38,6 +38,22 @@
       ]
     },
     {
+      "id": "codex-cli-first-external-tools",
+      "path": "codex/AGENTS.md",
+      "required": [
+        "Prefer a locally authenticated CLI over a connector when both cover the task.",
+        "Keep redundant connector plugins disabled or uninstalled so they do not distract tool selection."
+      ]
+    },
+    {
+      "id": "claude-cli-first-external-tools",
+      "path": "claude/CLAUDE.md",
+      "required": [
+        "Prefer a locally authenticated CLI over a connector when both cover the task.",
+        "Keep redundant connector plugins disabled or uninstalled so they do not distract tool selection."
+      ]
+    },
+    {
       "id": "mcp-runtime-neutral-profile",
       "path": "apps/compass-mcp/profile.md",
       "required": [
@@ -71,7 +87,35 @@
       "required": [
         "The controller is the user-facing logical principal. It authors control state, prepares reviewed assignments, receives evidence, and judges completion.",
         "Delegates own assigned artifacts and investigations. They return evidence through the named return channel.",
-        "Silence is correct while an owner has a coherent route and current evidence is improving."
+        "Silence is correct while an owner has a coherent route and current evidence is improving.",
+        "An explicit user hold, cancellation, or authority revocation ends ordinary continuation for the affected delegates.",
+        "Cancellation is neither worker failure nor parent completion."
+      ]
+    },
+    {
+      "id": "orchestration-controller-cancellation-transition",
+      "path": "codex/skills/orchestration-controller/references/controller-principles.md",
+      "required": [
+        "use its cancelled transition to clear worker ownership, pending action and check state, active recovery ownership, and public mutation authority",
+        "Require the stopped delegate to return `held` or `cancelled`"
+      ]
+    },
+    {
+      "id": "subagent-cancellation-return",
+      "path": "codex/skills/subagent-driven-development/implementer-prompt.md",
+      "required": [
+        "Result: completed | needs decision | waiting external | failed | held | cancelled",
+        "Preserved artifact and evidence locators:",
+        "Process or delegate state still requiring verification:"
+      ]
+    },
+    {
+      "id": "assignment-cancellation-return",
+      "path": "workflows/templates/assignment.md",
+      "required": [
+        "Result: completed | needs decision | waiting external | failed | held | cancelled",
+        "Preserved artifact and evidence locators:",
+        "Process or delegate state still requiring verification:"
       ]
     },
     {
@@ -93,7 +137,18 @@
       "required": [
         "The goal remains stable until its named authority records an amendment.",
         "A successor principal reopens authoritative anchors in order and verifies changeable state before continuing.",
-        "Production mutation begins when the named authority opens that phase."
+        "Production mutation begins when the named authority opens that phase.",
+        "keep that field to the smallest complete statement of finished state, constraints, authority, and anchor locators"
+      ]
+    },
+    {
+      "id": "codex-goal-blocked-transition",
+      "path": "codex/AGENTS.md",
+      "required": [
+        "Mark the active Codex goal blocked only when the same blocking condition has repeated for at least three consecutive goal turns and no meaningful progress remains without user input or an external state change.",
+        "Count the original or user-triggered turn and any automatic continuations.",
+        "After a blocked goal resumes, start a fresh blocked audit and require three consecutive resumed goal turns before blocking it again.",
+        "Once those conditions hold, mark the goal blocked instead of leaving it active while repeatedly reporting the blocker."
       ]
     },
     {
