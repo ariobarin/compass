@@ -50,6 +50,9 @@ Smoke must prove:
 - Same task order and concurrency across arms.
 - Version manifest records agent commit, harness commit, service images, browser
   version, model id, decoding params, grader settings, and task revision.
+- Give each materially distinct agent, harness, task, scorer, tool-surface,
+  environment, and repair identity an evidence epoch or an explicit
+  compatibility ruling.
 - Reset between arms for mutating tasks.
 - Record capability telemetry per task: available, invoked, successful, failed,
   names, args, and return logs.
@@ -60,6 +63,9 @@ Smoke must prove:
 - Count only rows with terminal artifacts and grader verdicts.
 - Separate task failure from infrastructure failure.
 - Report invalid, unpaired, unscored, rerun, and rescore rows separately.
+- Assign every candidate attempt to an evidence epoch, declare the compatible
+  epoch cohort, then select one accepted attempt per cohort, arm, and task
+  through a documented deterministic rule before computing comparison sets.
 - Headline deltas use the paired valid intersection.
 - Token, step, and duration comparisons should include all valid rows and the
   shared-success subset.

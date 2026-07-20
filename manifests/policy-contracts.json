@@ -124,7 +124,25 @@
       "path": "carried/benchmark/skills/benchmark-run-operator/SKILL.md",
       "required": [
         "Open the recovery circuit when the failure signature, inputs, and runtime path remain materially unchanged and the prior attempt produced no new discriminating evidence.",
-        "The user-facing principal authors benchmark policy, queue shape, comparability decisions, and control documents before dispatch."
+        "The user-facing principal authors benchmark policy, queue shape, comparability decisions, and control documents before dispatch.",
+        "Assign every candidate attempt to an evidence epoch, declare the compatible epoch cohort, then select one accepted attempt per cohort, arm, and task through a documented deterministic rule."
+      ]
+    },
+    {
+      "id": "benchmark-result-set-and-epoch-contract",
+      "path": "carried/benchmark/skills/benchmark-run-operator/references/report-rebuild.md",
+      "required": [
+        "Intended task population:",
+        "Candidate-attempt union:",
+        "Accepted valid set per arm:",
+        "Paired-valid intersection:",
+        "Shared-success intersection:",
+        "Any-arm-success union:",
+        "Assign every candidate attempt to an evidence epoch",
+        "Record a compatibility ruling and name the epoch cohort before selecting rows.",
+        "Use the intended task population for headline arm success and coverage.",
+        "Use the paired-valid intersection for paired deltas and the shared-success intersection for shared-success efficiency.",
+        "Preserve incompatible historical rows and their artifacts, but exclude them from current report cells"
       ]
     },
     {
