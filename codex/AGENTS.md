@@ -41,6 +41,14 @@
   control state.
 - A fresh context must be able to reopen the anchors, verify current state, and
   resume without relying on private conversation history.
+- A work catalog may record a blocker immediately. Mark the active Codex goal
+  blocked only when the same blocking condition has repeated for at least three
+  consecutive goal turns and no meaningful progress remains without user input
+  or an external state change. Count the original or user-triggered turn and any
+  automatic continuations. After a blocked goal resumes, start a fresh blocked
+  audit and require three consecutive resumed goal turns before blocking it
+  again. Once those conditions hold, mark the goal blocked instead of leaving it
+  active while repeatedly reporting the blocker.
 
 ## Planning Authority
 

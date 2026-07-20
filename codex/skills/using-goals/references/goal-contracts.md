@@ -53,6 +53,18 @@ Assertions should be independently checkable. Prefer product behavior, runtime
 state, persisted artifacts, current-head checks, and attributable result rows
 over completion prose.
 
+## Runtime Goal Payload
+
+When the runtime provides an active goal field, keep its payload compact. Include
+the finished state, controlling constraints and authority, plus versioned or
+revision-bound locators for the durable goal and current checkpoint. Keep the
+full assertion set, settings, ledger, evidence history, and active-work table in
+those anchors.
+
+The runtime payload is a stable activation contract, not a copy of every control
+document. It must remain complete enough to recover the anchors when surrounding
+conversation is lost.
+
 ## Current Catalog
 
 ```markdown
@@ -135,6 +147,11 @@ missing state.
 
 Use `blocked` when a named external dependency, missing authority, or unavailable
 fact prevents every safe local action that could advance any unmet assertion.
+
+A control document may record that observed state immediately. Changing an
+active runtime goal to a terminal blocked status follows that runtime's own
+transition contract. Do not treat the catalog label as authority to bypass a
+required persistence audit or resumed-goal reset.
 
 Use `waiting` when a named external event is expected and the next useful check
 can be scheduled. Put pure polling inside one bounded command.
