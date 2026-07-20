@@ -31,6 +31,9 @@ and cache paths out of this repo.
   cache paths?
 - Can it mutate GitHub, browser state, files, processes, containers, or cloud
   resources?
+- Does a locally authenticated CLI already provide equivalent coverage? Keep a
+  redundant connector disabled or uninstalled unless its distinct capability is
+  required.
 - Is the capability needed for the task, or would source reads and scripts be
   enough?
 - Should the durable artifact be a workflow, skill, script, manifest entry, or

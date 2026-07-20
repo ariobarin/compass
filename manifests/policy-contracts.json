@@ -38,6 +38,22 @@
       ]
     },
     {
+      "id": "codex-cli-first-external-tools",
+      "path": "codex/AGENTS.md",
+      "required": [
+        "Prefer a locally authenticated CLI over a connector when both cover the task.",
+        "Keep redundant connector plugins disabled or uninstalled so they do not distract tool selection."
+      ]
+    },
+    {
+      "id": "claude-cli-first-external-tools",
+      "path": "claude/CLAUDE.md",
+      "required": [
+        "Prefer a locally authenticated CLI over a connector when both cover the task.",
+        "Keep redundant connector plugins disabled or uninstalled so they do not distract tool selection."
+      ]
+    },
+    {
       "id": "mcp-runtime-neutral-profile",
       "path": "apps/compass-mcp/profile.md",
       "required": [
