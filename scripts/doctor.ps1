@@ -46,9 +46,9 @@ else {
         "checks\skill-sources.ps1",
         "checks\agents.ps1",
         "checks\policy-contracts.ps1",
+        "checks\retired-plugins.ps1",
         "checks\restart-recovery.ps1",
         "checks\hooks.ps1",
-        "checks\plugins.ps1",
         "checks\claude.ps1"
     )) {
         $fullCheckPath = Join-Path $doctorRoot $checkPath

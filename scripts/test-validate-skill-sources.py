@@ -145,6 +145,20 @@ class SkillSourceTests(unittest.TestCase):
             second = module.source_tree_sha256(source)
             self.assertNotEqual(first, second)
 
+    def test_source_hash_ignores_python_bytecode(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory)
+            (source / "SKILL.md").write_text("skill", encoding="utf-8")
+            expected = module.source_tree_sha256(source)
+
+            cache = source / "__pycache__"
+            cache.mkdir()
+            (cache / "helper.cpython-312.pyc").write_bytes(b"generated")
+            (source / "helper.pyc").write_bytes(b"generated")
+            (source / "helper.pyo").write_bytes(b"generated")
+
+            self.assertEqual(module.source_tree_sha256(source), expected)
+
 
 if __name__ == "__main__":
     unittest.main()

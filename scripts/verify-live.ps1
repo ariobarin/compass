@@ -3,7 +3,7 @@ param(
     [string]$AgentsHome,
     [string]$ClaudeHome,
     [switch]$SkipCodexCommand,
-    [switch]$SkipPlugins,
+    [switch]$SkipPluginCheck,
     [switch]$RequireInSync,
     [int]$TimeoutSeconds = 180
 )
@@ -22,47 +22,6 @@ $missing = New-Object System.Collections.Generic.List[string]
 $retired = New-Object System.Collections.Generic.List[string]
 $configProblems = New-Object System.Collections.Generic.List[string]
 $pluginProblems = New-Object System.Collections.Generic.List[string]
-
-function Get-RelativeFileMap {
-    param([string]$Root)
-
-    $map = @{}
-    if (-not (Test-Path $Root)) {
-        return $map
-    }
-
-    foreach ($file in Get-ChildItem -LiteralPath $Root -Recurse -File -Force) {
-        $relative = $file.FullName.Substring((Resolve-Path $Root).Path.Length).TrimStart("\")
-        $map[$relative] = (Get-FileHash -Algorithm SHA256 -LiteralPath $file.FullName).Hash
-    }
-    return $map
-}
-
-function Get-DerivedSkillFileMap {
-    param([string]$Root)
-
-    $map = @{}
-    if (-not (Test-Path $Root)) {
-        return $map
-    }
-
-    $skillFile = Join-Path $Root "SKILL.md"
-    if (Test-Path -LiteralPath $skillFile) {
-        $map["SKILL.md"] = (Get-FileHash -Algorithm SHA256 -LiteralPath $skillFile).Hash
-    }
-
-    foreach ($resourceDirectory in @("references", "scripts", "assets")) {
-        $resourceRoot = Join-Path $Root $resourceDirectory
-        if (Test-Path -LiteralPath $resourceRoot) {
-            foreach ($file in Get-ChildItem -LiteralPath $resourceRoot -Recurse -File -Force) {
-                $relative = $file.FullName.Substring((Resolve-Path $Root).Path.Length).TrimStart("\")
-                $map[$relative] = (Get-FileHash -Algorithm SHA256 -LiteralPath $file.FullName).Hash
-            }
-        }
-    }
-
-    return $map
-}
 
 foreach ($item in $items) {
     if (-not (Test-Path $item.LivePath)) {
@@ -96,13 +55,8 @@ foreach ($item in $items) {
         continue
     }
 
-    if ($item.Type -eq "derived-skill") {
-        $repoMap = Get-DerivedSkillFileMap -Root $item.RepoPath
-    }
-    else {
-        $repoMap = Get-RelativeFileMap -Root $item.RepoPath
-    }
-    $liveMap = Get-RelativeFileMap -Root $item.LivePath
+    $repoMap = Get-PortableDirectoryFileMap -Root $item.RepoPath -DerivedSkill:($item.Type -eq "derived-skill") -Stateful:($item.Type -eq "stateful-dir")
+    $liveMap = Get-PortableDirectoryFileMap -Root $item.LivePath -Stateful:($item.Type -eq "stateful-dir")
     $allKeys = @(@($repoMap.Keys) + @($liveMap.Keys) | Sort-Object -Unique)
     foreach ($key in $allKeys) {
         if (-not $repoMap.ContainsKey($key) -or -not $liveMap.ContainsKey($key) -or $repoMap[$key] -ne $liveMap[$key]) {
@@ -130,55 +84,16 @@ catch {
     $configProblems.Add($_.Exception.Message)
 }
 
-$pluginManifestPath = Join-Path $repoRoot "manifests\plugins.json"
-if (-not $SkipPlugins) {
-    if (-not (Test-Path -LiteralPath $pluginManifestPath -PathType Leaf)) {
-        $pluginProblems.Add("missing plugin manifest: $pluginManifestPath")
-    }
-    elseif (-not (Get-Command codex -ErrorAction SilentlyContinue)) {
-        $pluginProblems.Add("codex command not found; use -SkipPlugins only when plugin verification is intentionally out of scope")
-    }
-    else {
-        $previousCodexHome = $env:CODEX_HOME
-        $env:CODEX_HOME = $liveHome
-        try {
-            $pluginManifest = Get-Content -Raw -LiteralPath $pluginManifestPath | ConvertFrom-Json
-            $marketplaceOutput = & codex plugin marketplace list --json
-            if ($LASTEXITCODE -ne 0) {
-                $pluginProblems.Add("codex plugin marketplace list failed")
-            }
-            else {
-                $marketplaceState = $marketplaceOutput | Out-String | ConvertFrom-Json
-                foreach ($marketplace in @($pluginManifest.marketplaces)) {
-                    $configured = @($marketplaceState.marketplaces | Where-Object { $_.name -eq $marketplace.name })
-                    if ($configured.Count -eq 0) {
-                        $pluginProblems.Add("declared marketplace is not configured: $($marketplace.name)")
-                    }
-                    elseif ((Get-NormalizedMarketplaceSource -Source $configured[0].marketplaceSource.source) -ne (Get-NormalizedMarketplaceSource -Source $marketplace.source)) {
-                        $pluginProblems.Add("declared marketplace source mismatch for $($marketplace.name): $($configured[0].marketplaceSource.source)")
-                    }
-                }
-            }
-
-            $pluginOutput = & codex plugin list --json
-            if ($LASTEXITCODE -ne 0) {
-                $pluginProblems.Add("codex plugin list failed")
-            }
-            else {
-                $pluginState = $pluginOutput | Out-String | ConvertFrom-Json
-                foreach ($pluginId in @($pluginManifest.plugins)) {
-                    $installed = @($pluginState.installed | Where-Object { $_.pluginId -eq $pluginId })
-                    if ($installed.Count -eq 0) {
-                        $pluginProblems.Add("declared plugin is not installed: $pluginId")
-                    }
-                    elseif (-not [bool]$installed[0].enabled) {
-                        $pluginProblems.Add("declared plugin is disabled: $pluginId")
-                    }
-                }
-            }
+if (-not $SkipPluginCheck -and -not $SkipCodexCommand) {
+    $pluginOutput = @(& (Join-Path $PSScriptRoot "retire-plugins.ps1") -CodexHome $liveHome -RequireAbsent *>&1 | ForEach-Object { $_.ToString() })
+    if ($LASTEXITCODE -ne 0) {
+        if ($pluginOutput.Count -eq 0) {
+            $pluginProblems.Add("retired plugin verification failed")
         }
-        finally {
-            $env:CODEX_HOME = $previousCodexHome
+        else {
+            foreach ($line in $pluginOutput) {
+                $pluginProblems.Add($line)
+            }
         }
     }
 }

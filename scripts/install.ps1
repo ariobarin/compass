@@ -1,13 +1,14 @@
 param(
     [switch]$Apply,
-    [switch]$SkipPlugins,
     [Alias("ReplaceForeign")]
     [switch]$Adopt,
     [string]$SourceRef,
     [string]$SourceCommit,
     [string]$CodexHome,
     [string]$AgentsHome,
-    [string]$ClaudeHome
+    [string]$ClaudeHome,
+    [switch]$SkipSkillRuntimeSetup,
+    [switch]$SkipPluginRetirement
 )
 
 . "$PSScriptRoot\common.ps1"
@@ -18,45 +19,6 @@ param(
     [System.IO.Path]::DirectorySeparatorChar,
     [System.IO.Path]::AltDirectorySeparatorChar
 ) | Select-Object -Unique
-
-function Get-RelativeFileMap {
-    param(
-        [string]$Root,
-        [switch]$DerivedSkill
-    )
-
-    $map = @{}
-    if (-not (Test-Path -LiteralPath $Root -PathType Container)) {
-        return $map
-    }
-
-    $files = if ($DerivedSkill) {
-        $selected = New-Object System.Collections.Generic.List[object]
-        $skillFile = Join-Path $Root "SKILL.md"
-        if (Test-Path -LiteralPath $skillFile -PathType Leaf) {
-            $selected.Add((Get-Item -LiteralPath $skillFile))
-        }
-        foreach ($resourceDirectory in @("references", "scripts", "assets")) {
-            $resourceRoot = Join-Path $Root $resourceDirectory
-            if (Test-Path -LiteralPath $resourceRoot -PathType Container) {
-                foreach ($file in Get-ChildItem -LiteralPath $resourceRoot -Recurse -File -Force) {
-                    $selected.Add($file)
-                }
-            }
-        }
-        $selected.ToArray()
-    }
-    else {
-        @(Get-ChildItem -LiteralPath $Root -Recurse -File -Force)
-    }
-
-    $resolvedRoot = (Resolve-Path -LiteralPath $Root).Path
-    foreach ($file in $files) {
-        $relative = $file.FullName.Substring($resolvedRoot.Length).TrimStart($pathSeparators)
-        $map[$relative] = (Get-FileHash -Algorithm SHA256 -LiteralPath $file.FullName).Hash
-    }
-    return $map
-}
 
 function Test-FileMapsEqual {
     param(
@@ -119,8 +81,8 @@ function Test-PortableItemInSync {
         return $false
     }
 
-    $expected = Get-RelativeFileMap -Root $Item.RepoPath -DerivedSkill:($Item.Type -eq "derived-skill")
-    $actual = Get-RelativeFileMap -Root $Item.LivePath
+    $expected = Get-PortableDirectoryFileMap -Root $Item.RepoPath -DerivedSkill:($Item.Type -eq "derived-skill") -Stateful:($Item.Type -eq "stateful-dir")
+    $actual = Get-PortableDirectoryFileMap -Root $Item.LivePath -Stateful:($Item.Type -eq "stateful-dir")
     return Test-FileMapsEqual -Expected $expected -Actual $actual
 }
 
@@ -316,14 +278,11 @@ if (-not $Apply) {
     Write-Host "reviewed config: $($reviewedConfigState.changed_count)"
     Write-Host "retired: $($retiredRemovalStates.Count)"
     Write-Host "foreign: $($foreignStates.Count)"
-    if (-not $SkipPlugins) {
-        Write-Host ""
-        & (Join-Path $PSScriptRoot "sync-plugins.ps1") -CodexHome $liveHome
-        if ($LASTEXITCODE -ne 0) {
-            throw "plugin sync review failed"
-        }
-    }
     Write-Host "run with -Apply to install the approved plan"
+    if (-not $SkipPluginRetirement) {
+        Write-Host ""
+        & (Join-Path $PSScriptRoot "retire-plugins.ps1") -CodexHome $liveHome
+    }
     exit 0
 }
 
@@ -333,6 +292,13 @@ if ($blockedForeignStates.Count -gt 0) {
         Write-Host "  $($state.Item.LivePath)"
     }
     throw "rerun with -Adopt to replace or remove foreign targets"
+}
+
+if (-not $SkipPluginRetirement) {
+    & (Join-Path $PSScriptRoot "retire-plugins.ps1") -CodexHome $liveHome -Apply -RequireAbsent
+    if ($LASTEXITCODE -ne 0) {
+        throw "retired plugin cleanup failed"
+    }
 }
 
 $stamp = Get-Date -Format "yyyyMMdd-HHmmss"
@@ -392,6 +358,13 @@ foreach ($state in $retiredRemovalStates) {
         after = Get-PortablePathFingerprint -Path $item.LivePath
     })
     Write-Host "removed retired: $($item.LivePath)"
+}
+
+if (-not $SkipSkillRuntimeSetup) {
+    & (Join-Path $PSScriptRoot "setup-skill-runtime.ps1") -AgentsHome $agentsHome
+    if ($LASTEXITCODE -ne 0) {
+        throw "skill runtime setup failed"
+    }
 }
 
 if ([bool]$reviewedConfigState.changed) {
@@ -500,10 +473,4 @@ if ($receiptPath) {
 }
 else {
     Write-Host "receipt: unchanged"
-}
-if (-not $SkipPlugins) {
-    & (Join-Path $PSScriptRoot "sync-plugins.ps1") -Apply -CodexHome $liveHome
-    if ($LASTEXITCODE -ne 0) {
-        throw "plugin sync failed"
-    }
 }

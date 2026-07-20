@@ -14,6 +14,14 @@
   0-2 motivation-first sentences with no headers, checkboxes, emojis, or
   generated footer.
 
+## External Tool Routing
+
+- Prefer a locally authenticated CLI over a connector when both cover the task.
+  Use a connector only when it adds a material capability the CLI lacks or the
+  user explicitly requests it.
+- Keep redundant connector plugins disabled or uninstalled so they do not
+  distract tool selection.
+
 ## Runtime Identity
 
 - This Claude Code setup routes delegated model work through GLM-5.2. Treat

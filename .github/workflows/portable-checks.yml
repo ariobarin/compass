@@ -71,6 +71,11 @@ jobs:
         shell: pwsh
         run: python scripts/test-validate-skill-sources.py
 
+      - name: Test retired plugin migration
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/test-retire-plugins.ps1
+
       - name: Test review bundle isolation
         shell: pwsh
         run: python scripts/test-review-bundle.py

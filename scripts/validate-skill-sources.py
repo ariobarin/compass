@@ -132,6 +132,8 @@ def source_tree_sha256(path: Path) -> str:
         )
         for candidate in path.rglob("*")
         if candidate.is_file()
+        and "__pycache__" not in candidate.relative_to(path).parts
+        and candidate.suffix not in {".pyc", ".pyo"}
     )
     for relative_path, file in files:
         relative = relative_path.encode("utf-8")

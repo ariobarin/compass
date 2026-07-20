@@ -18,7 +18,7 @@ Choose the workflow by the decision or operation it owns:
 | Recover unfinished Codex sessions after restart | [codex-restart-recovery.md](codex-restart-recovery.md) |
 | Map repository or external evidence before editing | [read-only-research.md](read-only-research.md) |
 | Turn repeated agent failures into durable improvements | [agent-failures.md](agent-failures.md) |
-| Install and refresh the separately owned `which-llm` plugin | [which-llm-plugin.md](which-llm-plugin.md) |
+| Review and refresh the separately owned `which-llm` skill | [which-llm-skill.md](which-llm-skill.md) |
 
 Use [../glossary.md](../glossary.md) when a term changes ownership, authority,
 or lifecycle behavior. Keep workflows focused on maintainer action. Put reusable

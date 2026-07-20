@@ -39,9 +39,16 @@ skills = [
   "to-prd",
   "update-compass",
   "using-goals",
+  "which-llm",
   "workspace-steward",
   "write-a-compass-skill",
   "write-a-skill",
+]
+
+# These skills write refresh data, exports, and Python caches inside their live
+# directory. Compass manages their code while preserving those runtime paths.
+stateful_skills = [
+  "which-llm",
 ]
 
 [claude]

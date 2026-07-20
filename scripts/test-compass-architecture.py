@@ -29,6 +29,7 @@ class CompassArchitectureTests(unittest.TestCase):
         skills = set(manifest["agents"]["skills"])
         self.assertIn("run-a-micro-experiment", skills)
         self.assertIn("using-goals", skills)
+        self.assertIn("which-llm", skills)
         self.assertIn("write-a-compass-skill", skills)
         self.assertIn("write-a-skill", skills)
         self.assertNotIn("benchmark-run-operator", skills)
