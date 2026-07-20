@@ -41,15 +41,21 @@ Carry ordinary setup, repository reading, debugging, focused tests, and local
 recovery inside this boundary. Keep working while safe, authorized actions can
 advance the slice.
 
+If the user or principal explicitly holds, cancels, or revokes this assignment,
+stop further mutation, preserve current artifacts, and return current state plus
+evidence without completing extra scope.
+
 Return once when the postcondition is verified or a real exception prevents all
 remaining safe useful work.
 
 ## Return Record
 
-- Result: completed | needs decision | waiting external | failed
+- Result: completed | needs decision | waiting external | failed | held | cancelled
 - Slice outcome claimed:
 - Parent assertions advanced:
 - Artifact or files changed:
+- Preserved artifact and evidence locators:
+- Process or delegate state still requiring verification:
 - Checks and exact results:
 - Evidence mapped to each parent assertion:
 - Slice conditions still unmet:
@@ -58,3 +64,7 @@ remaining safe useful work.
 - Next action and owner:
 - Residual concerns, separate from completion:
 ```
+
+For `held` or `cancelled`, do not claim the slice outcome. Name the authority
+that ended, preserve the current artifact and evidence locators, and report any
+state the principal must independently verify as inactive.

@@ -12,7 +12,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": 4
+      "const": 5
     },
     "updated_at": {
       "type": "string",
@@ -216,6 +216,58 @@
             "properties": {
               "public_mutation_action": {
                 "$ref": "#/$defs/nonemptyString"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "cancelled"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "worker_id": {
+                "const": null
+              },
+              "next_action": {
+                "const": null
+              },
+              "next_check_at": {
+                "const": null
+              },
+              "decision_needed": {
+                "const": null
+              },
+              "public_mutation_gate": {
+                "enum": [
+                  "closed",
+                  "complete"
+                ]
+              },
+              "recovery_circuits": {
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/recoveryCircuit"
+                    },
+                    {
+                      "properties": {
+                        "state": {
+                          "not": {
+                            "const": "active"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
               }
             }
           }

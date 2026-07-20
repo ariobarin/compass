@@ -4,8 +4,8 @@ import re
 from datetime import datetime, timezone
 from typing import Any
 
-SCHEMA_VERSION = 4
-LEGACY_SCHEMA_VERSIONS = {1, 2, 3}
+SCHEMA_VERSION = 5
+LEGACY_SCHEMA_VERSIONS = {1, 2, 3, 4}
 STATES = {"planned", "active", "waiting", "blocked", "complete", "cancelled"}
 PHASES = {"planning", "implementation"}
 GATES = {"closed", "authorized", "in_flight", "complete"}

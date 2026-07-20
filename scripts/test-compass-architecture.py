@@ -100,7 +100,7 @@ class CompassArchitectureTests(unittest.TestCase):
             "last_verified_at": timestamp,
         }
         del goal["anchors"]
-        current = {"schema_version": 4, "updated_at": timestamp, "goals": [goal]}
+        current = {"schema_version": 5, "updated_at": timestamp, "goals": [goal]}
         with self.assertRaisesRegex(LedgerError, "missing required fields: anchors"):
             validate_ledger(current)
 
@@ -110,7 +110,7 @@ class CompassArchitectureTests(unittest.TestCase):
             "updated_at": "2026-07-17T12:00:00Z",
             "goals": [],
         }
-        with self.assertRaisesRegex(LedgerError, "requires schema_version 4"):
+        with self.assertRaisesRegex(LedgerError, "requires schema_version 5"):
             validate_ledger(invalid)
 
     def test_legacy_recovery_counter_rejects_malformed_values(self) -> None:

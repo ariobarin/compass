@@ -164,6 +164,18 @@ def migrate_goal(value: object, schema_version: int) -> object:
     goal.setdefault("control_revision", 1)
     goal.pop("control_edit_grants", None)
     goal.setdefault("last_verified_at", updated)
+    if schema_version <= 4 and goal.get("state") == "cancelled":
+        goal["worker_id"] = None
+        goal["next_action"] = None
+        goal["next_check_at"] = None
+        goal["decision_needed"] = None
+        if goal.get("public_mutation_gate") in {"authorized", "in_flight"}:
+            goal["public_mutation_gate"] = "closed"
+            goal["public_mutation_action"] = None
+        for circuit in goal["recovery_circuits"]:
+            if isinstance(circuit, dict) and circuit.get("state") == "active":
+                circuit["state"] = "closed"
+                circuit["assigned_worker"] = None
     return goal
 
 
@@ -232,6 +244,19 @@ def validate_goal(value: object, index: int) -> dict[str, Any]:
             raise LedgerError(f"{label}.state complete requires next_action null")
         if value.get("decision_needed") is not None:
             raise LedgerError(f"{label}.state complete requires decision_needed null")
+    if state == "cancelled":
+        if value.get("worker_id") is not None:
+            raise LedgerError(f"{label}.state cancelled requires worker_id null")
+        if value.get("next_action") is not None:
+            raise LedgerError(f"{label}.state cancelled requires next_action null")
+        if value.get("next_check_at") is not None:
+            raise LedgerError(f"{label}.state cancelled requires next_check_at null")
+        if value.get("decision_needed") is not None:
+            raise LedgerError(f"{label}.state cancelled requires decision_needed null")
+        if gate in {"authorized", "in_flight"}:
+            raise LedgerError(
+                f"{label}.state cancelled cannot retain public mutation authority"
+            )
     if gate == "complete" and not evidence:
         raise LedgerError(f"{label}.public_mutation_gate complete requires evidence")
 
@@ -246,6 +271,12 @@ def validate_goal(value: object, index: int) -> dict[str, Any]:
         created.replace("Z", "+00:00")
     ):
         raise LedgerError(f"{label}.updated_at must not precede created_at")
+
+    circuits = validate_recovery_circuits(
+        value.get("recovery_circuits"), f"{label}.recovery_circuits"
+    )
+    if state == "cancelled" and any(item["state"] == "active" for item in circuits):
+        raise LedgerError(f"{label}.state cancelled cannot retain active recovery ownership")
 
     return {
         "id": validate_id(value.get("id"), f"{label}.id"),
@@ -268,9 +299,7 @@ def validate_goal(value: object, index: int) -> dict[str, Any]:
         "decision_needed": validate_decision(value.get("decision_needed"), f"{label}.decision_needed"),
         "control_writer": nonempty_string(value.get("control_writer"), f"{label}.control_writer"),
         "control_revision": revision,
-        "recovery_circuits": validate_recovery_circuits(
-            value.get("recovery_circuits"), f"{label}.recovery_circuits"
-        ),
+        "recovery_circuits": circuits,
         "created_at": created,
         "updated_at": updated,
         "last_verified_at": verified,

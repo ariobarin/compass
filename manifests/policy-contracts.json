@@ -87,7 +87,35 @@
       "required": [
         "The controller is the user-facing logical principal. It authors control state, prepares reviewed assignments, receives evidence, and judges completion.",
         "Delegates own assigned artifacts and investigations. They return evidence through the named return channel.",
-        "Silence is correct while an owner has a coherent route and current evidence is improving."
+        "Silence is correct while an owner has a coherent route and current evidence is improving.",
+        "An explicit user hold, cancellation, or authority revocation ends ordinary continuation for the affected delegates.",
+        "Cancellation is neither worker failure nor parent completion."
+      ]
+    },
+    {
+      "id": "orchestration-controller-cancellation-transition",
+      "path": "codex/skills/orchestration-controller/references/controller-principles.md",
+      "required": [
+        "use its cancelled transition to clear worker ownership, pending action and check state, active recovery ownership, and public mutation authority",
+        "Require the stopped delegate to return `held` or `cancelled`"
+      ]
+    },
+    {
+      "id": "subagent-cancellation-return",
+      "path": "codex/skills/subagent-driven-development/implementer-prompt.md",
+      "required": [
+        "Result: completed | needs decision | waiting external | failed | held | cancelled",
+        "Preserved artifact and evidence locators:",
+        "Process or delegate state still requiring verification:"
+      ]
+    },
+    {
+      "id": "assignment-cancellation-return",
+      "path": "workflows/templates/assignment.md",
+      "required": [
+        "Result: completed | needs decision | waiting external | failed | held | cancelled",
+        "Preserved artifact and evidence locators:",
+        "Process or delegate state still requiring verification:"
       ]
     },
     {
