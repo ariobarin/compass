@@ -61,8 +61,13 @@ A catalog locates state. It does not duplicate every state entry.
 
 ## Ledger
 
-A compact current record of assertions, evidence, decisions, and remaining
-work. Replace mutable state instead of appending a diary.
+A structured mechanical control record with defined fields, one writer,
+revision protection, and explicit mutation rules. Compass's JSON orchestration
+ledger is the canonical example.
+
+Use a tracker for an ordinary list of items and statuses. Use a decision log for
+a chronological decision history. Reserve ledger for records whose structure
+and control semantics matter.
 
 ## Checkpoint
 
