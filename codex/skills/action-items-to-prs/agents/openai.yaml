@@ -1,7 +1,7 @@
 interface:
   display_name: "Action Items to PRs"
   short_description: "Turn source actions into coherent PR groups"
-  default_prompt: "Use $action-items-to-prs to build a principal-reviewed action ledger from this source and group the unresolved items into coherent PR work."
+  default_prompt: "Use $action-items-to-prs to build a principal-reviewed action tracker from this source and group the unresolved items into coherent PR work."
 
 policy:
   allow_implicit_invocation: true

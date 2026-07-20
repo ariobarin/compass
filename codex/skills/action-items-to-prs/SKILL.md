@@ -1,6 +1,6 @@
 ---
 name: action-items-to-prs
-description: Turn a report, audit, checklist, issue list, or review into a confirmed action ledger and coherent PR groups.
+description: Turn a report, audit, checklist, issue list, or review into a confirmed action tracker and coherent PR groups.
 ---
 
 # Action Items To PRs
@@ -9,13 +9,13 @@ Turn one source artifact into reviewable repository work without losing what the
 source actually asked for. This skill exists because a broad list is easy to
 fragment, duplicate, reinterpret, or declare complete from PR motion alone.
 
-The terminal result is a principal-reviewed action ledger plus PR groups whose
-scope and evidence map back to that ledger.
+The terminal result is a principal-reviewed action tracker plus PR groups whose
+scope and evidence map back to that tracker.
 
 ## Anchor To The Source
 
 Read repository guidance, the complete action source, and current open PRs that
-may already cover the same work. Build a compact proposed ledger before editing.
+may already cover the same work. Build a compact proposed tracker before editing.
 For each item record:
 
 - source locator or concise quote;
@@ -29,7 +29,7 @@ Resolve locally answerable questions from repository evidence. Present a
 proposed interpretation for ambiguous items and ask only when a different answer
 would materially change scope, ownership, risk, or PR grouping.
 
-The principal authors and approves the ledger. Implementers return evidence for
+The principal authors and approves the tracker. Implementers return evidence for
 it rather than maintaining independent copies.
 
 ## Form Coherent PR Groups
@@ -41,10 +41,10 @@ verification surface.
 - Create a new PR when the group has a distinct purpose, owner, risk, or review
   surface.
 - Keep unrelated groups separate even when they share a source document.
-- Mark non-actionable and already-handled items in the ledger instead of creating
+- Mark non-actionable and already-handled items in the tracker instead of creating
   ceremonial PRs.
 
-A PR group should state which ledger items it advances and what evidence will
+A PR group should state which tracked items it advances and what evidence will
 close them.
 
 ## Execute Through Existing Ownership
@@ -61,7 +61,7 @@ worktree contains unrelated edits.
 
 After each material result:
 
-1. map current evidence to the exact ledger items;
+1. map current evidence to the exact tracked items;
 2. update their status;
 3. recompute the unresolved set;
 4. adjust PR grouping only when new evidence changes ownership or scope.
@@ -70,6 +70,6 @@ A created PR is not evidence that its items are complete.
 
 ## Output
 
-Report the source artifact, approved ledger, PR groups created or reused, item
+Report the source artifact, approved tracker, PR groups created or reused, item
 status, evidence locators, unresolved decisions, and the next proof-producing
 action.
