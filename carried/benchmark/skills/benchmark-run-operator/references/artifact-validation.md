@@ -28,6 +28,26 @@ A clean zero-reward or max-step terminal row can be a valid task failure. A row
 with infrastructure poison is invalid recovery work even when a terminal
 summary exists.
 
+## Accepted Attempt Selection
+
+Inventory candidate attempts from every attributable original, rerun, rescore,
+and manual-classification root. Assign every candidate to an evidence epoch
+before selection, then declare the compatible epoch cohort for the comparison.
+Select at most one accepted attempt per cohort, arm, and task through a rule
+fixed before inspecting the desired outcome. Never collapse attempts across
+incompatible epochs.
+
+The benchmark contract owns the rule. A recovery run may use earliest valid by
+recorded start time, an explicit generation order, or another deterministic
+precedence that matches the harness. Do not let a later success replace an
+earlier valid failure merely because it improves the result.
+
+Preserve an excluded-attempt ledger with the candidate and parent-attempt
+identities, epoch and cohort, selection reason, validity classification,
+provenance, and artifact locator. Invalid or superseded attempts remain
+operational evidence and token overhead when the report contract calls for
+them, but they do not become accepted task rows.
+
 ## Error Taxonomy
 
 Maintain an error taxonomy during long runs instead of waiting for final
@@ -93,6 +113,8 @@ Before reporting:
 - Re-run the canonical aggregation script or notebook.
 - If the user needs refreshed report artifacts or comparison CSVs, also read
   `report-rebuild.md`.
+- Assign candidate epochs, declare a compatible cohort, and apply the documented
+  accepted-attempt selector before computing result sets.
 - Verify denominators after recovery.
 - Build paired valid intersections.
 - Separate invalid, unpaired, unscored, rerun, and rescore rows.

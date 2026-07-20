@@ -73,6 +73,10 @@ grader result with no uncaught crash, stale-runner marker, missing-summary gap,
 or known infrastructure poison. Recalculate strict and headline denominators
 from attributable rows.
 
+Assign every candidate attempt to an evidence epoch, declare the compatible
+epoch cohort, then select one accepted attempt per cohort, arm, and task through
+a documented deterministic rule.
+
 Do not mix changed task sets, scorers, tool surfaces, auth state, stacks, or
 repair conditions without an explicit comparability decision and label.
 
