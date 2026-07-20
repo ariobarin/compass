@@ -83,6 +83,18 @@ def mutate(args: argparse.Namespace, path: Path) -> tuple[dict[str, Any], str]:
         message = f"set {goal['id']} anchors and control documents"
     elif args.command == "set-state":
         goal["state"] = args.state
+        if args.state == "cancelled":
+            goal["worker_id"] = None
+            goal["next_action"] = None
+            goal["next_check_at"] = None
+            goal["decision_needed"] = None
+            if goal["public_mutation_gate"] in {"authorized", "in_flight"}:
+                goal["public_mutation_gate"] = "closed"
+                goal["public_mutation_action"] = None
+            for circuit in goal["recovery_circuits"]:
+                if circuit["state"] == "active":
+                    circuit["state"] = "closed"
+                    circuit["assigned_worker"] = None
         message = f"set {goal['id']} state to {args.state}"
     elif args.command == "set-next":
         if args.clear:

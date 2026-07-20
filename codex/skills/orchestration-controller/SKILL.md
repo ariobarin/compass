@@ -76,6 +76,12 @@ Workers escalate one exact missing decision, authority boundary, external event,
 or exhausted recovery path. The controller answers or reroutes without absorbing
 the task.
 
+An explicit user hold, cancellation, or authority revocation ends ordinary
+continuation for the affected delegates. Revoke the owned assignment promptly,
+preserve its current artifacts and evidence, verify that no affected delegate
+remains active or authorized, and update principal control state. Cancellation
+is neither worker failure nor parent completion.
+
 ## Read Returns As Evidence
 
 A worker return is a claim about an artifact or a real exception. Reinspect the
@@ -108,7 +114,8 @@ Be direct when work drifts. Friendly pressure serves delivery; constant presence
 does not.
 
 Read [references/controller-principles.md](references/controller-principles.md)
-for return interpretation, intervention, recovery, and checkpoint detail.
+for return interpretation, cancellation, intervention, recovery, and checkpoint
+detail.
 
 ## Completion
 

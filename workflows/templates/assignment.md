@@ -41,14 +41,24 @@ Return once when the slice outcome is verified or one exact missing decision,
 authority boundary, external event, or exhausted recovery path prevents further
 safe useful work.
 
+If the user or principal explicitly holds, cancels, or revokes the assignment,
+stop further mutation, preserve current artifacts and evidence, and return
+`held` or `cancelled` without completing extra scope.
+
 ## Return Record
 
-- Result: completed | needs decision | waiting external | failed
+- Result: completed | needs decision | waiting external | failed | held | cancelled
 - Slice outcome claimed:
 - Artifact or files changed:
+- Preserved artifact and evidence locators:
+- Process or delegate state still requiring verification:
 - Checks and observations:
 - Evidence mapped to parent assertions:
 - Remaining slice gap:
 - Recovery attempted:
 - Exact next action and owner:
 - Residual concerns, separate from completion:
+
+For `held` or `cancelled`, leave the slice outcome unclaimed, name the authority
+that ended, and provide the preservation evidence needed for the principal to
+verify inactive state independently.

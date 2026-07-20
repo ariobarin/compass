@@ -153,6 +153,22 @@ Update links when a reviewed control document supersedes an older one:
   -ControlDocument "local-docs/control/checkpoint.md"
 ```
 
+Cancel the current assignment in one transition after issuing the runtime stop:
+
+```powershell
+.\scripts\orchestration-ledger.ps1 -Action set-state `
+  -GoalId release-42 `
+  -Actor principal `
+  -ExpectedRevision 4 `
+  -State cancelled
+```
+
+The cancelled transition clears `worker_id`, `next_action`, `next_check_at`, and
+`decision_needed`; closes public mutation authority that is still authorized or
+in flight; and closes active recovery ownership. A completed public mutation is
+retained as completed history. Reinspect the runtime separately before treating
+the delegate as inactive.
+
 ## Record Verified Evidence
 
 A delegate may produce the observation. The principal inspects it and records
@@ -261,7 +277,7 @@ Changing the field does not grant permission.
 
 ## Verification
 
-- `manifests/orchestration-ledger.schema.json` documents schema version 4.
+- `manifests/orchestration-ledger.schema.json` documents schema version 5.
 - `scripts/orchestration-ledger.py` validates and writes the ledger atomically.
 - The path is restricted to `.local/` and rejects symlink traversal.
 - `scripts/test-orchestration-ledger.py` covers principal authority, optimistic

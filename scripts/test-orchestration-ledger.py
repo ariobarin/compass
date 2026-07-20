@@ -66,7 +66,7 @@ class OrchestrationLedgerTests(unittest.TestCase):
             document = harness.init()
             goal = document["goals"][0]
 
-            self.assertEqual(document["schema_version"], 4)
+            self.assertEqual(document["schema_version"], 5)
             self.assertEqual(goal["control_writer"], "principal")
             self.assertEqual(goal["phase"], "planning")
             self.assertEqual(goal["anchors"], ["product-requirements.md"])
@@ -359,7 +359,68 @@ class OrchestrationLedgerTests(unittest.TestCase):
             self.assertEqual(success[0], 0, success[2])
             self.assertEqual(harness.goal()["public_mutation_gate"], "authorized")
 
-    def test_schema_three_migrates_to_principal_only_schema_four(self) -> None:
+    def test_cancelled_transition_revokes_assignment_authority(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            harness = LedgerHarness(Path(directory))
+            harness.init()
+            commands = [
+                (
+                    "set-owner", "--goal-id", "release-42", "--actor", "principal",
+                    "--expected-revision", "1", "--execution-owner", "principal",
+                    "--worker-id", "implementation-01",
+                ),
+                (
+                    "set-next", "--goal-id", "release-42", "--actor", "principal",
+                    "--expected-revision", "2", "--action", "continue public mutation",
+                    "--check-at", "2026-07-20T18:00:00Z",
+                ),
+                (
+                    "set-gate", "--goal-id", "release-42", "--actor", "principal",
+                    "--expected-revision", "3", "--gate", "authorized",
+                    "--action", "publish reviewed artifact",
+                ),
+                (
+                    "begin-recovery", "--goal-id", "release-42", "--actor", "principal",
+                    "--expected-revision", "4", "--slice-label", "publish",
+                    "--worker-id", "implementation-01",
+                ),
+                (
+                    "set-state", "--goal-id", "release-42", "--actor", "principal",
+                    "--expected-revision", "5", "--state", "cancelled",
+                ),
+            ]
+            for command in commands:
+                exit_code, _, stderr = harness.run(*command)
+                self.assertEqual(exit_code, 0, stderr)
+            goal = harness.goal()
+            self.assertEqual(goal["state"], "cancelled")
+            self.assertIsNone(goal["worker_id"])
+            self.assertIsNone(goal["next_action"])
+            self.assertIsNone(goal["next_check_at"])
+            self.assertIsNone(goal["decision_needed"])
+            self.assertEqual(goal["public_mutation_gate"], "closed")
+            self.assertIsNone(goal["public_mutation_action"])
+            self.assertEqual(goal["recovery_circuits"][0]["state"], "closed")
+            self.assertIsNone(goal["recovery_circuits"][0]["assigned_worker"])
+
+    def test_cancelled_record_rejects_active_assignment_authority(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            harness = LedgerHarness(Path(directory))
+            harness.init()
+            document = json.loads(harness.path.read_text(encoding="utf-8"))
+            goal = document["goals"][0]
+            goal["state"] = "cancelled"
+            goal["worker_id"] = "still-running-worker"
+            goal["next_action"] = "continue public mutation"
+            goal["public_mutation_gate"] = "authorized"
+            goal["public_mutation_action"] = "publish reviewed artifact"
+            harness.path.write_text(json.dumps(document), encoding="utf-8")
+
+            exit_code, _, stderr = harness.run("validate")
+            self.assertEqual(exit_code, 1)
+            self.assertIn("state cancelled requires worker_id null", stderr)
+
+    def test_schema_three_migrates_to_current_principal_only_schema(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             harness = LedgerHarness(Path(directory))
             harness.path.parent.mkdir(parents=True)
@@ -416,6 +477,43 @@ class OrchestrationLedgerTests(unittest.TestCase):
             self.assertEqual(migrated["evidence"][0]["verified_by"], "principal")
             self.assertEqual(migrated["recovery_circuits"][0]["state"], "active")
             self.assertEqual(migrated["recovery_circuits"][0]["assigned_worker"], "worker-7")
+
+    def test_schema_four_cancelled_record_revokes_stale_authority(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            harness = LedgerHarness(Path(directory))
+            harness.init()
+            document = json.loads(harness.path.read_text(encoding="utf-8"))
+            document["schema_version"] = 4
+            goal = document["goals"][0]
+            goal["state"] = "cancelled"
+            goal["worker_id"] = "still-running-worker"
+            goal["next_action"] = "continue public mutation"
+            goal["next_check_at"] = "2026-07-20T18:00:00Z"
+            goal["public_mutation_gate"] = "authorized"
+            goal["public_mutation_action"] = "publish reviewed artifact"
+            goal["recovery_circuits"] = [
+                {
+                    "slice_label": "publish",
+                    "state": "active",
+                    "assigned_worker": "still-running-worker",
+                    "last_failure_evidence": None,
+                    "last_failure_at": None,
+                    "last_reset_evidence": None,
+                    "last_reset_at": None,
+                }
+            ]
+            harness.path.write_text(json.dumps(document), encoding="utf-8")
+
+            exit_code, stdout, stderr = harness.run("status", "--json")
+            self.assertEqual(exit_code, 0, stderr)
+            migrated = json.loads(stdout)["goals"][0]
+            self.assertIsNone(migrated["worker_id"])
+            self.assertIsNone(migrated["next_action"])
+            self.assertIsNone(migrated["next_check_at"])
+            self.assertEqual(migrated["public_mutation_gate"], "closed")
+            self.assertIsNone(migrated["public_mutation_action"])
+            self.assertEqual(migrated["recovery_circuits"][0]["state"], "closed")
+            self.assertIsNone(migrated["recovery_circuits"][0]["assigned_worker"])
 
     def test_ledger_path_stays_under_local_directory(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

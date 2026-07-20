@@ -31,6 +31,41 @@ Use a heartbeat only when each wake can require judgment. A purely mechanical
 condition belongs in one bounded command. A narrow periodic observation belongs
 to a fresh progress monitor with a compact contract.
 
+## Hold, Cancel, Or Revoke
+
+An explicit user hold, cancellation, or authority revocation is a control event,
+not an ordinary worker return. Act on the affected owned delegates immediately:
+
+1. Name the assignment and the authority that ended.
+2. Send a direct terminal instruction through the runtime control channel: stop
+   further mutation, preserve the current artifact or worktree, and return the
+   smallest current-state and evidence record.
+3. Use the runtime interrupt or cancellation mechanism when a message alone does
+   not stop execution.
+4. Reinspect delegate state and verify that no affected delegate remains active
+   or authorized.
+5. Record the held, cancelled, or reassigned state in the principal-owned
+   catalog and checkpoint. When the orchestration ledger represents the affected
+   assignment, use its cancelled transition to clear worker ownership, pending
+   action and check state, active recovery ownership, and public mutation
+   authority in one principal-authored mutation.
+
+Do not wait for the worker to finish extra scope after authority ends. Do not
+delete its worktree or discard partial artifacts merely because the assignment
+stopped. Keep unrelated delegates, processes, and workstreams outside the stop
+boundary.
+
+A cancellation return is preservation evidence. It is not a worker failure,
+slice completion, or parent completion claim.
+
+### Held Or Cancelled Return
+
+Require the stopped delegate to return `held` or `cancelled`, the assignment and
+authority that ended, current artifact locators, checks already run, partial
+evidence, any process state still requiring verification, and the first safe
+action if authority is later restored. The principal verifies inactive state
+independently before reusing the checkout or assigning another editor.
+
 ## Return Signals
 
 ### Progress

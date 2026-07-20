@@ -43,6 +43,12 @@ create collisions.
 The principal stays read-only against worker-owned files until the worker
 returns or the assignment is explicitly held, cancelled, or reassigned.
 
+When the user or principal explicitly holds, cancels, or revokes the assignment,
+the worker stops further mutation, preserves its current artifact and evidence,
+and returns `held` or `cancelled` with preservation evidence without completing
+extra scope. The principal verifies that the worker is inactive before taking
+over or assigning a new editor.
+
 ## Worker Ownership
 
 The implementer owns ordinary setup, repository reading, debugging, focused
