@@ -31,6 +31,12 @@ command, new prerequisite, implementation choice, worker return, review,
 timeout, or discovered repair changes the route or observed state. It does not
 change what finished means.
 
+When the runtime has an active goal field, keep that field to the smallest
+complete statement of finished state, constraints, authority, and anchor
+locators. Put detailed assertions, settings, ledgers, and history in the named
+anchors. Runtime goal text may be reintroduced on every continuation, so copying
+the whole control packet into it spends context without adding authority.
+
 Read [references/goal-contracts.md](references/goal-contracts.md) when creating or
 repairing the control packet.
 
