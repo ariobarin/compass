@@ -1,4 +1,4 @@
-$maxDescriptionLength = 160
+$maxDescriptionLength = $script:MaxSkillDescriptionLength
 $claudeRoot = Join-Path $repoRoot "claude"
 
 # Separately authored Claude global files.

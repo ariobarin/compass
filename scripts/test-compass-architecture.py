@@ -16,6 +16,8 @@ MODEL_EFFORT_DEFAULTS = {
     "gpt-5.6-luna": "high",
 }
 
+MAX_SKILL_DESCRIPTION_LENGTH = 160
+
 
 class CompassArchitectureTests(unittest.TestCase):
     def read(self, relative: str) -> str:
@@ -230,7 +232,7 @@ class CompassArchitectureTests(unittest.TestCase):
             self.assertEqual(name, path.parent.name, path)
             self.assertNotIn(name.casefold(), seen, path)
             seen.add(name.casefold())
-            self.assertLessEqual(len(description), 160, path)
+            self.assertLessEqual(len(description), MAX_SKILL_DESCRIPTION_LENGTH, path)
 
     def test_powershell_ledger_wrapper_uses_script_arguments(self) -> None:
         wrapper = self.read("scripts/orchestration-ledger.ps1")
@@ -293,6 +295,15 @@ class CompassArchitectureTests(unittest.TestCase):
         }
         for key, value in expected.items():
             self.assertEqual(manifest[key], value)
+
+    def test_skill_description_cap_matches_shared_constant(self) -> None:
+        common = self.read("scripts/common.ps1")
+        match = re.search(r"MaxSkillDescriptionLength\s*=\s*(\d+)", common)
+        self.assertIsNotNone(
+            match,
+            "scripts/common.ps1 must define $script:MaxSkillDescriptionLength",
+        )
+        self.assertEqual(int(match.group(1)), MAX_SKILL_DESCRIPTION_LENGTH)
 
 
 if __name__ == "__main__":

@@ -47,6 +47,11 @@ $script:PortableGeneratedData = $null
 $script:PortableResolvedClaudeHome = $null
 $script:PortableRetiredFileManifest = $null
 
+# Maximum allowed length of a skill description, shared by the Codex and Claude
+# skill checks. test-compass-architecture.py asserts this equals its own
+# MAX_SKILL_DESCRIPTION_LENGTH constant.
+$script:MaxSkillDescriptionLength = 160
+
 function Get-PortablePythonRunner {
     if ($script:PortablePythonRunner) {
         return $script:PortablePythonRunner
