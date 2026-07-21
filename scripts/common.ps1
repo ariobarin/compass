@@ -235,14 +235,15 @@ function Get-PortableRetiredFileManifest {
 # agent gets these tools and color; model is always inherit. The reviewer
 # coordinator has no tools entry, so its derived file omits the tools line.
 $script:ClaudeDerivedAgentFrontmatter = @{
-    "algorithm-critic" = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
-    "neutral-critic"   = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
-    "progress-monitor" = @{ Tools = "Read, Grep, Glob, Bash"; Color = "yellow" }
-    "repo-explorer"    = @{ Tools = "Read, Grep, Glob, Bash"; Color = "blue" }
-    "research-critic"  = @{ Tools = "Read, Grep, Glob, Bash, WebSearch, WebFetch"; Color = "red" }
-    "reuse-critic"     = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
-    "reviewer"         = @{ Color = "purple" }
-    "verifier"         = @{ Tools = "Read, Grep, Glob, Bash"; Color = "green" }
+    "behavior-validator" = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
+    "algorithm-critic"   = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
+    "neutral-critic"     = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
+    "progress-monitor"   = @{ Tools = "Read, Grep, Glob, Bash"; Color = "yellow" }
+    "repo-explorer"      = @{ Tools = "Read, Grep, Glob, Bash"; Color = "blue" }
+    "research-critic"    = @{ Tools = "Read, Grep, Glob, Bash, WebSearch, WebFetch"; Color = "red" }
+    "reuse-critic"       = @{ Tools = "Read, Grep, Glob, Bash"; Color = "red" }
+    "reviewer"           = @{ Color = "purple" }
+    "verifier"           = @{ Tools = "Read, Grep, Glob, Bash"; Color = "green" }
 }
 
 function Get-TopLevelTomlStringValues {
