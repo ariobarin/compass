@@ -29,7 +29,7 @@ Status values:
 | 3 | Skill roster | codex/skills/*/ and manifests/portable-files.toml | keep | skill-sources.ps1 | canonical |
 | 4 | Required-files list | git index (tracked files) | generate | required-files.ps1 | consolidated |
 | 5 | Doctor dispatch list | manifests/doctor-checks.json | generate | doctor.ps1 | consolidated |
-| 6 | Codex and Claude agent pairs | codex/agents/*.toml and carried/*/agents/*.toml | generate | claude.ps1 and generated-artifacts.ps1 | planned |
+| 6 | Codex and Claude agent pairs | codex/agents/*.toml and carried/*/agents/*.toml | generate | claude.ps1 and generated-artifacts.ps1 | consolidated |
 | 7 | Worker Result enum | manifests/policy-contracts.json | keep | policy-contracts.ps1 | canonical |
 | 8 | Model-tier defaults | manifests/model-tiers.json | generate | model-tiers.ps1 | consolidated |
 | 9 | Ledger schema version | scripts/_orchestration_ledger_core.py | generate | generated-artifacts.ps1 | consolidated |
@@ -55,3 +55,16 @@ audits do not re-flag them.
   contract, not as a second roster. The manifest remains the roster.
 - `scripts/doctor/checks/agents.ps1` allowed-models allowlist is a different
   fact from the model-tier defaults in `manifests/model-tiers.json`. Both stay.
+
+## Deferred decisions (need user input)
+
+- Cluster 1 (control-state templates): `workflows/templates/*.md`,
+  `codex/skills/workspace-steward/references/project-template/local-docs/*/TEMPLATE.md`,
+  `workflows/plan-template.md`, and the embedded blocks in
+  `codex/skills/using-goals/references/goal-contracts.md` have genuinely
+  different field sets per audience, not accidental drift. For example the plan
+  templates use different status enums and different sections (`Change Rule`
+  versus `Next Principal Action` and `Open Decisions`). Generating any site from
+  another requires a decision on the canonical field set for each control
+  document (plan, goal, catalog, assignment, checkpoint, decision). PR8 is
+  deferred until that reconciliation is decided, so these stay independent.
