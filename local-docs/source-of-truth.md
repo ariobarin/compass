@@ -27,7 +27,7 @@ Status values:
 | 1 | Control-state templates | workflows/templates/*.md | generate | generated-artifacts.ps1 | planned |
 | 2 | Retired skill names | manifests/retired-skills.json | generate | retired-skills.ps1 | consolidated |
 | 3 | Skill roster | codex/skills/*/ and manifests/portable-files.toml | keep | skill-sources.ps1 | canonical |
-| 4 | Required-files list | manifests/portable-files.toml | generate | manifest-boundaries.ps1 | planned |
+| 4 | Required-files list | git index (tracked files) | generate | required-files.ps1 | consolidated |
 | 5 | Doctor dispatch list | manifests/doctor-checks.json | generate | doctor.ps1 | consolidated |
 | 6 | Codex and Claude agent pairs | codex/agents/*.toml and carried/*/agents/*.toml | generate | claude.ps1 and generated-artifacts.ps1 | planned |
 | 7 | Worker Result enum | manifests/policy-contracts.json | keep | policy-contracts.ps1 | canonical |
