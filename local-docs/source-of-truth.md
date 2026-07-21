@@ -36,7 +36,7 @@ Status values:
 | 10 | Skill-description length cap | scripts/common.ps1 MaxSkillDescriptionLength | generate | test-compass-architecture.py | consolidated |
 | 11 | Routing table and update-together checklist | workflows/addition-intake.md | link | policy-contracts.ps1 | planned |
 | 12 | Glossary terms | glossary.md | link | editorial convention | planned |
-| 13 | Shared user-preference prose | manifests/shared-preferences.md | generate | generated-artifacts.ps1 | planned |
+| 13 | Shared user-preference prose | manifests/policy-contracts.json | pin | policy-contracts.ps1 | consolidated |
 
 ## Intentional separations
 
@@ -68,3 +68,10 @@ audits do not re-flag them.
   another requires a decision on the canonical field set for each control
   document (plan, goal, catalog, assignment, checkpoint, decision). PR8 is
   deferred until that reconciliation is decided, so these stay independent.
+- Cluster 13 (shared user-preference prose): the verbatim Writing and Git
+  sections across `codex/AGENTS.md`, `claude/CLAUDE.md`, and
+  `apps/compass-mcp/profile.md` are bound by policy-contract pins so drift fails
+  doctor. Full generation (a `generate-runtime-globals.py` reassembling each
+  file from a shared source plus runtime deltas) was deferred because these are
+  load-bearing runtime instructions; the pin is the safe fallback authorized in
+  the plan.

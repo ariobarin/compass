@@ -18,6 +18,33 @@
       ]
     },
     {
+      "id": "shared-preference-prose-codex",
+      "path": "codex/AGENTS.md",
+      "required": [
+        "Never use em dashes or en dashes in commits, code comments, prose, or chat.",
+        "Describe changes neutrally.",
+        "Prefer a pull request as the unit for repository changes."
+      ]
+    },
+    {
+      "id": "shared-preference-prose-claude",
+      "path": "claude/CLAUDE.md",
+      "required": [
+        "Never use em dashes or en dashes in commits, code comments, prose, or chat.",
+        "Describe changes neutrally.",
+        "Prefer a pull request as the unit for repository changes."
+      ]
+    },
+    {
+      "id": "shared-preference-prose-mcp",
+      "path": "apps/compass-mcp/profile.md",
+      "required": [
+        "Never use em dashes or en dashes in commits, code comments, prose, or chat.",
+        "Describe changes neutrally.",
+        "Prefer a pull request as the unit for repository changes."
+      ]
+    },
+    {
       "id": "codex-luna-first-delegation",
       "path": "codex/AGENTS.md",
       "required": [
