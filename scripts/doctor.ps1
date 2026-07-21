@@ -49,7 +49,9 @@ else {
         "checks\retired-plugins.ps1",
         "checks\restart-recovery.ps1",
         "checks\hooks.ps1",
-        "checks\claude.ps1"
+        "checks\claude.ps1",
+        "checks\source-of-truth.ps1",
+        "checks\generated-artifacts.ps1"
     )) {
         $fullCheckPath = Join-Path $doctorRoot $checkPath
         if (Test-Path -LiteralPath $fullCheckPath) {
