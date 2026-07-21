@@ -45,6 +45,20 @@
       ]
     },
     {
+      "id": "routing-source-referenced-by-compass-skill",
+      "path": "codex/skills/compass/SKILL.md",
+      "required": [
+        "workflows/addition-intake.md"
+      ]
+    },
+    {
+      "id": "routing-source-referenced-by-skill-authoring",
+      "path": "codex/skills/write-a-compass-skill/SKILL.md",
+      "required": [
+        "workflows/addition-intake.md"
+      ]
+    },
+    {
       "id": "codex-luna-first-delegation",
       "path": "codex/AGENTS.md",
       "required": [

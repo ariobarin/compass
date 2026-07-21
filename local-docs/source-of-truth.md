@@ -34,7 +34,7 @@ Status values:
 | 8 | Model-tier defaults | manifests/model-tiers.json | generate | model-tiers.ps1 | consolidated |
 | 9 | Ledger schema version | scripts/_orchestration_ledger_core.py | generate | generated-artifacts.ps1 | consolidated |
 | 10 | Skill-description length cap | scripts/common.ps1 MaxSkillDescriptionLength | generate | test-compass-architecture.py | consolidated |
-| 11 | Routing table and update-together checklist | workflows/addition-intake.md | link | policy-contracts.ps1 | planned |
+| 11 | Routing table and update-together checklist | workflows/addition-intake.md | pin | policy-contracts.ps1 | consolidated |
 | 12 | Glossary terms | glossary.md | link | editorial convention | planned |
 | 13 | Shared user-preference prose | manifests/policy-contracts.json | pin | policy-contracts.ps1 | consolidated |
 
@@ -75,3 +75,9 @@ audits do not re-flag them.
   file from a shared source plus runtime deltas) was deferred because these are
   load-bearing runtime instructions; the pin is the safe fallback authorized in
   the plan.
+- Cluster 11 (routing table and update-together checklist): the canonical
+  routing source `workflows/addition-intake.md` is already referenced from the
+  key surfaces, and policy contracts now require the two skill-authoring
+  surfaces to keep that reference. Cutting the surface-specific restatements of
+  the update-together checklist is editorial work that needs a per-surface
+  review, so it is deferred; the pins bind the canonical source in the meantime.
