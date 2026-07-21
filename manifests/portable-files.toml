@@ -88,12 +88,11 @@ derived_skills = [
 
 # These reviewer agents are maintained explicitly because their Claude
 # frontmatter and Codex read-only sandbox contracts are platform-specific.
-agents = [
-  "behavior-validator",
-]
+agents = []
 
 # Other Claude agents derive from codex/agents/<name>.toml at install time.
 derived_agents = [
+  "behavior-validator",
   "algorithm-critic",
   "neutral-critic",
   "progress-monitor",
