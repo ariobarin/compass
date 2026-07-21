@@ -38,29 +38,18 @@ if (-not (Test-Path -LiteralPath $doctorCommonPath)) {
 else {
     . $doctorCommonPath
 
-    foreach ($checkPath in @(
-        "checks\required-files.ps1",
-        "checks\manifest-boundaries.ps1",
-        "checks\text-policy.ps1",
-        "checks\skills.ps1",
-        "checks\skill-sources.ps1",
-        "checks\agents.ps1",
-        "checks\policy-contracts.ps1",
-        "checks\retired-plugins.ps1",
-        "checks\retired-skills.ps1",
-        "checks\restart-recovery.ps1",
-        "checks\hooks.ps1",
-        "checks\claude.ps1",
-        "checks\source-of-truth.ps1",
-        "checks\generated-artifacts.ps1"
-    )) {
-        $fullCheckPath = Join-Path $doctorRoot $checkPath
-        if (Test-Path -LiteralPath $fullCheckPath) {
-            . $fullCheckPath
-        }
-        else {
-            $problems.Add("missing doctor check module: $checkPath")
-        }
+    # Doctor checks are discovered from disk so the check roster has a single
+    # source: the files under scripts/doctor/checks. The expected count is a
+    # parity baseline that turns an accidental deletion into a doctor failure;
+    # bump it when adding or removing a check.
+    $checksRoot = Join-Path $doctorRoot "checks"
+    $expectedDoctorCheckCount = 14
+    $doctorCheckFiles = @(Get-ChildItem -LiteralPath $checksRoot -File -Filter "*.ps1" | Sort-Object Name)
+    if ($doctorCheckFiles.Count -ne $expectedDoctorCheckCount) {
+        $problems.Add("doctor check count is $($doctorCheckFiles.Count), expected $expectedDoctorCheckCount")
+    }
+    foreach ($checkFile in $doctorCheckFiles) {
+        . $checkFile.FullName
     }
 }
 
