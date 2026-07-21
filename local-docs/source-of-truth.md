@@ -25,7 +25,7 @@ Status values:
 | ID | Fact family | Canonical source | Mechanism | Bound by | Status |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Control-state templates | workflows/templates/*.md | generate | generated-artifacts.ps1 | planned |
-| 2 | Retired skill names | manifests/retired-skills.json | generate | retired-skills.ps1 | planned |
+| 2 | Retired skill names | manifests/retired-skills.json | generate | retired-skills.ps1 | consolidated |
 | 3 | Skill roster | codex/skills/*/ and manifests/portable-files.toml | keep | skill-sources.ps1 | canonical |
 | 4 | Required-files list | manifests/portable-files.toml | generate | manifest-boundaries.ps1 | planned |
 | 5 | Doctor dispatch list | scripts/doctor/checks/*.ps1 on disk | generate | doctor.ps1 | planned |

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "codex_home_skills": [
+    "benchmark-run-operator",
+    "codex-portable",
+    "input-token-economy",
+    "pr-merge-closeout",
+    "proper-flowcharts",
+    "ui-ux-pro-max",
+    "using-codex-goals"
+  ],
+  "user_skills_home": [
+    "benchmark-infra-reviewer",
+    "benchmark-run-operator",
+    "input-token-economy",
+    "pr-merge-closeout",
+    "ui-ux-pro-max",
+    "using-codex-goals",
+    "webmcp-eval-triage",
+    "webmcp-tool-authoring",
+    "webmcp-verify-tool"
+  ],
+  "claude_skills": [
+    "benchmark-infra-reviewer",
+    "benchmark-run-operator",
+    "input-token-economy",
+    "using-codex-goals"
+  ],
+  "claude_agents": [
+    "benchmark-infra-reviewer.md"
+  ]
+}

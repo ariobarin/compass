@@ -47,6 +47,7 @@ else {
         "checks\agents.ps1",
         "checks\policy-contracts.ps1",
         "checks\retired-plugins.ps1",
+        "checks\retired-skills.ps1",
         "checks\restart-recovery.ps1",
         "checks\hooks.ps1",
         "checks\claude.ps1",
