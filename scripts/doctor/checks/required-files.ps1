@@ -105,6 +105,7 @@ foreach ($path in @(
     "scripts\verify-live.ps1",
     "scripts\doctor\hooks\base.tests.ps1",
     "scripts\doctor\hooks\common.ps1",
+    "scripts\generators\write-ledger-schema-const.py",
     "workflows\README.md",
     "workflows\addition-intake.md",
     "workflows\agent-failures.md",
