@@ -35,7 +35,7 @@ Status values:
 | 9 | Ledger schema version | scripts/_orchestration_ledger_core.py | generate | generated-artifacts.ps1 | consolidated |
 | 10 | Skill-description length cap | scripts/common.ps1 MaxSkillDescriptionLength | generate | test-compass-architecture.py | consolidated |
 | 11 | Routing table and update-together checklist | workflows/addition-intake.md | pin | policy-contracts.ps1 | consolidated |
-| 12 | Glossary terms | glossary.md | link | editorial convention | planned |
+| 12 | Glossary terms | glossary.md | link | editorial convention | accepted |
 | 13 | Shared user-preference prose | manifests/policy-contracts.json | pin | policy-contracts.ps1 | consolidated |
 
 ## Intentional separations
@@ -81,3 +81,8 @@ audits do not re-flag them.
   surfaces to keep that reference. Cutting the surface-specific restatements of
   the update-together checklist is editorial work that needs a per-surface
   review, so it is deferred; the pins bind the canonical source in the meantime.
+- Cluster 12 (glossary terms): `glossary.md` is the named terminology authority.
+  Skills should link to it rather than redefine terms, but enforcing that
+  mechanically would be brittle, so it stays an editorial convention with no
+  mechanical check. A sweep of the most redundant in-skill re-definitions is
+  deferred for per-surface review.
