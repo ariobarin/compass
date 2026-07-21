@@ -2,131 +2,19 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     $problems.Add("git is not on PATH")
 }
 else {
+    # The required-file set is the git index: every tracked file must exist in
+    # the working tree and no tracked file may live under local scratch. git is
+    # the single source of truth for which files belong, so this check derives
+    # from it directly instead of maintaining a second hand-written list.
     $trackedFiles = @(& git -C $repoRoot ls-files 2>$null)
     foreach ($trackedFile in $trackedFiles) {
         $trackedPath = Get-DoctorFullPath -Path (Join-Path $repoRoot $trackedFile)
         if (Test-LocalScratchPath -Path $trackedPath) {
             $problems.Add("tracked local scratch path: $trackedFile")
+            continue
         }
-    }
-}
-
-foreach ($path in @(
-    ".gitattributes",
-    ".github\workflows\orchestration-ledger-checks.yml",
-    ".github\workflows\portable-checks.yml",
-    "AGENTS.md",
-    "apps\compass-mcp\profile.md",
-    "README.md",
-    "glossary.md",
-    "philosophy.md",
-    "carried\benchmark\README.md",
-    "carried\benchmark\agents\benchmark-infra-reviewer.toml",
-    "carried\benchmark\claude-agents\benchmark-infra-reviewer.md",
-    "carried\benchmark\skills\benchmark-run-operator\SKILL.md",
-    "carried\webmcp\README.md",
-    "claude\CLAUDE.md",
-    "claude\agents\behavior-validator.md",
-    "codex\AGENTS.md",
-    "codex\agents\behavior-validator.toml",
-    "codex\agents\progress-monitor.toml",
-    "codex\config.review.toml",
-    "codex\hooks.json",
-    "codex\hooks\README.md",
-    "codex\hooks\portable_guard.py",
-    "codex\hooks\portable_guard.ps1",
-    "codex\hooks\portable_guard.sh",
-    "codex\keybindings.json",
-    "codex\skills\behavior-validator\SKILL.md",
-    "codex\skills\behavior-validator\references\contract-template.md",
-    "codex\skills\behavior-validator\references\report-schema.md",
-    "codex\skills\behavior-validator\scripts\prepare-workspace.py",
-    "codex\skills\pr-review-loop\scripts\build-review-bundle.py",
-    "codex\skills\run-a-micro-experiment\SKILL.md",
-    "codex\skills\using-goals\SKILL.md",
-    "codex\skills\using-goals\references\goal-contracts.md",
-    "codex\skills\write-a-compass-skill\SKILL.md",
-    "codex\skills\write-a-skill\SKILL.md",
-    "codex\skills\workspace-steward\references\project-template\CLAUDE.md",
-    "codex\skills\workspace-steward\references\project-template\experiments\TEMPLATE.md",
-    "codex\skills\workspace-steward\references\project-template\glossary.md",
-    "codex\skills\workspace-steward\references\project-template\local-docs\assignments\TEMPLATE.md",
-    "codex\skills\workspace-steward\references\project-template\local-docs\catalogs\TEMPLATE.md",
-    "codex\skills\workspace-steward\references\project-template\local-docs\checkpoints\TEMPLATE.md",
-    "codex\skills\workspace-steward\references\project-template\local-docs\decisions\TEMPLATE.md",
-    "codex\skills\workspace-steward\references\project-template\local-docs\goals\TEMPLATE.md",
-    "codex\skills\workspace-steward\references\project-template\local-docs\plans\TEMPLATE.md",
-    "codex\skills\workspace-steward\references\project-template\worktrees\prs\README.md",
-    "codex\skills\workspace-steward\references\project-template\worktrees\spikes\README.md",
-    "local-docs\README.md",
-    "local-docs\2026-07-17-compass-revision.md",
-    "local-docs\context-economy.md",
-    "local-docs\maintenance-learnings.md",
-    "local-docs\model-calibration.md",
-    "local-docs\source-of-truth.md",
-    "manifests\model-tiers.json",
-    "manifests\orchestration-ledger.schema.json",
-    "manifests\policy-contracts.json",
-    "manifests\portable-files.toml",
-    "manifests\retired-plugins.json",
-    "manifests\retired-skills.json",
-    "manifests\skill-sources.json",
-    "manifests\tool-surfaces.md",
-    "scripts\codex-restart-recovery.ps1",
-    "scripts\orchestration-ledger.py",
-    "scripts\_orchestration_ledger_cli.py",
-    "scripts\_orchestration_ledger_core.py",
-    "scripts\_orchestration_ledger_model.py",
-    "scripts\_orchestration_ledger_mutation.py",
-    "scripts\_orchestration_ledger_parser.py",
-    "scripts\_orchestration_ledger_storage.py",
-    "scripts\orchestration-ledger.ps1",
-    "scripts\portable-data.py",
-    "scripts\plugin-retirement.ps1",
-    "scripts\retire-plugins.ps1",
-    "scripts\setup-skill-runtime.ps1",
-    "scripts\skills-audit.py",
-    "scripts\skills-audit.ps1",
-    "scripts\test-behavior-validator-workspace.py",
-    "scripts\test-compass-architecture.py",
-    "scripts\test-install-roundtrip.ps1",
-    "scripts\test-orchestration-ledger-lock.py",
-    "scripts\test-orchestration-ledger-output.py",
-    "scripts\test-orchestration-ledger-wrapper.ps1",
-    "scripts\test-orchestration-ledger.py",
-    "scripts\test-retire-plugins.ps1",
-    "scripts\test-review-bundle.py",
-    "scripts\test-reviewed-config.py",
-    "scripts\test-skills-audit.py",
-    "scripts\test-validate-skill-sources.py",
-    "scripts\update-live.ps1",
-    "scripts\validate-policy-contracts.py",
-    "scripts\validate-skill-sources.py",
-    "scripts\verify-live.ps1",
-    "scripts\doctor\hooks\base.tests.ps1",
-    "scripts\doctor\hooks\common.ps1",
-    "scripts\generators\write-ledger-schema-const.py",
-    "workflows\README.md",
-    "workflows\addition-intake.md",
-    "workflows\agent-failures.md",
-    "workflows\claude-config.md",
-    "workflows\codex-restart-recovery.md",
-    "workflows\compass-review-program.md",
-    "workflows\long-running-work.md",
-    "workflows\multi-thread-pr-coordination.md",
-    "workflows\orchestration-ledger.md",
-    "workflows\plan-template.md",
-    "workflows\portable-config.md",
-    "workflows\read-only-research.md",
-    "workflows\templates\assignment.md",
-    "workflows\templates\catalog.md",
-    "workflows\templates\checkpoint.md",
-    "workflows\templates\decision.md",
-    "workflows\templates\goal.md",
-    "workflows\templates\plan.md"
-)) {
-    $fullPath = Join-Path $repoRoot $path
-    if (-not (Test-Path -LiteralPath $fullPath)) {
-        $problems.Add("missing required file: $path")
+        if (-not (Test-Path -LiteralPath $trackedPath)) {
+            $problems.Add("tracked file missing from working tree: $trackedFile")
+        }
     }
 }
