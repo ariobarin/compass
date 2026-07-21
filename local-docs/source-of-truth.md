@@ -31,7 +31,7 @@ Status values:
 | 5 | Doctor dispatch list | scripts/doctor/checks/*.ps1 on disk | generate | doctor.ps1 | consolidated |
 | 6 | Codex and Claude agent pairs | codex/agents/*.toml and carried/*/agents/*.toml | generate | claude.ps1 and generated-artifacts.ps1 | planned |
 | 7 | Worker Result enum | manifests/policy-contracts.json | keep | policy-contracts.ps1 | canonical |
-| 8 | Model-tier defaults | manifests/model-tiers.json | generate | model-tiers.ps1 | planned |
+| 8 | Model-tier defaults | manifests/model-tiers.json | generate | model-tiers.ps1 | consolidated |
 | 9 | Ledger schema version | scripts/_orchestration_ledger_core.py | generate | generated-artifacts.ps1 | planned |
 | 10 | Skill-description length cap | scripts/common.ps1 MaxSkillDescriptionLength | generate | test-compass-architecture.py | consolidated |
 | 11 | Routing table and update-together checklist | workflows/addition-intake.md | link | policy-contracts.ps1 | planned |

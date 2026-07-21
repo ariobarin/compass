@@ -10,11 +10,16 @@ from pathlib import Path
 from _orchestration_ledger_model import LedgerError, validate_ledger
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL_EFFORT_DEFAULTS = {
-    "gpt-5.6-sol": "high",
-    "gpt-5.6-terra": "xhigh",
-    "gpt-5.6-luna": "high",
-}
+def _load_model_tiers() -> list[dict[str, str]]:
+    with (ROOT / "manifests" / "model-tiers.json").open("rb") as handle:
+        data = json.load(handle)
+    if data.get("schema_version") != 1:
+        raise AssertionError("unsupported model-tiers schema version")
+    return data["tiers"]
+
+
+MODEL_TIERS = _load_model_tiers()
+MODEL_EFFORT_DEFAULTS = {row["model"]: row["effort"] for row in MODEL_TIERS}
 
 MAX_SKILL_DESCRIPTION_LENGTH = 160
 
@@ -71,12 +76,8 @@ class CompassArchitectureTests(unittest.TestCase):
         self.assertEqual(config["model_reasoning_effort"], MODEL_EFFORT_DEFAULTS[model])
 
         calibration = self.read("local-docs/model-calibration.md")
-        for model_name, effort in (
-            ("GPT-5.6 Sol", "high"),
-            ("GPT-5.6 Terra", "xhigh"),
-            ("GPT-5.6 Luna", "high"),
-        ):
-            self.assertIn(f"| {model_name} | `{effort}` |", calibration)
+        for tier in MODEL_TIERS:
+            self.assertIn(f"| {tier['display_name']} | `{tier['effort']}` |", calibration)
 
     def test_current_ledger_schema_does_not_backfill_legacy_fields(self) -> None:
         timestamp = "2026-07-17T12:00:00Z"

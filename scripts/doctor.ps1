@@ -43,7 +43,7 @@ else {
     # parity baseline that turns an accidental deletion into a doctor failure;
     # bump it when adding or removing a check.
     $checksRoot = Join-Path $doctorRoot "checks"
-    $expectedDoctorCheckCount = 14
+    $expectedDoctorCheckCount = 15
     $doctorCheckFiles = @(Get-ChildItem -LiteralPath $checksRoot -File -Filter "*.ps1" | Sort-Object Name)
     if ($doctorCheckFiles.Count -ne $expectedDoctorCheckCount) {
         $problems.Add("doctor check count is $($doctorCheckFiles.Count), expected $expectedDoctorCheckCount")

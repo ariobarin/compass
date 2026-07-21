@@ -64,6 +64,7 @@ foreach ($path in @(
     "local-docs\maintenance-learnings.md",
     "local-docs\model-calibration.md",
     "local-docs\source-of-truth.md",
+    "manifests\model-tiers.json",
     "manifests\orchestration-ledger.schema.json",
     "manifests\policy-contracts.json",
     "manifests\portable-files.toml",
