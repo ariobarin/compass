@@ -86,3 +86,14 @@ audits do not re-flag them.
   mechanically would be brittle, so it stays an editorial convention with no
   mechanical check. A sweep of the most redundant in-skill re-definitions is
   deferred for per-surface review.
+
+## Status summary
+
+Of the 13 fact families, 11 are consolidated or already canonical, 1 is an
+accepted editorial convention (cluster 12, glossary terms), and 1 is deferred
+pending a reconciliation decision (cluster 1, control-state templates). The
+consolidations are enforced mechanically: new manifests and doctor checks
+(`retired-skills`, `model-tiers`, `generated-artifacts`, `source-of-truth`),
+generators under `scripts/generators/`, policy-contract pins, git-derived
+required files, and dynamic doctor dispatch. Run `pwsh scripts/doctor.ps1` to
+verify the whole binding holds.
