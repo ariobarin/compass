@@ -5,6 +5,7 @@
     "claude.ps1",
     "generated-artifacts.ps1",
     "hooks.ps1",
+    "ledger-schema-prose.ps1",
     "manifest-boundaries.ps1",
     "model-tiers.ps1",
     "policy-contracts.ps1",
