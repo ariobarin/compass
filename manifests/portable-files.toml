@@ -86,8 +86,8 @@ derived_skills = [
   "write-a-skill",
 ]
 
-# These reviewer agents are maintained explicitly because their Claude
-# frontmatter and Codex read-only sandbox contracts are platform-specific.
+# No Claude agent is maintained as a separate source. Every Claude agent
+# derives from codex/agents/*.toml at install time; see derived_agents below.
 agents = []
 
 # Other Claude agents derive from codex/agents/<name>.toml at install time.
