@@ -14,6 +14,29 @@ else {
         $claudeSkills = @($manifest.claude_skills)
         $claudeAgents = @($manifest.claude_agents)
 
+        # The manifest owns the full roster. These narrow pins preserve the
+        # historically replaced global surfaces in the bucket whose live path
+        # install actually removes.
+        $requiredByBucket = @{
+            codex_home_skills = @("benchmark-run-operator", "input-token-economy", "using-codex-goals")
+            user_skills_home = @("benchmark-infra-reviewer", "benchmark-run-operator", "input-token-economy", "using-codex-goals")
+            claude_skills = @("benchmark-infra-reviewer", "benchmark-run-operator", "input-token-economy", "using-codex-goals")
+            claude_agents = @("benchmark-infra-reviewer.md")
+        }
+        $actualByBucket = @{
+            codex_home_skills = $codexHomeSkills
+            user_skills_home = $userSkillsHome
+            claude_skills = $claudeSkills
+            claude_agents = $claudeAgents
+        }
+        foreach ($bucket in $requiredByBucket.Keys) {
+            foreach ($required in $requiredByBucket[$bucket]) {
+                if ($actualByBucket[$bucket] -notcontains $required) {
+                    $problems.Add("retired skill manifest bucket $bucket is missing required entry: $required")
+                }
+            }
+        }
+
         if ($codexHomeSkills.Count -ne @($codexHomeSkills | Sort-Object -Unique).Count) {
             $problems.Add("retired skill manifest contains duplicate entries in codex_home_skills")
         }

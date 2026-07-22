@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "note": "Retired means swept from the live Codex, user-skill, or Claude home on install. Some names also live under carried/ as opt-in repo packs that are not installed by default, so the same name can be both retired from the live home and an active carried pack.",
   "codex_home_skills": [
     "benchmark-run-operator",
     "codex-portable",
