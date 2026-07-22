@@ -98,7 +98,8 @@ Every departure from a plain layout needs a reason tied to hierarchy, storytelli
 - Keep the hero inside the initial viewport. Show the main CTA without scrolling.
 - When the brief requires the whole page in one viewport, name the tested width
   and height, wait for fonts and media to settle, then require
-  `scrollHeight <= innerHeight` and `scrollWidth <= innerWidth`.
+  `document.documentElement.scrollHeight <= window.innerHeight` and
+  `document.documentElement.scrollWidth <= window.innerWidth`.
 - Confirm fixed and sticky elements do not obscure required content at that
   viewport. Repeat the measurement for every required viewport size.
 - Limit hero copy to an optional eyebrow or brand strip, headline, short subtext, and one primary plus at most one secondary CTA.
