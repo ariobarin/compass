@@ -86,6 +86,26 @@ if ($blockedNames.Count -eq 0) {
     $problems.Add("missing local-only files in portable manifest")
 }
 
+# Every local-only filename must also be ignored at the repository root.
+$gitignorePath = Join-Path $repoRoot ".gitignore"
+if (-not (Test-Path -LiteralPath $gitignorePath -PathType Leaf)) {
+    $problems.Add("missing .gitignore for local-only boundary check")
+}
+else {
+    $gitignoreFiles = @(
+        Get-Content -LiteralPath $gitignorePath |
+            ForEach-Object { $_.Trim() } |
+            Where-Object { $_ -and -not $_.StartsWith("#") -and -not $_.StartsWith("!") } |
+            ForEach-Object { (ConvertTo-GitPath -Path $_).TrimEnd("/") }
+    )
+    foreach ($blocked in $blockedNames) {
+        $blockedPath = ConvertTo-GitPath -Path $blocked
+        if ($gitignoreFiles -notcontains $blockedPath) {
+            $problems.Add("local-only manifest file missing from .gitignore: $blocked")
+        }
+    }
+}
+
 foreach ($blocked in $blockedNames) {
     $matches = Get-DoctorChildItem -Kind File -Filter $blocked
     foreach ($match in $matches) {

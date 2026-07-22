@@ -27,15 +27,15 @@ Status values:
 | ID | Fact family | Canonical source | Mechanism | Bound by | Status |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Control-state templates | workflows/templates/*.md, project-template pair, and using-goals blocks | pin | template-anchors.ps1 | consolidated |
-| 2 | Retired skill names | manifests/retired-skills.json | generate | retired-skills.ps1 | consolidated |
+| 2 | Retired skill names | manifests/retired-skills.json | pin | retired-skills.ps1 and test-compass-architecture.py | consolidated |
 | 3 | Skill roster | codex/skills/*/ and manifests/portable-files.toml | keep | skill-sources.ps1 | canonical |
 | 4 | Required-files list | git index (tracked files) | generate | required-files.ps1 | consolidated |
 | 5 | Doctor dispatch list | manifests/doctor-checks.json | generate | doctor.ps1 | consolidated |
 | 6 | Codex and Claude agent pairs | codex/agents/*.toml and carried/*/agents/*.toml | generate | claude.ps1 and generated-artifacts.ps1 | consolidated |
-| 7 | Worker Result enum | manifests/policy-contracts.json | keep | policy-contracts.ps1 | canonical |
+| 7 | Worker Result enum | manifests/policy-contracts.json | pin | policy-contracts.ps1 | consolidated |
 | 8 | Model-tier defaults | manifests/model-tiers.json | generate | model-tiers.ps1 | consolidated |
 | 9 | Ledger schema version | scripts/_orchestration_ledger_core.py | generate | generated-artifacts.ps1 | consolidated |
-| 10 | Skill-description length cap | scripts/common.ps1 MaxSkillDescriptionLength | generate | test-compass-architecture.py | consolidated |
+| 10 | Skill-description length cap | scripts/common.ps1 MaxSkillDescriptionLength | pin | test-compass-architecture.py | consolidated |
 | 11 | Routing source reference (checklist prose deferred) | workflows/addition-intake.md | pin | policy-contracts.ps1 | consolidated |
 | 12 | Glossary terms | glossary.md | link | editorial convention | accepted |
 | 13 | Shared user-preference prose | manifests/policy-contracts.json | pin | policy-contracts.ps1 | consolidated |
@@ -66,8 +66,9 @@ audits do not re-flag them.
   authority at root `glossary.md`. It stays separate so a new workspace gets a
   compact self-contained reference.
 - `.gitignore` governs the working tree while `manifests/portable-files.toml`
-  `[local_only]` governs install boundaries. They overlap on auth, session, and
-  cache filenames by intent; both stay, and the shared filenames must agree.
+  `[local_only]` governs install boundaries. Every `[local_only].files` entry
+  must also appear in `.gitignore`; unrelated repository ignore patterns remain
+  independent.
 
 ## Deferred decisions (need user input)
 
