@@ -96,6 +96,11 @@ Every departure from a plain layout needs a reason tied to hierarchy, storytelli
 
 - When `DESIGN_VARIANCE > 4`, prefer asymmetric, split, offset, layered, or scroll-pinned composition over automatic centering.
 - Keep the hero inside the initial viewport. Show the main CTA without scrolling.
+- When the brief requires the whole page in one viewport, name the tested width
+  and height, wait for fonts and media to settle, then require
+  `scrollHeight <= innerHeight` and `scrollWidth <= innerWidth`.
+- Confirm fixed and sticky elements do not obscure required content at that
+  viewport. Repeat the measurement for every required viewport size.
 - Limit hero copy to an optional eyebrow or brand strip, headline, short subtext, and one primary plus at most one secondary CTA.
 - Keep desktop navigation on one line and at or below 80px tall.
 - Use at least four layout families across an eight-section landing page.
@@ -177,6 +182,8 @@ Do not call the page complete until every relevant statement is true:
 - The design read and dial values are explicit.
 - One foundation, theme, palette, and radius logic govern the page.
 - The hero, navigation, CTAs, and forms fit and remain readable at desktop and mobile widths.
+- Every whole-page one-viewport claim names the tested dimensions and includes
+  measured vertical and horizontal overflow evidence.
 - Section layouts have visible rhythm without template repetition.
 - Real imagery or honest asset placeholders are present.
 - Motion is motivated, implemented, cleaned up, and reduced-motion safe.
