@@ -38,15 +38,46 @@ if (-not (Test-Path -LiteralPath $doctorCommonPath)) {
 else {
     . $doctorCommonPath
 
-    # Doctor checks are discovered from disk so the check roster has a single
-    # source: the files under scripts/doctor/checks. The expected count is a
-    # parity baseline that turns an accidental deletion into a doctor failure;
-    # bump it when adding or removing a check.
+    # Doctor checks are discovered from disk and their identities are bound to
+    # one manifest so a rename, replacement, addition, or deletion fails here.
     $checksRoot = Join-Path $doctorRoot "checks"
-    $expectedDoctorCheckCount = 15
+    $checkManifestPath = Join-Path $repoRoot "manifests\doctor-checks.json"
     $doctorCheckFiles = @(Get-ChildItem -LiteralPath $checksRoot -File -Filter "*.ps1" | Sort-Object Name)
-    if ($doctorCheckFiles.Count -ne $expectedDoctorCheckCount) {
-        $problems.Add("doctor check count is $($doctorCheckFiles.Count), expected $expectedDoctorCheckCount")
+    $actualDoctorChecks = @($doctorCheckFiles | ForEach-Object { $_.Name })
+    $expectedDoctorChecks = @()
+
+    if (-not (Test-Path -LiteralPath $checkManifestPath -PathType Leaf)) {
+        $problems.Add("missing doctor check manifest")
+    }
+    else {
+        try {
+            $checkManifest = Get-Content -LiteralPath $checkManifestPath -Raw | ConvertFrom-Json
+            if ($checkManifest.schema_version -ne 1) {
+                $problems.Add("doctor check manifest requires schema_version 1")
+            }
+            $expectedDoctorChecks = @($checkManifest.checks)
+            if ($expectedDoctorChecks.Count -eq 0) {
+                $problems.Add("doctor check manifest requires a non-empty checks array")
+            }
+            elseif (@($expectedDoctorChecks | Where-Object {
+                $_ -isnot [string] -or $_ -notmatch "^[A-Za-z0-9][A-Za-z0-9.-]*\.ps1$"
+            }).Count -gt 0) {
+                $problems.Add("doctor check manifest contains an invalid identity")
+            }
+            elseif (@($expectedDoctorChecks | Sort-Object -Unique).Count -ne $expectedDoctorChecks.Count) {
+                $problems.Add("doctor check manifest contains duplicate identities")
+            }
+        }
+        catch {
+            $problems.Add("invalid doctor check manifest: $($_.Exception.Message)")
+        }
+    }
+
+    foreach ($missingCheck in @($expectedDoctorChecks | Where-Object { $actualDoctorChecks -notcontains $_ })) {
+        $problems.Add("missing doctor check: $missingCheck")
+    }
+    foreach ($unexpectedCheck in @($actualDoctorChecks | Where-Object { $expectedDoctorChecks -notcontains $_ })) {
+        $problems.Add("unexpected doctor check: $unexpectedCheck")
     }
     foreach ($checkFile in $doctorCheckFiles) {
         . $checkFile.FullName
