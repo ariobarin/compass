@@ -50,15 +50,36 @@ def safe_repo_path(root: Path, value: object) -> Path:
     return resolved
 
 
-def string_list(contract_id: str, field: str, value: object, *, required: bool) -> list[str]:
-    if value is None and not required:
+def string_list(contract_id: str, field: str, value: object) -> list[str]:
+    if value is None:
         return []
-    if not isinstance(value, list) or (required and not value):
-        qualifier = "non-empty " if required else ""
-        raise ValueError(f"contract {contract_id}: {field} must be a {qualifier}string array")
+    if not isinstance(value, list):
+        raise ValueError(f"contract {contract_id}: {field} must be a string array")
     if any(not isinstance(item, str) or not item.strip() for item in value):
         raise ValueError(f"contract {contract_id}: {field} must contain only non-empty strings")
     return value
+
+
+def string_mapping(contract_id: str, field: str, value: object) -> dict[str, str]:
+    if value is None:
+        return {}
+    if not isinstance(value, dict) or not value:
+        raise ValueError(f"contract {contract_id}: {field} must be a non-empty string map")
+    if any(not isinstance(key, str) or not key.strip() for key in value):
+        raise ValueError(f"contract {contract_id}: {field} keys must be non-empty strings")
+    if any(not isinstance(item, str) or not item.strip() for item in value.values()):
+        raise ValueError(f"contract {contract_id}: {field} values must be non-empty strings")
+    return value
+
+
+def markdown_section(text: str, heading: str) -> str | None:
+    pattern = re.compile(
+        rf"(?ms)^##\s+{re.escape(heading)}\s*$\n(.*?)(?=^##\s+|\Z)"
+    )
+    match = pattern.search(text)
+    if match is None:
+        return None
+    return match.group(1)
 
 
 def validate(root: Path, manifest_path: Path) -> list[str]:
@@ -80,7 +101,9 @@ def validate(root: Path, manifest_path: Path) -> list[str]:
             continue
         seen_ids.add(contract_id)
 
-        unknown = sorted(set(raw_contract) - {"id", "path", "required", "forbidden"})
+        unknown = sorted(
+            set(raw_contract) - {"id", "path", "required", "forbidden", "exact_sections"}
+        )
         if unknown:
             problems.append(f"contract {contract_id}: unsupported fields: {', '.join(unknown)}")
             continue
@@ -88,17 +111,25 @@ def validate(root: Path, manifest_path: Path) -> list[str]:
         try:
             path = safe_repo_path(root, raw_contract.get("path"))
             required_phrases = string_list(
-                contract_id, "required", raw_contract.get("required"), required=True
+                contract_id, "required", raw_contract.get("required")
             )
             forbidden_phrases = string_list(
-                contract_id, "forbidden", raw_contract.get("forbidden"), required=False
+                contract_id, "forbidden", raw_contract.get("forbidden")
             )
+            exact_sections = string_mapping(
+                contract_id, "exact_sections", raw_contract.get("exact_sections")
+            )
+            if not required_phrases and not exact_sections:
+                raise ValueError(
+                    f"contract {contract_id}: requires required text or exact_sections"
+                )
         except ValueError as error:
             problems.append(str(error))
             continue
 
         try:
-            content = normalize(path.read_text(encoding="utf-8"))
+            raw_content = path.read_text(encoding="utf-8")
+            content = normalize(raw_content)
         except FileNotFoundError:
             problems.append(f"contract {contract_id}: missing file: {path.relative_to(root)}")
             continue
@@ -115,6 +146,16 @@ def validate(root: Path, manifest_path: Path) -> list[str]:
             if normalize(phrase) in content:
                 problems.append(
                     f"contract {contract_id}: forbidden text present in {path.relative_to(root)}: {phrase}"
+                )
+        for heading, expected_body in exact_sections.items():
+            actual_body = markdown_section(raw_content, heading)
+            if actual_body is None:
+                problems.append(
+                    f"contract {contract_id}: missing section in {path.relative_to(root)}: {heading}"
+                )
+            elif normalize(actual_body) != normalize(expected_body):
+                problems.append(
+                    f"contract {contract_id}: section drift in {path.relative_to(root)}: {heading}"
                 )
 
     return problems
