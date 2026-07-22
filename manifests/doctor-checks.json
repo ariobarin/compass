@@ -15,6 +15,7 @@
     "skill-sources.ps1",
     "skills.ps1",
     "source-of-truth.ps1",
+    "template-anchors.ps1",
     "text-policy.ps1"
   ]
 }

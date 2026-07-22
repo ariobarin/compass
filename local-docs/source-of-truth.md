@@ -13,6 +13,8 @@ Mechanism values:
   under `scripts/generators/` and committed.
 - `link`: a secondary copy is reduced to a pointer at the canonical source.
 - `accepted`: intentional separation, documented below, no binding needed.
+- `pin`: copies stay, but a policy contract or check requires a shared phrase
+  or structural anchor, so drift fails doctor.
 - `keep`: already single-source before the audit.
 
 Status values:
@@ -24,7 +26,7 @@ Status values:
 
 | ID | Fact family | Canonical source | Mechanism | Bound by | Status |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Control-state templates | workflows/templates/*.md | generate | generated-artifacts.ps1 | planned |
+| 1 | Control-state templates | workflows/templates/*.md, project-template pair, and using-goals blocks | pin | template-anchors.ps1 | consolidated |
 | 2 | Retired skill names | manifests/retired-skills.json | generate | retired-skills.ps1 | consolidated |
 | 3 | Skill roster | codex/skills/*/ and manifests/portable-files.toml | keep | skill-sources.ps1 | canonical |
 | 4 | Required-files list | git index (tracked files) | generate | required-files.ps1 | consolidated |
@@ -34,9 +36,9 @@ Status values:
 | 8 | Model-tier defaults | manifests/model-tiers.json | generate | model-tiers.ps1 | consolidated |
 | 9 | Ledger schema version | scripts/_orchestration_ledger_core.py | generate | generated-artifacts.ps1 | consolidated |
 | 10 | Skill-description length cap | scripts/common.ps1 MaxSkillDescriptionLength | generate | test-compass-architecture.py | consolidated |
-| 11 | Routing table and update-together checklist | workflows/addition-intake.md | link | policy-contracts.ps1 | planned |
-| 12 | Glossary terms | glossary.md | link | editorial convention | planned |
-| 13 | Shared user-preference prose | manifests/shared-preferences.md | generate | generated-artifacts.ps1 | planned |
+| 11 | Routing source reference (checklist prose deferred) | workflows/addition-intake.md | pin | policy-contracts.ps1 | consolidated |
+| 12 | Glossary terms | glossary.md | link | editorial convention | accepted |
+| 13 | Shared user-preference prose | manifests/policy-contracts.json | pin | policy-contracts.ps1 | consolidated |
 
 ## Intentional separations
 
@@ -44,11 +46,15 @@ These duplications are deliberate and stay. They are listed here so future
 audits do not re-flag them.
 
 - `codex/AGENTS.md`, `claude/CLAUDE.md`, and `apps/compass-mcp/profile.md`
-  serve different runtimes. PR11 generates the shared Writing, Git, and PR prose
-  from one source while the runtime-specific deltas stay separate.
-- `workflows/templates/*.md` (maintainer, long form) and the generated
+  serve different runtimes. Policy contracts pin their complete shared Writing,
+  Git, and PR block while the runtime-specific deltas stay separate.
+- `workflows/templates/*.md` (maintainer, long form),
   `codex/skills/workspace-steward/references/project-template` copies (starter
-  pack) serve different audiences. One is canonical, the other is generated.
+  pack), and the embedded blocks in
+  `codex/skills/using-goals/references/goal-contracts.md` serve different
+  audiences. All are intentional canonicals with different field sets;
+  `template-anchors.ps1` pins their shared structural anchors so none silently
+  loses its identity.
 - `workflows/plan-template.md` is elaborated maintainer guidance distinct from
   the bare `workflows/templates/plan.md` template. Both stay.
 - `scripts/test-compass-architecture.py` asserts skill names as a behavior
@@ -58,13 +64,47 @@ audits do not re-flag them.
 
 ## Deferred decisions (need user input)
 
-- Cluster 1 (control-state templates): `workflows/templates/*.md`,
-  `codex/skills/workspace-steward/references/project-template/local-docs/*/TEMPLATE.md`,
-  `workflows/plan-template.md`, and the embedded blocks in
-  `codex/skills/using-goals/references/goal-contracts.md` have genuinely
-  different field sets per audience, not accidental drift. For example the plan
-  templates use different status enums and different sections (`Change Rule`
-  versus `Next Principal Action` and `Open Decisions`). Generating any site from
-  another requires a decision on the canonical field set for each control
-  document (plan, goal, catalog, assignment, checkpoint, decision). PR8 is
-  deferred until that reconciliation is decided, so these stay independent.
+- Cluster 1 (control-state templates): the three template families keep
+  intentionally different field sets. Full generation remains deferred until a
+  canonical field set is chosen for each control document. The shipped
+  `template-anchors.ps1` pin covers the shared goal, catalog, assignment, and
+  checkpoint identities, plus plan and decision identities where both file
+  families provide those artifacts, so the registered binding is consolidated.
+- Cluster 13 (shared user-preference prose): the verbatim Writing and Git
+  sections across `codex/AGENTS.md`, `claude/CLAUDE.md`, and
+  `apps/compass-mcp/profile.md` are bound by policy-contract pins so drift fails
+  doctor. Full generation (a `generate-runtime-globals.py` reassembling each
+  file from a shared source plus runtime deltas) was deferred because these are
+  load-bearing runtime instructions; the pin is the safe fallback authorized in
+  the plan.
+- Cluster 11 (routing table and update-together checklist): the canonical
+  routing source `workflows/addition-intake.md` is already referenced from the
+  key surfaces, and policy contracts now require the two skill-authoring
+  surfaces to keep that reference. Cutting the surface-specific restatements of
+  the update-together checklist is editorial work that needs a per-surface
+  review, so it is deferred; the pins bind the canonical source in the meantime.
+- Cluster 12 (glossary terms): `glossary.md` is the named terminology authority.
+  Skills should link to it rather than redefine terms, but enforcing that
+  mechanically would be brittle, so it stays an editorial convention with no
+  mechanical check. A sweep of the most redundant in-skill re-definitions is
+  deferred for per-surface review.
+
+## Status summary
+
+Of the 13 fact families, 12 are consolidated or already canonical and 1 is
+accepted as an intentional separation (cluster 12 glossary). The
+surface-specific update-together checklist prose (part of cluster 11) is
+deferred as editorial work. The consolidations are
+enforced mechanically: new manifests and doctor checks (`retired-skills`,
+`model-tiers`, `generated-artifacts`, `source-of-truth`, `template-anchors`),
+generators under `scripts/generators/`, policy-contract pins, git-derived
+required files, and dynamic doctor dispatch.
+
+Required files (cluster 4) use the git index as the source of repository
+membership. The architecturally mandatory entrypoints the old hand-written list
+covered are already enforced elsewhere: root docs and `[repo_only]` files by
+`manifest-boundaries.ps1`, each manifest by its own check, Codex agents by
+`portable-data.py`, skills by `skills.ps1`, runtime globals by policy contracts,
+and test scripts by CI. No broad path roster was restored; the one soft spot
+(generator deletion) is review-visible. Run `pwsh scripts/doctor.ps1` to verify
+the whole binding holds.
