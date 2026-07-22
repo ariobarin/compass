@@ -14,7 +14,7 @@ session state, and machine paths remain local.
 | Repair launches depended on proven wrappers, healthy upstreams, valid ports, and explicit process ownership. | Reuse attributable launch records and stop only the smallest poisoned slice. | `stack-operations.md` |
 | Observed valid-row pace contradicted requested deadlines. | Report observed pace, required pace, healthy capacity, and the bounded action that changes the gap. | benchmark operator and stack operations |
 | A user pause needed to stop owned work and monitors without claiming completion or blockage. | Preserve a resume packet and keep pause distinct from the goal state. | `using-goals` and long-running work |
-| A delegated child reconstructed a principal-owned control file from partial context. | Keep control documents principal-authored and accept delegated evidence through a reviewed return shape. | orchestration controller and ledger schema v4 |
+| A delegated child reconstructed a principal-owned control file from partial context. | Keep control documents principal-authored and accept delegated evidence through a reviewed return shape. | orchestration controller and ledger schema |
 | Compaction preserved activity while the objective and current state became contradictory. | Reopen anchors, verify a current checkpoint, and resume one logical principal role. | `using-goals`, long-running work, orchestration controller |
 | Recovery successors repeated the same child path without new evidence. | Open recovery when another equivalent attempt would repeat motion without learning. | benchmark operator and orchestration ledger |
 

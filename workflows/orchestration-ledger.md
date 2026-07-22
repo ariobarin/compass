@@ -277,7 +277,8 @@ Changing the field does not grant permission.
 
 ## Verification
 
-- `manifests/orchestration-ledger.schema.json` documents schema version 5.
+- `manifests/orchestration-ledger.schema.json` documents the current ledger
+  schema version.
 - `scripts/orchestration-ledger.py` validates and writes the ledger atomically.
 - The path is restricted to `.local/` and rejects symlink traversal.
 - `scripts/test-orchestration-ledger.py` covers principal authority, optimistic

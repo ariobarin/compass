@@ -70,8 +70,8 @@ review date:
   catalog, assignments, ledger shape, and checkpoints across contexts. Delegates
   receive reviewed assignments and return artifacts plus evidence. Principal-only
   ledger mutation is mechanically enforced.
-- Verification: schema version 4 rejects delegated control grants and records
-  evidence provenance while preserving optimistic revision checks.
+- Verification: the current ledger schema rejects delegated control grants and
+  records evidence provenance while preserving optimistic revision checks.
 
 ### 2026-07-17: Negative-only guidance left the route undefined
 

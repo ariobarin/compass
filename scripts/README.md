@@ -56,14 +56,14 @@ options. Usage scanning is opt-in and never emits raw log content.
 principal-authored Markdown goal, plan, catalog, assignment, and checkpoint
 documents referenced by the ledger.
 
-Mutations go through `scripts/orchestration-ledger.ps1`. Schema version 4
-records anchors, control-document links, planning or implementation phase,
-current routing, principal-verified evidence with producer and observation
-time, public-mutation gates, decisions, timestamps, and recovery circuits.
-Every mutation requires the named principal and expected revision. Delegated
-workers return artifacts and evidence; they cannot mutate control state. Schema
-versions 1 through 3 migrate on load and are rewritten as version 4 on the next
-successful write.
+Mutations go through `scripts/orchestration-ledger.ps1`. The current ledger
+schema records anchors, control-document links, planning or implementation
+phase, current routing, principal-verified evidence with producer and
+observation time, public-mutation gates, decisions, timestamps, and recovery
+circuits. Every mutation requires the named principal and expected revision.
+Delegated workers return artifacts and evidence; they cannot mutate control
+state. Legacy schema versions migrate on load and are rewritten to the current
+version on the next successful write.
 
 Use `check-recovery` for read-only observation. Use `begin-recovery` after the
 principal reviews an assignment. A failure with no new discriminating evidence
