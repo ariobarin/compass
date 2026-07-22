@@ -39,6 +39,34 @@
       ]
     },
     {
+      "id": "shared-runtime-prose-codex",
+      "path": "codex/AGENTS.md",
+      "required": [
+        "Treat compaction and principal replacement as lossy handoffs. Preserve the objective in principal-authored goals, plans, catalogs, ledgers, assignments, and checkpoints before context pressure forces recovery.",
+        "Delegates own assigned artifacts and return evidence. The user-facing principal reviews assignments and remains the logical author of control state.",
+        "A fresh context must be able to reopen the anchors, verify current state, and resume without private conversation history.",
+        "A planning-only request authorizes inspection, research, questions, plans, and explicitly scoped experiments. Production implementation begins when the user or named authority opens that phase.",
+        "Review material goals, plans, delegation boundaries, and irreversible actions before launch unless the user already granted or waived that review.",
+        "In a worktree, read and edit only that worktree. Keep one scope per branch or pull request, and preserve unrelated user work.",
+        "Prefer the smallest coherent change that fixes the owning boundary. After a repair, review for removable guards, wrappers, duplicate state, and obsolete paths.",
+        "Container entrypoint `.sh` files use LF line endings. When startup reports `No such file or directory`, inspect line endings before assuming a missing path."
+      ]
+    },
+    {
+      "id": "shared-runtime-prose-claude",
+      "path": "claude/CLAUDE.md",
+      "required": [
+        "Treat compaction and principal replacement as lossy handoffs. Preserve the objective in principal-authored goals, plans, catalogs, ledgers, assignments, and checkpoints before context pressure forces recovery.",
+        "Delegates own assigned artifacts and return evidence. The user-facing principal reviews assignments and remains the logical author of control state.",
+        "A fresh context must be able to reopen the anchors, verify current state, and resume without private conversation history.",
+        "A planning-only request authorizes inspection, research, questions, plans, and explicitly scoped experiments. Production implementation begins when the user or named authority opens that phase.",
+        "Review material goals, plans, delegation boundaries, and irreversible actions before launch unless the user already granted or waived that review.",
+        "In a worktree, read and edit only that worktree. Keep one scope per branch or pull request, and preserve unrelated user work.",
+        "Prefer the smallest coherent change that fixes the owning boundary. After a repair, review for removable guards, wrappers, duplicate state, and obsolete paths.",
+        "Container entrypoint `.sh` files use LF line endings. When startup reports `No such file or directory`, inspect line endings before assuming a missing path."
+      ]
+    },
+    {
       "id": "routing-source-referenced-by-compass-skill",
       "path": "codex/skills/compass/SKILL.md",
       "required": [
