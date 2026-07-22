@@ -20,7 +20,11 @@ else {
             "workflows\agent-failures.md",
             "local-docs\benchmark-run-evidence.md"
         )
-        $pattern = '(?i)schema\s+(?:version\s+)?v?(\d+)'
+        $patterns = @(
+            '(?i)\bschema\s+(?:version\s+)?v?(\d+)\b',
+            '(?i)\bschema\s+versions?\s+v?(\d+)(?:\s+(?:through|to|-)\s+v?(\d+))?',
+            '(?i)\brewritten\s+(?:as|to)\s+(?:schema\s+)?version\s+v?(\d+)\b'
+        )
         foreach ($relative in $docs) {
             $path = Join-Path $repoRoot $relative
             if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
@@ -28,8 +32,17 @@ else {
                 continue
             }
             $text = Get-Content -Raw -LiteralPath $path
-            foreach ($m in [regex]::Matches($text, $pattern)) {
-                $found = [int]$m.Groups[1].Value
+            $foundVersions = New-Object System.Collections.Generic.HashSet[int]
+            foreach ($pattern in $patterns) {
+                foreach ($m in [regex]::Matches($text, $pattern)) {
+                    foreach ($group in $m.Groups[1..($m.Groups.Count - 1)]) {
+                        if ($group.Success) {
+                            [void]$foundVersions.Add([int]$group.Value)
+                        }
+                    }
+                }
+            }
+            foreach ($found in $foundVersions) {
                 if ($found -ne $current) {
                     $problems.Add("$relative names ledger schema version $found but the canonical version is $current")
                 }
