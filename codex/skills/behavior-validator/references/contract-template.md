@@ -12,8 +12,11 @@ Target:
 - Build or version: <exact observable version, ref, or artifact identity>
 
 Setup:
-- <fixtures, account state, services, and allowed credentials>
-- <who may launch or reset the target>
+- Environment preparation: <exact commands, variables, services, and launch order>
+- Fixture: <exact synthetic path, schema, and initial contents or generator>
+- Credential route: <approved secret mechanism and account posture, never a secret value>
+- Source precedence: <ordered credential, config, or fixture sources and expected winner>
+- Reset and cleanup: <owner, allowed actions, and required post-run state>
 
 Clauses:
 - BV-1: Given <state>, when <user action>, then <observable result>.
@@ -22,6 +25,7 @@ Clauses:
 
 Anti-cheat probes:
 - <changed input or fixture that must change the result>
+- <conflicting lower-priority source that must not override the expected winner>
 - <refresh, restart, persistence, empty, invalid, or retry behavior>
 
 Exclusions:
