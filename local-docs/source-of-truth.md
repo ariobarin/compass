@@ -39,6 +39,7 @@ Status values:
 | 11 | Routing source reference (checklist prose deferred) | workflows/addition-intake.md | pin | policy-contracts.ps1 | consolidated |
 | 12 | Glossary terms | glossary.md | link | editorial convention | accepted |
 | 13 | Shared runtime-global prose | manifests/policy-contracts.json | pin | policy-contracts.ps1 | consolidated |
+| 14 | Portable runtime home paths | scripts/common.ps1 home resolvers | pin | portable-home-paths.ps1 | consolidated |
 
 ## Intentional separations
 
@@ -101,14 +102,14 @@ audits do not re-flag them.
 
 ## Status summary
 
-Of the 13 fact families, 12 are consolidated or already canonical and 1 is
+Of the 14 fact families, 13 are consolidated or already canonical and 1 is
 accepted as an intentional separation (cluster 12 glossary). The
 surface-specific update-together checklist prose (part of cluster 11) is
 deferred as editorial work. The consolidations are
 enforced mechanically: new manifests and doctor checks (`retired-skills`,
-`model-tiers`, `generated-artifacts`, `source-of-truth`, `template-anchors`),
-generators under `scripts/generators/`, policy-contract pins, git-derived
-required files, and dynamic doctor dispatch.
+`model-tiers`, `generated-artifacts`, `source-of-truth`, `template-anchors`,
+`portable-home-paths`), generators under `scripts/generators/`, policy-contract
+pins, git-derived required files, and dynamic doctor dispatch.
 
 Required files (cluster 4) use the git index as the source of repository
 membership. The architecturally mandatory entrypoints the old hand-written list
