@@ -97,7 +97,7 @@ else {
             }
         }
 
-        foreach ($expected in 1..13) {
+        foreach ($expected in 1..14) {
             if ($seenIds -notcontains "$expected") {
                 $problems.Add("source-of-truth register is missing cluster row: $expected")
             }
