@@ -9,6 +9,7 @@
     "manifest-boundaries.ps1",
     "model-tiers.ps1",
     "policy-contracts.ps1",
+    "portable-home-paths.ps1",
     "required-files.ps1",
     "restart-recovery.ps1",
     "retired-plugins.ps1",

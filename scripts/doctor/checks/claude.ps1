@@ -159,4 +159,12 @@ else {
             $problems.Add("claude derived agent missing frontmatter entry: $agent")
         }
     }
+
+    # Reverse binding: every frontmatter entry must be a declared derived
+    # agent, so an orphan left behind after removing a derived agent fails.
+    foreach ($agent in $script:ClaudeDerivedAgentFrontmatter.Keys) {
+        if ($manifestClaudeDerivedAgents -notcontains $agent) {
+            $problems.Add("claude frontmatter entry is not a declared derived agent: $agent")
+        }
+    }
 }
