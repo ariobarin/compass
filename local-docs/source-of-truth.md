@@ -38,7 +38,7 @@ Status values:
 | 10 | Skill-description length cap | scripts/common.ps1 MaxSkillDescriptionLength | pin | test-compass-architecture.py | consolidated |
 | 11 | Routing source reference (checklist prose deferred) | workflows/addition-intake.md | pin | policy-contracts.ps1 | consolidated |
 | 12 | Glossary terms | glossary.md | link | editorial convention | accepted |
-| 13 | Shared user-preference prose | manifests/policy-contracts.json | pin | policy-contracts.ps1 | consolidated |
+| 13 | Shared runtime-global prose | manifests/policy-contracts.json | pin | policy-contracts.ps1 | consolidated |
 
 ## Intentional separations
 
@@ -46,8 +46,10 @@ These duplications are deliberate and stay. They are listed here so future
 audits do not re-flag them.
 
 - `codex/AGENTS.md`, `claude/CLAUDE.md`, and `apps/compass-mcp/profile.md`
-  serve different runtimes. Policy contracts pin their complete shared Writing,
-  Git, and PR block while the runtime-specific deltas stay separate.
+  serve different runtimes. Policy contracts pin the applicable shared blocks:
+  Writing, Git, and PR prose across all three surfaces, plus continuity,
+  planning, repository, and Windows prose across the Codex and Claude globals.
+  Runtime-specific deltas stay separate.
 - `workflows/templates/*.md` (maintainer, long form),
   `codex/skills/workspace-steward/references/project-template` copies (starter
   pack), and the embedded blocks in
@@ -78,13 +80,13 @@ audits do not re-flag them.
   `template-anchors.ps1` pin covers the shared goal, catalog, assignment, and
   checkpoint identities, plus plan and decision identities where both file
   families provide those artifacts, so the registered binding is consolidated.
-- Cluster 13 (shared user-preference prose): the verbatim Writing and Git
-  sections across `codex/AGENTS.md`, `claude/CLAUDE.md`, and
-  `apps/compass-mcp/profile.md` are bound by policy-contract pins so drift fails
-  doctor. Full generation (a `generate-runtime-globals.py` reassembling each
-  file from a shared source plus runtime deltas) was deferred because these are
-  load-bearing runtime instructions; the pin is the safe fallback authorized in
-  the plan.
+- Cluster 13 (shared runtime-global prose): policy contracts pin the verbatim
+  Writing, Git, and PR blocks across `codex/AGENTS.md`, `claude/CLAUDE.md`, and
+  `apps/compass-mcp/profile.md`, plus the shared continuity, planning,
+  repository, and Windows blocks across the Codex and Claude globals. Full
+  generation (a `generate-runtime-globals.py` reassembling each file from a
+  shared source plus runtime deltas) was deferred because these are load-bearing
+  runtime instructions; the pin is the safe fallback authorized in the plan.
 - Cluster 11 (routing table and update-together checklist): the canonical
   routing source `workflows/addition-intake.md` is already referenced from the
   key surfaces, and policy contracts now require the two skill-authoring
