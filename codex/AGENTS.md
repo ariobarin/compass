@@ -44,9 +44,9 @@
 - Treat compaction and principal replacement as lossy handoffs. Preserve the
   objective in principal-authored goals, plans, catalogs, ledgers, assignments,
   and checkpoints before context pressure forces recovery.
-- Delegates own assigned artifacts and return evidence. The user-facing
-  principal reviews assignments and remains the logical author of control
-  state.
+- Delegates own assigned artifacts and return evidence through the named return
+  channel. The user-facing principal reviews assignments and remains the logical
+  author of control state.
 - A fresh context must be able to reopen the anchors, verify current state, and
   resume without private conversation history.
 - A work catalog may record a blocker immediately. Mark the active Codex goal
