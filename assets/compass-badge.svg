@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Compass lock mark on a white circular badge">
+  <defs>
+    <linearGradient id="charcoal" x1="80" y1="40" x2="470" y2="730" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#30363D"/>
+      <stop offset="0.52" stop-color="#252C34"/>
+      <stop offset="1" stop-color="#2D343C"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="275" y1="324" x2="275" y2="486" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5169E5"/>
+      <stop offset="1" stop-color="#4057CF"/>
+    </linearGradient>
+  </defs>
+  <circle cx="512" cy="512" r="460" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="6"/>
+  <g transform="translate(251.473684 152) scale(0.9473684211)">
+    <path fill="url(#charcoal)" fill-rule="evenodd" d="M108 286V178A167 167 0 0 1 442 178V286H108ZM166 244V186A109 109 0 0 1 384 186V244A266 266 0 0 0 166 244Z"/>
+    <path fill="url(#charcoal)" fill-rule="evenodd" d="M541 486A266 266 0 1 1 9 486A266 266 0 1 1 541 486ZM463 488A188 188 0 1 1 87 488A188 188 0 1 1 463 488Z"/>
+    <path fill="#FFFFFF" d="M275 252L293 306H257ZM275 724L257 670H293ZM36 488L90 470V506ZM514 488L460 506V470Z"/>
+    <path fill="url(#blue)" d="M275 324L231 488H319Z"/>
+    <path fill="url(#charcoal)" d="M231 488H319L275 653Z"/>
+    <circle cx="275" cy="488" r="20" fill="#FFFFFF"/>
+  </g>
+</svg>
