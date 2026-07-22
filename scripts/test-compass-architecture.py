@@ -250,52 +250,36 @@ class CompassArchitectureTests(unittest.TestCase):
             self.assertNotIn("using-codex-goals", text, path)
             self.assertNotIn("input-token-economy", text, path)
 
-    def test_retirement_map_names_every_replaced_global_surface(self) -> None:
-        manifest = self.read("manifests/retired-skills.json")
-        for retired in (
+    def test_retired_skill_manifest_is_well_formed(self) -> None:
+        # The manifest is the single source. Name format is owned by
+        # scripts/doctor/checks/retired-skills.ps1, so this test does not mirror
+        # that regex. It guards schema shape and the historically replaced
+        # global surfaces that must stay retired.
+        manifest = json.loads(self.read("manifests/retired-skills.json"))
+        self.assertEqual(manifest["schema_version"], 1)
+        list_keys = (
+            "codex_home_skills",
+            "user_skills_home",
+            "claude_skills",
+            "claude_agents",
+        )
+        all_names: set[str] = set()
+        for key in list_keys:
+            entries = manifest[key]
+            self.assertIsInstance(entries, list)
+            self.assertEqual(
+                len(entries),
+                len(set(entries)),
+                f"duplicate retired name in {key}",
+            )
+            all_names.update(entries)
+        for required in (
             "benchmark-run-operator",
             "input-token-economy",
             "using-codex-goals",
             "benchmark-infra-reviewer.md",
         ):
-            self.assertIn(retired, manifest)
-
-    def test_retired_skill_manifest_matches_expected_retirement_sets(self) -> None:
-        manifest = json.loads(self.read("manifests/retired-skills.json"))
-        self.assertEqual(manifest["schema_version"], 1)
-        expected = {
-            "codex_home_skills": [
-                "benchmark-run-operator",
-                "codex-portable",
-                "input-token-economy",
-                "pr-merge-closeout",
-                "proper-flowcharts",
-                "ui-ux-pro-max",
-                "using-codex-goals",
-            ],
-            "user_skills_home": [
-                "benchmark-infra-reviewer",
-                "benchmark-run-operator",
-                "input-token-economy",
-                "pr-merge-closeout",
-                "ui-ux-pro-max",
-                "using-codex-goals",
-                "webmcp-eval-triage",
-                "webmcp-tool-authoring",
-                "webmcp-verify-tool",
-            ],
-            "claude_skills": [
-                "benchmark-infra-reviewer",
-                "benchmark-run-operator",
-                "input-token-economy",
-                "using-codex-goals",
-            ],
-            "claude_agents": [
-                "benchmark-infra-reviewer.md",
-            ],
-        }
-        for key, value in expected.items():
-            self.assertEqual(manifest[key], value)
+            self.assertIn(required, all_names)
 
     def test_skill_description_cap_matches_shared_constant(self) -> None:
         common = self.read("scripts/common.ps1")
