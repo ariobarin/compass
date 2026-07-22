@@ -5,6 +5,9 @@ Each carried pack may define agents under carried/<pack>/agents/<name>.toml.
 The Codex TOML is canonical; the parallel Claude markdown file under
 carried/<pack>/claude-agents/<name>.md is generated from it so the pair cannot
 drift. Pass --check to verify committed files are fresh; pass no flag to write.
+A generated markdown with no matching TOML source is an orphan: --check reports
+it and a write deletes it, so a removed or renamed source cannot leave a stale
+generated file behind.
 """
 from __future__ import annotations
 
@@ -67,6 +70,19 @@ def main() -> int:
                 md_path.parent.mkdir(parents=True, exist_ok=True)
                 with md_path.open("w", encoding="utf-8", newline="\n") as handle:
                     handle.write(desired)
+
+    # Reject orphans: a generated markdown whose TOML source has been removed or
+    # renamed. Without this the check would pass while a stale generated file
+    # stays tracked, defeating the single-source pairing.
+    keep = {md_path for _, md_path in carried_targets()}
+    for md_path in sorted(CARRIED.glob("*/claude-agents/*.md")):
+        if md_path in keep:
+            continue
+        if args.check:
+            stale.append(str(md_path))
+        else:
+            md_path.unlink()
+
     if stale:
         for path in stale:
             print(path)
