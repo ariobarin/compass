@@ -55,16 +55,12 @@ every assignment. Give the user an opportunity to review material goals, plans,
 slice boundaries, and irreversible authority unless the user already granted
 that operating authority or explicitly waived review.
 
-A reviewed assignment names:
-
-- the slice outcome;
-- parent goal and assertion identifiers;
-- authoritative anchors;
-- exact scope and allowed actions;
-- production mutation authority;
-- evidence required;
-- return channel;
-- return conditions.
+A reviewed assignment names the slice outcome, parent goal and assertion
+identifiers, authoritative anchors, exact scope and allowed actions, production
+mutation authority, evidence required, return channel, and return conditions.
+The canonical field set lives in
+[templates/assignment.md](templates/assignment.md); mirror that template instead
+of restating its fields here.
 
 The assignment carries enough context to act and no narrative history that does
 not change the work.
