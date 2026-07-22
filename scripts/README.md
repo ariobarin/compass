@@ -84,4 +84,3 @@ command also accepts `-Remote` and `-Ref`.
 Use `Get-Help .\scripts\compass.ps1 -Detailed` for parameter help. See
 [../workflows/portable-config.md](../workflows/portable-config.md) for the
 maintenance workflow and install boundary.
-
