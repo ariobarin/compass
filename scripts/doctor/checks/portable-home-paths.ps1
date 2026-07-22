@@ -1,12 +1,17 @@
 # Home paths are executable truth in scripts/common.ps1 (Get-CodexHome,
-# Get-AgentsHome, Get-ClaudeHome). The portable manifest documents the same
-# paths as strings for maintainers. This check extracts the default directory
-# names from common.ps1 and requires the parsed manifest values to match the
-# complete documented expressions exactly.
+# Get-AgentsHome, Get-ClaudeHome). The portable manifest and portable-config
+# workflow document the same paths for maintainers. This check extracts the
+# default directory names from common.ps1 and requires every documented copy to
+# match the complete expected expressions exactly.
 $commonPath = Join-Path $repoRoot "scripts\common.ps1"
 $manifestPath = Join-Path $repoRoot "manifests\portable-files.toml"
-if (-not (Test-Path -LiteralPath $commonPath -PathType Leaf) -or -not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
-    $problems.Add("missing common.ps1 or portable-files.toml for home path check")
+$workflowPath = Join-Path $repoRoot "workflows\portable-config.md"
+if (
+    -not (Test-Path -LiteralPath $commonPath -PathType Leaf) -or
+    -not (Test-Path -LiteralPath $manifestPath -PathType Leaf) -or
+    -not (Test-Path -LiteralPath $workflowPath -PathType Leaf)
+) {
+    $problems.Add("missing common.ps1, portable-files.toml, or portable-config.md for home path check")
 }
 else {
     $common = Get-Content -Raw -LiteralPath $commonPath
@@ -51,5 +56,17 @@ else {
         Assert-Equals "claude" "home" $claudeHome
         Assert-Equals "claude" "skills_dir" ($claudeHome + "\skills")
         Assert-Equals "claude" "agents_dir" ($claudeHome + "\agents")
+
+        $workflowLines = @(Get-Content -LiteralPath $workflowPath)
+        $expectedWorkflowLines = @(
+            '- `-CodexHome`, then `$env:CODEX_HOME`, then `%USERPROFILE%\' + $defaults.codex + '`;'
+            '- `-AgentsHome`, then `$HOME\' + $defaults.agents + '`;'
+            '- `-ClaudeHome`, then `$HOME\' + $defaults.claude + '`.`'
+        )
+        foreach ($expectedLine in $expectedWorkflowLines) {
+            if ($workflowLines -cnotcontains $expectedLine) {
+                $problems.Add("portable-config.md home path line missing or stale: $expectedLine")
+            }
+        }
     }
 }
