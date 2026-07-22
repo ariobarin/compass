@@ -21,7 +21,7 @@ else {
             $dataRows = @($tableRows[2..($tableRows.Count - 1)])
         }
 
-        $allowedMechanisms = @("generate", "link", "accepted", "keep")
+        $allowedMechanisms = @("generate", "link", "accepted", "keep", "pin")
         $allowedStatuses = @("canonical", "consolidated", "planned", "accepted")
         $seenIds = New-Object System.Collections.Generic.List[string]
         foreach ($row in $dataRows) {

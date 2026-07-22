@@ -18,6 +18,41 @@
       ]
     },
     {
+      "id": "shared-preference-prose-codex",
+      "path": "codex/AGENTS.md",
+      "required": [
+        "## Writing\n\n- Never use em dashes or en dashes in commits, code comments, prose, or chat.\n  Use other punctuation or separate sentences.\n\n## Git And Pull Requests\n\n- Commit with one lowercase subject, about 8 words or fewer, with no trailing\n  punctuation, body, or `Co-Authored-By` trailer. Describe changes neutrally.\n- Prefer a pull request as the unit for repository changes. Use a descriptive,\n  often verb-led title without conventional-commit prefixes. Keep the body to\n  0-2 motivation-first sentences with no headers, checkboxes, emojis, or\n  generated footer."
+      ]
+    },
+    {
+      "id": "shared-preference-prose-claude",
+      "path": "claude/CLAUDE.md",
+      "required": [
+        "## Writing\n\n- Never use em dashes or en dashes in commits, code comments, prose, or chat.\n  Use other punctuation or separate sentences.\n\n## Git And Pull Requests\n\n- Commit with one lowercase subject, about 8 words or fewer, with no trailing\n  punctuation, body, or `Co-Authored-By` trailer. Describe changes neutrally.\n- Prefer a pull request as the unit for repository changes. Use a descriptive,\n  often verb-led title without conventional-commit prefixes. Keep the body to\n  0-2 motivation-first sentences with no headers, checkboxes, emojis, or\n  generated footer."
+      ]
+    },
+    {
+      "id": "shared-preference-prose-mcp",
+      "path": "apps/compass-mcp/profile.md",
+      "required": [
+        "## Writing\n\n- Never use em dashes or en dashes in commits, code comments, prose, or chat.\n  Use other punctuation or separate sentences.\n\n## Git And Pull Requests\n\n- Commit with one lowercase subject, about 8 words or fewer, with no trailing\n  punctuation, body, or `Co-Authored-By` trailer. Describe changes neutrally.\n- Prefer a pull request as the unit for repository changes. Use a descriptive,\n  often verb-led title without conventional-commit prefixes. Keep the body to\n  0-2 motivation-first sentences with no headers, checkboxes, emojis, or\n  generated footer."
+      ]
+    },
+    {
+      "id": "routing-source-referenced-by-compass-skill",
+      "path": "codex/skills/compass/SKILL.md",
+      "required": [
+        "workflows/addition-intake.md"
+      ]
+    },
+    {
+      "id": "routing-source-referenced-by-skill-authoring",
+      "path": "codex/skills/write-a-compass-skill/SKILL.md",
+      "required": [
+        "workflows/addition-intake.md"
+      ]
+    },
+    {
       "id": "codex-luna-first-delegation",
       "path": "codex/AGENTS.md",
       "required": [
