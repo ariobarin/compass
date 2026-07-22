@@ -24,7 +24,8 @@ Capture success before implementation detail can redefine it. Use
 - exact target identity and launch or connection instructions;
 - user posture and permissions;
 - observable clauses with pass evidence;
-- approved fixtures and credential route;
+- exact synthetic fixture paths, schemas, and environment preparation;
+- approved credential route and source precedence;
 - negative, boundary, persistence, and anti-cheat probes;
 - destructive-action and cleanup authority;
 - blocked and out-of-scope conditions.
