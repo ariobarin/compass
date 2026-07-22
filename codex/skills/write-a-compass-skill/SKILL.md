@@ -30,14 +30,12 @@ that repays its retrieval and maintenance cost.
 
 ## Integrate One Reviewed Source
 
-A global skill update lands together across every owning surface:
+A global skill update lands together across every owning surface. The canonical
+update-together checklist lives in `workflows/addition-intake.md` (skill source,
+install lists, provenance record, and binding checks). Add the one
+skill-authoring item that workflow does not name:
 
-1. `codex/skills/<name>/`;
-2. `[agents].skills` in `manifests/portable-files.toml`;
-3. `[claude].derived_skills` when the runtime-neutral skill belongs in Claude;
-4. `manifests/skill-sources.json`;
-5. policy contracts or required-file checks that bind its behavior;
-6. MCP catalog fixtures and other tests that depend on the installed set.
+- MCP catalog fixtures and other tests that depend on the installed set.
 
 Claude derives shared skills from Codex source. Maintain `codex/AGENTS.md` and
 `claude/CLAUDE.md` separately because their global runtime context differs.

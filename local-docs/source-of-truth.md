@@ -61,6 +61,13 @@ audits do not re-flag them.
   contract, not as a second roster. The manifest remains the roster.
 - `scripts/doctor/checks/agents.ps1` allowed-models allowlist is a different
   fact from the model-tier defaults in `manifests/model-tiers.json`. Both stay.
+- `codex/skills/workspace-steward/references/project-template/glossary.md` is a
+  starter-pack glossary for adopting workspaces, distinct from the terminology
+  authority at root `glossary.md`. It stays separate so a new workspace gets a
+  compact self-contained reference.
+- `.gitignore` governs the working tree while `manifests/portable-files.toml`
+  `[local_only]` governs install boundaries. They overlap on auth, session, and
+  cache filenames by intent; both stay, and the shared filenames must agree.
 
 ## Deferred decisions (need user input)
 
