@@ -17,7 +17,8 @@ Every serious run needs explicit ownership:
 - Worker count.
 - Auth directories.
 - Browser profile policy.
-- Timeout and step cap.
+- Inner task or agent deadline, outer runner deadline, terminal-artifact margin,
+  and step cap.
 - Cleanup boundary.
 
 Do not reuse another agent's stack unless the user explicitly asks. New stacks
@@ -60,7 +61,10 @@ For OpAgent-style runs:
   worker activity, and errors.
 - Tune `TaskTimeoutS` deliberately. Slow DGX or remote generation can make the
   default invalid.
-- Record timeout in launcher metadata or phase state.
+- Keep the outer runner deadline above `TaskTimeoutS` by a margin that covers
+  terminal artifact writes, grading, and cleanup. Long synchronous calls may
+  consume part of that margin before the inner timeout is observed.
+- Record both deadlines and the margin in launcher metadata or phase state.
 
 For OSM-heavy stacked services:
 
@@ -78,9 +82,11 @@ For OSM-heavy stacked services:
 - Auth probes pass.
 - Tool or capability exposure smoke passes.
 - Agent and grader model settings are pinned.
-- Timeout and step cap are equal across arms.
+- Inner deadline, outer deadline, terminal-artifact margin, and step cap are
+  equal across comparable arms.
 - Result roots are empty or intentionally resumed.
-- Launcher metadata records run label, arms, task set, timeout, model, and stack.
+- Launcher metadata records run label, arms, task set, both deadlines, margin,
+  model, and stack.
 - Derived ports are inside the valid range and every proxy or same-origin
   listener has a live upstream service.
 - Child command lines match the intended launcher, label, task slice, and result

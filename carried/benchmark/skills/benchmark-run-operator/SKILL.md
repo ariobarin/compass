@@ -30,6 +30,8 @@ Before expensive work, record:
 - stack, port, auth, and worker ownership;
 - output root and provenance label;
 - smoke proof and stop conditions;
+- inner agent or task deadline, outer runner deadline, and explicit artifact
+  flush, grading, and cleanup margin;
 - capacity, budget, and authority limits.
 
 The user-facing principal authors benchmark policy, queue shape, comparability

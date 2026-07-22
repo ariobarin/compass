@@ -12,7 +12,7 @@ must be identical between treatment and control:
 - Model endpoint and decoding params.
 - Grader and grader params.
 - Browser/runtime.
-- Task set, order, seed, concurrency, timeout, and step cap.
+- Task set, order, seed, concurrency, inner and outer timeout pair, and step cap.
 - Site state and reset policy.
 - Auth policy.
 - Input guards.
@@ -46,7 +46,8 @@ Smoke must prove:
 
 ## Run Rules
 
-- Same timeout and step cap across arms.
+- Same inner deadline, outer deadline, terminal-artifact margin, and step cap
+  across arms.
 - Same task order and concurrency across arms.
 - Version manifest records agent commit, harness commit, service images, browser
   version, model id, decoding params, grader settings, and task revision.
