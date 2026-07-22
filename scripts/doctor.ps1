@@ -38,26 +38,49 @@ if (-not (Test-Path -LiteralPath $doctorCommonPath)) {
 else {
     . $doctorCommonPath
 
-    foreach ($checkPath in @(
-        "checks\required-files.ps1",
-        "checks\manifest-boundaries.ps1",
-        "checks\text-policy.ps1",
-        "checks\skills.ps1",
-        "checks\skill-sources.ps1",
-        "checks\agents.ps1",
-        "checks\policy-contracts.ps1",
-        "checks\retired-plugins.ps1",
-        "checks\restart-recovery.ps1",
-        "checks\hooks.ps1",
-        "checks\claude.ps1"
-    )) {
-        $fullCheckPath = Join-Path $doctorRoot $checkPath
-        if (Test-Path -LiteralPath $fullCheckPath) {
-            . $fullCheckPath
+    # Doctor checks are discovered from disk and their identities are bound to
+    # one manifest so a rename, replacement, addition, or deletion fails here.
+    $checksRoot = Join-Path $doctorRoot "checks"
+    $checkManifestPath = Join-Path $repoRoot "manifests\doctor-checks.json"
+    $doctorCheckFiles = @(Get-ChildItem -LiteralPath $checksRoot -File -Filter "*.ps1" | Sort-Object Name)
+    $actualDoctorChecks = @($doctorCheckFiles | ForEach-Object { $_.Name })
+    $expectedDoctorChecks = @()
+
+    if (-not (Test-Path -LiteralPath $checkManifestPath -PathType Leaf)) {
+        $problems.Add("missing doctor check manifest")
+    }
+    else {
+        try {
+            $checkManifest = Get-Content -LiteralPath $checkManifestPath -Raw | ConvertFrom-Json
+            if ($checkManifest.schema_version -ne 1) {
+                $problems.Add("doctor check manifest requires schema_version 1")
+            }
+            $expectedDoctorChecks = @($checkManifest.checks)
+            if ($expectedDoctorChecks.Count -eq 0) {
+                $problems.Add("doctor check manifest requires a non-empty checks array")
+            }
+            elseif (@($expectedDoctorChecks | Where-Object {
+                $_ -isnot [string] -or $_ -notmatch "^[A-Za-z0-9][A-Za-z0-9.-]*\.ps1$"
+            }).Count -gt 0) {
+                $problems.Add("doctor check manifest contains an invalid identity")
+            }
+            elseif (@($expectedDoctorChecks | Sort-Object -Unique).Count -ne $expectedDoctorChecks.Count) {
+                $problems.Add("doctor check manifest contains duplicate identities")
+            }
         }
-        else {
-            $problems.Add("missing doctor check module: $checkPath")
+        catch {
+            $problems.Add("invalid doctor check manifest: $($_.Exception.Message)")
         }
+    }
+
+    foreach ($missingCheck in @($expectedDoctorChecks | Where-Object { $actualDoctorChecks -notcontains $_ })) {
+        $problems.Add("missing doctor check: $missingCheck")
+    }
+    foreach ($unexpectedCheck in @($actualDoctorChecks | Where-Object { $expectedDoctorChecks -notcontains $_ })) {
+        $problems.Add("unexpected doctor check: $unexpectedCheck")
+    }
+    foreach ($checkFile in $doctorCheckFiles) {
+        . $checkFile.FullName
     }
 }
 

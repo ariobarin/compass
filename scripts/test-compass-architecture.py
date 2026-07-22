@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import json
 import re
 import tomllib
 import unittest
@@ -9,11 +10,18 @@ from pathlib import Path
 from _orchestration_ledger_model import LedgerError, validate_ledger
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL_EFFORT_DEFAULTS = {
-    "gpt-5.6-sol": "high",
-    "gpt-5.6-terra": "xhigh",
-    "gpt-5.6-luna": "high",
-}
+def _load_model_tiers() -> list[dict[str, str]]:
+    with (ROOT / "manifests" / "model-tiers.json").open("rb") as handle:
+        data = json.load(handle)
+    if data.get("schema_version") != 1:
+        raise AssertionError("unsupported model-tiers schema version")
+    return data["tiers"]
+
+
+MODEL_TIERS = _load_model_tiers()
+MODEL_EFFORT_DEFAULTS = {row["model"]: row["effort"] for row in MODEL_TIERS}
+
+MAX_SKILL_DESCRIPTION_LENGTH = 160
 
 
 class CompassArchitectureTests(unittest.TestCase):
@@ -68,12 +76,8 @@ class CompassArchitectureTests(unittest.TestCase):
         self.assertEqual(config["model_reasoning_effort"], MODEL_EFFORT_DEFAULTS[model])
 
         calibration = self.read("local-docs/model-calibration.md")
-        for model_name, effort in (
-            ("GPT-5.6 Sol", "high"),
-            ("GPT-5.6 Terra", "xhigh"),
-            ("GPT-5.6 Luna", "high"),
-        ):
-            self.assertIn(f"| {model_name} | `{effort}` |", calibration)
+        for tier in MODEL_TIERS:
+            self.assertIn(f"| {tier['display_name']} | `{tier['effort']}` |", calibration)
 
     def test_current_ledger_schema_does_not_backfill_legacy_fields(self) -> None:
         timestamp = "2026-07-17T12:00:00Z"
@@ -229,7 +233,7 @@ class CompassArchitectureTests(unittest.TestCase):
             self.assertEqual(name, path.parent.name, path)
             self.assertNotIn(name.casefold(), seen, path)
             seen.add(name.casefold())
-            self.assertLessEqual(len(description), 160, path)
+            self.assertLessEqual(len(description), MAX_SKILL_DESCRIPTION_LENGTH, path)
 
     def test_powershell_ledger_wrapper_uses_script_arguments(self) -> None:
         wrapper = self.read("scripts/orchestration-ledger.ps1")
@@ -247,14 +251,60 @@ class CompassArchitectureTests(unittest.TestCase):
             self.assertNotIn("input-token-economy", text, path)
 
     def test_retirement_map_names_every_replaced_global_surface(self) -> None:
-        common = self.read("scripts/common.ps1")
+        manifest = self.read("manifests/retired-skills.json")
         for retired in (
             "benchmark-run-operator",
             "input-token-economy",
             "using-codex-goals",
             "benchmark-infra-reviewer.md",
         ):
-            self.assertIn(retired, common)
+            self.assertIn(retired, manifest)
+
+    def test_retired_skill_manifest_matches_expected_retirement_sets(self) -> None:
+        manifest = json.loads(self.read("manifests/retired-skills.json"))
+        self.assertEqual(manifest["schema_version"], 1)
+        expected = {
+            "codex_home_skills": [
+                "benchmark-run-operator",
+                "codex-portable",
+                "input-token-economy",
+                "pr-merge-closeout",
+                "proper-flowcharts",
+                "ui-ux-pro-max",
+                "using-codex-goals",
+            ],
+            "user_skills_home": [
+                "benchmark-infra-reviewer",
+                "benchmark-run-operator",
+                "input-token-economy",
+                "pr-merge-closeout",
+                "ui-ux-pro-max",
+                "using-codex-goals",
+                "webmcp-eval-triage",
+                "webmcp-tool-authoring",
+                "webmcp-verify-tool",
+            ],
+            "claude_skills": [
+                "benchmark-infra-reviewer",
+                "benchmark-run-operator",
+                "input-token-economy",
+                "using-codex-goals",
+            ],
+            "claude_agents": [
+                "benchmark-infra-reviewer.md",
+            ],
+        }
+        for key, value in expected.items():
+            self.assertEqual(manifest[key], value)
+
+    def test_skill_description_cap_matches_shared_constant(self) -> None:
+        common = self.read("scripts/common.ps1")
+        match = re.search(r"MaxSkillDescriptionLength\s*=\s*(\d+)", common)
+        self.assertIsNotNone(
+            match,
+            "scripts/common.ps1 must define $script:MaxSkillDescriptionLength",
+        )
+        self.assertEqual(int(match.group(1)), MAX_SKILL_DESCRIPTION_LENGTH)
 
 
 if __name__ == "__main__":

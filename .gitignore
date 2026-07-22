@@ -9,6 +9,8 @@
 *.local.toml
 *.bak
 *.tmp
+__pycache__/
+*.pyc
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal

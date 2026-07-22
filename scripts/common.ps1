@@ -45,6 +45,12 @@ function Get-ClaudeHome {
 $script:PortablePythonRunner = $null
 $script:PortableGeneratedData = $null
 $script:PortableResolvedClaudeHome = $null
+$script:PortableRetiredFileManifest = $null
+
+# Maximum allowed length of a skill description, shared by the Codex and Claude
+# skill checks. test-compass-architecture.py asserts this equals its own
+# MAX_SKILL_DESCRIPTION_LENGTH constant.
+$script:MaxSkillDescriptionLength = 160
 
 function Get-PortablePythonRunner {
     if ($script:PortablePythonRunner) {
@@ -197,6 +203,31 @@ function Get-PortableClaudeAgentNames {
 
 function Get-PortableClaudeDerivedAgentNames {
     return Get-PortableManifestArray -Section "claude" -Key "derived_agents"
+}
+
+function Get-PortableRetiredFileManifest {
+    if ($script:PortableRetiredFileManifest) {
+        return $script:PortableRetiredFileManifest
+    }
+
+    $path = Join-Path (Get-RepoRoot) "manifests\retired-skills.json"
+    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+        throw "missing retired skill manifest: $path"
+    }
+
+    try {
+        $manifest = Get-Content -Raw -LiteralPath $path | ConvertFrom-Json
+    }
+    catch {
+        throw "invalid retired skill manifest: $($_.Exception.Message)"
+    }
+
+    if ($manifest.schema_version -ne 1) {
+        throw "unsupported retired skill manifest schema version"
+    }
+
+    $script:PortableRetiredFileManifest = $manifest
+    return $manifest
 }
 
 # Claude agent frontmatter is install wiring, not runtime guidance, so it lives
@@ -375,7 +406,11 @@ function Get-RetiredPortableFileMap {
 
     $items = New-Object System.Collections.Generic.List[object]
 
-    foreach ($skill in @(@(Get-PortableSkillNames) + @("benchmark-run-operator", "codex-portable", "input-token-economy", "pr-merge-closeout", "proper-flowcharts", "ui-ux-pro-max", "using-codex-goals"))) {
+    $retired = Get-PortableRetiredFileManifest
+
+    # The Codex home once held skills directly. Sweep both the current skill
+    # names and the retired set so legacy installs clean up completely.
+    foreach ($skill in @(@(Get-PortableSkillNames) + @($retired.codex_home_skills))) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $CodexHome "skills") $skill
@@ -386,7 +421,7 @@ function Get-RetiredPortableFileMap {
 
     # Keep retired user-skill removals explicit so install does not delete
     # unrelated personal skills that Compass does not own.
-    foreach ($skill in @("benchmark-infra-reviewer", "benchmark-run-operator", "input-token-economy", "pr-merge-closeout", "ui-ux-pro-max", "using-codex-goals", "webmcp-eval-triage", "webmcp-tool-authoring", "webmcp-verify-tool")) {
+    foreach ($skill in @($retired.user_skills_home)) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $AgentsHome "skills") $skill
@@ -401,7 +436,7 @@ function Get-RetiredPortableFileMap {
     if (-not $claudeHome) {
         $claudeHome = Get-ClaudeHome
     }
-    foreach ($skill in @("benchmark-infra-reviewer", "benchmark-run-operator", "input-token-economy", "using-codex-goals")) {
+    foreach ($skill in @($retired.claude_skills)) {
         $items.Add([pscustomobject]@{
             Type = "dir"
             LivePath = Join-Path (Join-Path $claudeHome "skills") $skill
@@ -410,12 +445,14 @@ function Get-RetiredPortableFileMap {
         })
     }
 
-    $items.Add([pscustomobject]@{
-        Type = "file"
-        LivePath = Join-Path (Join-Path $claudeHome "agents") "benchmark-infra-reviewer.md"
-        LiveRoot = $claudeHome
-        BackupScope = "claude"
-    })
+    foreach ($agent in @($retired.claude_agents)) {
+        $items.Add([pscustomobject]@{
+            Type = "file"
+            LivePath = Join-Path (Join-Path $claudeHome "agents") $agent
+            LiveRoot = $claudeHome
+            BackupScope = "claude"
+        })
+    }
 
     return $items
 }

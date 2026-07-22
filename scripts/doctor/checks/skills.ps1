@@ -1,4 +1,4 @@
-$maxDescriptionLength = 160
+$maxDescriptionLength = $script:MaxSkillDescriptionLength
 $skillRoots = @(
     (Join-Path $repoRoot "codex\skills")
 )
