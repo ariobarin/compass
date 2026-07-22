@@ -61,7 +61,7 @@ else {
         $expectedWorkflowLines = @(
             '- `-CodexHome`, then `$env:CODEX_HOME`, then `%USERPROFILE%\' + $defaults.codex + '`;'
             '- `-AgentsHome`, then `$HOME\' + $defaults.agents + '`;'
-            '- `-ClaudeHome`, then `$HOME\' + $defaults.claude + '`.`'
+            '- `-ClaudeHome`, then `$HOME\' + $defaults.claude + '`.'
         )
         foreach ($expectedLine in $expectedWorkflowLines) {
             if ($workflowLines -cnotcontains $expectedLine) {
