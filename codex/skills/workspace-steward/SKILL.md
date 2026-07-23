@@ -64,6 +64,9 @@ Move registered worktrees with Git. Remove them after merge, preservation, or
 explicit disposable evidence. A dirty worktree remains active work until its
 contents are understood and preserved.
 
+For a preservation audit across many nested repositories and worktrees, read
+[large-workspace-git-audit.md](references/large-workspace-git-audit.md).
+
 ## Experiments Are Disposable Learning
 
 A micro-experiment answers one uncertainty with tiny code that will never be
