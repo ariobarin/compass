@@ -115,6 +115,7 @@ files = [
   ".gitattributes",
   ".gitignore",
   "AGENTS.md",
+  "assets/compass-badge.svg",
   "CODE_OF_CONDUCT.md",
   "CONTRIBUTING.md",
   "glossary.md",
