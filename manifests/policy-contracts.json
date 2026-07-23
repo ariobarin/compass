@@ -97,7 +97,10 @@
       "path": "codex/AGENTS.md",
       "required": [
         "Prefer a locally authenticated CLI over a connector when both cover the task.",
-        "Keep redundant connector plugins disabled or uninstalled so they do not distract tool selection."
+        "Keep redundant connector plugins disabled or uninstalled so they do not distract tool selection.",
+        "Before requesting consent or changing a live external tenant, explain the effective authorization grant and why it is needed.",
+        "Decline broad management consent when a narrower route exists.",
+        "Verify the effective grant rather than trusting requested scope labels alone."
       ]
     },
     {
