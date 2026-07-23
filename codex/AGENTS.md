@@ -21,6 +21,11 @@
   user explicitly requests it.
 - Keep redundant connector plugins disabled or uninstalled so they do not
   distract tool selection.
+- Before requesting consent or changing a live external tenant, explain the
+  effective authorization grant and why it is needed. Confirm that approval
+  applies to that exact route.
+- Decline broad management consent when a narrower route exists. Verify the
+  effective grant rather than trusting requested scope labels alone.
 
 ## Runtime Routing
 
