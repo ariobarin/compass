@@ -32,6 +32,10 @@ would materially change scope, ownership, risk, or PR grouping.
 The principal authors and approves the tracker. Implementers return evidence for
 it rather than maintaining independent copies.
 
+When the source is an issue or shared tracker, repair and approve that artifact
+before broad PR mutation. Keep one authoritative item identity and status
+vocabulary across the coordinated work.
+
 ## Form Coherent PR Groups
 
 Choose boundaries around one purpose, reviewer context, risk profile, and
@@ -46,6 +50,10 @@ verification surface.
 
 A PR group should state which tracked items it advances and what evidence will
 close them.
+
+For a coordinated multi-PR set, link each PR to its exact tracked items and use
+a compact table with Decision, Scope, Evidence, Risk, and Next gate. Do not add
+this ceremony to an ordinary single-purpose PR.
 
 ## Execute Through Existing Ownership
 
