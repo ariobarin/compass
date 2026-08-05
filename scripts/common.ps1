@@ -588,6 +588,42 @@ function Get-LiveConfigValueMap {
     return $values
 }
 
+function Get-PortableConfigDrift {
+    param(
+        [string]$Source,
+        [string]$Destination
+    )
+
+    $live = [System.Collections.Generic.Dictionary[string, string]]::new(
+        [System.StringComparer]::Ordinal
+    )
+    if (Test-Path -LiteralPath $Destination -PathType Leaf) {
+        $live = Get-LiveConfigValueMap -Path $Destination
+    }
+    foreach ($entry in Get-PortableConfigEntries -Path $Source) {
+        $identity = "$($entry.Section)`n$($entry.Key)"
+        if (-not $live.ContainsKey($identity)) {
+            $state = "missing"
+        }
+        elseif ($live[$identity] -ne $entry.Value) {
+            $state = "differs"
+        }
+        else {
+            continue
+        }
+        $key = if ($entry.Section) {
+            "$($entry.Section).$($entry.Key)"
+        }
+        else {
+            $entry.Key
+        }
+        [pscustomobject]@{
+            Key = $key
+            State = $state
+        }
+    }
+}
+
 function Merge-PortableConfig {
     param(
         [string]$Source,
@@ -671,14 +707,7 @@ function Test-PortableConfigInSync {
     if (-not (Test-Path -LiteralPath $Destination -PathType Leaf)) {
         return $false
     }
-    $live = Get-LiveConfigValueMap -Path $Destination
-    foreach ($entry in Get-PortableConfigEntries -Path $Source) {
-        $identity = "$($entry.Section)`n$($entry.Key)"
-        if (-not $live.ContainsKey($identity) -or $live[$identity] -ne $entry.Value) {
-            return $false
-        }
-    }
-    return $true
+    return @(Get-PortableConfigDrift -Source $Source -Destination $Destination).Count -eq 0
 }
 
 function Copy-PortableItem {

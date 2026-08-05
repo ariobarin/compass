@@ -47,6 +47,14 @@ if (-not $Apply) {
     else {
         foreach ($state in $changes) {
             Write-Host "  $($state.Item.RepoPath) -> $($state.Item.LivePath)"
+            if ($state.Item.Type -eq "config" -and $state.Exists) {
+                foreach ($entry in @(Get-PortableConfigDrift `
+                    -Source $state.Item.RepoPath `
+                    -Destination $state.Item.LivePath
+                )) {
+                    Write-Host "    reviewed config key $($entry.State): $($entry.Key)"
+                }
+            }
         }
     }
     Write-Host ""
