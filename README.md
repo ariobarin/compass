@@ -1,8 +1,8 @@
 # Compass
 
-Compass is reviewed source for portable Codex and Claude Code configuration,
-instructions, skills, and agents. The bundle contains portable Codex defaults
-and only explicitly selected skills or agents.
+Compass is reviewed source for portable Codex configuration, with manifest
+support for direct Claude Code definitions. The current bundle contains
+portable Codex defaults and selects no Claude definitions.
 
 It is an allowlist, not a runtime-home backup. Auth, sessions, logs, caches,
 databases, browser state, generated plugins, and machine-only values stay local.
