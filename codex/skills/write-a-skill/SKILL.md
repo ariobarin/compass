@@ -42,6 +42,9 @@ Challenge the core on realistic work. Observe what the agent selects, decides,
 and produces. When a failure exposes missing judgment, add the smallest causal
 instruction and run it again. Never expand against an imagined failure.
 
+Make the pull request carry the challenge and observed result so reviewers can
+judge the behavioral claim.
+
 Fix the causal language, then delete every line that merely makes the skill more
 complete. Run the structural validator and the repository's current checks.
 
