@@ -1,12 +1,28 @@
 ---
 name: unslop
-description: "Remove canned AI-writing patterns from explanations, documentation, PR text, and public prose. Use when a draft is inflated, formulaic, vague, or repetitive, or when the user asks to unslop writing."
+description: "Remove canned patterns without replacing the author. Use when prose is inflated, formulaic, vague, or repetitive, an author's voice has been flattened by editing, or the user asks to unslop writing."
 ---
 
 # Unslop
 
-Edit the writing to remove AI patterns. Preserve its meaning and intended tone;
-do not invent opinions, anecdotes, or personality to make it seem human.
+Edit the account, not the author. Smoothness alone is not an improvement;
+do not invent opinions, anecdotes, or personality to make writing seem human.
+
+## Keep the source in view
+
+For authored prose, work beside the original account and latest corrections,
+not only the last edited draft. Meaning includes objections, mixed feelings,
+qualifications, and cadence that carries thought. Start with the author's words,
+not an imitation of their personality. Understand repetition before cutting it.
+
+When reviewing a regression, distinguish deleted thought, unused or missing
+source material, and useful corrections. History locates changes; it does not prove
+who wrote them or make older wording authoritative. Research can check a
+mechanism, not supply a motive. Respect later corrections and disclosure limits.
+
+Make substantial lost thoughts and new first-person claims visible in brief
+editorial notes, with their source or the reason for the cut. Do not narrate
+routine cleanup. An unchanged passage is a valid result.
 
 ## Patterns to notice
 
