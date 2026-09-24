@@ -41,3 +41,27 @@ jobs:
       - name: Run portable tests
         shell: powershell
         run: ./scripts/test-all.ps1
+
+  compass-mcp-freshness:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Require production MCP at pushed revision
+        env:
+          EXPECTED_REVISION: ${{ github.sha }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          expected = os.environ["EXPECTED_REVISION"]
+          with urllib.request.urlopen("https://compass.ariobarin.com/healthz?fresh=1", timeout=20) as response:
+              health = json.load(response)
+          actual = health.get("source_revision")
+          if actual != expected:
+              raise SystemExit(f"production Compass MCP is stale: {actual} != {expected}")
+          print(f"production Compass MCP is current: {actual}")
+          PY
