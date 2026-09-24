@@ -20,7 +20,7 @@ $items = @(
         -ClaudeHome $claudeHome
 )
 $missing = New-Object System.Collections.Generic.List[string]
-$drift = New-Object System.Collections.Generic.List[string]
+$drift = New-Object System.Collections.Generic.List[object]
 
 foreach ($item in $items) {
     if (-not (Test-Path -LiteralPath $item.LivePath)) {
@@ -28,7 +28,7 @@ foreach ($item in $items) {
         continue
     }
     if (-not (Test-PortableItemInSync -Item $item)) {
-        $drift.Add($item.LivePath)
+        $drift.Add($item)
     }
 }
 
@@ -48,8 +48,16 @@ if ($missing.Count -gt 0) {
 if ($drift.Count -gt 0) {
     Write-Host ""
     Write-Host "drift:"
-    foreach ($path in $drift) {
-        Write-Host "  $path"
+    foreach ($item in $drift) {
+        Write-Host "  $($item.LivePath)"
+        if ($item.Type -eq "config") {
+            foreach ($entry in @(Get-PortableConfigDrift `
+                -Source $item.RepoPath `
+                -Destination $item.LivePath
+            )) {
+                Write-Host "    reviewed config key $($entry.State): $($entry.Key)"
+            }
+        }
     }
 }
 

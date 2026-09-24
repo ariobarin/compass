@@ -36,17 +36,49 @@ function Assert-TestFileContains {
     }
 }
 
+function Assert-TestDriftOutput {
+    param([string]$Text)
+
+    foreach ($expected in @(
+        "reviewed config key differs: model_reasoning_effort"
+        "reviewed config key missing: features.goals"
+    )) {
+        if (-not $Text.Contains($expected)) {
+            throw "expected output to contain: $expected"
+        }
+    }
+    foreach ($unexpected in @(
+        "machine_setting"
+        "machine-sensitive-preview-value"
+    )) {
+        if ($Text.Contains($unexpected)) {
+            throw "expected output not to contain: $unexpected"
+        }
+    }
+}
+
 $testRoot = Join-Path ([System.IO.Path]::GetTempPath()) "compass-test-$([guid]::NewGuid().ToString('N'))"
 $codexHome = Join-Path $testRoot "codex"
 $agentsHome = Join-Path $testRoot "agents"
 $claudeHome = Join-Path $testRoot "claude"
 
 try {
+    . "$PSScriptRoot\common.ps1"
+
+    $emptyConfigPath = Join-Path $testRoot "empty-config.toml"
+    $directoryTarget = Join-Path $testRoot "config-directory"
+    Write-TestFile -Path $emptyConfigPath -Content ""
+    New-Item -ItemType Directory -Path $directoryTarget | Out-Null
+    if (Test-PortableConfigInSync -Source $emptyConfigPath -Destination $directoryTarget) {
+        throw "config directory target reported in sync"
+    }
+
     $machineLabel = "preserve caf$([char]0x00E9)"
     Write-TestFile -Path (Join-Path $codexHome "AGENTS.md\local.txt") -Content "preserve this backup`n"
     Write-TestFile -Path (Join-Path $codexHome "auth.json") -Content "leave unlisted state alone`n"
     Write-TestFile -Path (Join-Path $codexHome "config.toml") -Content @"
 MODEL = "machine-specific"
+model_reasoning_effort = "machine-sensitive-preview-value"
 machine_setting = "$machineLabel"
 
 ["features"]
@@ -55,6 +87,30 @@ memories = false
 [projects.'C:\machine']
 trust_level = "trusted"
 "@
+
+    $configPath = Join-Path $codexHome "config.toml"
+    $configBeforePreview = Get-Content -Raw -LiteralPath $configPath
+    $powerShellPath = (Get-Process -Id $PID).Path
+    $previewOutput = & $powerShellPath `
+        -NoProfile `
+        -ExecutionPolicy Bypass `
+        -File (Join-Path $PSScriptRoot "install.ps1") `
+        -CodexHome $codexHome `
+        -AgentsHome $agentsHome `
+        -ClaudeHome $claudeHome 2>&1 | Out-String
+    if ($LASTEXITCODE -ne 0) {
+        throw "install preview failed: $previewOutput"
+    }
+    if ((Get-Content -Raw -LiteralPath $configPath) -cne $configBeforePreview) {
+        throw "install preview changed live config"
+    }
+    Assert-TestDriftOutput -Text $previewOutput
+
+    $verifyOutput = & (Join-Path $PSScriptRoot "verify-live.ps1") `
+        -CodexHome $codexHome `
+        -AgentsHome $agentsHome `
+        -ClaudeHome $claudeHome 6>&1 | Out-String
+    Assert-TestDriftOutput -Text $verifyOutput
 
     & (Join-Path $PSScriptRoot "install.ps1") `
         -Apply `
