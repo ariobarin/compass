@@ -53,6 +53,9 @@ current model without the candidate first, then against the candidate under the
 same conditions. Do not tell the candidate what behavior is being measured.
 Judge what it actually decides and produces, not what it claims to have applied.
 
+Make the pull request carry the challenge and observed result so reviewers can
+judge the behavioral claim.
+
 Test the description as prompt code too. Matching tasks must trigger the skill;
 nearby tasks that do not need the correction must stay out.
 
