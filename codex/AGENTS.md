@@ -18,6 +18,10 @@
 - Prefer an authenticated CLI over a connector when both can complete the task.
 - Prefer non-forked subagents with self-contained assignments. Fork context only
   when the task depends on prior history.
+- Before recommending steering active work, name the observed deviation and the
+  behavior the new instruction would change. If it only repeats known
+  constraints or compensates for missing visibility, wait for the next
+  checkpoint.
 - Keep plans, goals, and other working documents concise and complete enough to
   understand as a whole. Draft freely, then prune before execution.
 - Every line becomes maintenance. Delete, consolidate, or reuse before adding.
