@@ -1,4 +1,4 @@
 interface:
   display_name: "Compass"
-  short_description: "Change or refresh the Compass configuration"
-  default_prompt: "Use $compass to make this change through the smallest coherent Compass pull request."
+  short_description: "Improve Compass skills and working preferences"
+  default_prompt: "Use $compass to make this change in the Compass repository."

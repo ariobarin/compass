@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implement Spec"
+  short_description: "Execute dependent tickets as integrated work"
+  default_prompt: "Use $implement-spec to implement this spec and its tickets, integrate the work, and leave a verified result ready to inspect."

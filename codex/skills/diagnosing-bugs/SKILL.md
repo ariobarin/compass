@@ -40,7 +40,7 @@ Change one variable at a time. Every probe must distinguish between hypotheses. 
 
 ## Fix the bug, not the story
 
-If a maintained regression test is warranted, put it at a seam that reproduces the real bug pattern. A shallow test that cannot express the failure gives false confidence. Use `$test-for-risk` to decide whether the repro should become recurring test code.
+If a maintained regression test is warranted, put it at a seam that reproduces the real bug pattern. A shallow test that cannot express the failure gives false confidence. Weigh recurrence risk against maintenance cost, using `$test-for-risk` when available, to decide whether the repro should become recurring test code.
 
 Then:
 

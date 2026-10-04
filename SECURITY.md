@@ -1,13 +1,13 @@
 # Security Policy
 
-Compass contains reviewed source for a portable Codex setup. It should never
+Compass contains reviewed agent skills and working preferences. It should never
 contain auth tokens, session data, logs, browser state, generated plugin caches,
 SQLite state, or private machine-only runtime files.
 
 ## Reporting
 
 Please do not open a public issue for secrets, credentials, private machine
-state, or install behavior that could expose local data.
+state, or instructions that could expose local data.
 
 Use GitHub private vulnerability reporting if it is enabled. If it is not
 available, contact the maintainer privately through the channels listed on their
@@ -22,14 +22,13 @@ issue without exposing new secrets.
 In scope:
 
 - tracked files in this repository;
-- install and verification scripts;
-- portable config fragments and manifests;
-- guidance that could cause Codex to copy local-only state into git;
+- the skill catalog, source checks, and optional role definitions;
+- guidance that could cause an agent to expose local-only state;
 - guidance that could grant stronger authority than the docs explain.
 
 Out of scope:
 
 - private forks or local edits that are not proposed back to this repo;
-- generated files already excluded by the repo allowlist and denylist;
+- untracked runtime state;
 - issues in the Codex product or third-party services independent of this
   repository.

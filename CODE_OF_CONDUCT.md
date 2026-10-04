@@ -1,7 +1,7 @@
 # Code of Conduct
 
 This project expects direct, respectful, technical collaboration. The goal is to
-make the portable setup easier to understand, review, and safely adapt.
+make the skills easier to understand, review, and adapt.
 
 Contributors should focus criticism on code, docs, claims, and evidence. Do not
 use personal attacks, harassment, threats, discrimination, or private

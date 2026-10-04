@@ -7,7 +7,9 @@ on:
       - main
 
 jobs:
-  portable:
+  catalog:
+    # These names are required by the repository's branch protection.
+    name: portable (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
@@ -22,22 +24,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run portable tests
-        shell: pwsh
-        run: ./scripts/test-all.ps1
+      - name: Check source catalog
+        run: python scripts/check.py
 
       - name: Check diff formatting
-        shell: pwsh
         run: git diff --check HEAD^
-
-  windows-powershell:
-    runs-on: windows-2025
-
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Run portable tests
-        shell: powershell
-        run: ./scripts/test-all.ps1

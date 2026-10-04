@@ -1,35 +1,24 @@
 {
-  "codex": {
-    "config": "config.toml",
-    "files": [
-      "AGENTS.md"
-    ],
-    "agents": [
-      "comment-sicko",
-      "simplicity-critic"
-    ]
-  },
   "agents": {
     "skills": [
+      "babysit-pr",
       "blast-radius",
       "compass",
-      "diagnosing-bugs",
+      "create-verification-skill",
       "design-prototype",
+      "diagnosing-bugs",
       "grilling",
       "ground-in-sources",
       "handoff",
+      "implement-spec",
       "micro-experiment",
       "monitor",
       "no-comments",
+      "retro",
       "test-for-risk",
       "to-tickets",
       "unslop",
       "write-a-skill"
     ]
-  },
-  "claude": {
-    "files": [],
-    "skills": [],
-    "agents": []
   }
 }

@@ -4,11 +4,27 @@ Read this provenance when auditing or revising To Tickets, not during normal use
 
 The skill is substantially derived from Matt Pocock's `to-tickets` skill:
 
-- Source: https://github.com/mattpocock/skills/blob/0ab1b63a410a03d3627979a109c8695de27af954/skills/engineering/to-tickets/SKILL.md
+- Source: https://github.com/mattpocock/skills/blob/24fe0ef7737efae15c87225755e9f6f5965e4888/skills/engineering/to-tickets/SKILL.md
+- Inspected: October 4, 2026, at repository commit `24fe0ef7737efae15c87225755e9f6f5965e4888`
 - Repository license: MIT
 - Upstream copyright: Copyright (c) 2026 Matt Pocock
 
-Compass keeps the upstream tracer-bullet slicing rules, blocking-edge model, wide-refactor expand-contract exception, approval round, publication templates, and stale-path warning. It removes the dependency on Matt's setup skill and hard-coded local `.scratch` issue location so the same workflow can use whatever tracker, local issue directory, and triage vocabulary the repository or user has actually configured.
+Compass keeps tracer-bullet slices, real blocking edges, the wide-refactor
+expand-contract exception, and the distinction between a stable decision and a
+stale implementation prescription. Slices cover the layers the behavior needs;
+prefactors must earn a separate ticket. Wide migrations can use an explicit
+integration point when intermediate batches cannot stay green.
+
+Compass drafts without setup, uses the requested or configured destination and
+ticket format, and asks only for material decisions or missing publication
+authority. It replaces the unconditional approval round and duplicate templates
+with those rules. Parent relationships stay separate from blockers. Publishing
+tickets does not itself grant implementation authority; existing authority
+still applies. These are Compass adaptations, not upstream changes.
+
+Host metadata keeps this skill discoverable for explicit natural-language
+requests to draft or publish tickets. Its description, rather than an
+invocation-only catalog flag, limits it to the requested workflow.
 
 ## Upstream license
 
