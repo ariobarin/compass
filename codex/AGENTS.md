@@ -18,6 +18,13 @@
 - Prefer an authenticated CLI over a connector when both can complete the task.
 - Prefer non-forked subagents with self-contained assignments. Fork context only
   when the task depends on prior history.
+- Use parallel agents to reduce my handoffs. Keep one owner responsible for
+  integration and the evidence behind the final result.
+- Complete authorized work before handing it back. Make the result easy to
+  inspect, with evidence for the current revision and a usable preview or PR
+  when the task calls for one.
+- Ask for missing decisions that materially affect the outcome or authority.
+  Do not ask me to reconfirm permission I have already given.
 - Keep plans, goals, and other working documents concise and complete enough to
   understand as a whole. Draft freely, then prune before execution.
 - Every line becomes maintenance. Delete, consolidate, or reuse before adding.

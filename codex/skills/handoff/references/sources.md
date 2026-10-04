@@ -4,11 +4,23 @@ Read this provenance when auditing or revising Handoff, not during normal use.
 
 The skill is substantially derived from Matt Pocock's `handoff` skill:
 
-- Source: https://github.com/mattpocock/skills/blob/0ab1b63a410a03d3627979a109c8695de27af954/skills/productivity/handoff/SKILL.md
+- Source: https://github.com/mattpocock/skills/blob/24fe0ef7737efae15c87225755e9f6f5965e4888/skills/productivity/handoff/SKILL.md
+- Inspected: 2026-10-04
+- License source: https://github.com/mattpocock/skills/blob/24fe0ef7737efae15c87225755e9f6f5965e4888/LICENSE
 - Repository license: MIT
 - Upstream copyright: Copyright (c) 2026 Matt Pocock
 
-Compass keeps the upstream temporary-directory rule, suggested-skills section, artifact-reference discipline, redaction requirement, and argument-based focus. The only behavioral wording change translates Matt's Claude-style instruction to call the Skill tool into the portable requirement to name installed skills the next agent should use.
+Compass keeps the upstream artifact-reference discipline, next-session focus,
+and requirement for a user-requested handoff. It adds the intent, authorization, working
+state, unresolved decisions, next action, and inspection guidance that may be
+lost between sessions. It replaces the fixed temporary-directory rule with a
+requested or conventional destination, falling back to a nontracked temporary
+file. Skill suggestions are conditional on known availability and usefulness;
+no section template or Claude-specific Skill tool call is required. Upstream's
+separate blanket redaction paragraph is not included in the Compass instruction.
+
+Host metadata keeps this skill discoverable for a natural-language handoff
+request; the description still requires the user to ask for a context transfer.
 
 ## Upstream license
 

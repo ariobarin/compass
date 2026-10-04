@@ -1,0 +1,4 @@
+interface:
+  display_name: "Retro"
+  short_description: "Turn session corrections into durable fixes"
+  default_prompt: "Use $retro to review this session and recommend the smallest durable environment changes."

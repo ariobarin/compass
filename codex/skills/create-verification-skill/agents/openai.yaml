@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Verification Skill"
+  short_description: "Build and prove reusable verification recipes"
+  default_prompt: "Use $create-verification-skill to create or update this project’s verification skill and prove its recipe end to end."

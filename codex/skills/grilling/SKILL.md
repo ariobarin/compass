@@ -1,28 +1,43 @@
 ---
 name: grilling
-description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
+description: Stress-test a plan, decision, or idea through rounds of dependent questions. Use when the user explicitly asks to be grilled or to stress-test their thinking.
 ---
 
-Interview the user relentlessly until you reach a shared understanding. Map this as a **design tree**: every decision branches into the decisions that hang off it.
+# Grilling
 
-Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question and give your recommended answer. Then wait for the user's answers before the next round.
+Challenge the user's thinking until the decisions that matter are sound enough
+to act on. Map this as a **design tree**: each decision branches into the
+decisions that depend on it. Keep the tree to choices that could materially
+change the outcome, scope, or next action.
 
-Format a round like so:
+Work the tree in **rounds**. The **frontier** is the unsettled decisions whose
+prerequisites are already settled: questions you can ask now without guessing
+at answers you have not heard yet. Ask a manageable batch of independent
+frontier questions, numbered, with your recommended answer and its tradeoff.
+Then wait for the user's answers.
+
+Format each question like so:
 
 ```
-❓ **Q1** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
+❓ **Q1** - **<decision>**: <question and meaningful choices>
 
-➡️ <your recommended answer>
-
----
-
-❓ **Q2** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
-
-➡️ <your recommended answer>
+➡️ <recommended answer and why>
 ```
 
-Each round the user answers reshapes the tree: settled decisions push the frontier outward and unblock questions that depended on them. Recompute the frontier and ask the next round. A question whose answer depends on another question still open in this round belongs to a _later_ round, not this one.
+Each round reshapes the tree: settled decisions unblock their dependents and
+retire alternatives the user has ruled out. A question whose answer depends on
+another open question belongs to a later round. Reopen a settled decision only
+when new evidence materially changes it.
 
-Finding _facts_ is your job, never the user's. When a frontier question needs a fact from the environment (filesystem, tools, etc.), dispatch a sub-agent to find it; don't ask the user for anything you could look up yourself. Don't block on it: a running exploration is an unsettled prerequisite, so only the questions downstream of it wait for the sub-agent to report; ask the rest of the frontier now. The _decisions_ are the user's: put each to them and wait.
+Finding **facts** is your job. Look up what the environment and sources can
+answer; delegate independent discovery when useful. A pending lookup blocks
+only its dependent questions. Reserve questions for material **decisions** the
+user owns. Apply their existing choices and delegated judgment yourself.
 
-The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Do not act on it until the user confirms you have reached a shared understanding.
+Stop when another answer is unlikely to materially change the outcome, scope,
+or next action. State the settled decisions, consequential assumptions, and any
+remaining blocker. Continue follow-on work the user has already authorized.
+Ask only for a new material decision or authority that is still missing.
+
+Source provenance lives in [references/sources.md](references/sources.md). Do not
+load it during normal use.

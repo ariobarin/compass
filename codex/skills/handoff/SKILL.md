@@ -1,13 +1,28 @@
 ---
 name: handoff
-description: Compact the current conversation into a handoff document for another agent to pick up.
-argument-hint: "What will the next session be used for?"
+description: Write a concise handoff for a fresh session to resume the work. Use when the user requests a handoff or context transfer.
 ---
 
-Write a handoff document summarizing the current conversation so a fresh agent can continue the work. Save to the temporary directory of the user's OS - not the current workspace.
+Write a concise handoff that lets a fresh agent continue the intended work.
+Tailor it to the user's requested next-session focus.
 
-Include a "suggested skills" section in the document, naming which installed skills the next agent should use.
+Point to existing specs, plans, issues, commits, diffs, and outputs by path or
+URL instead of duplicating them. Preserve otherwise-lost user intent, scope,
+constraints, and decision rationale. Distinguish authorized work from proposals
+that still need a decision; carry forward authorized follow-on work without
+requiring the user to approve it again.
 
-Do not duplicate content already captured in other artifacts (specs, plans, ADRs, issues, commits, diffs). Reference them by path or URL instead.
+Locate the current work and result, including the branch or revision and
+uncommitted changes when relevant. Preserve what has been completed and
+verified, the limits of that evidence, and unresolved decisions. Give a concrete
+next action and explain how the next session can inspect or verify the result.
 
-If the user passed arguments, treat them as a description of what the next session will focus on and tailor the doc accordingly.
+Use only the structure the task needs, not a transcript or a fixed set of
+sections. Suggest skills only when they are known to be available and useful
+for the next step; identify them by exact name or path.
+
+Save to the user's requested destination or an established project convention.
+Otherwise, use a nontracked temporary file in an available temporary directory.
+Report the exact location so the next session can read it.
+
+For provenance and adaptation notes, see [sources](references/sources.md).

@@ -9,7 +9,7 @@ The skill and custom agent are substantially derived from Lauren Tan's pstack:
 - Repository license: MIT
 - Upstream copyright: Copyright (c) 2026 Lauren Tan
 
-Compass preserves the adversarial reviewer and parent-review split. The port only translates Cursor-specific skill and subagent calls into Codex-native behavior and removes dependencies on pstack skills Compass does not ship.
+Compass preserves the adversarial reviewer and parent-review split and removes dependencies on pstack skills Compass does not ship. The October 2026 refresh moves the specialist prompt into this skill's references so the parent can supply it to a fresh subagent without requiring a configured runtime role. The prompt and its behavior are unchanged.
 
 ## Upstream license
 

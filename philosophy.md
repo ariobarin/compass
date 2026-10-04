@@ -19,6 +19,11 @@ Brevity is not the goal by itself. Preserve correctness, evidence, user intent,
 and true boundaries. Prune what does not help the reader understand, decide, or
 act.
 
+Human attention is serial. Agents can pursue independent work in parallel.
+Spend that parallelism on a result the human can inspect in one visit, with
+integration and proof already handled. Ask early about consequential unknowns;
+do not manufacture handoffs for decisions the user has already made.
+
 ## Signal
 
 Words steer models. More words alone do not mean more control.
@@ -32,13 +37,11 @@ is not compression. Preserve meaning, force, and taste.
 
 ## Sources
 
-Revisit the model-specific sources after material model changes. The
-engineering sources are the durable layer.
+Revisit agent-specific guidance after material model or harness changes.
+[Source Grounding](source-grounding.md) records the current workflow sources
+and the boundaries of their advice.
 
-Model-specific guidance:
-
-- [OpenAI GPT-5.6 prompting guidance](https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6): outcome-first prompts, prompt pruning, and preservation of context and true constraints.
-- [Anthropic Claude Opus 5 prompting guidance](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5): written deliverable length, task scope, and removal of legacy verification scaffolding.
+- [Theo Browne, October 2026 workflow discussion, 45:23](https://www.youtube.com/watch?v=D8PikZ1KhUo&t=2723): parallel agent work should reduce the human's repeated visits and deliver the artifacts needed for review.
 
 Durable engineering sources:
 

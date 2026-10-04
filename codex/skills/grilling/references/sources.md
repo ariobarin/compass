@@ -4,11 +4,19 @@ Read this provenance when auditing or revising Grilling, not during normal use.
 
 The skill is substantially derived from Matt Pocock's `grilling` skill:
 
-- Source: https://github.com/mattpocock/skills/blob/0ab1b63a410a03d3627979a109c8695de27af954/skills/productivity/grilling/SKILL.md
+- Source: https://github.com/mattpocock/skills/blob/24fe0ef7737efae15c87225755e9f6f5965e4888/skills/productivity/grilling/SKILL.md
+- Inspected: October 4, 2026, at repository commit `24fe0ef7737efae15c87225755e9f6f5965e4888`
 - Repository license: MIT
 - Upstream copyright: Copyright (c) 2026 Matt Pocock
 
-Compass preserves the upstream skill body and invocation metadata. The design-tree, frontier, facts-versus-decisions, and round structure are the behavior being adopted.
+Compass keeps the design tree, dependent-question frontier, facts-versus-decisions
+distinction, and recommended answers in rounds. The current upstream body still
+requires visiting every branch and a final confirmation before acting. Compass
+limits questions to material decisions, retires ruled-out branches, and stops
+when another answer would not materially change the outcome. The session is
+explicitly requested and preserves authority for already-approved follow-on work.
+Fact-finding may use direct lookup or independent delegation; a subagent is not
+required for every lookup. These are Compass adaptations, not upstream changes.
 
 ## Upstream license
 

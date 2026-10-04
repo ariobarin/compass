@@ -1,5 +1,4 @@
 interface:
   display_name: "Handoff"
   short_description: "Compact a conversation into a handoff"
-policy:
-  allow_implicit_invocation: false
+  default_prompt: "Use $handoff to preserve what the next session needs to continue."

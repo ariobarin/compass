@@ -1,8 +1,8 @@
 # Repository Guidance
 
-Compass is the lean source of truth for portable Codex and Claude Code
-configuration. The bundle contains reviewed Codex defaults and only explicitly
-selected skills or agents.
+Compass is Ario's collection of agent skills and working preferences. Its job
+is to improve how work gets done: clear decisions, independent execution,
+observable results, and fewer unnecessary human handoffs.
 
 ## Philosophy
 
@@ -12,7 +12,7 @@ judgment, execution paths, tool use, and self-checking to current models.
 Every Compass instruction must earn its place. Use decisive words that change
 behavior. Delete noise.
 
-Add prompts, skills, agents, or configuration only for a demonstrated
+Add prompts, skills, or agents only for a demonstrated
 current-model gap. Re-evaluate them after material model changes, and remove
 scaffolding that duplicates or distorts native behavior. Use absolute rules
 only for true invariants.
@@ -25,25 +25,25 @@ Read `philosophy.md` for simplicity and `source-grounding.md` for research.
 
 ## Boundaries
 
-- `codex/AGENTS.md` is the permanent global Codex instruction source. It may be
-  empty, but the source path stays in Compass.
-- `codex/config.toml` contains reviewed portable keys. Install overlays those
-  keys without replacing unrelated live configuration.
-- Portable skills belong under `codex/skills/<name>/` and are selected by
-  `agents.skills` in `manifests/portable-files.json`.
-- Portable Codex subagents belong under `codex/agents/<name>.toml` and are
-  selected by `codex.agents`.
-- Direct Claude files, skills, and agents belong under `claude/` and are
-  selected by the corresponding `claude` manifest collection.
+- `codex/AGENTS.md` holds global user preferences.
+- Skills live in `codex/skills/<name>/`. Keep the catalog in
+  `manifests/portable-files.json` aligned with those directories.
+- Compass MCP reads these paths and `agents.skills` directly. Preserve that
+  interface and single-line skill names and descriptions in frontmatter.
+- Optional Codex roles live in `codex/agents/`. Put a skill's required
+  specialist prompt inside that skill so it can supply the prompt itself.
 - Project-specific behavior belongs in the project that uses it.
+- Models, runtime settings, and installation choices belong to the environment
+  running the agent.
 - Auth, sessions, logs, caches, databases, browser state, generated plugin
   state, and machine-only values stay untracked.
 
-The manifest describes only the current desired bundle. Do not add migration,
-retirement, adoption, receipt, or compatibility machinery for prior layouts.
-Install may replace a selected target after backing it up. It must not change
-unlisted runtime state.
+Adapt upstream skills deliberately. Preserve attribution and license notices,
+record the inspected revision, and explain consequential departures in the
+skill's source notes. Keep provenance out of the normal execution path.
 
-Use a focused pull request as the review unit. Run `git diff --check`,
-`.\scripts\test-all.ps1`, and the Windows PowerShell 5.1 form of the same suite
-before committing.
+Use a focused pull request as the review unit. Run `git diff --check` and
+`python3 scripts/check.py` before committing. For behavioral changes, exercise
+the decision the skill should improve with a fresh agent and realistic inputs;
+include a nearby task where it should stay out of the way. Structural checks
+alone do not establish that a skill helps.

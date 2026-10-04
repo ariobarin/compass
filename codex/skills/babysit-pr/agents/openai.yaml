@@ -1,0 +1,4 @@
+interface:
+  display_name: "Babysit PR"
+  short_description: "Carry a PR through checks and real review findings"
+  default_prompt: "Use $babysit-pr to supervise this PR, address real blockers, and report its current readiness with evidence."
